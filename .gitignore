@@ -478,3 +478,7 @@ CMakeLists.txt.user*
 
 # End of https://www.gitignore.io/api/c,qt,c++,cmake,clion,python,pycharm,qtcreator,pycharm+all
 
+/2D_draw_module/CMakeFiles/
+docs/
+2D_draw_module/draw_lib_autogen/include/
+2D_draw_module/figures/figures_lib_autogen/include/

@@ -1,0 +1,70 @@
+QPushButton#BigButton {
+    font-size: 20px;
+    height: 40px;
+    width: 100px;
+    border-radius: 6px;
+    border: 1px solid #3873d9;
+}
+QPushButton#BigButton:pressed {
+    color: #111;
+    border: 1px solid #3873d9;
+    background: #cccccc;
+}
+
+QPushButton#arrowBtn:disabled {
+    color: #111;
+    background: #303030;
+}
+
+QPushButton#RadioFieldButton {
+    background-color: #305090;
+    border: 1px solid #AAAAAA;
+    border-radius: 8px;
+}
+
+QRadioButton {
+    font-weight: normal;
+}
+
+QRadioButton:checked {
+    font-weight: bold;
+}
+
+QLabel#BigLabel {
+    font-size: 12px;
+    margin-top: 5px;
+    font-family: "Ubuntu Light";
+}
+
+QLabel#headerLabel {
+    font-size: 14px;
+    color: #4287ff;
+    font-family: "Ubuntu Light";
+}
+
+QScrollBar {
+    background: #e4e4e4;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    width: 12px;
+    margin: 0px;
+}
+QScrollBar::handle{
+    background-color: qlineargradient( x1: 0, y1: 0, x2: 1, y2: 0,
+    stop: 0 #4287ff, stop: 1 #356ccc);
+    border-radius: 4px;
+    min-height: 20px;
+    margin: 0px 2px 0px 2px;
+}
+QScrollBar::add-line {
+    background: none;
+    height: 0px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+QScrollBar::sub-line {
+    background: none;
+    height: 0px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
