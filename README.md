@@ -1,2 +1,1 @@
-# Marvelous 3D Project
-
+oop, lab 03
