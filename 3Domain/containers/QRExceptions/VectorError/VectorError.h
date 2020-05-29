@@ -5,7 +5,7 @@
 #ifndef LAB2_VECTORERROR_H
 #define LAB2_VECTORERROR_H
 
-#include "../../QRExceptions/QRContainerException.h"
+#include "../QRContainerException.h"
 
 class VectorError: public QRContainerException {
 public:

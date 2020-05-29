@@ -7,32 +7,30 @@
 
 #include <ctime>
 
-#include "HashTable.h"
-#include "HashTableIterator.h"
-#include "SetError.h"
+#include "../QRHashTable/QRHashTable.h"
+#include "../QRHashTable/HashTableIterator.h"
+#include "../QRExceptions/SetError.h"
 #include "SetBase.h"
 
-const int DEFAULT_MAX_PRINT_SIZE = 8;
-
 template <typename T>
-class Set: public SetBase {
+class QRSet: public SetBase {
 public:
-    Set() = default;
-    Set(const Set &);
-    Set(Set &&) noexcept;
-    Set(const std::initializer_list<T> &);
-    Set(const T*, size_t);
+    QRSet() = default;
+    QRSet(const QRSet &);
+    QRSet(QRSet &&) noexcept;
+    QRSet(const std::initializer_list<T> &);
+    QRSet(const T*, size_t);
 
-    Set& operator=(const Set &);
-    Set& operator=(Set &&) noexcept;
-    Set& operator=(const std::initializer_list<T> &);
+    QRSet& operator=(const QRSet &);
+    QRSet& operator=(QRSet &&) noexcept;
+    QRSet& operator=(const std::initializer_list<T> &);
 
-    virtual ~Set() = default;
+    virtual ~QRSet() = default;
 
     HashTableIterator<T> begin() const;
     HashTableIterator<T> end() const;
 
-    T* make_array(); // todo const
+    T* make_array() const;
 
     void clear() noexcept;
     HashTableIterator<T> add(const T &);
@@ -41,60 +39,60 @@ public:
     size_t size() const noexcept;
     bool isEmpty() const noexcept;
 
-    Set join(const Set&) const;
-    Set join(const T&) const;
-    Set& join_update(const Set&);
-    Set& join_update(const T&);
-    Set& operator |=(const Set&);
-    Set& operator |=(const T&);
+    QRSet join(const QRSet&) const;
+    QRSet join(const T&) const;
+    QRSet& join_update(const QRSet&);
+    QRSet& join_update(const T&);
+    QRSet& operator |=(const QRSet&);
+    QRSet& operator |=(const T&);
 
-    Set intersection(const Set&) const;
-    Set intersection(const T&) const;
-    Set& intersection_update(const Set&);
-    Set& intersection_update(const T&);
-    Set& operator &=(const Set&);
-    Set& operator &=(const T&);
+    QRSet intersection(const QRSet&) const;
+    QRSet intersection(const T&) const;
+    QRSet& intersection_update(const QRSet&);
+    QRSet& intersection_update(const T&);
+    QRSet& operator &=(const QRSet&);
+    QRSet& operator &=(const T&);
 
-    Set difference(const Set&) const;
-    Set difference(const T&) const;
-    Set& difference_update(const Set&);
-    Set& difference_update(const T&);
-    Set& operator -=(const Set&);
-    Set& operator -=(const T&);
+    QRSet difference(const QRSet&) const;
+    QRSet difference(const T&) const;
+    QRSet& difference_update(const QRSet&);
+    QRSet& difference_update(const T&);
+    QRSet& operator -=(const QRSet&);
+    QRSet& operator -=(const T&);
 
-    Set sym_difference(const Set&) const;
-    Set sym_difference(const T&) const;
-    Set& sym_difference_update(const Set&);
-    Set& sym_difference_update(const T&);
-    Set& operator ^=(const Set&);
-    Set& operator ^=(const T&);
+    QRSet sym_difference(const QRSet&) const;
+    QRSet sym_difference(const T&) const;
+    QRSet& sym_difference_update(const QRSet&);
+    QRSet& sym_difference_update(const T&);
+    QRSet& operator ^=(const QRSet&);
+    QRSet& operator ^=(const T&);
 
-    bool isSubSet(const Set&) const;
-    bool isSuperSet(const Set&) const;
+    bool isSubSet(const QRSet&) const;
+    bool isSuperSet(const QRSet&) const;
 
-    bool isEqual(const Set&) const;
-    bool isNotEqual(const Set&) const;
+    bool isEqual(const QRSet&) const;
+    bool isNotEqual(const QRSet&) const;
 
 private:
-    HashTable<T> hashTable;
+    QRHashTable<T> hashTable;
 };
 
 using namespace std;
 
 template <typename T>
-Set<T>::Set(const Set<T> &s): hashTable(s.hashTable) {}
+QRSet<T>::QRSet(const QRSet<T> &s): hashTable(s.hashTable) {}
 
 template <typename T>
-Set<T>::Set(Set<T> &&s) noexcept: hashTable(move(s.hashTable)) {}
+QRSet<T>::QRSet(QRSet<T> &&s) noexcept: hashTable(move(s.hashTable)) {}
 
 template <typename T>
-Set<T>::Set(const std::initializer_list<T> &list): Set() {
+QRSet<T>::QRSet(const std::initializer_list<T> &list): QRSet() {
     for (auto el: list)
         hashTable.add(el);
 }
 
 template <typename T>
-Set<T>::Set(const T* arr, size_t n): Set() {
+QRSet<T>::QRSet(const T* arr, size_t n): QRSet() {
     if (!arr && n) {
         time_t t = time(NULL);
         throw SetExceptionBadPointer(__FILE__, __LINE__, asctime(localtime(&t)),
@@ -106,17 +104,17 @@ Set<T>::Set(const T* arr, size_t n): Set() {
 }
 
 template <typename T>
-Set<T>& Set<T>::operator=(const Set &s) {
+QRSet<T>& QRSet<T>::operator=(const QRSet &s) {
     hashTable = s.hashTable;
 }
 
 template <typename T>
-Set<T>& Set<T>::operator=(Set &&s) noexcept {
+QRSet<T>& QRSet<T>::operator=(QRSet &&s) noexcept {
     hashTable = move(s.hashTable);
 }
 
 template <typename T>
-Set<T>& Set<T>::operator=(const initializer_list<T> &list) {
+QRSet<T>& QRSet<T>::operator=(const initializer_list<T> &list) {
     hashTable.clear();
     for (auto el: list)
         hashTable.add(el);
@@ -124,14 +122,14 @@ Set<T>& Set<T>::operator=(const initializer_list<T> &list) {
 
 
 template <typename T>
-HashTableIterator<T> Set<T>::begin() const { return hashTable.begin(); }
+HashTableIterator<T> QRSet<T>::begin() const { return hashTable.begin(); }
 
 template <typename T>
-HashTableIterator<T> Set<T>::end() const { return hashTable.end(); }
+HashTableIterator<T> QRSet<T>::end() const { return hashTable.end(); }
 
 
 template <typename T>
-T* Set<T>::make_array() {
+T* QRSet<T>::make_array() const{
     try {
         size_t n = size();
         T *arr = new T[n];
@@ -150,26 +148,26 @@ T* Set<T>::make_array() {
 
 
 template <typename T>
-void Set<T>::clear() noexcept { hashTable.clear(); }
+void QRSet<T>::clear() noexcept { hashTable.clear(); }
 
 template <typename T>
-HashTableIterator<T> Set<T>::add(const T &x) { return hashTable.add(x); }
+HashTableIterator<T> QRSet<T>::add(const T &x) { return hashTable.add(x); }
 
 template <typename T>
-HashTableIterator<T> Set<T>::erase(const T &x) { return hashTable.erase(x); }
+HashTableIterator<T> QRSet<T>::erase(const T &x) { return hashTable.erase(x); }
 
 template <typename T>
-bool Set<T>::has(const T &x) const noexcept { return hashTable.has(x); }
+bool QRSet<T>::has(const T &x) const noexcept { return hashTable.has(x); }
 
 template <typename T>
-size_t Set<T>::size() const noexcept { return hashTable.size(); }
+size_t QRSet<T>::size() const noexcept { return hashTable.size(); }
 
 template <typename T>
-bool Set<T>::isEmpty() const noexcept { return hashTable.size() == 0; }
+bool QRSet<T>::isEmpty() const noexcept { return hashTable.size() == 0; }
 
 
 template <typename T>
-bool Set<T>::isEqual(const Set<T> &a) const {
+bool QRSet<T>::isEqual(const QRSet<T> &a) const {
     if (size() != a.size())
         return false;
 
@@ -181,23 +179,23 @@ bool Set<T>::isEqual(const Set<T> &a) const {
 }
 
 template <typename T>
-bool operator ==(const Set<T> &a, const Set<T> &b) {
+bool operator ==(const QRSet<T> &a, const QRSet<T> &b) {
     return a.isEqual(b);
 }
 
 template <typename T>
-bool Set<T>::isNotEqual(const Set<T> &a) const {
+bool QRSet<T>::isNotEqual(const QRSet<T> &a) const {
     return !(isEqual(a));
 }
 
 template <typename T>
-bool operator !=(const Set<T> &a, const Set<T> &b) {
+bool operator !=(const QRSet<T> &a, const QRSet<T> &b) {
     return a.isNotEqual(b);
 }
 
 
 template <typename T>
-bool Set<T>::isSubSet(const Set<T> &s) const {
+bool QRSet<T>::isSubSet(const QRSet<T> &s) const {
     bool flag = true;
     for (auto it = this->begin(); it != this->end() && flag; ++it)
         if (!s.has(*it))
@@ -206,12 +204,12 @@ bool Set<T>::isSubSet(const Set<T> &s) const {
 }
 
 template <typename  T>
-bool operator <=(const Set<T> &a, const Set<T> &b) {
+bool operator <=(const QRSet<T> &a, const QRSet<T> &b) {
     return a.isSubSet(b);
 }
 
 template <typename T>
-bool Set<T>::isSuperSet(const Set<T> &s) const {
+bool QRSet<T>::isSuperSet(const QRSet<T> &s) const {
     bool flag = true;
     for (auto x: s)
         if (!has(x))
@@ -220,28 +218,28 @@ bool Set<T>::isSuperSet(const Set<T> &s) const {
 }
 
 template <typename  T>
-bool operator >=(const Set<T> &a, const Set<T> &b) {
+bool operator >=(const QRSet<T> &a, const QRSet<T> &b) {
     return a.isSuperSet(b);
 }
 
 
 template <typename T>
-Set<T> Set<T>::join(const Set<T> &s) const {
-    Set<T> res(*this);
+QRSet<T> QRSet<T>::join(const QRSet<T> &s) const {
+    QRSet<T> res(*this);
     for (auto x: s)
         res.add(x);
     return res;
 }
 
 template <typename T>
-Set<T> Set<T>::join(const T &x) const {
-    Set<T> res(*this);
+QRSet<T> QRSet<T>::join(const T &x) const {
+    QRSet<T> res(*this);
     res.add(x);
     return res;
 }
 
 template <typename T>
-Set<T>& Set<T>::join_update(const Set<T> &s) {
+QRSet<T>& QRSet<T>::join_update(const QRSet<T> &s) {
     for (auto x: s)
         if (!has(x))
             add(x);
@@ -249,40 +247,40 @@ Set<T>& Set<T>::join_update(const Set<T> &s) {
 }
 
 template <typename T>
-Set<T>& Set<T>::join_update(const T &x) {
+QRSet<T>& QRSet<T>::join_update(const T &x) {
     add(x);
     return *this;
 }
 
 template <typename T>
-Set<T>& Set<T>::operator |=(const Set<T> &s) {
+QRSet<T>& QRSet<T>::operator |=(const QRSet<T> &s) {
     return join_update(s);
 }
 
 template <typename T>
-Set<T>& Set<T>::operator |=(const T &x) {
+QRSet<T>& QRSet<T>::operator |=(const T &x) {
     return join_update(x);
 }
 
 template <typename T>
-Set<T> operator |(const Set<T> &a, const Set<T> &b) {
+QRSet<T> operator |(const QRSet<T> &a, const QRSet<T> &b) {
     return a.join(b);
 }
 
 template <typename T>
-Set<T> operator |(const T &x, const Set<T> &a) {
+QRSet<T> operator |(const T &x, const QRSet<T> &a) {
     return a.join(x);
 }
 
 template <typename T>
-Set<T> operator |(const Set<T> &a, const T &x) {
+QRSet<T> operator |(const QRSet<T> &a, const T &x) {
     return a.join(x);
 }
 
 
 template <typename T>
-Set<T> Set<T>::intersection(const Set &s) const {
-    Set<T> res(*this);
+QRSet<T> QRSet<T>::intersection(const QRSet &s) const {
+    QRSet<T> res(*this);
     for (auto x: *this)
         if (!s.has(x))
             res.erase(x);
@@ -290,15 +288,15 @@ Set<T> Set<T>::intersection(const Set &s) const {
 }
 
 template <typename T>
-Set<T> Set<T>::intersection(const T &x) const {
-    Set<T> res;
+QRSet<T> QRSet<T>::intersection(const T &x) const {
+    QRSet<T> res;
     if (this->has(x))
         res.add(x);
     return res;
 }
 
 template <typename T>
-Set<T>& Set<T>::intersection_update(const Set<T> &s) {
+QRSet<T>& QRSet<T>::intersection_update(const QRSet<T> &s) {
     auto it = this->begin();
     while (it != this->end()) {
         if (!s.has(*it))
@@ -310,7 +308,7 @@ Set<T>& Set<T>::intersection_update(const Set<T> &s) {
 }
 
 template <typename T>
-Set<T>& Set<T>::intersection_update(const T &x) {
+QRSet<T>& QRSet<T>::intersection_update(const T &x) {
     bool flag = this->has(x);
     this->clear();
     if (flag)
@@ -319,34 +317,34 @@ Set<T>& Set<T>::intersection_update(const T &x) {
 }
 
 template <typename T>
-Set<T>& Set<T>::operator &=(const Set<T> &s) {
+QRSet<T>& QRSet<T>::operator &=(const QRSet<T> &s) {
     return intersection_update(s);
 }
 
 template <typename T>
-Set<T>& Set<T>::operator &=(const T &x) {
+QRSet<T>& QRSet<T>::operator &=(const T &x) {
     return intersection_update(x);
 }
 
 template <typename T>
-Set<T> operator &(const Set<T> &a, const Set<T> &b) {
+QRSet<T> operator &(const QRSet<T> &a, const QRSet<T> &b) {
     return a.intersection(b);
 }
 
 template <typename T>
-Set<T> operator &(const Set<T> &a, const T &x) {
+QRSet<T> operator &(const QRSet<T> &a, const T &x) {
     return a.intersection(x);
 }
 
 template <typename T>
-Set<T> operator &(const T &x, const Set<T> &a) {
+QRSet<T> operator &(const T &x, const QRSet<T> &a) {
     return a.intersection(x);
 }
 
 
 template <typename T>
-Set<T> Set<T>::difference(const Set<T> &s) const {
-    Set<T> res(*this);
+QRSet<T> QRSet<T>::difference(const QRSet<T> &s) const {
+    QRSet<T> res(*this);
     for (auto x: *this)
         if (s.has(x))
             res.erase(x);
@@ -354,14 +352,14 @@ Set<T> Set<T>::difference(const Set<T> &s) const {
 }
 
 template <typename T>
-Set<T> Set<T>::difference(const T &x) const {
-    Set<T> res(*this);
+QRSet<T> QRSet<T>::difference(const T &x) const {
+    QRSet<T> res(*this);
     res.erase(x);
     return res;
 }
 
 template <typename T>
-Set<T>& Set<T>::difference_update(const Set<T> &s) {
+QRSet<T>& QRSet<T>::difference_update(const QRSet<T> &s) {
     auto it = this->begin();
     while (it != this->end()) {
         if (s.has(*it))
@@ -373,34 +371,34 @@ Set<T>& Set<T>::difference_update(const Set<T> &s) {
 }
 
 template <typename T>
-Set<T>& Set<T>::difference_update(const T &x) {
+QRSet<T>& QRSet<T>::difference_update(const T &x) {
     this->erase(x);
     return *this;
 }
 
 template <typename T>
-Set<T>& Set<T>::operator -=(const Set<T> &s) {
+QRSet<T>& QRSet<T>::operator -=(const QRSet<T> &s) {
     return difference_update(s);
 }
 
 template <typename T>
-Set<T>& Set<T>::operator -=(const T &x) {
+QRSet<T>& QRSet<T>::operator -=(const T &x) {
     return difference_update(x);
 }
 
 template <typename T>
-Set<T> operator -(const Set<T> &a, const Set<T> &b) {
+QRSet<T> operator -(const QRSet<T> &a, const QRSet<T> &b) {
     return a.difference(b);
 }
 
 template <typename T>
-Set<T> operator -(const Set<T> &a, const T &x) {
+QRSet<T> operator -(const QRSet<T> &a, const T &x) {
     return a.difference(x);
 }
 
 template <typename T>
-Set<T> operator -(const T &x, const Set<T> &a) {
-    Set<T> res;
+QRSet<T> operator -(const T &x, const QRSet<T> &a) {
+    QRSet<T> res;
     if (!a.has(x))
         res.add(x);
     return res;
@@ -408,8 +406,8 @@ Set<T> operator -(const T &x, const Set<T> &a) {
 
 
 template <typename T>
-Set<T> Set<T>::sym_difference(const Set<T> &s) const {
-    Set<T> res;
+QRSet<T> QRSet<T>::sym_difference(const QRSet<T> &s) const {
+    QRSet<T> res;
     for (auto x: *this)
         if (!s.has(x))
             res.add(x);
@@ -420,8 +418,8 @@ Set<T> Set<T>::sym_difference(const Set<T> &s) const {
 }
 
 template <typename T>
-Set<T> Set<T>::sym_difference(const T &x) const {
-    Set<T> res(*this);
+QRSet<T> QRSet<T>::sym_difference(const T &x) const {
+    QRSet<T> res(*this);
     if (res.has(x))
         res.erase(x);
     else
@@ -430,7 +428,7 @@ Set<T> Set<T>::sym_difference(const T &x) const {
 }
 
 template <typename T>
-Set<T>& Set<T>::sym_difference_update(const Set<T> &s) {
+QRSet<T>& QRSet<T>::sym_difference_update(const QRSet<T> &s) {
     for (auto x: s) {
         if (!has(x))
             add(x);
@@ -441,7 +439,7 @@ Set<T>& Set<T>::sym_difference_update(const Set<T> &s) {
 }
 
 template <typename T>
-Set<T>& Set<T>::sym_difference_update(const T &x) {
+QRSet<T>& QRSet<T>::sym_difference_update(const T &x) {
     if (this->has(x))
         this->erase(x);
     else
@@ -450,33 +448,33 @@ Set<T>& Set<T>::sym_difference_update(const T &x) {
 }
 
 template <typename T>
-Set<T>& Set<T>::operator ^=(const Set<T> &s) {
+QRSet<T>& QRSet<T>::operator ^=(const QRSet<T> &s) {
     return sym_difference_update(s);
 }
 
 template <typename T>
-Set<T>& Set<T>::operator ^=(const T &x) {
+QRSet<T>& QRSet<T>::operator ^=(const T &x) {
     return sym_difference_update(x);
 }
 
 template <typename T>
-Set<T> operator ^(const Set<T> &a, const Set<T> &b) {
+QRSet<T> operator ^(const QRSet<T> &a, const QRSet<T> &b) {
     return a.sym_difference(b);
 }
 
 template <typename T>
-Set<T> operator ^(const Set<T> &a, const T &x) {
+QRSet<T> operator ^(const QRSet<T> &a, const T &x) {
     return a.sym_difference(x);
 }
 
 template <typename T>
-Set<T> operator ^(const T &x, const Set<T> &a) {
+QRSet<T> operator ^(const T &x, const QRSet<T> &a) {
     return a.sym_difference(x);
 }
 
 
 template <typename T>
-ostream& operator <<(ostream &os, const Set<T> &st) {
+ostream& operator <<(ostream &os, const QRSet<T> &st) {
     os << "Set<";
     for (auto it = st.begin(); it != st.end();) {
         os << *it;

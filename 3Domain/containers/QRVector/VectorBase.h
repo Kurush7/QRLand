@@ -8,7 +8,7 @@
 
 #include <cstdio>
 #include <memory>
-#include "VectorError/Errors.h"
+#include "../QRExceptions/VectorError/Errors.h"
 
 class VectorBase {
 public:
@@ -21,6 +21,7 @@ public:
     operator bool() const;
 protected:
     std::shared_ptr<size_t> size;
+    size_t max_size;
 };
 
 

@@ -8,13 +8,13 @@
 #include <iostream>
 #include <iterator>
 
-#include "HashTable.h"
+#include "QRHashTable.h"
 
 template <typename T>
 class HashTableIterator : public std::iterator<std::output_iterator_tag, T>
 {
 private:
-    friend class HashTable<T>;
+    friend class QRHashTable<T>;
     HashTableIterator(const std::shared_ptr<std::shared_ptr<HashNode<T>>[]> &,
             const std::shared_ptr<size_t> &, bool is_end = false);
     HashTableIterator(const std::shared_ptr<std::shared_ptr<HashNode<T>>[]> &,
@@ -26,21 +26,21 @@ public:
     bool operator!=(HashTableIterator const&) const;
     bool operator==(HashTableIterator const&) const;
 
-    const T& operator*() const;
-    const T* operator->() const;
+    virtual const T& operator*() const;
+    virtual const T* operator->() const;
 
     explicit operator bool() const;
 
-    HashTableIterator<T>& operator++();
-    HashTableIterator<T> operator++(int);
+    virtual HashTableIterator<T>& operator++();
+    virtual HashTableIterator<T> operator++(int);
 
-private:
-    bool setNextValid();
-
+protected:
     std::weak_ptr<std::shared_ptr<HashNode<T>>[]> table;
     std::weak_ptr<size_t> capacity;
     size_t tableIndex = 0;
     std::weak_ptr<HashNode<T>> curNode;
+private:
+    bool setNextValid();
 };
 
 template <typename T>

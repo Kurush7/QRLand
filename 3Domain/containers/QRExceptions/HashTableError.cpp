@@ -6,7 +6,8 @@
 
 using namespace std;
 
-HashTableException::HashTableException(const char *file, int line, const char *time, const char *msg) {
+HashTableException::HashTableException(const char *file, int line, const char *time, const char *msg)
+: QRContainerException(file, line, time, msg) {
     try {
         int n = strlen(time);
         bool flag = false;
@@ -31,30 +32,6 @@ HashTableException::~HashTableException() {
 
 const char* HashTableException::what() const noexcept {
     return errorMsg;
-}
-
-
-HashTableBadAlloc::HashTableBadAlloc(const char *file, int line, const char *time,
-                                     const char *msg, size_t size)
-: HashTableException(file, line, time, msg), size(size) {}
-
-const char* HashTableBadAlloc::what() const noexcept {
-    try {
-        const char *buf = "<< HashTable Bad Alloc Exception!\n  memory amount requested: ";
-        size_t len = strlen(errorMsg) + strlen(buf) + 16;
-
-        char *msg = new char[len + 1];
-
-        sprintf(msg, "%s%-8zd\n%s>>", buf, size, errorMsg);
-
-        delete[] errorMsg;
-        const_cast<HashTableBadAlloc *>(this)->errorMsg = msg;
-
-        return errorMsg;
-    }
-    catch (bad_alloc &exc) {
-        throw;
-    }
 }
 
 

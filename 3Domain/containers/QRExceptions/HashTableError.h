@@ -5,10 +5,7 @@
 #ifndef OOP_HASHTABLEERROR_H
 #define OOP_HASHTABLEERROR_H
 
-#include <exception>
-#include <cstring>
-#include <cstdio>
-#include "../QRExceptions/QRContainerException.cpp"
+#include "QRContainerException.h"
 
 class HashTableException: public QRContainerException {
 public:

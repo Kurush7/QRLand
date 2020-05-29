@@ -13,38 +13,40 @@
 
 #include "HashNode.h"
 #include "HashTableBase.h"
-#include "HashTableError.h"
+#include "../QRExceptions/HashTableError.h"
 
 template <typename T>
 class HashTableIterator;
 
 template <typename T>
-class HashTable: public HashTableBase
+class QRHashTable: public HashTableBase
 {
 public:
-    HashTable();
-    HashTable(const HashTable &);
-    HashTable(HashTable &&) noexcept;
-    HashTable(const std::initializer_list<T> &list);
+    QRHashTable();
+    QRHashTable(const QRHashTable &);
+    QRHashTable(QRHashTable &&) noexcept;
+    QRHashTable(const std::initializer_list<T> &list);
 
-    HashTable& operator=(const HashTable &);
-    HashTable& operator=(HashTable &&) noexcept = default;
+    QRHashTable& operator=(const QRHashTable &);
+    QRHashTable& operator=(QRHashTable &&) noexcept = default;
 
-    virtual ~HashTable() = default;
+    virtual ~QRHashTable() = default;
 
     HashTableIterator<T> begin() const;
     HashTableIterator<T> end() const;
 
     void clear() noexcept;
     HashTableIterator<T> add(const T &);    // returns iterator of added element
+    void add(const std::shared_ptr<HashNode<T>>);
     HashTableIterator<T> erase(const T &);  // returns iterator of next element or nullptr
+    const std::shared_ptr<HashNode<T>> getNode(const T&);
     bool has(const T &) const noexcept;
 
 
 private:
     std::shared_ptr<std::shared_ptr<HashNode<T>>[]> createEmptyTable(size_t);
-    void copyTable(const HashTable &);
-    void moveTable(HashTable &);
+    void copyTable(const QRHashTable &);
+    void moveTable(QRHashTable &);
     void grow() noexcept;
 
     size_t makeHash(const T&, size_t) const;
@@ -57,34 +59,34 @@ private:
 using namespace std;
 
 template <typename T>
-HashTable<T>::HashTable(): HashTableBase(DEFAULT_SIZE) {
+QRHashTable<T>::QRHashTable(): HashTableBase(DEFAULT_SIZE) {
     try {
         table = createEmptyTable(DEFAULT_SIZE);
     }
-    catch (HashTableBadAlloc &exc) {
+    catch (QRBadAllocException &exc) {
         cerr << "HashTable default constructor error: " << exc.what() << '\n';
         throw;
     }
 }
 
 template <typename T>
-HashTable<T>::HashTable(const HashTable<T> &table) {
+QRHashTable<T>::QRHashTable(const QRHashTable<T> &table) {
     try {
         copyTable(table);
     }
-    catch (HashTableBadAlloc &exc) {
+    catch (QRBadAllocException &exc) {
         cerr << "HashTable copy constructor error: " << exc.what() << '\n';
         throw;
     }
 }
 
 template <typename T>
-HashTable<T>::HashTable(HashTable<T> &&table) noexcept {
+QRHashTable<T>::QRHashTable(QRHashTable<T> &&table) noexcept {
     moveTable(table);
 }
 
 template <typename T>
-HashTable<T>::HashTable(const std::initializer_list<T> &list) {
+QRHashTable<T>::QRHashTable(const std::initializer_list<T> &list) {
     try {
         *capacity = getFitSize(list.size());
 
@@ -100,14 +102,14 @@ HashTable<T>::HashTable(const std::initializer_list<T> &list) {
 }
 
 template <typename T>
-HashTable<T>& HashTable<T>::operator=(const HashTable<T> &other) {
+QRHashTable<T>& QRHashTable<T>::operator=(const QRHashTable<T> &other) {
     if (this == &other)
         return *this;
 
     try {
         copyTable(other);
     }
-    catch (HashTableBadAlloc &exc) {
+    catch (QRBadAllocException &exc) {
         cerr << "HashTable operator= copy error: " << exc.what() << '\n';
         throw;
     }
@@ -115,7 +117,7 @@ HashTable<T>& HashTable<T>::operator=(const HashTable<T> &other) {
 
 
 template <typename T>
-HashTableIterator<T> HashTable<T>::add(const T &key) {
+HashTableIterator<T> QRHashTable<T>::add(const T &key) {
     try {
         if (curSize > *capacity * MAX_ALPHA)
             grow();
@@ -137,13 +139,40 @@ HashTableIterator<T> HashTable<T>::add(const T &key) {
     }
     catch(const std::bad_alloc &exc) {
         time_t t = time(nullptr);
-        throw HashTableBadAlloc(__FILE__, __LINE__, asctime(localtime(&t)),
+        throw QRBadAllocException(__FILE__, __LINE__, asctime(localtime(&t)),
                 "Failed to add element!", size() * sizeof(T));
     }
 }
 
 template <typename T>
-HashTableIterator<T> HashTable<T>::erase(const T &key) {
+void QRHashTable<T>::add(const std::shared_ptr<HashNode<T>> nd) {
+    try {
+        if (curSize > *capacity * MAX_ALPHA)
+            grow();
+
+        size_t hash = makeHash(nd->key,*capacity);
+        auto node = table[hash];
+        while (node != nullptr && !(node->key == nd->key))
+            node = node->next;
+
+        if (node != nullptr) {
+            return;
+        }
+
+        auto x = shared_ptr<HashNode<T>>(nd->clone());
+        x->next = table[hash];
+        table[hash] = x;
+        curSize++;
+    }
+    catch(const std::bad_alloc &exc) {
+        time_t t = time(nullptr);
+        throw QRBadAllocException(__FILE__, __LINE__, asctime(localtime(&t)),
+                                  "Failed to add element!", size() * sizeof(T));
+    }
+}
+
+template <typename T>
+HashTableIterator<T> QRHashTable<T>::erase(const T &key) {
     size_t hash = makeHash(key, *capacity);
 
     shared_ptr<HashNode<T>> node = table[hash], prevNode;
@@ -172,7 +201,7 @@ HashTableIterator<T> HashTable<T>::erase(const T &key) {
 }
 
 template <typename T>
-bool HashTable<T>::has(const T &key) const noexcept {
+bool QRHashTable<T>::has(const T &key) const noexcept {
     size_t hash = makeHash(key, *capacity);
 
     auto node = table[hash];
@@ -183,7 +212,19 @@ bool HashTable<T>::has(const T &key) const noexcept {
 }
 
 template <typename T>
-void HashTable<T>::clear() noexcept {
+const std::shared_ptr<HashNode<T>> QRHashTable<T>::getNode(const T &key) {
+    size_t hash = makeHash(key, *capacity);
+
+    auto node = table[hash];
+    while (node != nullptr && !(node->key == key))
+        node = node->next;
+
+    return node;
+}
+
+
+template <typename T>
+void QRHashTable<T>::clear() noexcept {
     for (size_t i = 0; i < *capacity; ++i)
         table[i] = nullptr;
     curSize = 0;
@@ -191,19 +232,19 @@ void HashTable<T>::clear() noexcept {
 
 
 template <typename T>
-shared_ptr<shared_ptr<HashNode<T>>[]> HashTable<T>::createEmptyTable(size_t sz) {
+shared_ptr<shared_ptr<HashNode<T>>[]> QRHashTable<T>::createEmptyTable(size_t sz) {
     try {
         shared_ptr<shared_ptr<HashNode<T>>[]> newTable(new shared_ptr<HashNode<T>>[sz]{nullptr});
         return newTable;
     }
     catch(const std::bad_alloc &exc) {
         time_t t = time(nullptr);
-        throw HashTableBadAlloc(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to allocate new table!", *capacity);
+        throw QRBadAllocException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to allocate new table!", *capacity);
     }
 }
 
 template <typename T>
-void HashTable<T>::copyTable(const HashTable &copyTable) {
+void QRHashTable<T>::copyTable(const QRHashTable &copyTable) {
     try {
         auto newTable = createEmptyTable(*copyTable.capacity);
         shared_ptr<HashNode<T>> head, node, copyHead;
@@ -227,7 +268,7 @@ void HashTable<T>::copyTable(const HashTable &copyTable) {
         curSize = copyTable.curSize;
         capacity = copyTable.capacity;
     }
-    catch (HashTableBadAlloc &exc) {
+    catch (QRBadAllocException &exc) {
         throw;
     }
     catch(const std::bad_alloc &exc) {
@@ -236,14 +277,14 @@ void HashTable<T>::copyTable(const HashTable &copyTable) {
 }
 
 template <typename T>
-void HashTable<T>::moveTable(HashTable &moveTable) {
+void QRHashTable<T>::moveTable(QRHashTable &moveTable) {
     table = moveTable.table;
     capacity = moveTable.capacity;
     curSize = moveTable.curSize;
 }
 
 template <typename T>
-void HashTable<T>::grow() noexcept {
+void QRHashTable<T>::grow() noexcept {
     try {
         size_t newCapacity = *capacity * 2;
         auto newTable = createEmptyTable(newCapacity);
@@ -263,21 +304,21 @@ void HashTable<T>::grow() noexcept {
         table = newTable;
         *capacity = newCapacity;
     }
-    catch (HashTableBadAlloc &exc) {
+    catch (QRBadAllocException &exc) {
         cerr<< "HashTable grow failed: " << exc.what()<<endl;
     }
 }
 
 
 template <typename T>
-HashTableIterator<T> HashTable<T>::begin() const { return HashTableIterator<T>(table, capacity, false); }
+HashTableIterator<T> QRHashTable<T>::begin() const { return HashTableIterator<T>(table, capacity, false); }
 
 template <typename T>
-HashTableIterator<T> HashTable<T>::end() const { return HashTableIterator<T>(table, capacity, true);	}
+HashTableIterator<T> QRHashTable<T>::end() const { return HashTableIterator<T>(table, capacity, true);	}
 
 
 template <typename T>
-size_t HashTable<T>::makeHash(const T &key, size_t capacity) const {
+size_t QRHashTable<T>::makeHash(const T &key, size_t capacity) const {
     size_t hash = 0;
     size_t len = sizeof(key);
 
@@ -292,7 +333,7 @@ size_t HashTable<T>::makeHash(const T &key, size_t capacity) const {
 }
 
 template <typename T>
-size_t HashTable<T>::getFitSize(size_t required) {
+size_t QRHashTable<T>::getFitSize(size_t required) {
     size_t sz = DEFAULT_SIZE;
     while (sz * MAX_ALPHA < required)
         sz *= 2;
@@ -301,7 +342,7 @@ size_t HashTable<T>::getFitSize(size_t required) {
 
 
 template <typename T>
-ostream& operator<<(ostream &os, const HashTable<T> &table) {
+ostream& operator<<(ostream &os, const QRHashTable<T> &table) {
     os<<"HashTable<" << table.size() << " elements>";
     return os;
 }

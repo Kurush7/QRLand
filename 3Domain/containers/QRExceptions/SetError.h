@@ -5,11 +5,7 @@
 #ifndef OOP_SETERROR_H
 #define OOP_SETERROR_H
 
-#include <exception>
-#include <cstring>
-#include <cstdio>
-#include <cstdlib>
-#include "../QRExceptions/QRContainerException.cpp"
+#include "QRContainerException.cpp"
 
 class SetException: public QRContainerException {
 public:

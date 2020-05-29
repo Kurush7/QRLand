@@ -6,7 +6,8 @@
 
 using namespace std;
 
-SetException::SetException(const char *file, int line, const char *time, const char *msg) {
+SetException::SetException(const char *file, int line, const char *time, const char *msg)
+: QRContainerException(file, line, time, msg) {
     try {
         int n = strlen(time);
         bool flag = false;

@@ -8,12 +8,16 @@
 #include <memory>
 
 template <typename T>
-struct HashNode
+class HashNode
 {
+public:
     HashNode() = default;
-    HashNode(const T &, std::shared_ptr<HashNode<T>>);
+    HashNode(const T &, const std::shared_ptr<HashNode<T>>);
+    HashNode(const T &);
     HashNode(const HashNode &);
     HashNode(HashNode &&) noexcept;
+
+    virtual std::shared_ptr<HashNode> clone() const;
 
     ~HashNode() = default;
 
@@ -30,7 +34,15 @@ struct HashNode
 using namespace std;
 
 template <typename T>
-HashNode<T>::HashNode(const T &key, shared_ptr<HashNode<T>> next): key(key), next(next) {}
+shared_ptr<HashNode<T>> HashNode<T>::clone() const {
+    return shared_ptr<HashNode<T>>(new HashNode<T>(key, next));
+}
+
+template <typename T>
+HashNode<T>::HashNode(const T &key, const shared_ptr<HashNode<T>> next): key(key), next(next) {}
+
+template <typename T>
+HashNode<T>::HashNode(const T &key): key(key), next(nullptr) {}
 
 template <typename T>
 HashNode<T>::HashNode(const HashNode &node): key(node.key), next(node.next) {}

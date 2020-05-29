@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(kg)
 set(CMAKE_CXX_STANDARD 14)
 
-set(DRAW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/2D_draw_module)
+set(DRAW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/2Domain)
 
 # QT includes
 find_package(Qt5 COMPONENTS Core Widgets PrintSupport REQUIRED)
@@ -13,9 +13,13 @@ set(QT_INCLUDES
         Qt5::Gui
         Qt5::Widgets)
 
-include_directories(2D_draw_module)
-add_subdirectory(2D_draw_module)
+include_directories(2Domain)
+add_subdirectory(2Domain)
 link_directories(${CMAKE_SOURCE_DIR}/2D_draw_module)
+
+include_directories(3Domain)
+add_subdirectory(3Domain)
+link_directories(${CMAKE_SOURCE_DIR}/3D_draw_module)
 
 add_library(gui_lib
         gui/MainWindow.cpp
@@ -32,7 +36,8 @@ add_executable(main.exe
 
 target_link_libraries(main.exe
         gui_lib
-        draw_lib)
+        draw_lib
+        3domain_lib)
 
 add_custom_command(
         TARGET main.exe POST_BUILD
