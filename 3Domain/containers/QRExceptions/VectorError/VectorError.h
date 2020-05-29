@@ -5,11 +5,9 @@
 #ifndef LAB2_VECTORERROR_H
 #define LAB2_VECTORERROR_H
 
-#include <exception>
-#include <cstring>
-#include <cstdio>
+#include "../../QRExceptions/QRContainerException.h"
 
-class VectorError: public std::exception {
+class VectorError: public QRContainerException {
 public:
     explicit VectorError(const char* file, int line, const char* time, const char* msg);
 

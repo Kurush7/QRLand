@@ -2,8 +2,8 @@
 // Created by Георгий Куликов on 27.04.2020.
 //
 
-#ifndef LAB2_VECTOR_H
-#define LAB2_VECTOR_H
+#ifndef QRVECTOR_H
+#define QRVECTOR_H
 
 
 #include <initializer_list>
@@ -14,7 +14,7 @@
 
 
 template <typename Type>
-class Vector final: public VectorBase {
+class Vector: public VectorBase {
 private:
     std::shared_ptr<Type[]> vecPtr;
     void newMemory(size_t size);
@@ -548,4 +548,4 @@ bool Vector<Type>::isNotEqual(const Vector<Type> &vec) const {
     return *this != vec;
 }
 
-#endif //LAB2_VECTOR_H
+#endif //QRVECTOR_H
