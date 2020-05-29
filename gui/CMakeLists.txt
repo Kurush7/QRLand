@@ -9,7 +9,7 @@ include_directories(/usr/include//python3.6/)
 
 add_library(lab03_lib STATIC
         Lab04_View.cpp
-        Controller.cpp
+        Presenter.cpp
         )
 
 target_link_libraries(lab03_lib

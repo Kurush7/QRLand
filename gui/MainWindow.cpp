@@ -2,16 +2,16 @@
 
 using namespace std;
 
-void Lab10_View::setDarkTheme() {
+void MainWindow::setDarkTheme() {
     qApp->setPalette(getDarkTheme());
 }
 
-Lab10_View::~Lab10_View() {
+MainWindow::~MainWindow() {
     delete visibilityManager;
 }
 
-Lab10_View::Lab10_View(QWidget *parent)
-        : QMainWindow(parent) {
+MainWindow::MainWindow(QWidget *parent)
+        : QMainWindow(parent), presenter(new Presenter(*this)) {
     setDarkTheme();
 
     canvas = new Canvas3DViewer(500, 500, this,
@@ -82,7 +82,7 @@ Lab10_View::Lab10_View(QWidget *parent)
     addLogic();
 }
 
-void Lab10_View::decorate() {
+void MainWindow::decorate() {
     auto sepLays = ui->getSepLayers();
     for (auto lay = sepLays.begin(); lay != sepLays.end(); ++lay) {
         (*lay)->addChild(new QRLayoutNode("sep", QRHor, nullptr, new LineSpacer("color:rgb(100,100,100)", 300)));
@@ -112,20 +112,17 @@ void Lab10_View::decorate() {
     //visibilityManager->changeActive("selection");
 }
 
-void Lab10_View::addLogic() {
-    //connect(changeAxisBtn, &QPushButton::clicked,
-            //[this](){taskManager.performAction(Action::CHANGE_AXIS);});
+void MainWindow::addLogic() {
+    connect(canvas, &Canvas3DViewer::sendModify,[this](TransformStateDir d){presenter->transform(d);});
 
-    connect(openFileBtn, &QPushButton::clicked, [this]() {
-        auto name = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("*"));
-        QFile file(name);
+    connect(backColorEdit, &QPushButton::clicked, [this]() {presenter->backChangeColor();});
 
-        if (!file.exists()) {
-            fileName->setText("файл не найден!");
-        } else {
-            //errorLabel->setVisible(false);
-            fileName->setText(file.fileName());
-        }
-    });
+    connect(openFileBtn, &QPushButton::clicked, [this]() {presenter->openFile();});
+    connect(modelLoadBtn, &QPushButton::clicked, [this]() {presenter->loadModel();});
+
+    connect(canvas, &Canvas3DViewer::mousePressed, [this](double x, double y) {presenter->select(x, y);});
+    connect(selBindBtn, &QPushButton::clicked, [this]() {presenter->selBind();});
+    connect(selColorEdit, &QPushButton::clicked, [this]() {presenter->selChangeColor();});
+    connect(selDeleteBtn, &QPushButton::clicked, [this]() {presenter->selDelete();});
 }
 

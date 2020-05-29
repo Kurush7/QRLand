@@ -31,12 +31,14 @@ public:
 
 signals:
     void sendModify(TransformStateDir);
+    void mousePressed(double x, double y);
 private slots:
     void timerAlarm();
 
 private:
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void keyReleaseEvent(QKeyEvent *) override;
+    virtual void mousePressEvent(QMouseEvent *) override;
 
     int cur_key;
     TransformStateDir state;

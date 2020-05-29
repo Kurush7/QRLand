@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     if (translator->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         app.installTranslator(translator);
 
-    Lab10_View window;
+    MainWindow window;
 
     window.setWindowIcon(QIcon("i.ico"));
     window.show();

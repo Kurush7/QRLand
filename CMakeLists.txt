@@ -19,7 +19,7 @@ link_directories(${CMAKE_SOURCE_DIR}/2D_draw_module)
 
 add_library(gui_lib
         gui/MainWindow.cpp
-        gui/Controller.cpp
+        gui/Presenter.cpp
         )
 target_link_libraries(gui_lib
         ${QT_INCLUDES}

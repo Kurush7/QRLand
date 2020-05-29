@@ -37,16 +37,18 @@
 #include "figures/PolygonCutter.h"
 #include "figures/AlgoedLine.h"
 #include "figures/Function3D.h"
-#include "Controller.h"
+#include "Presenter.h"
 
 
-class Lab10_View: public QMainWindow {
+class MainWindow: public QMainWindow {
 Q_OBJECT
 public:
-    explicit Lab10_View(QWidget *parent = nullptr);
-    virtual ~Lab10_View();
+    explicit MainWindow(QWidget *parent = nullptr);
+    virtual ~MainWindow();
 private:
-    friend class Controller;
+    friend class Presenter;
+    Presenter *presenter;
+
     void decorate();
     void addLogic();
     void setDarkTheme();
@@ -55,7 +57,6 @@ private:
     QRLayoutManager *ui;
     Canvas3DViewer *canvas;
     QRMultiRadioField *visibilityManager;
-
 
     QRLabel *settingsLabel, *selectionLabel;
     QRLabel *backColorLabel, *selColorLabel;
@@ -68,8 +69,6 @@ private:
     QLineEdit *fileName;
 
     QPushButton *selBindBtn, *selDeleteBtn;
-
-private slots:
 };
 
 #endif //MAIN_WINDOW
