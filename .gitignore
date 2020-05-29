@@ -9,6 +9,8 @@
 *autogen"
 *.OBJ
 *.EXE
+**/CMakeFiles/**
+**/MakeFile
 
 
 
@@ -478,7 +480,26 @@ CMakeLists.txt.user*
 
 # End of https://www.gitignore.io/api/c,qt,c++,cmake,clion,python,pycharm,qtcreator,pycharm+all
 
-/2D_draw_module/CMakeFiles/
+/2Domain/CMakeFiles/
 docs/
-2D_draw_module/draw_lib_autogen/include/
-2D_draw_module/figures/figures_lib_autogen/include/
+2Domain/draw_lib_autogen/include/
+2Domain/figures/figures_lib_autogen/include/
+3Domain/commands/
+3Domain/containers/QRVector/Vector.h
+3Domain/containers/QRVector/VectorBase.cpp
+3Domain/containers/QRVector/VectorBase.h
+3Domain/containers/QRVector/VectorError/
+3Domain/containers/QRVector/VectorIterator/
+3Domain/managers/
+3Domain/math/
+3Domain/objects/
+diagrams/.oop3.vpp.lck
+diagrams/oop3.vpp.bak_000d
+diagrams/oop3.vpp.bak_001f
+diagrams/oop3.vpp.bak_002d
+diagrams/oop3.vpp.bak_003d
+!/3Domain/containers/QRHashTable/CMakeFiles/
+!/3Domain/containers/QRHashTable/CMakeFiles/hash_table_lib.dir/
+!/3Domain/containers/QRHashTable/CMakeFiles/hash_table_lib.dir/
+!/3Domain/containers/QRHashTable/Makefile
+!/3Domain/containers/QRHashTable/Makefile
