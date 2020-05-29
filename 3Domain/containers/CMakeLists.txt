@@ -7,7 +7,7 @@ add_subdirectory(QRMap)
 include_directories(QRExceptions)
 
 add_library(containers_lib
-        QRContainerAdapter.cpp)
+        QRContainers.h)
 
 target_link_libraries(containers_lib
         qrexceptions_lib

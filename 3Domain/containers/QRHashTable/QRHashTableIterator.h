@@ -23,13 +23,13 @@ public:
     QRHashTableIterator(const QRHashTableIterator &) = default;
     ~QRHashTableIterator() = default;
 
-    bool operator!=(QRHashTableIterator const&) const;
-    bool operator==(QRHashTableIterator const&) const;
+    virtual bool operator!=(QRHashTableIterator const&) const;
+    virtual bool operator==(QRHashTableIterator const&) const;
 
     virtual const T& operator*() const;
     virtual const T* operator->() const;
 
-    explicit operator bool() const;
+    virtual explicit operator bool() const;
 
     virtual QRHashTableIterator<T>& operator++();
     virtual QRHashTableIterator<T> operator++(int);

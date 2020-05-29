@@ -10,7 +10,7 @@
 #include <cmath>
 #include <iostream>
 #include "VectorBase.h"
-#include "VectorIterator/VectorIterator.h"
+#include "QRVectorIterator/QRVectorIterator.h"
 
 const double DEFAULT_SIZE = 8;
 
@@ -30,8 +30,8 @@ public:
     QRVector<T>& operator =(const QRVector<T>&&);
     QRVector<T>& operator =(std::initializer_list<T>);
 
-    VectorIterator<T> begin() const;
-    VectorIterator<T> end() const;
+    QRVectorIterator<T> begin() const;
+    QRVectorIterator<T> end() const;
 
     T& operator [](int index);
     const T& operator [](size_t index) const;
@@ -44,6 +44,8 @@ public:
     bool isEqual(const QRVector<T>& vec) const;
     bool isNotEqual(const QRVector<T>& vec) const;
 };
+
+using namespace std;
 
 template<typename T>
 std::ostream& operator <<(std::ostream &os, const QRVector<T> &vec);
@@ -119,13 +121,13 @@ QRVector<T>::QRVector(QRVector<T> &&vec) {
 
 
 template<typename T>
-VectorIterator<T> QRVector<T>::begin() const {
-    return VectorIterator<T>(arr, size);
+QRVectorIterator<T> QRVector<T>::begin() const {
+    return QRVectorIterator<T>(arr, size);
 }
 
 template<typename T>
-VectorIterator<T> QRVector<T>::end() const {
-    return VectorIterator<T>(arr, size, *size);
+QRVectorIterator<T> QRVector<T>::end() const {
+    return QRVectorIterator<T>(arr, size, *size);
 }
 
 
@@ -164,7 +166,7 @@ template<typename T>
 QRVector<T> &QRVector<T>::operator =(const QRVector<T> &newVec) {
     grow(newVec.getSize());
 
-    VectorIterator<T> iter(arr, size);
+    QRVectorIterator<T> iter(arr, size);
     for (auto newIter = newVec.begin(); newIter != newVec.end(); newIter++)
         *iter = *newIter;
 }
@@ -182,7 +184,7 @@ template<typename T>
 QRVector<T> &QRVector<T>::operator =(std::initializer_list<T> initList) {
     grow(initList.size());
 
-    VectorIterator<T> iter(arr, size);
+    QRVectorIterator<T> iter(arr, size);
     for (auto &elem : initList) {
         *iter = elem;
         iter++;

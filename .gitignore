@@ -489,7 +489,7 @@ docs/
 3Domain/containers/QRVector/VectorBase.cpp
 3Domain/containers/QRVector/VectorBase.h
 3Domain/containers/QRVector/VectorError/
-3Domain/containers/QRVector/VectorIterator/
+3Domain/containers/QRVector/QRVectorIterator/
 3Domain/managers/
 3Domain/math/
 3Domain/objects/
@@ -504,7 +504,7 @@ diagrams/oop3.vpp.bak_003d
 !/3Domain/containers/QRHashTable/Makefile
 !/3Domain/containers/QRHashTable/Makefile
 !/3Domain/containers/QRVector/VectorBase.h
-!/3Domain/containers/QRVector/VectorIterator/
+!/3Domain/containers/QRVector/QRVectorIterator/
 !/3Domain/containers/QRVector/VectorBase.cpp
 !/3Domain/containers/QRVector/QRVector.h
 !/3Domain/containers/QRVector/VectorError/
