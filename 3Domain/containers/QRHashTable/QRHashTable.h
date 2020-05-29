@@ -13,7 +13,7 @@
 
 #include "HashNode.h"
 #include "HashTableBase.h"
-#include "../QRExceptions/HashTableError.h"
+#include "../exceptions/HashTableError.h"
 
 template <typename T>
 class QRHashTableIterator;

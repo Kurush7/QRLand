@@ -8,7 +8,7 @@
 
 #include <cstdio>
 #include <memory>
-#include "../QRExceptions/VectorError/Errors.h"
+#include "../exceptions/VectorError/Errors.h"
 
 class VectorBase {
 public:

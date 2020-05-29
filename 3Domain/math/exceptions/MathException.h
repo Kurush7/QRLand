@@ -10,26 +10,26 @@
 #include <cstdio>
 #include <cstdlib>
 
-class QRContainerException: public std::exception {
+class QRMathException: public std::exception {
 public:
-    explicit QRContainerException(const char *file, int line, const char *time, const char *msg);
-    virtual ~QRContainerException();
+    explicit QRMathException(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRMathException();
     virtual const char* what() const noexcept override;
 
 protected:
     char* errorMsg;
 };
 
-class QRBadAllocException: public QRContainerException
+class QRMathWrongDimension: public QRMathException
 {
 public:
-    QRBadAllocException(const char *file, int line, const char *time, const char *msg, size_t);
-    virtual ~QRBadAllocException() = default;
+    QRMathWrongDimension(const char *file, int line, const char *time, const char *msg, int sent, int expected);
+    virtual ~QRMathWrongDimension() = default;
 
     virtual const char* what() const noexcept override;
 
 private:
-    size_t size;
+    int dim1, dim2;
 };
 
 

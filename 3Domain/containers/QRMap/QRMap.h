@@ -7,7 +7,7 @@
 
 
 #include "../QRHashTable/QRHashTable.h"
-#include "../QRExceptions/SetError.h"
+#include "../exceptions/SetError.h"
 #include "QRMapBase.h"
 #include "QRMapIterator.h"
 #include "QRMapNode.h"

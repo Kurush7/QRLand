@@ -9,7 +9,7 @@
 
 #include "../QRHashTable/QRHashTable.h"
 #include "QRHashTable/QRHashTableIterator.h"
-#include "../QRExceptions/SetError.h"
+#include "../exceptions/SetError.h"
 #include "QRSetBase.h"
 
 template <typename T>

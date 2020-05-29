@@ -1,4 +1,4 @@
-include_directories(../QRExceptions)
+include_directories(../exceptions)
 
 add_library(qrvector_lib
         QRVector.h

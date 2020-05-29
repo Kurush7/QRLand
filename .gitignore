@@ -536,8 +536,9 @@ diagrams/oop3.vpp.bak_003d
 2Domain/widgets/QRLabel.h
 2Domain/widgets/QRadioField.cpp
 2Domain/widgets/QRadioField.h
-3Domain/containers/QRExceptions/QRContainerException.cpp
-3Domain/containers/QRExceptions/QRContainerException.h
+3Domain/containers/exceptions/QRContainerException.cpp
+3Domain/containers/exceptions/MathException.h
 3Domain/containers/QRVector/CMakeLists.txt
 /tests/googletest/
 diagrams/oop3.vpp.bak_004d
+!/3Domain/math/

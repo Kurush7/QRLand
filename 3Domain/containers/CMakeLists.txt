@@ -1,10 +1,10 @@
-add_subdirectory(QRExceptions)
+add_subdirectory(exceptions)
 add_subdirectory(QRVector)
 add_subdirectory(QRSet)
 add_subdirectory(QRHashTable)
 add_subdirectory(QRMap)
 
-include_directories(QRExceptions)
+include_directories(exceptions)
 
 add_library(containers_lib
         QRContainers.h)
