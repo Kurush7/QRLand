@@ -6,7 +6,7 @@
 
 using namespace std;
 
-SetException::SetException(const char *file, int line, const char *time, const char *msg)
+QRSetException::QRSetException(const char *file, int line, const char *time, const char *msg)
 : QRContainerException(file, line, time, msg) {
     try {
         int n = strlen(time);
@@ -25,17 +25,17 @@ SetException::SetException(const char *file, int line, const char *time, const c
         throw;
     }
 }
-SetException::~SetException() {
+QRSetException::~QRSetException() {
     delete[] errorMsg;
 }
-const char* SetException::what() const noexcept {
+const char* QRSetException::what() const noexcept {
     return errorMsg;
 }
 
 
-SetExceptionBadPointer::SetExceptionBadPointer(const char *file, int line, const char *time,
-                                           const char *msg): SetException(file, line, time, msg) {}
-const char* SetExceptionBadPointer::what() const noexcept {
+QRSetExceptionBadPointer::QRSetExceptionBadPointer(const char *file, int line, const char *time,
+                                                   const char *msg): QRSetException(file, line, time, msg) {}
+const char* QRSetExceptionBadPointer::what() const noexcept {
     try {
         const char *buf = "<< Set Bad Pointer Exception!\n";
         size_t len = strlen(errorMsg) + strlen(buf) + 16;
@@ -45,7 +45,7 @@ const char* SetExceptionBadPointer::what() const noexcept {
         sprintf(msg, "%s%s>>", buf, errorMsg);
 
         delete[] errorMsg;
-        const_cast<SetExceptionBadPointer *>(this)->errorMsg = msg;
+        const_cast<QRSetExceptionBadPointer *>(this)->errorMsg = msg;
 
         return errorMsg;
     }

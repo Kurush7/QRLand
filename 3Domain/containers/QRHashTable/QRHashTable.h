@@ -16,7 +16,7 @@
 #include "../QRExceptions/HashTableError.h"
 
 template <typename T>
-class HashTableIterator;
+class QRHashTableIterator;
 
 template <typename T>
 class QRHashTable: public HashTableBase
@@ -32,13 +32,13 @@ public:
 
     virtual ~QRHashTable() = default;
 
-    HashTableIterator<T> begin() const;
-    HashTableIterator<T> end() const;
+    QRHashTableIterator<T> begin() const;
+    QRHashTableIterator<T> end() const;
 
     void clear() noexcept;
-    HashTableIterator<T> add(const T &);    // returns iterator of added element
+    QRHashTableIterator<T> add(const T &);    // returns iterator of added element
     void add(const std::shared_ptr<HashNode<T>>);
-    HashTableIterator<T> erase(const T &);  // returns iterator of next element or nullptr
+    QRHashTableIterator<T> erase(const T &);  // returns iterator of next element or nullptr
     const std::shared_ptr<HashNode<T>> getNode(const T&);
     bool has(const T &) const noexcept;
 
@@ -117,7 +117,7 @@ QRHashTable<T>& QRHashTable<T>::operator=(const QRHashTable<T> &other) {
 
 
 template <typename T>
-HashTableIterator<T> QRHashTable<T>::add(const T &key) {
+QRHashTableIterator<T> QRHashTable<T>::add(const T &key) {
     try {
         if (curSize > *capacity * MAX_ALPHA)
             grow();
@@ -135,7 +135,7 @@ HashTableIterator<T> QRHashTable<T>::add(const T &key) {
         table[hash] = x;
         curSize++;
 
-        return HashTableIterator<T>(table, capacity, hash, table[hash]);
+        return QRHashTableIterator<T>(table, capacity, hash, table[hash]);
     }
     catch(const std::bad_alloc &exc) {
         time_t t = time(nullptr);
@@ -172,7 +172,7 @@ void QRHashTable<T>::add(const std::shared_ptr<HashNode<T>> nd) {
 }
 
 template <typename T>
-HashTableIterator<T> QRHashTable<T>::erase(const T &key) {
+QRHashTableIterator<T> QRHashTable<T>::erase(const T &key) {
     size_t hash = makeHash(key, *capacity);
 
     shared_ptr<HashNode<T>> node = table[hash], prevNode;
@@ -197,7 +197,7 @@ HashTableIterator<T> QRHashTable<T>::erase(const T &key) {
         node = table[++hash];
     else
         node = nullptr, ++hash;
-    return HashTableIterator<T>(table, capacity, hash, node);
+    return QRHashTableIterator<T>(table, capacity, hash, node);
 }
 
 template <typename T>
@@ -311,10 +311,10 @@ void QRHashTable<T>::grow() noexcept {
 
 
 template <typename T>
-HashTableIterator<T> QRHashTable<T>::begin() const { return HashTableIterator<T>(table, capacity, false); }
+QRHashTableIterator<T> QRHashTable<T>::begin() const { return QRHashTableIterator<T>(table, capacity, false); }
 
 template <typename T>
-HashTableIterator<T> QRHashTable<T>::end() const { return HashTableIterator<T>(table, capacity, true);	}
+QRHashTableIterator<T> QRHashTable<T>::end() const { return QRHashTableIterator<T>(table, capacity, true);	}
 
 
 template <typename T>

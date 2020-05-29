@@ -25,16 +25,6 @@ int main(int argc, char *argv[]) {
         cout << x << ' ';
 
     cout <<'\n';
-    QRMap<char, int> map;
-    for (int i = 0; i < 5; ++i) {
-        map.add('0' + i, i);
-    }
-    for (int i = 0; i < 5; ++i) {
-        cout << map['0' + i] << ' ';
-    }
-    for (auto it = map.begin(); it != map.end(); ++it) {
-        cout << it.key() << ' ' << it.value() <<'\n';
-    }
 
     QApplication app(argc, argv);
 

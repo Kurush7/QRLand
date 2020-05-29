@@ -6,7 +6,7 @@
 
 using namespace std;
 
-HashTableException::HashTableException(const char *file, int line, const char *time, const char *msg)
+QRHashTableException::QRHashTableException(const char *file, int line, const char *time, const char *msg)
 : QRContainerException(file, line, time, msg) {
     try {
         int n = strlen(time);
@@ -26,20 +26,20 @@ HashTableException::HashTableException(const char *file, int line, const char *t
     }
 }
 
-HashTableException::~HashTableException() {
+QRHashTableException::~QRHashTableException() {
     delete[] errorMsg;
 }
 
-const char* HashTableException::what() const noexcept {
+const char* QRHashTableException::what() const noexcept {
     return errorMsg;
 }
 
 
-HashTableBadIterator::HashTableBadIterator(const char *file, int line, const char *time,
-                                           const char *msg)
-        : HashTableException(file, line, time, msg) {}
+QRHashTableBadIterator::QRHashTableBadIterator(const char *file, int line, const char *time,
+                                               const char *msg)
+        : QRHashTableException(file, line, time, msg) {}
 
-const char* HashTableBadIterator::what() const noexcept {
+const char* QRHashTableBadIterator::what() const noexcept {
     try {
         const char *buf = "HashTable Bad Iterator Error!";
         size_t len = strlen(errorMsg) + strlen(buf) + 16;
@@ -49,7 +49,7 @@ const char* HashTableBadIterator::what() const noexcept {
         sprintf(msg, "%s: %s", buf, errorMsg);
 
         delete[] errorMsg;
-        const_cast<HashTableBadIterator*>(this)->errorMsg = msg;
+        const_cast<QRHashTableBadIterator*>(this)->errorMsg = msg;
 
         return errorMsg;
     }

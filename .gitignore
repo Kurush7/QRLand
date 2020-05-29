@@ -539,3 +539,5 @@ diagrams/oop3.vpp.bak_003d
 3Domain/containers/QRExceptions/QRContainerException.cpp
 3Domain/containers/QRExceptions/QRContainerException.h
 3Domain/containers/QRVector/CMakeLists.txt
+/tests/googletest/
+diagrams/oop3.vpp.bak_004d

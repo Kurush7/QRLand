@@ -1,2 +1,3 @@
 add_library(qrmap_lib
-        QRMap.h)
+        QRMap.h
+        QRMapBase.cpp)

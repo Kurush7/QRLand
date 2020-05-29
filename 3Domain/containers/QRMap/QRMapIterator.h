@@ -7,19 +7,19 @@
 
 #endif //KG_QRMAPITERATOR_H
 
-#include "../QRHashTable/HashTableIterator.h"
+#include "../QRHashTable/QRHashTableIterator.h"
 #include "../QRPair/QRPair.h"
 #include "QRMapNode.h"
 
 // todo this is const-iterator. simple one is needed
 // todo for(auto x: map) is not supported
 template<typename Key, typename Val>
-class QRMapIterator: public HashTableIterator<Key> {
+class QRMapIterator: public QRHashTableIterator<Key> {
 public:
-    QRMapIterator(const HashTableIterator<Key> it): HashTableIterator<Key>(it) {}
+    QRMapIterator(const QRHashTableIterator<Key> it): QRHashTableIterator<Key>(it) {}
 
     QRMapIterator<Key, Val>& operator++() {
-        HashTableIterator<Key>::operator++();
+        QRHashTableIterator<Key>::operator++();
         return *this;
     }
 
@@ -30,7 +30,7 @@ public:
         }
         catch (bad_weak_ptr &exc) {
             time_t t = time(NULL);
-            throw HashTableBadIterator(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get element value!");
+            throw QRHashTableBadIterator(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get element value!");
         }
     }
     const Key key() const {
@@ -40,7 +40,7 @@ public:
         }
         catch (bad_weak_ptr &exc) {
             time_t t = time(NULL);
-            throw HashTableBadIterator(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get element value!");
+            throw QRHashTableBadIterator(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get element value!");
         }
     }
     const Val value() const {
@@ -50,7 +50,7 @@ public:
         }
         catch (bad_weak_ptr &exc) {
             time_t t = time(NULL);
-            throw HashTableBadIterator(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get element value!");
+            throw QRHashTableBadIterator(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get element value!");
         }
     }
 };

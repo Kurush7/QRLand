@@ -7,10 +7,10 @@
 
 #include "QRContainerException.h"
 
-class HashTableException: public QRContainerException {
+class QRHashTableException: public QRContainerException {
 public:
-    explicit HashTableException(const char *file, int line, const char *time, const char *msg);
-    virtual ~HashTableException();
+    explicit QRHashTableException(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRHashTableException();
     virtual const char* what() const noexcept override;
 
 protected:
@@ -18,11 +18,11 @@ protected:
 };
 
 
-class HashTableBadIterator: public HashTableException
+class QRHashTableBadIterator: public QRHashTableException
 {
 public:
-    explicit HashTableBadIterator(const char *file, int line, const char *time, const char *msg);
-    virtual ~HashTableBadIterator() = default;
+    explicit QRHashTableBadIterator(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRHashTableBadIterator() = default;
 
     virtual const char* what() const noexcept override;
 };

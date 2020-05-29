@@ -1,2 +1,3 @@
 add_library(qrset_lib
-        QRSet.h)
+        QRSet.h
+        QRSetBase.cpp)

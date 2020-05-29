@@ -11,6 +11,4 @@ public:
     virtual ~QRMapBase() = 0;
 };
 
-QRMapBase::~QRMapBase() {}
-
 #endif //KG_QRMAPBASE_H

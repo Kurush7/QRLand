@@ -5,12 +5,12 @@
 #ifndef OOP_SETERROR_H
 #define OOP_SETERROR_H
 
-#include "QRContainerException.cpp"
+#include "QRContainerException.h"
 
-class SetException: public QRContainerException {
+class QRSetException: public QRContainerException {
 public:
-    explicit SetException(const char *file, int line, const char *time, const char *msg);
-    virtual ~SetException();
+    explicit QRSetException(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRSetException();
     virtual const char* what() const noexcept override;
 
 protected:
@@ -18,11 +18,11 @@ protected:
 };
 
 
-class SetExceptionBadPointer : public SetException
+class QRSetExceptionBadPointer : public QRSetException
 {
 public:
-    SetExceptionBadPointer(const char *file, int line, const char *time, const char *msg);
-    virtual ~SetExceptionBadPointer() = default;
+    QRSetExceptionBadPointer(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRSetExceptionBadPointer() = default;
 
     virtual const char* what() const noexcept override;
 };

@@ -13,6 +13,9 @@ set(QT_INCLUDES
         Qt5::Gui
         Qt5::Widgets)
 
+
+add_subdirectory(tests)
+
 include_directories(2Domain)
 add_subdirectory(2Domain)
 link_directories(${CMAKE_SOURCE_DIR}/2D_draw_module)

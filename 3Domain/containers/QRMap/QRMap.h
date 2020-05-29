@@ -28,7 +28,7 @@ public:
 
     void clear() noexcept;
     void add(const Key &, const Val &);
-    HashTableIterator<Key> erase(const Key &key) {return hashTable.erase(key);};
+    QRHashTableIterator<Key> erase(const Key &key) {return hashTable.erase(key);};
     bool has(const Key &key) const noexcept {return hashTable.has(key);}
     size_t size() const noexcept {return hashTable.size();}
     bool isEmpty() const noexcept {return hashTable.size() == 0;}

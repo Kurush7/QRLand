@@ -8,12 +8,12 @@
 #include <ctime>
 
 #include "../QRHashTable/QRHashTable.h"
-#include "../QRHashTable/HashTableIterator.h"
+#include "QRHashTable/QRHashTableIterator.h"
 #include "../QRExceptions/SetError.h"
-#include "SetBase.h"
+#include "QRSetBase.h"
 
 template <typename T>
-class QRSet: public SetBase {
+class QRSet: public QRSetBase {
 public:
     QRSet() = default;
     QRSet(const QRSet &);
@@ -27,14 +27,14 @@ public:
 
     virtual ~QRSet() = default;
 
-    HashTableIterator<T> begin() const;
-    HashTableIterator<T> end() const;
+    QRHashTableIterator<T> begin() const;
+    QRHashTableIterator<T> end() const;
 
     T* make_array() const;
 
     void clear() noexcept;
-    HashTableIterator<T> add(const T &);
-    HashTableIterator<T> erase(const T &);
+    QRHashTableIterator<T> add(const T &);
+    QRHashTableIterator<T> erase(const T &);
     bool has(const T &) const noexcept;
     size_t size() const noexcept;
     bool isEmpty() const noexcept;
@@ -95,8 +95,8 @@ template <typename T>
 QRSet<T>::QRSet(const T* arr, size_t n): QRSet() {
     if (!arr && n) {
         time_t t = time(NULL);
-        throw SetExceptionBadPointer(__FILE__, __LINE__, asctime(localtime(&t)),
-                "bad pointer for array-constructor!");
+        throw QRSetExceptionBadPointer(__FILE__, __LINE__, asctime(localtime(&t)),
+                                       "bad pointer for array-constructor!");
     }
 
     for (size_t i = 0; i < n; ++i)
@@ -122,10 +122,10 @@ QRSet<T>& QRSet<T>::operator=(const initializer_list<T> &list) {
 
 
 template <typename T>
-HashTableIterator<T> QRSet<T>::begin() const { return hashTable.begin(); }
+QRHashTableIterator<T> QRSet<T>::begin() const { return hashTable.begin(); }
 
 template <typename T>
-HashTableIterator<T> QRSet<T>::end() const { return hashTable.end(); }
+QRHashTableIterator<T> QRSet<T>::end() const { return hashTable.end(); }
 
 
 template <typename T>
@@ -142,7 +142,7 @@ T* QRSet<T>::make_array() const{
     }
     catch (bad_alloc &exc) {
         time_t t = time(NULL);
-        throw SetExceptionBadAlloc(__FILE__, __LINE__, asctime(localtime(&t)), "Set failed to create an array!", size() * sizeof(T));
+        throw QRBadAllocException(__FILE__, __LINE__, asctime(localtime(&t)), "Set failed to create an array!", size() * sizeof(T));
     }
 }
 
@@ -151,10 +151,10 @@ template <typename T>
 void QRSet<T>::clear() noexcept { hashTable.clear(); }
 
 template <typename T>
-HashTableIterator<T> QRSet<T>::add(const T &x) { return hashTable.add(x); }
+QRHashTableIterator<T> QRSet<T>::add(const T &x) { return hashTable.add(x); }
 
 template <typename T>
-HashTableIterator<T> QRSet<T>::erase(const T &x) { return hashTable.erase(x); }
+QRHashTableIterator<T> QRSet<T>::erase(const T &x) { return hashTable.erase(x); }
 
 template <typename T>
 bool QRSet<T>::has(const T &x) const noexcept { return hashTable.has(x); }

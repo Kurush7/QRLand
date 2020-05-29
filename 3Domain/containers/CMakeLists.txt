@@ -2,6 +2,7 @@ add_subdirectory(QRExceptions)
 add_subdirectory(QRVector)
 add_subdirectory(QRSet)
 add_subdirectory(QRHashTable)
+add_subdirectory(QRMap)
 
 include_directories(QRExceptions)
 
@@ -13,4 +14,5 @@ target_link_libraries(containers_lib
         qrhash_table_lib
         qrset_lib
         qrvector_lib
+        qrmap_lib
         )

@@ -5,11 +5,9 @@
 #ifndef OOP_SETBASE_H
 #define OOP_SETBASE_H
 
-class SetBase {
+class QRSetBase {
 public:
-    virtual ~SetBase() = 0;
+    virtual ~QRSetBase() = 0;
 };
-
-SetBase::~SetBase() {}
 
 #endif //OOP_SETBASE_H
