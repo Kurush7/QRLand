@@ -7,7 +7,7 @@
 using namespace std;
 
 MoveTransformer3DCreator::MoveTransformer3DCreator(double dx, double dy, double dz) {
-    matrix[3][0] = dx, matrix[3][1] = dy, matrix[3][2] = dz;
+    matrix[0][3] = dx, matrix[1][3] = dy, matrix[2][3] = dz;
 }
 unique_ptr<BaseTransformer3D> MoveTransformer3DCreator::create() {
     return unique_ptr<BaseTransformer3D>(new Transformer3D(matrix));
@@ -55,3 +55,21 @@ unique_ptr<BaseTransformer3D> RotateTransformer3DCreator::create() {
     return unique_ptr<BaseTransformer3D>(new Transformer3D(matrix));
 }
 
+
+ProjectionTransformer3DCreator::ProjectionTransformer3DCreator(const Vector3D &base,
+        const Vector3D &ox, const Vector3D &oy, const Vector3D &oz) {
+    MoveTransformer3DCreator mc(-base[0], -base[1], -base[2]);
+    matrix = mc.create()->transform(matrix);
+
+    Matrix3D rot;   // combine axis to new ones
+    for (int i = 0; i < 3; ++i) {
+        rot[0][i] = ox[i];
+        rot[1][i] = oy[i];
+        rot[2][i] = oz[i];
+    }
+    matrix = rot * matrix;
+}
+
+unique_ptr<BaseTransformer3D> ProjectionTransformer3DCreator::create() {
+    return unique_ptr<BaseTransformer3D>(new Transformer3D(matrix));
+}
