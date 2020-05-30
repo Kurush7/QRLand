@@ -49,5 +49,6 @@ TEST(ObjectTests, Edge3D)
 }
 
 TEST(ObjectTests, Camera3D) {
-    int x;
+    FrontalCamera3DCreator x(100);
+    auto cam = x.create(100, 100, Vector3D(0,0,0));
 }
