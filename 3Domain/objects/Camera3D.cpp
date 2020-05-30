@@ -54,9 +54,11 @@ void Camera3DMemento::restore() {
     p->setProjector(projector);
 }
 
-Camera3D::Camera3D(double w, double h, shared_ptr<ProjectionImp>pr, const Vector3D &origin,
-                       const Vector3D &viewUp, const Vector3D &bind)
-: BaseCamera3D(w, h, pr), origin(origin), viewUpVector(viewUp), bind(bind) {}
+Camera3D::Camera3D(double w, double h, shared_ptr<ProjectionImp>pr, const Vector3D &_origin,
+                       const Vector3D &viewUp, const Vector3D &_bind)
+: BaseCamera3D(w, h, pr), origin(_origin), viewUpVector(viewUp), bind(_bind) {
+    origin -= bind;
+}
 
 unique_ptr<BaseTransformer3D> Camera3D::getProjectionTransformer() {
     return projector->getTransformer(origin, bind, viewUpVector);

@@ -12,4 +12,15 @@
 
 #include "../../exceptions/QRException.h"
 
+
+class QRBadPointException: public QRObjectException
+{
+public:
+    QRBadPointException(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRBadPointException() = default;
+
+    virtual const char* what() const noexcept override;
+};
+
+
 #endif //KG_MATHEXCEPTION_H

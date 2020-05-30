@@ -19,7 +19,7 @@ Point3DMemento::Point3DMemento(weak_ptr<BasePoint3D> wp) {
 
     object = wp;
     shared_ptr<BasePoint3D> p(wp);
-    point = p->getVector();
+    point = p->getPoint();
     bind = p->getBind();
     style = p->getStyle();
 }

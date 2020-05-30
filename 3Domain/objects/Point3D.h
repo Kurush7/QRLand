@@ -17,7 +17,7 @@ public:
 
     virtual std::unique_ptr<Memento> save();
 
-    virtual const Vector3D& getVector() const = 0;
+    virtual const Vector3D getPoint() const = 0;
     virtual void setVector(const Vector3D&) = 0;
     virtual const PointStyle& getStyle() const {return style;}
     virtual void setStyle(const PointStyle &s) {style = s;}
@@ -25,9 +25,9 @@ public:
     virtual const Vector3D& getBind() const = 0;
     virtual void setBind(const Vector3D&) = 0;
 
-    std::weak_ptr<BasePoint3D> getPointer() {return p;}
+    std::shared_ptr<BasePoint3D> getPointer() {return p;}
 
-    virtual bool operator==(const BasePoint3D &b) const {return getVector() == b.getVector() &&
+    virtual bool operator==(const BasePoint3D &b) const {return getPoint() == b.getPoint() &&
                                                           getBind() == b.getBind() &&
                                                           getStyle() == b.getStyle();}
     virtual BasePoint3D& operator=(const BasePoint3D &p) {style = p.style;}
@@ -50,14 +50,14 @@ private:
 
 class Point3D: public BasePoint3D {
 public:
-    Point3D() {}
+    Point3D() {vec -= bindPoint;}
     Point3D(const Vector3D &vec, const Vector3D &bind = Vector3D(), PointStyle s = PointStyle());
     Point3D(const double x, const double y, const double z, const Vector3D &bind = Vector3D(), PointStyle s = PointStyle());
 
-    virtual const Vector3D& getVector() const {return vec;}
-    virtual void setVector(const Vector3D &v) {vec = v;}
+    virtual const Vector3D getPoint() const {return vec + bindPoint;}
+    virtual void setVector(const Vector3D &v) {vec = v - bindPoint;}
     virtual const Vector3D& getBind() const {return bindPoint;}
-    virtual void setBind(const Vector3D &b) {bindPoint = b;}
+    virtual void setBind(const Vector3D &b) {vec += bindPoint; bindPoint = b; vec -= bindPoint;}
 
 private:
     Vector3D vec;

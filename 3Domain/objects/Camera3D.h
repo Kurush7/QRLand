@@ -69,10 +69,10 @@ public:
 
     virtual std::unique_ptr<BaseTransformer3D> getProjectionTransformer();
 
-    virtual const Vector3D& getOrigin() const {origin;}
-    virtual void setOrigin(const Vector3D &v) {origin = v;}
+    virtual const Vector3D& getOrigin() const {origin + bind;}
+    virtual void setOrigin(const Vector3D &v) {origin = v; origin -= bind;}
     virtual const Vector3D& getBind() const {return bind;}
-    virtual void setBind(const Vector3D &b) {bind = b;}
+    virtual void setBind(const Vector3D &b) {origin+=bind; bind = b; origin -=bind;}
 
 private:
     Vector3D origin, bind, viewUpVector;

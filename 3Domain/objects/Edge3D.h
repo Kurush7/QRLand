@@ -17,19 +17,18 @@ public:
     ~BaseEdge3D() {p.reset();}
 
     virtual std::unique_ptr<Memento> save();
+    virtual bool isValid() const = 0;
 
-    virtual const std::weak_ptr<BasePoint3D> getStart() const = 0;
-    virtual void setStart(std::weak_ptr<BasePoint3D>) = 0;
+    virtual const std::shared_ptr<BasePoint3D> getStart() const = 0;
+    virtual void setStart(std::shared_ptr<BasePoint3D>) = 0;
 
-    virtual const std::weak_ptr<BasePoint3D> getEnd() const = 0;
-    virtual void setEnd(std::weak_ptr<BasePoint3D>) = 0;
+    virtual const std::shared_ptr<BasePoint3D> getEnd() const = 0;
+    virtual void setEnd(std::shared_ptr<BasePoint3D>) = 0;
 
     virtual const EdgeStyle& getStyle() const {return style;}
     virtual void setStyle(const EdgeStyle &s) {style = s;}
 
-    virtual bool operator==(const BaseEdge3D &b) const {return getStart().lock() == b.getStart().lock() &&
-                                                               getEnd().lock() == b.getEnd().lock() &&
-                                                               getStyle() == b.getStyle();}
+    virtual bool operator==(const BaseEdge3D &b) const = 0;
     virtual BaseEdge3D& operator=(const BaseEdge3D &p) {style = p.style;}
 private:
     EdgeStyle style;
@@ -50,18 +49,21 @@ private:
 
 class Edge3D: public BaseEdge3D {
 public:
-    Edge3D(std::weak_ptr<BasePoint3D> start, std::weak_ptr<BasePoint3D> end, EdgeStyle s = EdgeStyle());
+    Edge3D(std::shared_ptr<BasePoint3D> start, std::shared_ptr<BasePoint3D> end, EdgeStyle s = EdgeStyle());
     Edge3D(BasePoint3D &start, BasePoint3D &end, EdgeStyle s = EdgeStyle());
 
-    virtual const std::weak_ptr<BasePoint3D> getStart() const {return start;}
-    virtual void setStart(std::weak_ptr<BasePoint3D> p) {start = p;}
+    virtual bool isValid() const {return !start.expired() && !end.expired();}
 
-    virtual const std::weak_ptr<BasePoint3D> getEnd() const {return end;}
-    virtual void setEnd(std::weak_ptr<BasePoint3D> p) {end = p;}
+    virtual const std::shared_ptr<BasePoint3D> getStart() const;
+    virtual void setStart(std::shared_ptr<BasePoint3D> p) {start = p;}
+
+    virtual const std::shared_ptr<BasePoint3D> getEnd() const;
+    virtual void setEnd(std::shared_ptr<BasePoint3D> p) {end = p;}
+
+    virtual bool operator==(const BaseEdge3D &b) const;
 
 private:
     std::weak_ptr<BasePoint3D> start, end;
 };
-
 
 #endif //QR_EDGE3D_H
