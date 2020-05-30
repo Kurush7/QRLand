@@ -6,9 +6,9 @@
 #define KG_QROBJECTS_H
 
 #include "BaseObject.h"
-#include "Point3D.h"
-#include "Camera3D.h"
-
-#include "Industry.h"
+#include "components/Point3D.h"
+#include "components/Edge3D.h"
+#include "components/Camera3D.h"
+#include "components/Industry.h"
 
 #endif //KG_QROBJECTS_H

@@ -49,6 +49,22 @@ TEST(ObjectTests, Edge3D)
 }
 
 TEST(ObjectTests, Camera3D) {
+    // todo perform testing
     FrontalCamera3DCreator x(100);
     auto cam = x.create(100, 100, Vector3D(0,0,0));
+}
+
+TEST(ObjectTests, AbstractFactory) {
+    // todo perform testing
+    auto factory = shared_ptr<AbstractObject3DFactory>(new BasicObject3DFactory());
+    shared_ptr<BasePoint3D> p1 = factory->createPoint(Vector3D(1,2,3));
+    shared_ptr<BasePoint3D>  p2 = factory->createPoint(Vector3D(4,5,6));
+    shared_ptr<BaseEdge3D> e = factory->createEdge(p1, p2);
+    shared_ptr<BaseCamera3D> c = factory->createCamera(100, 100, Vector3D(-100,100,0));
+
+    //int cnt = 0;
+    //for (auto it = p1->begin(); it != p1->end(); ++it) {
+    //    cnt++;
+    //}
+    //EXPECT_EQ(cnt, 1);
 }

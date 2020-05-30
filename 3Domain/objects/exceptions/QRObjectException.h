@@ -2,8 +2,8 @@
 // Created by kurush on 29.05.2020.
 //
 
-#ifndef KG_MATHEXCEPTION_H
-#define KG_MATHEXCEPTION_H
+#ifndef QR_OBJECTEXCEPTION_H
+#define QR_OBJECTEXCEPTION_H
 
 #include <exception>
 #include <cstring>
@@ -23,4 +23,4 @@ public:
 };
 
 
-#endif //KG_MATHEXCEPTION_H
+#endif //QR_OBJECTEXCEPTION_H

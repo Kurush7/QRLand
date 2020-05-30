@@ -8,7 +8,7 @@
 #include <ctime>
 
 #include "../QRHashTable/QRHashTable.h"
-#include "QRHashTable/QRHashTableIterator.h"
+#include "../QRHashTable/QRHashTableIterator.h"
 #include "../exceptions/SetError.h"
 #include "QRSetBase.h"
 
