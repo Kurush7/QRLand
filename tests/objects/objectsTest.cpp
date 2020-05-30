@@ -40,5 +40,8 @@ TEST(ObjectTests, Edge3D)
     EXPECT_EQ(e1, e2);
     mem->restore();
     EXPECT_EQ(e1, e0);
+}
 
+TEST(ObjectTests, Camera3D) {
+    Ca
 }

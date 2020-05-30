@@ -35,8 +35,12 @@ void Point3DMemento::restore() {
     p->setStyle(style);
 }
 
-Point3D::Point3D(const Vector3D &vec, const Vector3D &bind, PointStyle s): BasePoint3D(s),
-vec(vec), bindPoint(bind) {}
+Point3D::Point3D(const Vector3D &_vec, const Vector3D &bind, PointStyle s): BasePoint3D(s),
+vec(_vec), bindPoint(bind) {
+    vec -= bind;
+}
 
 Point3D::Point3D(const double x, const double y, const double z, const Vector3D &bind, PointStyle s)
-: BasePoint3D(s), vec(x, y, z), bindPoint(bind) {}
+: BasePoint3D(s), vec(x, y, z), bindPoint(bind) {
+    vec -= bind;
+}

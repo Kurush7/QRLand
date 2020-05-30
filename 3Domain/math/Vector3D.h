@@ -6,6 +6,8 @@
 #define KG_VECTOR3D_H
 
 #include <ctime>
+#include <cmath>
+
 #include <initializer_list>
 
 #include "exceptions/MathException.h"
@@ -21,14 +23,18 @@ public:
     Vector3D(const std::initializer_list<double> &);
 
     Vector3D& operator +=(const Vector3D&);
+    Vector3D& operator -=(const Vector3D&);
     double& operator[](int);
     const double& operator[](int) const;
 
     double arr[4] = {0,0,0,1};
 };
 
+Vector3D norm(const Vector3D&);
 bool operator ==(const Vector3D&, const Vector3D&);
 bool operator !=(const Vector3D&, const Vector3D&);
 Vector3D operator +(const Vector3D&, const Vector3D&);
+Vector3D operator -(const Vector3D&, const Vector3D&);
+Vector3D operator *(const Vector3D&, const Vector3D&);
 
 #endif //KG_VECTOR3D_H

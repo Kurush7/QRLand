@@ -7,6 +7,8 @@
 
 #include "BaseObject.h"
 #include "Point3D.h"
+#include "Camera3D.h"
+
 #include "Industry.h"
 
 #endif //KG_QROBJECTS_H
