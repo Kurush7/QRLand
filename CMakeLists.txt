@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(kg)
+project(big3DFluffy)
 set(CMAKE_CXX_STANDARD 14)
 
 set(VERBOSE=1)

@@ -7,6 +7,7 @@
 
 #include <memory>
 #include "../math/QRMath.h"
+#include "exceptions/QRObjectException.h"
 
 class Memento {
 public:
@@ -17,28 +18,40 @@ class BaseObject {
 public:
     virtual std::unique_ptr<Memento> save() = 0;
     // todo accept visitor
-    virtual bool isVisible() = 0;
+    virtual bool isVisible() {return visible;}
     virtual bool isComposite() = 0;
 protected:
-    bool visible;
+    bool visible = true;
 };
 
 class Object3D: public BaseObject {
 public:
     bool isComposite() {return false;}
-    virtual const Vector3D& getBind() const = 0;
-    virtual void setBind(const Vector3D&) = 0;
 };
 
 
 enum QRColor {
     white, black, blue, red, yellow, green
 };
-struct Style {
-    QRColor color;
+class Style {
+public:
+    Style() {}
+    Style(QRColor c): color(c) {}
+    QRColor color = white;
+
+    virtual bool operator==(const Style &s) const{return color == s.color;}
 };
-struct PointStyle: public Style {};
-struct EdgeStyle: public Style {};
+class PointStyle: public Style {
+public:
+    PointStyle(){}
+    PointStyle(QRColor c): Style(c) {}
+
+};
+class EdgeStyle: public Style {
+public:
+    EdgeStyle(){}
+    EdgeStyle(QRColor c): Style(c) {}
+};
 
 
 #endif //KG_BASEOBJECT_H

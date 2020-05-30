@@ -5,6 +5,8 @@ add_subdirectory(googletest)
 
 include_directories(../3Domain/containers)
 include_directories(../3Domain/math)
+include_directories(../3Domain/objects)
+include_directories(../3Domain)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 add_executable(tests.exe
@@ -15,6 +17,7 @@ add_executable(tests.exe
         containers/mapTest.cpp
         containers/vectorTest.cpp
         math/mathTest.cpp
+        objects/objectsTest.cpp
         )
 target_link_libraries(tests.exe
         3domain_lib
