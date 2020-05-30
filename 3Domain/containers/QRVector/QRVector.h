@@ -10,7 +10,7 @@
 #include <cmath>
 #include <iostream>
 #include "VectorBase.h"
-#include "QRVectorIterator/QRVectorIterator.h"
+#include "QRVectorIterator.h"
 
 const double DEFAULT_SIZE = 8;
 

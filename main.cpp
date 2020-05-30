@@ -20,12 +20,6 @@ int main(int argc, char *argv[]) {
     QRVector<int> vec;
     for (int i = 0; i < 5; ++i)
         vec.push_back(i);
-    QRVector<long> v1({0,1,2,3,4});
-    for (auto x: vec)
-        cout << x << ' ';
-
-    cout <<'\n';
-
     QApplication app(argc, argv);
 
     QFile styleF;

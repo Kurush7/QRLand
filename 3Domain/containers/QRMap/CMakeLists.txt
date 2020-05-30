@@ -1,3 +1,5 @@
-add_library(qrmap_lib
-        QRMap.h
-        QRMapBase.cpp)
+set(path ${path}/QRMap)
+
+set(source_list ${source_list}
+        ${path}/QRMapBase.cpp
+        PARENT_SCOPE)

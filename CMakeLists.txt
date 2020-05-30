@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 project(kg)
 set(CMAKE_CXX_STANDARD 14)
 
+set(VERBOSE=1)
+set(CMAKE_AUTOGEN_VERBOSE on)
+set(CMAKE_VERBOSE_MAKEFILE on)
 set(DRAW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/2Domain)
 
 # QT includes

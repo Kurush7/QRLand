@@ -72,7 +72,6 @@ private:
     Matrix3D matrix;
 };
 
-// todo projection transformer
 class ProjectionTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     ProjectionTransformer3DCreator(const Vector3D &base, const Vector3D &ox, const Vector3D &oy, const Vector3D &oz);

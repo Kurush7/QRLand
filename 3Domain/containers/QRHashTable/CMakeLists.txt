@@ -1,4 +1,5 @@
-add_library(qrhash_table_lib
-        HashTableBase.cpp
-        QRHashTable.h
-        )
+set(path ${path}/QRHashTable)
+
+set(source_list ${source_list}
+        ${path}/HashTableBase.cpp
+        PARENT_SCOPE)

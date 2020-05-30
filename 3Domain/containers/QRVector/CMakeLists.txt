@@ -1,5 +1,5 @@
-include_directories(../exceptions)
+set(path ${path}/QRVector)
 
-add_library(qrvector_lib
-        QRVector.h
-        VectorBase.cpp)
+set(source_list ${source_list}
+        ${path}/VectorBase.cpp
+        PARENT_SCOPE)

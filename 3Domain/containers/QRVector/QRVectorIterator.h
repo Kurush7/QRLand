@@ -7,7 +7,7 @@
 
 #include <iterator>
 
-#include "../../exceptions/VectorError/Errors.h"
+#include "../exceptions/VectorError/Errors.h"
 
 template <typename T>
 class QRVectorIterator: public std::iterator<std::output_iterator_tag, T> {

@@ -63,7 +63,7 @@ QRHashTable<T>::QRHashTable(): HashTableBase(DEFAULT_SIZE) {
     try {
         table = createEmptyTable(DEFAULT_SIZE);
     }
-    catch (QRBadAllocException &exc) {
+    catch (QRBadPointerException &exc) {
         cerr << "HashTable default constructor error: " << exc.what() << '\n';
         throw;
     }
@@ -74,7 +74,7 @@ QRHashTable<T>::QRHashTable(const QRHashTable<T> &table) {
     try {
         copyTable(table);
     }
-    catch (QRBadAllocException &exc) {
+    catch (QRBadPointerException &exc) {
         cerr << "HashTable copy constructor error: " << exc.what() << '\n';
         throw;
     }
@@ -109,7 +109,7 @@ QRHashTable<T>& QRHashTable<T>::operator=(const QRHashTable<T> &other) {
     try {
         copyTable(other);
     }
-    catch (QRBadAllocException &exc) {
+    catch (QRBadPointerException &exc) {
         cerr << "HashTable operator= copy error: " << exc.what() << '\n';
         throw;
     }
@@ -140,7 +140,7 @@ QRHashTableIterator<T> QRHashTable<T>::add(const T &key) {
     catch(const std::bad_alloc &exc) {
         time_t t = time(nullptr);
         throw QRBadAllocException(__FILE__, __LINE__, asctime(localtime(&t)),
-                "Failed to add element!", size() * sizeof(T));
+                                    "Failed to add element!", size() * sizeof(T));
     }
 }
 
@@ -167,7 +167,7 @@ void QRHashTable<T>::add(const std::shared_ptr<HashNode<T>> nd) {
     catch(const std::bad_alloc &exc) {
         time_t t = time(nullptr);
         throw QRBadAllocException(__FILE__, __LINE__, asctime(localtime(&t)),
-                                  "Failed to add element!", size() * sizeof(T));
+                                    "Failed to add element!", size() * sizeof(T));
     }
 }
 
@@ -268,7 +268,7 @@ void QRHashTable<T>::copyTable(const QRHashTable &copyTable) {
         curSize = copyTable.curSize;
         capacity = copyTable.capacity;
     }
-    catch (QRBadAllocException &exc) {
+    catch (QRBadPointerException &exc) {
         throw;
     }
     catch(const std::bad_alloc &exc) {
@@ -304,7 +304,7 @@ void QRHashTable<T>::grow() noexcept {
         table = newTable;
         *capacity = newCapacity;
     }
-    catch (QRBadAllocException &exc) {
+    catch (QRBadPointerException &exc) {
         cerr<< "HashTable grow failed: " << exc.what()<<endl;
     }
 }

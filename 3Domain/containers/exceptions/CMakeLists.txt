@@ -1,14 +1,17 @@
-set(vector_errors
-        VectorError/ErrorAlloc.cpp
-        VectorError/ErrorDeletedObj.cpp
-        VectorError/ErrorIndex.cpp
-        VectorError/ErrorNullptr.cpp
-        VectorError/ErrorSize.cpp
-        VectorError/ErrorZeroDivision.cpp
-        VectorError/VectorError.cpp)
+set(path ${path}/exceptions)
 
-add_library(qrexceptions_lib
-        QRContainerException.cpp
-        SetError.cpp
-        HashTableError.cpp
-        ${vector_errors})
+set(vector_errors
+        ${path}/VectorError/ErrorAlloc.cpp
+        ${path}/VectorError/ErrorDeletedObj.cpp
+        ${path}/VectorError/ErrorIndex.cpp
+        ${path}/VectorError/ErrorNullptr.cpp
+        ${path}/VectorError/ErrorSize.cpp
+        ${path}/VectorError/ErrorZeroDivision.cpp
+        ${path}/VectorError/VectorError.cpp)
+
+set(source_list ${source_list}
+        ${path}/QRContainerException.cpp
+        ${path}/SetError.cpp
+        ${path}/HashTableError.cpp
+        ${vector_errors}
+        PARENT_SCOPE)
