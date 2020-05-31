@@ -5,7 +5,7 @@
 #ifndef BIG3DFLUFFY_CAMERA_H
 #define BIG3DFLUFFY_CAMERA_H
 
-#include "BaseObject.h"
+#include "../BaseObject.h"
 #include "Projection.h"
 
 class Camera3DMemento;

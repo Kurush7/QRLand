@@ -9,35 +9,35 @@
 #include "Edge3D.h"
 #include "Camera3D.h"
 
-class BasePoint3DCreator {
+class BaseQRPoint3DCreator {
 public:
-    virtual std::unique_ptr<BasePoint3D> create(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
+    virtual std::unique_ptr<BaseQRPoint3D> create(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
 };
 
-class Point3DCreator: public BasePoint3DCreator {
+class QRPoint3DCreator: public BaseQRPoint3DCreator {
 public:
-    explicit Point3DCreator(PointStyle s = PointStyle()):st(s) {}
-    virtual std::unique_ptr<BasePoint3D> create(const Vector3D &vec, const Vector3D &bind = Vector3D()) {
-        return std::unique_ptr<BasePoint3D>(new Point3D(vec, bind, st));
+    explicit QRPoint3DCreator(QRPointStyle s = QRPointStyle()):st(s) {}
+    virtual std::unique_ptr<BaseQRPoint3D> create(const Vector3D &vec, const Vector3D &bind = Vector3D()) {
+        return std::unique_ptr<BaseQRPoint3D>(new QRPoint3D(vec, bind, st));
     }
 private:
-    PointStyle st;
+    QRPointStyle st;
 };
 
 
 class BaseEdge3DCreator {
 public:
-    virtual std::unique_ptr<BaseEdge3D> create(std::shared_ptr<BasePoint3D> start, std::shared_ptr<BasePoint3D> end) = 0;
+    virtual std::unique_ptr<BaseEdge3D> create(std::shared_ptr<BaseQRPoint3D> start, std::shared_ptr<BaseQRPoint3D> end) = 0;
 };
 
 class Edge3DCreator: public BaseEdge3DCreator {
 public:
-    Edge3DCreator(EdgeStyle s = EdgeStyle()):st(s) {}
-    virtual std::unique_ptr<BaseEdge3D> create(std::shared_ptr<BasePoint3D> start, std::shared_ptr<BasePoint3D> end) {
+    Edge3DCreator(QREdgeStyle s = QREdgeStyle()):st(s) {}
+    virtual std::unique_ptr<BaseEdge3D> create(std::shared_ptr<BaseQRPoint3D> start, std::shared_ptr<BaseQRPoint3D> end) {
         return std::unique_ptr<BaseEdge3D>(new Edge3D(start, end, st));
     }
 private:
-    EdgeStyle st;
+    QREdgeStyle st;
 };
 
 
@@ -65,9 +65,9 @@ private:
 
 class AbstractObject3DFactory {
 public:
-    virtual std::unique_ptr<BasePoint3D> createPoint(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
-    virtual std::unique_ptr<BaseEdge3D> createEdge(std::shared_ptr<BasePoint3D> start,
-                                                   std::shared_ptr<BasePoint3D> end) = 0;
+    virtual std::unique_ptr<BaseQRPoint3D> createPoint(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
+    virtual std::unique_ptr<BaseEdge3D> createEdge(std::shared_ptr<BaseQRPoint3D> start,
+                                                   std::shared_ptr<BaseQRPoint3D> end) = 0;
     virtual std::unique_ptr<BaseCamera3D> createCamera(double w, double h,
                                                        const Vector3D &origin) = 0;
 };
@@ -75,15 +75,15 @@ public:
 class BasicObject3DFactory: public AbstractObject3DFactory {
 public:
     BasicObject3DFactory(QRColor pc = yellow, QRColor ec = green): pc(pc), ec(ec) {}
-    virtual std::unique_ptr<BasePoint3D> createPoint(const Vector3D &vec,
+    virtual std::unique_ptr<BaseQRPoint3D> createPoint(const Vector3D &vec,
             const Vector3D &bind = Vector3D()) {return point_cr.create(vec,bind);}
-    virtual std::unique_ptr<BaseEdge3D> createEdge(std::shared_ptr<BasePoint3D> start,
-                                                   std::shared_ptr<BasePoint3D> end) {return edge_cr.create(start,end);}
+    virtual std::unique_ptr<BaseEdge3D> createEdge(std::shared_ptr<BaseQRPoint3D> start,
+                                                   std::shared_ptr<BaseQRPoint3D> end) {return edge_cr.create(start,end);}
     virtual std::unique_ptr<BaseCamera3D> createCamera(double w, double h,
                                                        const Vector3D &origin) {return camera_cr.create(w,h,origin);}
 private:
     QRColor pc, ec;
-    Point3DCreator point_cr = Point3DCreator(pc);
+    QRPoint3DCreator point_cr = QRPoint3DCreator(pc);
     Edge3DCreator edge_cr = Edge3DCreator(ec);
     FrontalCamera3DCreator camera_cr = FrontalCamera3DCreator(100);
 };

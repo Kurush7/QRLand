@@ -33,13 +33,13 @@ void Edge3DMemento::restore() {
     p->setStyle(style);
 }
 
-Edge3D::Edge3D(shared_ptr<BasePoint3D> start, shared_ptr<BasePoint3D> end, EdgeStyle s)
+Edge3D::Edge3D(shared_ptr<BaseQRPoint3D> start, shared_ptr<BaseQRPoint3D> end, QREdgeStyle s)
 : BaseEdge3D(s), start(start), end(end) {}
 
-Edge3D::Edge3D(BasePoint3D &start, BasePoint3D &end, EdgeStyle s)
+Edge3D::Edge3D(BaseQRPoint3D &start, BaseQRPoint3D &end, QREdgeStyle s)
 :BaseEdge3D(s), start(start.getPointer()), end(end.getPointer()) {}
 
-const std::shared_ptr<BasePoint3D> Edge3D::getStart() const {
+const std::shared_ptr<BaseQRPoint3D> Edge3D::getStart() const {
     if (start.expired()) {
         time_t t = time(nullptr);
         throw QRBadPointException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get edge's point!");
@@ -47,7 +47,7 @@ const std::shared_ptr<BasePoint3D> Edge3D::getStart() const {
     return start.lock();
 }
 
-const std::shared_ptr<BasePoint3D> Edge3D::getEnd() const {
+const std::shared_ptr<BaseQRPoint3D> Edge3D::getEnd() const {
     if (end.expired()) {
         time_t t = time(nullptr);
         throw QRBadPointException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get edge's point!");

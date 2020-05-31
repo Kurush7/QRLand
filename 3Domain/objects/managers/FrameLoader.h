@@ -35,7 +35,7 @@ public:
 protected:
     std::shared_ptr<LoadSource> source;
     std::shared_ptr<AbstractObject3DFactory> factory;
-    QRVector<std::shared_ptr<BasePoint3D>> points;
+    QRVector<std::shared_ptr<BaseQRPoint3D>> points;
     QRVector<std::shared_ptr<BaseObject>> objects;
 };
 

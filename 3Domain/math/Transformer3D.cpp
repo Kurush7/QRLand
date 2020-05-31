@@ -22,11 +22,11 @@ unique_ptr<BaseTransformer3D> ScaleTransformer3DCreator::create() {
 
 
 RotateTransformer3DCreator::RotateTransformer3DCreator(double dx, double dy, double dz) {
-    if (fabs(dx) > EPS)
+    if (fabs(dx) > QREPS)
         matrix *= createOneRotateMatrix(dx, ox);
-    if (fabs(dy) > EPS)
+    if (fabs(dy) > QREPS)
         matrix *= createOneRotateMatrix(dy, oy);
-    if (fabs(dz) > EPS)
+    if (fabs(dz) > QREPS)
         matrix *= createOneRotateMatrix(dz, oz);
 }
 

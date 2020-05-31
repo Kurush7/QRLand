@@ -99,9 +99,9 @@ Vector3D operator /(const Vector3D &a, double x) {
 
 Vector3D norm(const Vector3D &a) {
     Vector3D b = a;
-    if (fabs(b[3] - 1) < EPS)
+    if (fabs(b[3] - 1) < QREPS)
         return b;
-    if (fabs(b[3]) < EPS)
+    if (fabs(b[3]) < QREPS)
         b[3] = 1;
     b[0] = b[0]/ b[3];
     b[1] = b[1]/ b[3];

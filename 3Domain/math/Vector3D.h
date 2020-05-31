@@ -14,7 +14,7 @@
 
 // todo problem: consider arr[3] or not when operating?
 
-const double EPS = 1e-9;
+const double QREPS = 1e-9;
 
 class Vector3D {
 public:

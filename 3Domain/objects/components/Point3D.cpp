@@ -7,34 +7,34 @@
 using namespace std;
 
 
-unique_ptr<Memento> BasePoint3D::save() {
-    return unique_ptr<Memento>(new Point3DMemento(p));
+unique_ptr<Memento> BaseQRPoint3D::save() {
+    return unique_ptr<Memento>(new QRPoint3DMemento(p));
 }
 
-Point3DMemento::Point3DMemento(shared_ptr<BasePoint3D> p) {
+QRPoint3DMemento::QRPoint3DMemento(shared_ptr<BaseQRPoint3D> p) {
     object = p;
     point = p->getPoint();
     bind = p->getBind();
     style = p->getStyle();
 }
 
-void Point3DMemento::restore() {
+void QRPoint3DMemento::restore() {
     if (object.expired()) {
         time_t t = time(nullptr);
         throw QRBadPointerException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to create memento!");
     }
-    shared_ptr<BasePoint3D> p(object);
+    shared_ptr<BaseQRPoint3D> p(object);
     p->setVector(point);
     p->setBind(bind);
     p->setStyle(style);
 }
 
-Point3D::Point3D(const Vector3D &_vec, const Vector3D &bind, PointStyle s): BasePoint3D(s),
+QRPoint3D::QRPoint3D(const Vector3D &_vec, const Vector3D &bind, QRPointStyle s): BaseQRPoint3D(s),
 vec(_vec), bindPoint(bind) {
     vec -= bind;
 }
 
-Point3D::Point3D(const double x, const double y, const double z, const Vector3D &bind, PointStyle s)
-: BasePoint3D(s), vec(x, y, z), bindPoint(bind) {
+QRPoint3D::QRPoint3D(const double x, const double y, const double z, const Vector3D &bind, QRPointStyle s)
+: BaseQRPoint3D(s), vec(x, y, z), bindPoint(bind) {
     vec -= bind;
 }

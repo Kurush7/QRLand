@@ -83,16 +83,16 @@ public:
 
     virtual bool operator==(const Style &s) const{return color == s.color;}
 };
-class PointStyle: public Style {
+class QRPointStyle: public Style {
 public:
-    PointStyle(){}
-    PointStyle(QRColor c): Style(c) {}
+    QRPointStyle(){}
+    QRPointStyle(QRColor c): Style(c) {}
 
 };
-class EdgeStyle: public Style {
+class QREdgeStyle: public Style {
 public:
-    EdgeStyle(){}
-    EdgeStyle(QRColor c): Style(c) {}
+    QREdgeStyle(){}
+    QREdgeStyle(QRColor c): Style(c) {}
 };
 
 

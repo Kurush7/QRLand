@@ -11,12 +11,12 @@ using namespace std;
 TEST(ObjectTests, Point3D)
 {
     Point3D p0, p1, p2(Vector3D(1,2,3));
-    auto cr = Point3DCreator(PointStyle(green));
+    auto cr = Point3DCreator(QRPointStyle(green));
 
     auto p = cr.create(Vector3D(1,2,3), Vector3D(1,1,1));
     EXPECT_EQ(p->getPoint(), Vector3D(1,2,3));
     EXPECT_EQ(p->getBind(), Vector3D(1,1,1));
-    EXPECT_EQ(p->getStyle(), PointStyle(green));
+    EXPECT_EQ(p->getStyle(), QRPointStyle(green));
 
     auto mem = p1.save();
     p1 = p2;
@@ -32,7 +32,7 @@ TEST(ObjectTests, Edge3D)
     auto e1 = Edge3D(p0, p1, black), e0 = e1;
     EXPECT_EQ(e1.getStart(), p0.getPointer());
     EXPECT_EQ(e1.getEnd(), p1.getPointer());
-    EXPECT_EQ(e1.getStyle(), EdgeStyle(black));
+    EXPECT_EQ(e1.getStyle(), QREdgeStyle(black));
 
     auto e2 = Edge3D(p1, p2, yellow);
     auto mem = e1.save();
@@ -41,11 +41,11 @@ TEST(ObjectTests, Edge3D)
     mem->restore();
     EXPECT_EQ(e1, e0);
 
-    auto cr = Edge3DCreator(EdgeStyle(yellow));
+    auto cr = Edge3DCreator(QREdgeStyle(yellow));
     auto e3 = cr.create(p2.getPointer(), p1.getPointer());
     EXPECT_EQ(e3->getStart(), p2.getPointer());
     EXPECT_EQ(e3->getEnd(), p1.getPointer());
-    EXPECT_EQ(e3->getStyle(), EdgeStyle(yellow));
+    EXPECT_EQ(e3->getStyle(), QREdgeStyle(yellow));
 }
 
 TEST(ObjectTests, Camera3D) {

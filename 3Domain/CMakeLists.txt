@@ -11,8 +11,3 @@ message( STATUS "Variable BAR in ./bar/ = ${source_list}" )
 add_library(3domain_lib
         ${source_list}
         )
-        #Lab3Facade.cpp
-        #${qrexceptions_list}
-        #${containers_lib}
-        #${math_lib}
-        #${objects_list})

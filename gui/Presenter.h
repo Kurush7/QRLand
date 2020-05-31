@@ -2,15 +2,36 @@
 #define LAB_10_TASKMANAGER_H
 
 #include <QObject>
-#include <QThread>
 #include <fstream>
 #include <QMessageBox>
 
-#include "common/ThreadFunctionCall.h"
-#include "figures/AlgoedCircle.h"
-#include "figures/AlgoedEllipse.h"
-#include "figures/Function3D.h"
 #include "Canvas3DViewer.h"
+#include "../3Domain/Lab3Facade.h"
+
+
+class QTPainter: public Painter {
+public:
+    virtual void drawPoint(double x, double y, QRPointStyle s) {
+        canvas->addObject(new Point(x, y, defineColor(s.color)));
+    }
+    virtual void drawEdge(double x1, double y1, double x2, double y2, QREdgeStyle s) {
+        canvas->addObject(new Line(x1, y1, x2, y2, defineColor(s.color)));
+    }
+
+private:
+    QColor defineColor(QRColor c) {
+        QColor st;
+        if (c == black) st = black;
+        if (c == white) st = white;
+        if (c == green) st = green;
+        if (c == blue) st = blue;
+        if (c == yellow) st = yellow;
+        if (c == red) st = red;
+        return st;
+    }
+
+    Canvas3DViewer *canvas;
+};
 
 class MainWindow;
 class Presenter: public QObject {
