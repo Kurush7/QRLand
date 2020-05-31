@@ -12,3 +12,9 @@ shared_ptr<Memento> AddModelCommand::exec() {
     scene->addObject(model);
     return mem;
 }
+
+shared_ptr<Memento> DrawCommand::exec() {
+    SceneDrawMethod draw;
+    draw.draw(scene, painter);
+    return nullptr;
+}

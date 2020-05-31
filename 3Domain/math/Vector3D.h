@@ -29,10 +29,11 @@ public:
     double& operator[](int);
     const double& operator[](int) const;
 
-    double arr[4] = {0,0,0,1};
+    double arr[4] = {0,0,0,0};
 };
 
-Vector3D norm(const Vector3D&);
+Vector3D norm(const Vector3D&); // manage 4th axis value
+Vector3D lenNorm(const Vector3D&);
 bool operator ==(const Vector3D&, const Vector3D&);
 bool operator !=(const Vector3D&, const Vector3D&);
 Vector3D operator +(const Vector3D&, const Vector3D&);

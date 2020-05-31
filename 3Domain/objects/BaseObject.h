@@ -16,10 +16,14 @@ class BaseCamera3D;
 class BaseFrame3D;
 class Visitor {
 public:
+    Visitor() {p = std::shared_ptr<Visitor>(this, [](void *ptr){});}
     virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) = 0;
     virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge) = 0;
     virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera) = 0;
     virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame) = 0;
+
+protected:
+    std::shared_ptr<Visitor> p;
 };
 
 class Memento {

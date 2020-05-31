@@ -81,8 +81,6 @@ Vector3D operator -(const Vector3D &a, const Vector3D &b) {
 
 Vector3D operator *(const Vector3D &a0, const Vector3D &b0) {
     Vector3D c, a = a0, b = b0;
-    a = norm(a);
-    b = norm(b);
     c[0] = a[1]*b[2] - a[2]*b[1];
     c[1] = a[2]*b[0] - a[0]*b[2];
     c[2] = a[0]*b[1] - a[1]*b[0];
@@ -107,5 +105,16 @@ Vector3D norm(const Vector3D &a) {
     b[1] = b[1]/ b[3];
     b[2] = b[2]/ b[3];
     b[3] = 1;
+    return b;
+}
+
+Vector3D lenNorm(const Vector3D &a) {
+    Vector3D b = a;
+    double x = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+    if (fabs(x) > QREPS) {
+        b[0] /= x;
+        b[1] /= x;
+        b[2] /= x;
+    }
     return b;
 }

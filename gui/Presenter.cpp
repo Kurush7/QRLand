@@ -5,7 +5,6 @@
 #include "MainWindow.h"
 
 Presenter::Presenter(MainWindow &w): window(w) {
-        painter = std::shared_ptr<Painter>(new QTPainter(window.canvas));
 }
 
 void Presenter::backChangeColor() {
@@ -13,11 +12,15 @@ void Presenter::backChangeColor() {
     window.canvas->repaint();
 }
 
+void Presenter::setPainter() {
+    painter = std::shared_ptr<Painter>(new QTPainter(window.canvas));
+}
 
 void Presenter::loadModel() {
     auto filename = window.fileName->text().toUtf8().constData();
     facade.addModel(filename);
     facade.draw(painter);
+    window.canvas->repaint();
 }
 void Presenter::openFile() {
     auto fileName = QFileDialog::getOpenFileName(&window, tr("Open File"), "~", tr("*"));

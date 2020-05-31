@@ -19,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     canvas->setOwnData(true);
     canvas->setAutoScaleFit(false);
     canvas->refillBg();
-    //canvas->setAutoScaleFit(true);
+    canvas->setAutoScaleFit(true);
+    presenter->setPainter();
 
     visibilityManager = new QRMultiRadioField("selection", 0);
 

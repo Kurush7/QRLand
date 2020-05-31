@@ -85,7 +85,7 @@ private:
     QRColor pc, ec;
     QRPoint3DCreator point_cr = QRPoint3DCreator(pc);
     Edge3DCreator edge_cr = Edge3DCreator(ec);
-    FrontalCamera3DCreator camera_cr = FrontalCamera3DCreator(100);
+    FrontalCamera3DCreator camera_cr = FrontalCamera3DCreator(10);
 };
 
 #endif //KG_INDUSTRY_H

@@ -7,12 +7,7 @@
 
 #include "objects/QRObjects.h"
 #include "managers/QRManagers.h"
-
-class Painter {
-public:
-    virtual void drawPoint(double x, double y, QRPointStyle) = 0;
-    virtual void drawEdge(double x1, double y1, double x2, double y2, QREdgeStyle) = 0;
-};
+#include "Painter.h"
 
 class Lab3Facade {
 public:

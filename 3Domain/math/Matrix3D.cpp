@@ -16,8 +16,7 @@ Matrix3D makeNull() {
 }
 
 Matrix3D::Matrix3D() {
-    for (int i = 0; i < 3; ++i) {
-        matrix[i][3] = 0;
+    for (int i = 0; i <= 3; ++i) {
         matrix[i][i] = 1;
     }
 }
@@ -103,13 +102,24 @@ Matrix3D operator *(const Matrix3D &a, const Matrix3D &b) {
                 c[i][j] += a[i][k] * b[k][j];
     return c;
 }
-Vector3D operator *(const Matrix3D &m, const Vector3D &v) {
-    Vector3D ans;
+Vector3D operator *(const Matrix3D &m, const Vector3D &v0) {
+    Vector3D ans, v = v0;
+    v[3] = 1;
+
     for (int i = 0; i < 4; ++i) {
         ans[i] = 0;
-        for (int j = 0; j < 4; ++j)
             for (int k = 0; k < 4; ++k)
-                ans[i] += m[i][k] * v[j];
+                ans[i] += m[i][k] * v[k];
     }
+    ans[3] = 0;
     return ans;
+}
+
+std::ostream& operator<<(std::ostream &os, const Matrix3D &m) {
+    os << "<Matrix3D>:\n";
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j)
+            os << m[i][j] << ' ';
+        os <<'\n';
+    }
 }

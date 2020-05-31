@@ -22,8 +22,9 @@ public:
 
     virtual std::unique_ptr<Memento> save();
 
-protected:
+private:
     std::shared_ptr<BaseComposite> p;
+protected:
     QRVector<std::shared_ptr<BaseObject>> objects;
 };
 

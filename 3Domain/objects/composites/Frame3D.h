@@ -11,17 +11,19 @@
 
 class BaseFrame3D: public BaseComposite {
 public:
-    explicit BaseFrame3D(QRVector<std::shared_ptr<BaseObject>> &obj): BaseComposite(obj) {}
-    ~BaseFrame3D() {p.reset();}
+    explicit BaseFrame3D(QRVector<std::shared_ptr<BaseObject>> &obj): BaseComposite(obj) {
+        p_frame = std::shared_ptr<BaseFrame3D>(this, [](void *ptr){});
+    }
+    ~BaseFrame3D() {p_frame.reset();}
 
-    virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) {visitor->visitFrame3D(p);}
+    virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) {visitor->visitFrame3D(p_frame);}
 
-    std::shared_ptr<BaseFrame3D> getPointer() {return p;}
+    std::shared_ptr<BaseFrame3D> getPointer() {return p_frame;}
 
     virtual bool operator==(const BaseFrame3D &b) const = delete;
     virtual BaseFrame3D& operator=(const BaseFrame3D &p) = delete;
 private:
-    std::shared_ptr<BaseFrame3D> p;
+    std::shared_ptr<BaseFrame3D> p_frame;
 };
 
 class Frame3D: public BaseFrame3D {

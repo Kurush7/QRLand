@@ -20,7 +20,6 @@ bool Frame3DLoader::loadPoints() {
         points.push_back(factory->createPoint(cur));
     }
     center /= cnt;
-    center[3] = 1;
     for (auto &x: points)
         x->setBind(center);
 

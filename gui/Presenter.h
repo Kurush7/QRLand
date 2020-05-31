@@ -38,6 +38,7 @@ class Presenter: public QObject {
 Q_OBJECT
 public:
     explicit Presenter(MainWindow &w);
+    void setPainter();
 
     void backChangeColor();
 
@@ -53,7 +54,7 @@ public:
 private:
     MainWindow &window;
 
-    std::shared_ptr<Painter> painter;
+    std::shared_ptr<Painter> painter = nullptr;
     Lab3Facade facade;
 };
 

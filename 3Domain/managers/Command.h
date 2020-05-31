@@ -6,6 +6,8 @@
 #define BIG3DFLUFFY_COMMAND_H
 
 #include "../objects/QRObjects.h"
+#include "../Painter.h"
+#include "SceneDrawMethod.h"
 
 class BaseCommand {
 public:
@@ -31,6 +33,17 @@ public:
 private:
     std::shared_ptr<BaseFrame3DLoader> loader;
     FrameLoadDirector director;
+};
+
+class DrawCommand: public SceneCommand {
+public:
+    DrawCommand(std::shared_ptr<Painter> painter, std::shared_ptr<BaseScene3D> s)
+            :SceneCommand(s), painter(painter){}
+
+    virtual std::shared_ptr<Memento> exec();
+
+private:
+    std::shared_ptr<Painter> painter;
 };
 
 

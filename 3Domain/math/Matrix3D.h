@@ -6,6 +6,7 @@
 #define KG_MATRIX3D_H
 
 #include "Vector3D.h"
+#include <fstream>
 
 class Matrix3D {
 public:
@@ -29,6 +30,9 @@ Vector3D operator *(const Matrix3D&, const Vector3D&);
 
 Matrix3D makeID();
 Matrix3D makeNull();
+
+
+std::ostream& operator<<(std::ostream &os, const Matrix3D &m);
 
 
 #endif //KG_MATRIX3D_H

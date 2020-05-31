@@ -8,7 +8,7 @@ Scene3DBuilder::Scene3DBuilder (std::shared_ptr<AbstractObject3DFactory> f)
         :factory(f) {}
 
 bool Scene3DBuilder::makeCamera() {
-    camera = factory->createCamera(100, 100, Vector3D(0,0,0));
+    camera = factory->createCamera(100, 100, Vector3D(0,0,-10));
     stage++;
     return true;
 }

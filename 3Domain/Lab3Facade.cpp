@@ -25,6 +25,7 @@ void Lab3Facade::addModel(string filename) {
 }
 
 void Lab3Facade::draw(std::shared_ptr<Painter> painter) {
-    //todo manager.push draw
+    auto command = shared_ptr<BaseCommand>(new DrawCommand(painter, scene));
+    manager->push(command);
     manager->execAll();
 }
