@@ -22,12 +22,12 @@ public:
 private:
     QColor defineColor(QRColor c) {
         QColor st;
-        if (c == black) st = black;
-        if (c == white) st = white;
-        if (c == green) st = green;
-        if (c == blue) st = blue;
-        if (c == yellow) st = yellow;
-        if (c == red) st = red;
+        if (c == black) st = Qt::black;
+        if (c == white) st = Qt::white;
+        if (c == green) st = Qt::green;
+        if (c == blue) st = Qt::blue;
+        if (c == yellow) st = Qt::yellow;
+        if (c == red) st = Qt::red;
         return st;
     }
     Canvas3DViewer *canvas;
