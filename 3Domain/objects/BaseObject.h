@@ -16,7 +16,7 @@ public:
 };
 
 class BaseObject;
-using ObjectIterator = QRVector<std::shared_ptr<BaseObject>>;
+using ObjectIterator = QRVectorIterator<std::shared_ptr<BaseObject>>;
 
 class BaseObject {
 public:

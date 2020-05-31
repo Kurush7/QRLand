@@ -54,6 +54,12 @@ Vector3D& Vector3D::operator -=(const Vector3D &v) {
     return *this;
 }
 
+Vector3D& Vector3D::operator /=(double x) {
+    arr[0] /= x, arr[1] /= x;
+    arr[2] /= x, arr[3] /= x;
+    return *this;
+}
+
 bool operator ==(const Vector3D &a, const Vector3D &b) {
     return a.arr[0] == b.arr[0] && a.arr[1] == b.arr[1] &&
            a.arr[2] == b.arr[2] && a.arr[3] == b.arr[3];
@@ -81,6 +87,14 @@ Vector3D operator *(const Vector3D &a0, const Vector3D &b0) {
     c[1] = a[2]*b[0] - a[0]*b[2];
     c[2] = a[0]*b[1] - a[1]*b[0];
     return c;
+}
+
+Vector3D operator /(const Vector3D &a, double x) {
+    Vector3D b = a;
+    b[0] *= x;
+    b[1] *= x;
+    b[2] *= x;
+    return b;
 }
 
 Vector3D norm(const Vector3D &a) {

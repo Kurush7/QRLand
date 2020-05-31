@@ -11,4 +11,10 @@
 #include "components/Camera3D.h"
 #include "components/Industry.h"
 
+#include "composites/Frame3D.h"
+
+#include "managers/LoadSource.h"
+#include "managers/FrameLoader.h"
+
+
 #endif //KG_QROBJECTS_H

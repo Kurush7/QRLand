@@ -62,9 +62,30 @@ TEST(ObjectTests, AbstractFactory) {
     shared_ptr<BaseEdge3D> e = factory->createEdge(p1, p2);
     shared_ptr<BaseCamera3D> c = factory->createCamera(100, 100, Vector3D(-100,100,0));
 
-    //int cnt = 0;
-    //for (auto it = p1->begin(); it != p1->end(); ++it) {
-    //    cnt++;
-    //}
-    //EXPECT_EQ(cnt, 1);
+    int cnt = 0;
+    for (auto it = p1->begin(); it != p1->end(); ++it) {
+        cnt++;
+    }
+    EXPECT_EQ(cnt, 0);
+
+    QRVector<shared_ptr<BaseObject>> v1({p1, p2});
+    QRVector<shared_ptr<BaseObject>> v2({e, c});
+
+    QRDuoVectorIterator<shared_ptr<BaseObject>> beg(v1.getPointer(), v2.getPointer(), false);
+    QRDuoVectorIterator<shared_ptr<BaseObject>> end(v1.getPointer(), v2.getPointer(), true);
+    cnt = 0;
+    for (beg; beg != end; beg++) {
+        cnt++;
+    }
+    EXPECT_EQ(cnt, 4);
+}
+
+TEST(ObjectTests, model3D) {
+    auto factory = shared_ptr<AbstractObject3DFactory>(new BasicObject3DFactory());
+    auto data = shared_ptr<LoadData> (new FileLoadData("test.txt"));
+    auto source = shared_ptr<LoadSource>(new FileSource(data));
+    auto loader = shared_ptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
+    auto director = FrameLoadDirector();
+    auto model = director.load(loader);
+    EXPECT_NE(model, nullptr);
 }

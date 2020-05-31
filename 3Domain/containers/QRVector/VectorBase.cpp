@@ -6,7 +6,7 @@
 
 
 VectorBase::VectorBase(size_t sz) {
-    this->size = std::shared_ptr<size_t>(new size_t(sz));
+    this->size = std::shared_ptr<size_t>(new size_t(0));
     if (!this->size)
         throw ErrorAlloc(__FILE__, __LINE__, "can't allocate memory", __DATE__);
 }

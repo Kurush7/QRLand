@@ -6,5 +6,7 @@ set(source_list ${source_list}
         ${path}/components/Projection.cpp
         ${path}/components/Industry.cpp
         ${path}/composites/Frame3D.cpp
+        ${path}/managers/LoadSource.cpp
+        ${path}/managers/FrameLoader.cpp
         ${path}/exceptions/QRObjectException.cpp
         PARENT_SCOPE)

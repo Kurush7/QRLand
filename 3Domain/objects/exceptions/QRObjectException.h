@@ -22,5 +22,15 @@ public:
     virtual const char* what() const noexcept override;
 };
 
+class QRBadSourceException: public QRObjectException
+{
+public:
+    QRBadSourceException(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRBadSourceException() = default;
+
+    virtual const char* what() const noexcept override;
+};
+
+
 
 #endif //QR_OBJECTEXCEPTION_H

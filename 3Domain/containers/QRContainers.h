@@ -11,6 +11,8 @@
 
 #include "QRSet/QRSet.h"
 #include "QRVector/QRVector.h"
+#include "containers/QRVector/QRDuoVectorIterator.h"
+
 #include "QRPair/QRPair.h"
 
 #endif //QRCONTAINERS_H

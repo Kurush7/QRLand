@@ -7,7 +7,6 @@
 
 #include "BaseObject.h"
 
-class Point3DMemento;
 class BasePoint3D: public Object3D {
 public:
     BasePoint3D(PointStyle s = PointStyle()): style(s) {

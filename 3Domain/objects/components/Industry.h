@@ -74,6 +74,7 @@ public:
 
 class BasicObject3DFactory: public AbstractObject3DFactory {
 public:
+    BasicObject3DFactory(QRColor pc = yellow, QRColor ec = green): pc(pc), ec(ec) {}
     virtual std::unique_ptr<BasePoint3D> createPoint(const Vector3D &vec,
             const Vector3D &bind = Vector3D()) {return point_cr.create(vec,bind);}
     virtual std::unique_ptr<BaseEdge3D> createEdge(std::shared_ptr<BasePoint3D> start,
@@ -81,8 +82,9 @@ public:
     virtual std::unique_ptr<BaseCamera3D> createCamera(double w, double h,
                                                        const Vector3D &origin) {return camera_cr.create(w,h,origin);}
 private:
-    Point3DCreator point_cr = Point3DCreator(yellow);
-    Edge3DCreator edge_cr = Edge3DCreator(green);
+    QRColor pc, ec;
+    Point3DCreator point_cr = Point3DCreator(pc);
+    Edge3DCreator edge_cr = Edge3DCreator(ec);
     FrontalCamera3DCreator camera_cr = FrontalCamera3DCreator(100);
 };
 

@@ -7,14 +7,31 @@
 
 #include "../BaseObject.h"
 
-class BaseComposite: public BaseObject {
+
+class GroupMemento: public Memento {
 public:
-    virtual bool isComposite() {return true;}
-    virtual ObjectIterator begin() {return vector.begin();}
-    virtual ObjectIterator end() {return vector.end();}
+    GroupMemento(QRVector<std::shared_ptr<BaseObject>> objects) {
+        for (auto obj: objects)
+            memes.push_back(obj->save());
+    }
+    virtual void restore() {
+        for (auto meme: memes)
+            meme->restore();
+    }
 private:
-    QRVector<shared_ptr<BaseObject>> vector;
+    QRVector<std::shared_ptr<Memento>> memes;
 };
 
+
+class BaseComposite: public BaseObject {
+public:
+    BaseComposite(QRVector<std::shared_ptr<BaseObject>> obj): objects(obj) {}
+    virtual bool isComposite() {return true;}
+
+    virtual std::unique_ptr<Memento> save() {return std::unique_ptr<Memento>(new GroupMemento(objects));}
+
+protected:
+    QRVector<std::shared_ptr<BaseObject>> objects;
+};
 
 #endif //BIG3DFLUFFY_BASECOMPOSITE_H

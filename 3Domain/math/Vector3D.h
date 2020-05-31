@@ -12,6 +12,7 @@
 
 #include "exceptions/MathException.h"
 
+// todo problem: consider arr[3] or not when operating?
 
 const double EPS = 1e-9;
 
@@ -24,6 +25,7 @@ public:
 
     Vector3D& operator +=(const Vector3D&);
     Vector3D& operator -=(const Vector3D&);
+    Vector3D& operator /=(double);
     double& operator[](int);
     const double& operator[](int) const;
 
@@ -36,5 +38,6 @@ bool operator !=(const Vector3D&, const Vector3D&);
 Vector3D operator +(const Vector3D&, const Vector3D&);
 Vector3D operator -(const Vector3D&, const Vector3D&);
 Vector3D operator *(const Vector3D&, const Vector3D&);
+Vector3D operator /(const Vector3D&, double);
 
 #endif //KG_VECTOR3D_H

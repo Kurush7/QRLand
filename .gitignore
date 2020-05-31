@@ -11,7 +11,8 @@
 *.EXE
 **/CMakeFiles/**
 **/MakeFile
-
+**/html/**
+**/latex/**
 
 
 

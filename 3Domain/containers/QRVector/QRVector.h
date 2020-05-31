@@ -16,15 +16,14 @@ const double DEFAULT_SIZE = 8;
 
 template <typename T>
 class QRVector: public VectorBase {
-private:
-    std::shared_ptr<T[]> arr;
-    void grow();
 public:
-    explicit QRVector(size_t = DEFAULT_SIZE);
+    explicit QRVector(size_t = 0);
     QRVector(size_t, T*);
     QRVector(std::initializer_list<T>);
     QRVector(const QRVector<T> &);
     QRVector(QRVector<T>&&);
+
+    std::shared_ptr<QRVector<T>> getPointer() {return p;}
 
     QRVector<T>& operator =(const QRVector<T>&);
     QRVector<T>& operator =(const QRVector<T>&&);
@@ -33,7 +32,10 @@ public:
     QRVectorIterator<T> begin() const;
     QRVectorIterator<T> end() const;
 
-    T& operator [](int index);
+    T& getElem(size_t index) {return arr[index];}
+    const T& getElem(size_t index) const {return arr[index];}
+
+    T& operator [](size_t index);
     const T& operator [](size_t index) const;
     void push_back(const T& newValue);
 
@@ -43,6 +45,10 @@ public:
     bool operator !=(const QRVector<T>& vec) const;
     bool isEqual(const QRVector<T>& vec) const;
     bool isNotEqual(const QRVector<T>& vec) const;
+private:
+    std::shared_ptr<T[]> arr;
+    std::shared_ptr<QRVector<T>> p;
+    void grow();
 };
 
 using namespace std;
@@ -66,11 +72,12 @@ void QRVector<T>::grow() {
 
 template<typename T>
 QRVector<T>::QRVector(size_t sz):VectorBase(sz) {
+    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
     try {
         max_size = DEFAULT_SIZE;
         while (max_size < sz)
             max_size *= 2;
-        size = shared_ptr<size_t>(new size_t(0));
+        size = shared_ptr<size_t>(new size_t(sz));
         this->arr = std::shared_ptr<T[]>(new T[max_size]);
     }
     catch (bad_alloc &exc) {
@@ -80,6 +87,7 @@ QRVector<T>::QRVector(size_t sz):VectorBase(sz) {
 
 template<typename T>
 QRVector<T>::QRVector(size_t sz, T *vec): VectorBase(sz) {
+    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
     if (!vec)
         throw ErrorNullptr(__FILE__, __LINE__, __TIME__, "can't initialize vector with nullptr");
     try {
@@ -95,14 +103,16 @@ QRVector<T>::QRVector(size_t sz, T *vec): VectorBase(sz) {
 
 template<typename T>
 QRVector<T>::QRVector(std::initializer_list<T> initList): QRVector(initList.size()) {
+    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
     size_t i = 0;
     for (auto &elem : initList)
         arr[i] = elem;
 }
 
 template<typename T>
-QRVector<T>::QRVector(const QRVector<T> &vec) {
-    while (*size < vec.len())
+QRVector<T>::QRVector(const QRVector<T> &vec): QRVector() {
+    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
+    while (max_size < vec.len())
         grow();
 
     size = vec.size;
@@ -112,6 +122,7 @@ QRVector<T>::QRVector(const QRVector<T> &vec) {
 
 template<typename T>
 QRVector<T>::QRVector(QRVector<T> &&vec) {
+    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
     arr = vec.arr;
     size = vec.size;
     max_size = vec.max_size;
@@ -139,7 +150,7 @@ void QRVector<T>::push_back(const T &val) {
 }
 
 template<typename T>
-T& QRVector<T>::operator[](int index) {
+T& QRVector<T>::operator[](size_t index) {
     return this->getElem(index);
 }
 

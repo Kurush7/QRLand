@@ -24,3 +24,6 @@ target_link_libraries(tests.exe
         gtest
         gtest_main
         )
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/objects/test.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
