@@ -29,3 +29,16 @@ TEST(QRVectorTests, basic)
         EXPECT_EQ(visited[i], 1);
 }
 
+TEST(QRVectorTests, queue_stack)
+{
+    QRQueue<int> q;
+    QRStack<int> s;
+
+    int n = 10;
+    for (int i = 0; i < n; ++i)
+        q.push(i), s.push(i);
+    for (int i = 0; i < n; ++i) {
+        EXPECT_EQ(q.pop(), i);
+        EXPECT_EQ(s.pop(), n-i-1);
+    }
+}

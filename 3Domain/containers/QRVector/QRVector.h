@@ -38,6 +38,12 @@ public:
     T& operator [](size_t index);
     const T& operator [](size_t index) const;
     void push_back(const T& newValue);
+    T pop_back() {
+        if(*size == 0)
+            throw ErrorIndex(__FILE__, __LINE__, __TIME__, "pop from empty queue");
+        (*size)--;
+        return arr[*size];
+    }
 
     size_t len() const;
 
