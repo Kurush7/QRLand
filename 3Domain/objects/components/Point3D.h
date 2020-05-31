@@ -37,7 +37,7 @@ private:
 
 class Point3DMemento: public Memento {
 public:
-    Point3DMemento(std::weak_ptr<BasePoint3D>);
+    Point3DMemento(std::shared_ptr<BasePoint3D>);
     virtual void restore();
 
 private:

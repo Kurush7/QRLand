@@ -26,14 +26,8 @@ void BaseCamera3D::setHeight(double height) {
     BaseCamera3D::height = height;
 }
 
-Camera3DMemento::Camera3DMemento(weak_ptr<BaseCamera3D> wp) {
-    if (wp.expired()) {
-        time_t t = time(nullptr);
-        throw QRBadPointerException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to create memento!");
-    }
-
-    object = wp;
-    shared_ptr<BaseCamera3D> p(wp);
+Camera3DMemento::Camera3DMemento(shared_ptr<BaseCamera3D> p) {
+    object = p;
     origin = p->getOrigin();
     bind = p->getBind();
     width = p->getWidth();

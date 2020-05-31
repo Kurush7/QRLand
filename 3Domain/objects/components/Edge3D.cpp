@@ -11,14 +11,8 @@ unique_ptr<Memento> BaseEdge3D::save() {
     return unique_ptr<Memento>(new Edge3DMemento(p));
 }
 
-Edge3DMemento::Edge3DMemento(weak_ptr<BaseEdge3D> wp) {
-    if (wp.expired()) {
-        time_t t = time(nullptr);
-        throw QRBadPointerException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to create memento!");
-    }
-
-    object = wp;
-    shared_ptr<BaseEdge3D> p(wp);
+Edge3DMemento::Edge3DMemento(shared_ptr<BaseEdge3D> p) {
+    object = p;
     start = p->getStart();
     end = p->getEnd();
     style = p->getStyle();

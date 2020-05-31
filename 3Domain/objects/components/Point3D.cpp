@@ -11,14 +11,8 @@ unique_ptr<Memento> BasePoint3D::save() {
     return unique_ptr<Memento>(new Point3DMemento(p));
 }
 
-Point3DMemento::Point3DMemento(weak_ptr<BasePoint3D> wp) {
-    if (wp.expired()) {
-        time_t t = time(nullptr);
-        throw QRBadPointerException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to create memento!");
-    }
-
-    object = wp;
-    shared_ptr<BasePoint3D> p(wp);
+Point3DMemento::Point3DMemento(shared_ptr<BasePoint3D> p) {
+    object = p;
     point = p->getPoint();
     bind = p->getBind();
     style = p->getStyle();

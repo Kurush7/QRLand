@@ -15,6 +15,7 @@
 
 #include "managers/LoadSource.h"
 #include "managers/FrameLoader.h"
+#include "managers/SceneBuilder.h"
 
 
 #endif //KG_QROBJECTS_H

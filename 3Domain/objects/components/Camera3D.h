@@ -49,7 +49,7 @@ protected:
 
 class Camera3DMemento: public Memento {
 public:
-    Camera3DMemento(std::weak_ptr<BaseCamera3D>);
+    Camera3DMemento(std::shared_ptr<BaseCamera3D>);
     virtual void restore();
 
 private:

@@ -37,7 +37,7 @@ private:
 
 class Edge3DMemento: public Memento {
 public:
-    Edge3DMemento(std::weak_ptr<BaseEdge3D>);
+    Edge3DMemento(std::shared_ptr<BaseEdge3D>);
     virtual void restore();
 
 private:

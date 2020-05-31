@@ -11,7 +11,7 @@
 
 class BaseFrame3D: public BaseComposite {
 public:
-    explicit BaseFrame3D(QRVector<std::shared_ptr<BaseObject>> obj): BaseComposite(obj) {}
+    explicit BaseFrame3D(QRVector<std::shared_ptr<BaseObject>> &obj): BaseComposite(obj) {}
     ~BaseFrame3D() {p.reset();}
 
     std::shared_ptr<BaseFrame3D> getPointer() {return p;}

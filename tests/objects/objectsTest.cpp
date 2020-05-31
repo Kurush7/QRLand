@@ -88,4 +88,29 @@ TEST(ObjectTests, model3D) {
     auto director = FrameLoadDirector();
     auto model = director.load(loader);
     EXPECT_NE(model, nullptr);
+
+    // hand-testing
+    auto mem = model->save();
+    QRVector<shared_ptr<BaseObject>> v;
+    model->setObjects(v);
+    mem->restore();
+}
+
+TEST(ObjectTests, scene3D) {
+    auto factory = shared_ptr<AbstractObject3DFactory>(new BasicObject3DFactory());
+    auto data = shared_ptr<LoadData> (new FileLoadData("test.txt"));
+    auto source = shared_ptr<LoadSource>(new FileSource(data));
+    auto loader = shared_ptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
+    auto director = FrameLoadDirector();
+    auto model = director.load(loader);
+
+
+    auto sceneBuilder = std::shared_ptr<BaseScene3DBuilder> (new Scene3DBuilder(factory));
+    auto sceneDirector = SceneBuildDirector();
+    auto scene = sceneDirector.build(sceneBuilder);
+
+    auto mem = scene->save();
+    QRVector<shared_ptr<BaseObject>> v;
+    scene->setObjects(v);
+    mem->restore();
 }

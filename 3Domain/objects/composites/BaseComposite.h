@@ -8,30 +8,38 @@
 #include "../BaseObject.h"
 
 
-class GroupMemento: public Memento {
-public:
-    GroupMemento(QRVector<std::shared_ptr<BaseObject>> objects) {
-        for (auto obj: objects)
-            memes.push_back(obj->save());
-    }
-    virtual void restore() {
-        for (auto meme: memes)
-            meme->restore();
-    }
-private:
-    QRVector<std::shared_ptr<Memento>> memes;
-};
 
-
+class GroupMemento;
 class BaseComposite: public BaseObject {
 public:
-    BaseComposite(QRVector<std::shared_ptr<BaseObject>> obj): objects(obj) {}
+    explicit BaseComposite(QRVector<std::shared_ptr<BaseObject>> &obj): objects(obj) {
+        p = std::shared_ptr<BaseComposite>(this, [](void *ptr){});
+    }
     virtual bool isComposite() {return true;}
 
-    virtual std::unique_ptr<Memento> save() {return std::unique_ptr<Memento>(new GroupMemento(objects));}
+    virtual const QRVector<std::shared_ptr<BaseObject>>& getObjects() {return objects;}
+    virtual void setObjects(QRVector<std::shared_ptr<BaseObject>>&obj) {objects = obj;}
+
+    virtual std::unique_ptr<Memento> save();
 
 protected:
+    std::shared_ptr<BaseComposite> p;
     QRVector<std::shared_ptr<BaseObject>> objects;
+};
+
+class GroupMemento: public Memento {
+public:
+    GroupMemento(std::shared_ptr<BaseComposite> obj): object(obj) {
+        memes = obj->getObjects();
+    }
+    virtual void restore() {
+        if (object.expired())
+            throw QRBadPointerException(__FILE__, __LINE__, __TIME__, "Failed to create memento!");
+        object.lock()->setObjects(memes);
+    }
+private:
+    std::weak_ptr<BaseComposite> object;
+    QRVector<std::shared_ptr<BaseObject>> memes;
 };
 
 #endif //BIG3DFLUFFY_BASECOMPOSITE_H

@@ -5,8 +5,11 @@ set(source_list ${source_list}
         ${path}/components/Camera3D.cpp
         ${path}/components/Projection.cpp
         ${path}/components/Industry.cpp
+        ${path}/composites/BaseComposite.cpp
         ${path}/composites/Frame3D.cpp
+        ${path}/composites/Scene3D.cpp
         ${path}/managers/LoadSource.cpp
         ${path}/managers/FrameLoader.cpp
+        ${path}/managers/SceneBuilder.cpp
         ${path}/exceptions/QRObjectException.cpp
         PARENT_SCOPE)

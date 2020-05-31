@@ -8,6 +8,7 @@ Frame3DLoader::Frame3DLoader (std::shared_ptr<LoadSource> src,  std::shared_ptr<
 : source(src), factory(f) {}
 
 bool Frame3DLoader::loadPoints() {
+    if (stage != 0) return false;
     int cnt = source->readInt();
     if (!cnt) return false;
     Vector3D cur, center;

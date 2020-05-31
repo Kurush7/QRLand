@@ -175,16 +175,19 @@ size_t QRVector<T>::len() const {
 
 template<typename T>
 QRVector<T> &QRVector<T>::operator =(const QRVector<T> &newVec) {
-    grow(newVec.getSize());
+    while (max_size < newVec.len())
+        grow();
 
-    QRVectorIterator<T> iter(arr, size);
-    for (auto newIter = newVec.begin(); newIter != newVec.end(); newIter++)
-        *iter = *newIter;
+    *size = newVec.len();
+    for (size_t i = 0; i < *size; ++i)
+        arr[i] = newVec[i];
 }
 
 template<typename T>
 QRVector<T> &QRVector<T>::operator =(const QRVector<T> &&newVec) {
-    grow(newVec.getSize());
+    // todo
+    size = newVec.size;
+    max_size = newVec.max_size;
     arr = newVec.arr;
     newVec.arr.reset();
 
