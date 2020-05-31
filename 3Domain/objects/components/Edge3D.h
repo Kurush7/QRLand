@@ -16,6 +16,8 @@ public:
     }
     ~BaseEdge3D() {p.reset();}
 
+    virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) {visitor->visitEdge3D(p);}
+
     virtual std::unique_ptr<Memento> save();
     virtual bool isValid() const = 0;
 

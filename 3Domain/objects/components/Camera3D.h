@@ -15,6 +15,8 @@ public:
         p = std::shared_ptr<BaseCamera3D>(this, [](void *ptr){});}
     ~BaseCamera3D() {p.reset();}
 
+    virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) {visitor->visitCamera3D(p);}
+
     virtual std::unique_ptr<Memento> save();
     virtual std::unique_ptr<BaseTransformer3D> getProjectionTransformer() = 0;
 

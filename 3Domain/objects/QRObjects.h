@@ -17,5 +17,7 @@
 #include "managers/FrameLoader.h"
 #include "managers/SceneBuilder.h"
 
+#include "visitors/Visitor.h"
+
 
 #endif //KG_QROBJECTS_H

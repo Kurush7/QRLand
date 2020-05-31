@@ -10,6 +10,18 @@
 #include "../containers/QRContainers.h"
 #include "exceptions/QRObjectException.h"
 
+class BaseQRPoint3D;
+class BaseEdge3D;
+class BaseCamera3D;
+class BaseFrame3D;
+class Visitor {
+public:
+    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) = 0;
+    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge) = 0;
+    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera) = 0;
+    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame) = 0;
+};
+
 class Memento {
 public:
     virtual void restore() = 0;
@@ -21,7 +33,7 @@ using ObjectIterator = QRVectorIterator<std::shared_ptr<BaseObject>>;
 class BaseObject {
 public:
     virtual std::unique_ptr<Memento> save() = 0;
-    // todo accept visitor
+    virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) = 0;
     virtual bool isVisible() {return visible;}
     virtual bool isComposite() = 0;
 

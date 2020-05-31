@@ -14,6 +14,8 @@ public:
     explicit BaseFrame3D(QRVector<std::shared_ptr<BaseObject>> &obj): BaseComposite(obj) {}
     ~BaseFrame3D() {p.reset();}
 
+    virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) {visitor->visitFrame3D(p);}
+
     std::shared_ptr<BaseFrame3D> getPointer() {return p;}
 
     virtual bool operator==(const BaseFrame3D &b) const = delete;

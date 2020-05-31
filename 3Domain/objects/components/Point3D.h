@@ -15,7 +15,7 @@ public:
     ~BaseQRPoint3D() {p.reset();}
 
     virtual std::unique_ptr<Memento> save();
-
+    virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) {visitor->visitPoint3D(p);}
     virtual const Vector3D getPoint() const = 0;
     virtual void setVector(const Vector3D&) = 0;
     virtual const QRPointStyle& getStyle() const {return style;}

@@ -12,4 +12,5 @@ set(source_list ${source_list}
         ${path}/managers/FrameLoader.cpp
         ${path}/managers/SceneBuilder.cpp
         ${path}/exceptions/QRObjectException.cpp
+        ${path}/visitors/Visitor.cpp
         PARENT_SCOPE)
