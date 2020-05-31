@@ -11,6 +11,7 @@
 
 class QTPainter: public Painter {
 public:
+    QTPainter(Canvas3DViewer *c): canvas(c) {}
     virtual void drawPoint(double x, double y, QRPointStyle s) {
         canvas->addObject(new Point(x, y, defineColor(s.color)));
     }
@@ -29,7 +30,6 @@ private:
         if (c == red) st = red;
         return st;
     }
-
     Canvas3DViewer *canvas;
 };
 
@@ -37,7 +37,7 @@ class MainWindow;
 class Presenter: public QObject {
 Q_OBJECT
 public:
-    explicit Presenter(MainWindow &w): window(w) {}
+    explicit Presenter(MainWindow &w);
 
     void backChangeColor();
 
@@ -52,6 +52,9 @@ public:
     void transform(TransformStateDir);
 private:
     MainWindow &window;
+
+    std::shared_ptr<Painter> painter;
+    Lab3Facade facade;
 };
 
 

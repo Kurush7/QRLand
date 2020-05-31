@@ -12,6 +12,11 @@ add_library(lab03_lib STATIC
         Presenter.cpp
         )
 
+# todo not working!
+target_compile_definitions(lab03_lib PUBLIC
+        CURRENT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../models"
+        )
+
 target_link_libraries(lab03_lib
         xyz_lib
         draw_lib

@@ -16,10 +16,13 @@ public:
 
 class Lab3Facade {
 public:
-    void draw(const Painter &);
+    Lab3Facade();
+    void draw(std::shared_ptr<Painter>);
     void addModel(std::string filename);
 private:
     std::shared_ptr<BaseCommandManager> manager;
+    std::shared_ptr<AbstractObject3DFactory> factory;
+    std::shared_ptr<BaseScene3D> scene;
 
 };
 
