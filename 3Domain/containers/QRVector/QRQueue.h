@@ -11,6 +11,10 @@ template <typename T>
 class QRQueue {
 public:
     QRQueue() {}
+
+    size_t size() {return vector.len();}
+    bool isEmpty() {return vector.isEmpty();}
+
     void push(const T &x) {vector.push_back(x);}
     T pop() {
         if (vector.isEmpty())

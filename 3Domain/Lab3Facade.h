@@ -5,10 +5,10 @@
 #ifndef KG_LAB3FACADE_H
 #define KG_LAB3FACADE_H
 
+#include "objects/QRObjects.h"
+#include "managers/QRManagers.h"
 
-class Lab3Facade {
 
-};
 
 
 #endif //KG_LAB3FACADE_H

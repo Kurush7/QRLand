@@ -12,6 +12,10 @@ template <typename T>
 class QRStack {
 public:
     QRStack() {}
+
+    size_t size() {return vector.len();}
+    bool isEmpty() {return vector.isEmpty();}
+
     void push(const T &x) {vector.push_back(x);}
     T pop() {
         return vector.pop_back();
