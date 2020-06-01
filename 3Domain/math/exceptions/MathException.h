@@ -10,14 +10,12 @@
 #include <cstdio>
 #include <cstdlib>
 
-class QRMathException: public std::exception {
-public:
-    explicit QRMathException(const char *file, int line, const char *time, const char *msg);
-    virtual ~QRMathException();
-    virtual const char* what() const noexcept override;
+#include "../../exceptions/QRException.h"
 
-protected:
-    char* errorMsg;
+class QRMathException: public QRException {
+public:
+    explicit QRMathException(const char *file, int line, const char *time, const char *msg)
+    :QRException(file, line, time, msg) {}
 };
 
 class QRMathWrongDimension: public QRMathException

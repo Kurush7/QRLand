@@ -8,6 +8,8 @@ using namespace std;
 
 shared_ptr<Memento> AddModelCommand::exec() {
     auto model = director.load(loader);
+    if (!model)
+        throw QRBadSourceException(__FILE__, __LINE__, __TIME__, "failed to read model from file!");
     auto mem = scene->save();
     scene->addObject(model);
     return mem;

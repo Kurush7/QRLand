@@ -64,7 +64,7 @@ class HideInvisibleDrawMethodVisitor: public BaseDrawMethodVisitor {
 public:
     HideInvisibleDrawMethodVisitor(double z_min): z_min(z_min) {}
     void visitDrawPoint(DrawablePoint &p) {
-        cout << "point-z:" << p.z << '\n';
+        //cout << "point-z:" << p.z << '\n';
         visible = p.z > z_min;
     }
     void visitDrawEdge(DrawableEdge &e) {

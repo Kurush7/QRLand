@@ -40,7 +40,7 @@ void Lab3Facade::move(double dx, double dy, double dz) {
         command = shared_ptr<BaseCommand>(new TransformCameraCommand(trans, scene));
     else
         command = shared_ptr<BaseCommand>(new MoveTransformSelectionCommand(trans, scene));
-    cout << "move by: " << dx << ' ' << dy << ' ' << dz <<"\nmatrix:" << trans->getMatrix();
+    //cout << "move by: " << dx << ' ' << dy << ' ' << dz <<"\nmatrix:" << trans->getMatrix();
     manager->push(command);
 }
 void Lab3Facade::scale(double kx, double ky, double kz) {
@@ -53,7 +53,7 @@ void Lab3Facade::scale(double kx, double ky, double kz) {
     else
         command = shared_ptr<BaseCommand>(new TransformSelectionCommand(trans, scene));
 
-    cout << "scale by: " << kx << ' ' << ky << ' ' << kz <<"\nmatrix:" << trans->getMatrix();
+    //cout << "scale by: " << kx << ' ' << ky << ' ' << kz <<"\nmatrix:" << trans->getMatrix();
     manager->push(command);
 }
 void Lab3Facade::rotate(double dx, double dy, double dz) {
@@ -66,13 +66,14 @@ void Lab3Facade::rotate(double dx, double dy, double dz) {
     else
         command = shared_ptr<BaseCommand>(new TransformSelectionCommand(trans, scene));
 
-    cout << "rotate by: " << dx << ' ' << dy << ' ' << dz <<"\nmatrix:" << trans->getMatrix();
+    //cout << "rotate by: " << dx << ' ' << dy << ' ' << dz <<"\nmatrix:" << trans->getMatrix();
     manager->push(command);
 }
 
 void Lab3Facade::select(double x, double y) {
     auto command = shared_ptr<BaseCommand>(new SelectCommand(x, y, scene));
-    cout << "select by: " << x << ' ' << y <<"\n";
+    //cout << "select by: " << x << ' ' << y <<"\n";
+    //cout << "select by: " << x << ' ' << y <<"\n";
     manager->push(command);
 }
 

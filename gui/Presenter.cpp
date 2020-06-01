@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include <QtGui>
+#include <QMessageBox>
 #include "Presenter.h"
 #include "MainWindow.h"
 
@@ -31,9 +32,16 @@ void Presenter::setPainter() {
 }
 
 void Presenter::loadModel() {
-    auto filename = window.fileName->text().toUtf8().constData();
-    facade.addModel(filename);
-    facade.draw(painter);
+    try {
+        auto filename = window.fileName->text().toUtf8().constData();
+        facade.addModel(filename);
+        facade.draw(painter);
+    }
+    catch (QRException &exc) {
+        QMessageBox msgBox;
+        msgBox.setText(exc.what());
+        msgBox.exec();
+    }
 }
 void Presenter::openFile() {
     auto fileName = QFileDialog::getOpenFileName(&window, tr("Open File"), "~", tr("*"));

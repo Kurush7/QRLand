@@ -129,8 +129,8 @@ void SelectionVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
 
     double val = sqrt(x*x+y*y);
     is_selected |= (fabs(len) + val)/ val < SELECTION_ERROR;
-    cout << "edge " << s[0] << ' ' << s[1] << " <=> " << e[0] << ' ' << e[1] << " :: ";
-    cout << len << ' ' << val << ' ' << (fabs(len) + val)/ val << '\n';
+    //cout << "edge " << s[0] << ' ' << s[1] << " <=> " << e[0] << ' ' << e[1] << " :: ";
+    //cout << len << ' ' << val << ' ' << (fabs(len) + val)/ val << '\n';
 }
 void SelectionVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
     is_selected = false;

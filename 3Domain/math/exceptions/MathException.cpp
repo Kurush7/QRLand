@@ -6,32 +6,6 @@
 
 using namespace std;
 
-QRMathException::QRMathException(const char *file, int line, const char *time, const char *msg) {
-    try {
-        int n = strlen(time);
-        bool flag = false;
-        if (time[n - 1] == '\n')
-            flag = true;
-
-        size_t len = strlen(file) + 64 + n + strlen(msg) + 1;
-        errorMsg = new char[len];
-        errorMsg[0] = '\0';
-        strcat(errorMsg, msg);
-        sprintf(errorMsg, "  file: %s\n  line: %-8d\n  time: %s%s  error: %s\n", file, line, time, flag ? "" : "\n",
-                msg);
-    }
-    catch (bad_alloc &exc) {
-        throw;
-    }
-}
-QRMathException::~QRMathException() {
-    delete[] errorMsg;
-}
-const char* QRMathException::what() const noexcept {
-    return errorMsg;
-}
-
-
 QRMathWrongDimension::QRMathWrongDimension(const char *file, int line, const char *time,
                                            const char *msg, int sent, int expected): QRMathException(file, line, time, msg),
                                                                           dim1(sent), dim2(expected) {}
