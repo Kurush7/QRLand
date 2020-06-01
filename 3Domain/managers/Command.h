@@ -76,5 +76,38 @@ private:
 };
 
 
+class TransformSelectionCommand: public SceneCommand {
+public:
+    TransformSelectionCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
+            :SceneCommand(s), transformer(trans){}
+
+    virtual std::shared_ptr<Memento> exec();
+
+protected:
+    std::shared_ptr<BaseTransformer3D> transformer;
+};
+
+class SetColorSelectionCommand: public SceneCommand {
+public:
+    SetColorSelectionCommand(ColorKeeper keeper, std::shared_ptr<BaseScene3D> &s)
+            :SceneCommand(s), keeper(keeper){}
+
+    virtual std::shared_ptr<Memento> exec();
+
+protected:
+    std::shared_ptr<BaseTransformer3D> transformer;
+    ColorKeeper keeper;
+};
+
+class DeleteSelectionCommand: public SceneCommand {
+public:
+    DeleteSelectionCommand(std::shared_ptr<BaseScene3D> &s)
+            :SceneCommand(s){}
+
+    virtual std::shared_ptr<Memento> exec();
+};
+
+
+
 
 #endif //BIG3DFLUFFY_COMMAND_H

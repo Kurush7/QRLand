@@ -74,7 +74,7 @@ public:
 
 class BasicObject3DFactory: public AbstractObject3DFactory {
 public:
-    BasicObject3DFactory(QRColor pc = yellow, QRColor ec = green): pc(pc), ec(ec) {}
+    BasicObject3DFactory(QRColor pc = QRColor("white"), QRColor ec = QRColor("green")): pc(pc), ec(ec) {}
     virtual std::unique_ptr<BaseQRPoint3D> createPoint(const Vector3D &vec,
             const Vector3D &bind = Vector3D()) {return point_cr.create(vec,bind);}
     virtual std::unique_ptr<BaseEdge3D> createEdge(std::shared_ptr<BaseQRPoint3D> start,

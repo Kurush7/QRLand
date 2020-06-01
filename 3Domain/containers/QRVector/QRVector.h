@@ -10,9 +10,11 @@
 #include <cmath>
 #include <iostream>
 #include "VectorBase.h"
-#include "QRVectorIterator.h"
 
 const double DEFAULT_SIZE = 8;
+
+template <typename T>
+class QRVectorIterator;
 
 template <typename T>
 class QRVector: public VectorBase {
@@ -38,6 +40,7 @@ public:
     T& operator [](size_t index);
     const T& operator [](size_t index) const;
     void push_back(const T& newValue);
+    void push_front(const T& newValue);
     T pop_back() {
         if(*size == 0)
             throw ErrorIndex(__FILE__, __LINE__, __TIME__, "pop from empty queue");
@@ -46,6 +49,17 @@ public:
     }
 
     T pop(size_t ind) {
+        if(*size <= ind)
+            throw ErrorIndex(__FILE__, __LINE__, __TIME__, "pop from bad index");
+        T x = arr[ind];
+        for (size_t i = ind; i < *size-1; ++i)
+            arr[i] = arr[i+1];
+        (*size)--;
+        return x;
+    }
+
+    T pop(QRVectorIterator<T> it) {
+        size_t ind = it.index;
         if(*size <= ind)
             throw ErrorIndex(__FILE__, __LINE__, __TIME__, "pop from bad index");
         T x = arr[ind];
@@ -164,6 +178,16 @@ void QRVector<T>::push_back(const T &val) {
     arr[*size] = val;
     (*size)++;
 }
+
+template<typename T>
+void QRVector<T>::push_front(const T &val) {
+    if (*size >= max_size - 1) grow();
+    for (size_t i = (*size+1); i > 0; --i)
+        arr[i] = arr[i-1];
+    arr[0] = val;
+    (*size)++;
+}
+
 
 template<typename T>
 T& QRVector<T>::operator[](size_t index) {

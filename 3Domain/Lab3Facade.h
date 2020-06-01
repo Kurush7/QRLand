@@ -9,6 +9,7 @@
 #include "managers/QRManagers.h"
 #include "Painter.h"
 
+
 class Lab3Facade {
 public:
     Lab3Facade();
@@ -19,6 +20,13 @@ public:
     void move(double dx, double dy, double dz);
     void scale(double kx, double ky, double kz);
     void rotate(double dx, double dy, double dz);
+
+    void deleteSelection();
+    void undo();
+
+    void setColor(QRColor pointcolor, QRColor edgeColor);
+
+    bool isEmptySelection() {return scene->isEmptySelection();}
 
 private:
     std::shared_ptr<BaseCommandManager> manager;

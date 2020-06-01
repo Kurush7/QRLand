@@ -10,7 +10,7 @@ unique_ptr<BaseTransformer3D> OrthogonalProjection::getTransformer(const Vector3
                                          const Vector3D &zeroPoint, const Vector3D &ViewUpVector) {
     auto oz = lenNorm(zeroPoint - origin);
     auto oy = lenNorm(ViewUpVector);
-    ProjectionTransformer3DCreator creator(zeroPoint, oz * oy, oy, oz);
+    ProjectionTransformer3DCreator creator(zeroPoint, oy * oz, oy, oz);
     return creator.create();
-    //todo normalize, minus ox??!!!!
+    //todo oz * oy is theoretially correct....??!!!!
 }

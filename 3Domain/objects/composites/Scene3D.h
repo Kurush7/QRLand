@@ -20,8 +20,10 @@ public:
 
     virtual QRVector<shared_ptr<BaseObject>> getSelection() = 0;
     virtual void switchSelection(const ObjectIterator &it) = 0;
+    virtual bool isEmptySelection() = 0;
 
     virtual bool addObject(std::shared_ptr<BaseObject> obj) = 0;
+    virtual void deleteObject(ObjectIterator obj) = 0;
 
     virtual std::shared_ptr<BaseScene3D> getPointer() {return p;}
 
@@ -60,6 +62,11 @@ public:
      selectionManager(shared_ptr<BaseSelectionManager>(new SelectionManager(objects))){}
 
     virtual bool addObject(std::shared_ptr<BaseObject> obj) {objects.push_back(obj);}
+    virtual void deleteObject(ObjectIterator obj) {
+        if (selectionManager->isSelected(obj))
+            selectionManager->switchSelection(obj);
+        objects.pop(obj);
+    }
 
     virtual void switchSelection(const ObjectIterator &it) {
         selectionManager->switchSelection(it);
@@ -67,6 +74,7 @@ public:
     virtual QRVector<shared_ptr<BaseObject>> getSelection() {
         return selectionManager->getSelection();
     }
+    virtual bool isEmptySelection() {return selectionManager->isEmptySelection();}
 
     virtual const QRVector<std::shared_ptr<BaseObject>>& getObjects() {return objects;}
     virtual void setObjects(QRVector<std::shared_ptr<BaseObject>> &obj) {objects = obj;}

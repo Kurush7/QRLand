@@ -12,8 +12,7 @@
 #include "../composites/Frame3D.h"
 #include "../BaseObject.h"
 #include "../../Painter.h"
-
-const double SELECTION_ERROR = 1.2;
+#include "../../QRConstants.h"
 
 
 class BaseDrawMethodVisitor;
@@ -85,7 +84,6 @@ public:
     virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
     virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
     virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
-    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
 
 private:
     std::shared_ptr<BaseTransformer3D> transformer;
@@ -103,6 +101,18 @@ public:
 
 protected:
     std::shared_ptr<BaseTransformer3D> transformer;
+    Vector3D frameBind;
+};
+
+class BindSetterVisitor: public Visitor {
+public:
+    BindSetterVisitor(const Vector3D &bind): bind(bind) {}
+    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+
+protected:
+    Vector3D bind;
 };
 
 class ScaleCameraVisitor: public TransformVisitor {
@@ -117,7 +127,6 @@ public:
     virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
     virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
     virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
-    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
 
     bool is_selected;
 protected:
@@ -125,5 +134,16 @@ protected:
     double x, y;
 };
 
+class SetColorVisitor: public Visitor {
+public:
+    SetColorVisitor(ColorKeeper keeper): keeper(keeper) {}
+    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+
+    bool is_selected;
+protected:
+    ColorKeeper keeper;
+};
 
 #endif //BIG3DFLUFFY_VISITOR_H

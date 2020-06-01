@@ -52,3 +52,35 @@ shared_ptr<Memento> SelectCommand::exec() {
     }
     return nullptr;
 }
+
+
+shared_ptr<Memento> TransformSelectionCommand::exec() {
+    auto mem = scene->save();
+    // todo group memento with filling new memes
+    auto visitor = shared_ptr<Visitor>(new TransformVisitor(transformer));
+    for (auto x: scene->getSelection())
+        x->acceptVisitor(visitor);
+    return mem;
+}
+
+shared_ptr<Memento> SetColorSelectionCommand::exec() {
+    auto mem = scene->save();
+    // todo group memento with filling new memes
+    auto visitor = shared_ptr<Visitor>(new SetColorVisitor(keeper));
+    for (auto x: scene->getSelection())
+        x->acceptVisitor(visitor);
+    return mem;
+}
+
+
+shared_ptr<Memento> DeleteSelectionCommand::exec() {
+    auto mem = scene->save();
+    QRVector<ObjectIterator> selected;
+    // todo accurate delete: smart iterators & another system
+    for (auto it = scene->getObjects().begin(); it != scene->getObjects().end(); ++it)
+        if (it->get()->isSelected())
+            selected.push_back(it);
+    for (auto x: selected)
+        scene->deleteObject(x);
+    return mem;
+}

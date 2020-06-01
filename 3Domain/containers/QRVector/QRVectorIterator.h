@@ -8,10 +8,13 @@
 #include <iterator>
 
 #include "../exceptions/VectorError/Errors.h"
+#include "QRVector.h"
 
 template <typename T>
 class QRVectorIterator: public std::iterator<std::output_iterator_tag, T> {
 public:
+    friend class QRVector<T>;
+
     QRVectorIterator() {}
     QRVectorIterator(const std::shared_ptr<T[]> vect, const std::shared_ptr<size_t> sz, size_t ind = 0);
     QRVectorIterator(const QRVectorIterator<T>& iter);

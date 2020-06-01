@@ -1,0 +1,11 @@
+//
+// Created by kurush on 01.06.2020.
+//
+
+#ifndef BIG3DFLUFFY_QRCONSTANTS_H
+#define BIG3DFLUFFY_QRCONSTANTS_H
+
+
+const double SELECTION_ERROR = 1.05;
+
+#endif //BIG3DFLUFFY_QRCONSTANTS_H

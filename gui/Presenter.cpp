@@ -4,6 +4,20 @@
 #include "Presenter.h"
 #include "MainWindow.h"
 
+
+QColor defineColor(QRColor c) {
+    QColor st;
+    st.setRgb(c.r,c.g,c.b);
+    return st;
+}
+QRColor defineColor(QColor c) {
+    QRColor st;
+    c.getRgb(&st.r, &st.g, &st.b);
+    return st;
+}
+
+
+
 Presenter::Presenter(MainWindow &w): window(w) {
 }
 
@@ -34,20 +48,37 @@ void Presenter::openFile() {
 void Presenter::select(double x, double y) {
     facade.select(x, y);
     facade.draw(painter);
+    window.visibilityManager->setActive("selection", !facade.isEmptySelection());
 
 }
 
-void Presenter::selBind() {
-    // todo
-}
 void Presenter::selChangeColor() {
-    // todo
+    QColor pColor = window.selPointColorEdit->getColor();
+    QColor eColor = window.selEdgeColorEdit->getColor();
+    facade.setColor(defineColor(pColor), defineColor(eColor));
+    facade.draw(painter);
 }
 void Presenter::selDelete() {
-    // todo
+    facade.deleteSelection();
+    facade.draw(painter);
 }
 
 void Presenter::transform(TransformStateDir d) {
+    double x, y, z;
+    defineTransformParams(x,y,z, d);
+
+    if (window.moveRad->isChecked())
+        facade.move(x,y,z);
+    else if (window.rotateRad->isChecked())
+        facade.rotate(x,y,z);
+    else {
+        facade.scale(x,y,z);
+    }
+    facade.draw(painter);
+}
+
+
+void Presenter::defineTransformParams(double &x, double &y, double &z, TransformStateDir d) {
     double val = 0;
     if (window.moveRad->isChecked())
         val = MOVE_UNIT_VAL;
@@ -64,7 +95,7 @@ void Presenter::transform(TransformStateDir d) {
             val = -val;
     }
 
-    double x = 0, y = 0, z = 0;
+    x = 0, y = 0, z = 0;
     if (window.scaleRad->isChecked()) {
         x = y = z = 1;
     }
@@ -75,13 +106,10 @@ void Presenter::transform(TransformStateDir d) {
         y = val;
     else
         z = val;
+}
 
-    if (window.moveRad->isChecked())
-        facade.move(x,y,z);
-    else if (window.rotateRad->isChecked())
-        facade.rotate(x,y,z);
-    else {
-        facade.scale(x,y,z);
-    }
+void Presenter::undo() {
+    facade.undo();
     facade.draw(painter);
+
 }

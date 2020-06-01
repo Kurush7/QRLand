@@ -9,6 +9,8 @@
 
 class BaseSelectionManager {
 public:
+    virtual bool isEmptySelection() = 0;
+    virtual bool isSelected(const ObjectIterator &it) = 0;
     virtual void switchSelection(const ObjectIterator &it) = 0;
     virtual QRVector<shared_ptr<BaseObject>> getSelection() = 0;
 };
@@ -16,6 +18,13 @@ public:
 class SelectionManager: public BaseSelectionManager {
 public:
     SelectionManager (const QRVector<shared_ptr<BaseObject>> &vector): vector(vector) {}
+    virtual bool isSelected(const ObjectIterator &it) {
+        for (int i = 0; i < selection.len(); ++i) {
+            if (selection[i] == it)
+                return true;
+        }
+        return false;
+    }
     virtual void switchSelection(const ObjectIterator &it) {
         for (int i = 0; i < selection.len(); ++i) {
             if (selection[i] == it) {
@@ -27,6 +36,7 @@ public:
         it->get()->setSelected(true);
         selection.push_back(it);
     }
+    virtual bool isEmptySelection() {return selection.isEmpty();}
     virtual QRVector<shared_ptr<BaseObject>> getSelection() {
         QRVector<shared_ptr<BaseObject>> ans;
         for (auto s: selection)

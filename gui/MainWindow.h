@@ -61,16 +61,16 @@ private:
     QRMultiRadioField *visibilityManager;
 
     QRLabel *settingsLabel, *selectionLabel;
-    QRLabel *backColorLabel, *selColorLabel;
-    ColorEdit *backColorEdit, *selColorEdit;
+    QRLabel *backColorLabel, *selPointColorLabel, *selEdgeColorLabel;
+    ColorEdit *backColorEdit, *selPointColorEdit, *selEdgeColorEdit;
 
     QRLabel *loadLabel, *fileNameLabel;
-    QRLabel *xDropLabel, *yDropLabel, *zDropLabel;
-    QLineEdit *xDropEdit, *yDropEdit, *zDropEdit;
+    //QRLabel *xDropLabel, *yDropLabel, *zDropLabel;
+    //QLineEdit *xDropEdit, *yDropEdit, *zDropEdit;
     QPushButton *modelLoadBtn, *openFileBtn;
     QLineEdit *fileName;
 
-    QPushButton *selBindBtn, *selDeleteBtn;
+    QPushButton /*selBindBtn*/ *selDeleteBtn, *undoButton;
 };
 
 #endif //MAIN_WINDOW

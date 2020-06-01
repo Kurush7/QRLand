@@ -8,10 +8,13 @@
 #include "Canvas3DViewer.h"
 #include "../3Domain/Lab3Facade.h"
 
+// todo problem in selection: multiple zones
 
 const double MOVE_UNIT_VAL = 1;
 const double SCALE_UNIT_VAL = 1.05;
 const double ROTATE_UNIT_VAL = 0.05;
+
+QColor defineColor(QRColor c);
 
 class QTPainter: public Painter {
 public:
@@ -44,20 +47,10 @@ public:
         lines.clear();
     }
 
-    virtual QRPointStyle getSelectionPointStyle() {return QRPointStyle(QRColor::white);}
-    virtual QREdgeStyle getSelectionEdgeStyle() {return QREdgeStyle(QRColor::red);}
+    virtual QRPointStyle getSelectionPointStyle() {return QRPointStyle(QRColor("white"));}
+    virtual QREdgeStyle getSelectionEdgeStyle() {return QREdgeStyle(QRColor("red"));}
 
 private:
-    QColor defineColor(QRColor c) {
-        QColor st;
-        if (c == black) st = Qt::black;
-        if (c == white) st = Qt::white;
-        if (c == green) st = Qt::green;
-        if (c == blue) st = Qt::blue;
-        if (c == yellow) st = Qt::yellow;
-        if (c == red) st = Qt::red;
-        return st;
-    }
     Canvas3DViewer *canvas;
     vector<Line*> lines;
     vector<Point*> points;
@@ -74,14 +67,17 @@ public:
 
     void loadModel();
     void openFile();
+    void undo();
 
     void select(double x, double y);
-    void selBind();
     void selChangeColor();
     void selDelete();
 
     void transform(TransformStateDir);
+
 private:
+    void defineTransformParams(double&, double&, double&, TransformStateDir);
+
     MainWindow &window;
 
     std::shared_ptr<Painter> painter = nullptr;

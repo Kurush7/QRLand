@@ -20,7 +20,7 @@ public:
     virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) = 0;
     virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge) = 0;
     virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera) = 0;
-    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame) = 0;
+    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
 
 protected:
     std::shared_ptr<Visitor> p;
@@ -91,14 +91,26 @@ public:
 };
 
 
-enum QRColor {
-    white, black, blue, red, yellow, green
+class QRColor {
+public:
+    // todo accurate color string mapping
+    QRColor() {}
+    QRColor (std::string name) {
+        if (name == "white") r = b = g = 255;
+        if (name == "black") r=b=g=0;
+        if (name == "green") g = 255;
+        if (name == "blue") b = 255;
+        if (name == "red") r = 255;
+    }
+    QRColor(int r, int g, int b): r(r), g(g), b(b) {}
+    bool operator==(const QRColor &c) const{return r==c.r && b==c.b && g==c.g;}
+    int r=0, g=0, b=0;
 };
 class Style {
 public:
     Style() {}
     Style(QRColor c): color(c) {}
-    QRColor color = white;
+    QRColor color = QRColor("white");
 
     virtual bool operator==(const Style &s) const{return color == s.color;}
 };
@@ -114,5 +126,11 @@ public:
     QREdgeStyle(QRColor c): Style(c) {}
 };
 
+class ColorKeeper {
+public:
+    ColorKeeper(QRPointStyle p, QREdgeStyle e): pointStyle(p), edgeStyle(e) {}
+    QRPointStyle pointStyle;
+    QREdgeStyle edgeStyle;
+};
 
 #endif //KG_BASEOBJECT_H
