@@ -5,21 +5,11 @@
 #include "Presenter.h"
 #include "MainWindow.h"
 
-
-QColor defineColor(QRColor c) {
-    QColor st;
-    st.setRgb(c.r,c.g,c.b);
-    return st;
-}
-QRColor defineColor(QColor c) {
-    QRColor st;
-    c.getRgb(&st.r, &st.g, &st.b);
-    return st;
-}
-
-
+using namespace std;
 
 Presenter::Presenter(MainWindow &w): window(w) {
+    creator = shared_ptr<BasePainterCreator>(new QTPainterCreator(window.canvas));
+    facade = shared_ptr<Lab3Facade>(new Lab3Facade(creator));
 }
 
 void Presenter::backChangeColor() {
@@ -27,15 +17,12 @@ void Presenter::backChangeColor() {
     window.canvas->repaint();
 }
 
-void Presenter::setPainter() {
-    painter = std::shared_ptr<Painter>(new QTPainter(window.canvas));
-}
 
 void Presenter::loadModel() {
     try {
         auto filename = window.fileName->text().toUtf8().constData();
-        facade.addModel(filename);
-        facade.draw(painter);
+        facade->addModel(filename);
+        facade->draw();
     }
     catch (QRException &exc) {
         QMessageBox msgBox;
@@ -44,7 +31,8 @@ void Presenter::loadModel() {
     }
 }
 void Presenter::openFile() {
-    auto fileName = QFileDialog::getOpenFileName(&window, tr("Open File"), "~", tr("*"));
+    auto fileName = QFileDialog::getOpenFileName(&window, tr("Open File"),
+            CURRENT_DIR, tr("*"));
     window.fileName->setText(fileName);
     QFile file(fileName);
 
@@ -54,21 +42,21 @@ void Presenter::openFile() {
 }
 
 void Presenter::select(double x, double y) {
-    facade.select(x, y);
-    facade.draw(painter);
-    window.visibilityManager->setActive("selection", !facade.isEmptySelection());
+    facade->select(x, y);
+    facade->draw();
+    window.visibilityManager->setActive("selection", !facade->isEmptySelection());
 
 }
 
 void Presenter::selChangeColor() {
     QColor pColor = window.selPointColorEdit->getColor();
     QColor eColor = window.selEdgeColorEdit->getColor();
-    facade.setColor(defineColor(pColor), defineColor(eColor));
-    facade.draw(painter);
+    facade->setColor(defineColor(pColor), defineColor(eColor));
+    facade->draw();
 }
 void Presenter::selDelete() {
-    facade.deleteSelection();
-    facade.draw(painter);
+    facade->deleteSelection();
+    facade->draw();
 }
 
 void Presenter::transform(TransformStateDir d) {
@@ -76,13 +64,13 @@ void Presenter::transform(TransformStateDir d) {
     defineTransformParams(x,y,z, d);
 
     if (window.moveRad->isChecked())
-        facade.move(x,y,z);
+        facade->move(x,y,z);
     else if (window.rotateRad->isChecked())
-        facade.rotate(x,y,z);
+        facade->rotate(x,y,z);
     else {
-        facade.scale(x,y,z);
+        facade->scale(x,y,z);
     }
-    facade.draw(painter);
+    facade->draw();
 }
 
 
@@ -117,7 +105,6 @@ void Presenter::defineTransformParams(double &x, double &y, double &z, Transform
 }
 
 void Presenter::undo() {
-    facade.undo();
-    facade.draw(painter);
-
+    facade->undo();
+    facade->draw();
 }

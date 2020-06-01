@@ -10,6 +10,9 @@
 #include "../containers/QRContainers.h"
 #include "exceptions/QRObjectException.h"
 
+// todo prototypes for copying
+// todo compares
+
 class BaseQRPoint3D;
 class BaseEdge3D;
 class BaseCamera3D;

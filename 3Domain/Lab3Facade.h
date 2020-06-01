@@ -12,8 +12,8 @@
 
 class Lab3Facade {
 public:
-    Lab3Facade();
-    void draw(std::shared_ptr<Painter>);
+    Lab3Facade(std::shared_ptr<BasePainterCreator> cr);
+    void draw();
     void addModel(std::string filename);
     void select(double x, double y);
 
@@ -29,6 +29,7 @@ public:
     bool isEmptySelection() {return scene->isEmptySelection();}
 
 private:
+    std::shared_ptr<BasePainterCreator> painterCreator;
     std::shared_ptr<BaseCommandManager> manager;
     std::shared_ptr<AbstractObject3DFactory> factory;
     std::shared_ptr<BaseScene3D> scene;

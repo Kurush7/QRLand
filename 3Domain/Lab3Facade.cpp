@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Lab3Facade::Lab3Facade() {
+Lab3Facade::Lab3Facade(std::shared_ptr<BasePainterCreator> cr): painterCreator(cr) {
     manager = shared_ptr<BaseCommandManager> (new CommandManager());
     factory = shared_ptr<AbstractObject3DFactory> (new BasicObject3DFactory());
 
@@ -24,8 +24,8 @@ void Lab3Facade::addModel(string filename) {
     manager->push(command);
 }
 
-void Lab3Facade::draw(std::shared_ptr<Painter> painter) {
-    auto command = shared_ptr<BaseCommand>(new DrawCommand(painter, scene));
+void Lab3Facade::draw() {
+    auto command = shared_ptr<BaseCommand>(new DrawCommand(painterCreator->getPainter(), scene));
     manager->push(command);
     manager->execAll();
 }

@@ -47,7 +47,7 @@ public:
     virtual ~MainWindow();
 private:
     friend class Presenter;
-    Presenter *presenter;
+    std::shared_ptr<Presenter> presenter;
 
     void decorate();
     void addLogic();

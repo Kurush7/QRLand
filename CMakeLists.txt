@@ -30,9 +30,14 @@ link_directories(${CMAKE_SOURCE_DIR}/3D_draw_module)
 add_library(gui_lib
         gui/MainWindow.cpp
         gui/Presenter.cpp
+        gui/QTPainter.cpp
         )
 target_link_libraries(gui_lib
         ${QT_INCLUDES}
+        )
+
+target_compile_definitions(gui_lib PUBLIC
+        CURRENT_DIR="~/../models"
         )
 
 add_executable(main.exe

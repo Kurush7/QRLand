@@ -19,5 +19,17 @@ public:
     virtual QREdgeStyle getSelectionEdgeStyle() = 0;
 };
 
+class BasePainterCreator {
+public:
+    virtual std::shared_ptr<Painter> getPainter() {
+        if (!painter)
+            painter = create();
+        return painter;
+    }
+protected:
+    virtual std::shared_ptr<Painter> create() = 0;
+    std::shared_ptr<Painter> painter = nullptr;
+};
+
 
 #endif //BIG3DFLUFFY_PAINTER_H

@@ -9,5 +9,6 @@
 #include "containers/QRContainers.h"
 #include "objects/QRObjects.h"
 #include "math/QRMath.h"
+#include "Painter.h"
 
 #endif //KG_3DOMAIN_H

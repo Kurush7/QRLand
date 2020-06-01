@@ -11,7 +11,7 @@ MainWindow::~MainWindow() {
 }
 
 MainWindow::MainWindow(QWidget *parent)
-        : QMainWindow(parent), presenter(new Presenter(*this)) {
+        : QMainWindow(parent) {
     setDarkTheme();
 
     canvas = new Canvas3DViewer(500, 500, this,
@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     canvas->setAutoScaleFit(false);
     canvas->refillBg();
     //canvas->setAutoScaleFit(true);
-    presenter->setPainter();
+    presenter = shared_ptr<Presenter>(new Presenter(*this));
 
 
     visibilityManager = new QRMultiRadioField("selection", 0);
