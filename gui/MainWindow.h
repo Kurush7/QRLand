@@ -53,6 +53,8 @@ private:
     void addLogic();
     void setDarkTheme();
 
+    QRadioButton *moveRad, *rotateRad, *scaleRad;
+
     QWidget *mainWidget;
     QRLayoutManager *ui;
     Canvas3DViewer *canvas;

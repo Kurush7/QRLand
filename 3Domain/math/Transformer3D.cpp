@@ -7,6 +7,7 @@
 using namespace std;
 
 MoveTransformer3DCreator::MoveTransformer3DCreator(double dx, double dy, double dz) {
+    matrix = makeID();
     matrix[0][3] = dx, matrix[1][3] = dy, matrix[2][3] = dz;
 }
 unique_ptr<BaseTransformer3D> MoveTransformer3DCreator::create() {
@@ -14,6 +15,7 @@ unique_ptr<BaseTransformer3D> MoveTransformer3DCreator::create() {
 }
 
 ScaleTransformer3DCreator::ScaleTransformer3DCreator(double kx, double ky, double kz) {
+    matrix = makeID();
     matrix[0][0] = kx, matrix[1][1] = ky, matrix[2][2] = kz;
 }
 unique_ptr<BaseTransformer3D> ScaleTransformer3DCreator::create() {
@@ -22,6 +24,7 @@ unique_ptr<BaseTransformer3D> ScaleTransformer3DCreator::create() {
 
 
 RotateTransformer3DCreator::RotateTransformer3DCreator(double dx, double dy, double dz) {
+    matrix = makeID();
     if (fabs(dx) > QREPS)
         matrix *= createOneRotateMatrix(dx, ox);
     if (fabs(dy) > QREPS)

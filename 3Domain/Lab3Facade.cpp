@@ -29,3 +29,35 @@ void Lab3Facade::draw(std::shared_ptr<Painter> painter) {
     manager->push(command);
     manager->execAll();
 }
+
+
+void Lab3Facade::move(double dx, double dy, double dz) {
+    auto creator = shared_ptr<BaseTransformer3DCreator> (new MoveTransformer3DCreator(dx,dy,dz));
+    auto trans = shared_ptr<BaseTransformer3D>(creator->create());
+    auto command = shared_ptr<BaseCommand>(new TransformCameraCommand(trans, scene));
+
+    cout << "move by: " << dx << ' ' << dy << ' ' << dz <<"\nmatrix:" << trans->getMatrix();
+    manager->push(command);
+}
+void Lab3Facade::scale(double kx, double ky, double kz) {
+    auto creator = shared_ptr<BaseTransformer3DCreator> (new ScaleTransformer3DCreator(kx,ky,kz));
+    auto trans = shared_ptr<BaseTransformer3D>(creator->create());
+    auto command = shared_ptr<BaseCommand>(new ScaleCameraCommand(trans, scene));
+
+    cout << "scale by: " << kx << ' ' << ky << ' ' << kz <<"\nmatrix:" << trans->getMatrix();
+    manager->push(command);
+}
+void Lab3Facade::rotate(double dx, double dy, double dz) {
+    auto creator = shared_ptr<BaseTransformer3DCreator> (new RotateTransformer3DCreator(dx,dy,dz));
+    auto trans = shared_ptr<BaseTransformer3D>(creator->create());
+    auto command = shared_ptr<BaseCommand>(new TransformCameraCommand(trans, scene));
+
+    cout << "rotate by: " << dx << ' ' << dy << ' ' << dz <<"\nmatrix:" << trans->getMatrix();
+    manager->push(command);
+}
+
+void Lab3Facade::select(double x, double y) {
+    auto command = shared_ptr<BaseCommand>(new SelectCommand(x, y, scene));
+    cout << "select by: " << x << ' ' << y <<"\n";
+    manager->push(command);
+}

@@ -16,6 +16,10 @@ public:
         p = std::shared_ptr<BaseComposite>(this, [](void *ptr){});
     }
     virtual bool isComposite() {return true;}
+    virtual void setSelected(bool x) {
+        for (auto obj: objects) obj->setSelected(x);
+        selected = x;
+    }
 
     virtual const QRVector<std::shared_ptr<BaseObject>>& getObjects() {return objects;}
     virtual void setObjects(QRVector<std::shared_ptr<BaseObject>>&obj) {objects = obj;}

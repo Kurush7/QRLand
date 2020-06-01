@@ -19,10 +19,16 @@ MainWindow::MainWindow(QWidget *parent)
     canvas->setOwnData(true);
     canvas->setAutoScaleFit(false);
     canvas->refillBg();
-    canvas->setAutoScaleFit(true);
+    //canvas->setAutoScaleFit(true);
     presenter->setPainter();
 
+
     visibilityManager = new QRMultiRadioField("selection", 0);
+
+
+    moveRad = new QRadioButton("move", this);
+    rotateRad = new QRadioButton("rotate", this);
+    scaleRad = new QRadioButton("scale", this);
 
     loadLabel = new QRLabel("новая модель", 150, this);
     selectionLabel = new QRLabel("изменить", 150, this);
@@ -56,8 +62,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->goToPath("right");
     ui->addLayers("settings $ load $ selection", QRVert);
 
-    ui->addLayers("label color", QRHor, "settings");
+    ui->addLayers("label color move scale rotate", QRHor, "settings");
     ui->addWidgets({{"label", settingsLabel}}, "settings/label");
+    ui->addWidgets({{"radio", moveRad}}, "settings/move");
+    ui->addWidgets({{"radio", scaleRad}}, "settings/scale");
+    ui->addWidgets({{"radio", rotateRad}}, "settings/rotate");
     ui->addWidgets({{"label", backColorLabel}, {"color", backColorEdit}}, "settings/color");
 
     ui->addLayers("label file coords button", QRHor, "load");
@@ -89,6 +98,8 @@ void MainWindow::decorate() {
         (*lay)->addChild(new QRLayoutNode("sep", QRHor, nullptr, new LineSpacer("color:rgb(100,100,100)", 300)));
         (*lay)->getLayout()->setAlignment(Qt::AlignCenter);
     }
+
+    moveRad->setChecked(true);
 
     modelLoadBtn->setFixedWidth(140);
     selDeleteBtn->setFixedWidth(80);

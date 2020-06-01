@@ -6,6 +6,7 @@
 #define BIG3DFLUFFY_CAMERA_H
 
 #include "../BaseObject.h"
+#include "Point3D.h"
 #include "Projection.h"
 
 class Camera3DMemento;
@@ -31,8 +32,8 @@ public:
     double getHeight() const;
     void setHeight(double height);
 
-    virtual const Vector3D& getOrigin() const = 0;
-    virtual void setOrigin(const Vector3D&) = 0;
+    virtual const std::shared_ptr<BaseQRPoint3D> getOrigin() const = 0;
+    virtual void setOrigin(std::shared_ptr<BaseQRPoint3D>) = 0;
 
     virtual const Vector3D& getBind() const = 0;
     virtual void setBind(const Vector3D&) = 0;
@@ -56,7 +57,7 @@ public:
 
 private:
     std::weak_ptr<BaseCamera3D> object;
-    Vector3D origin, bind;
+    std::shared_ptr<BaseQRPoint3D> origin;
     double width, height;
     std::shared_ptr<ProjectionImp> projector;
 };
@@ -69,15 +70,17 @@ public:
 
     virtual bool isVisible(){return false;}
 
+
     virtual std::unique_ptr<BaseTransformer3D> getProjectionTransformer();
 
-    virtual const Vector3D& getOrigin() const {origin + bind;}
-    virtual void setOrigin(const Vector3D &v) {origin = v; origin -= bind;}
-    virtual const Vector3D& getBind() const {return bind;}
-    virtual void setBind(const Vector3D &b) {origin+=bind; bind = b; origin -=bind;}
+    virtual const std::shared_ptr<BaseQRPoint3D> getOrigin() const {return origin;}
+    virtual void setOrigin(std::shared_ptr<BaseQRPoint3D> p) {origin = p;}
+    virtual const Vector3D& getBind() const {return origin->getBind();}
+    virtual void setBind(const Vector3D &b) {origin->setBind(b);}
 
 private:
-    Vector3D origin, bind, viewUpVector;
+    Vector3D viewUpVector;
+    std::shared_ptr<BaseQRPoint3D> origin;
 };
 
 

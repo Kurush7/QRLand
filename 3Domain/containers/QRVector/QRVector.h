@@ -45,6 +45,16 @@ public:
         return arr[*size];
     }
 
+    T pop(size_t ind) {
+        if(*size <= ind)
+            throw ErrorIndex(__FILE__, __LINE__, __TIME__, "pop from bad index");
+        T x = arr[ind];
+        for (size_t i = ind; i < *size-1; ++i)
+            arr[i] = arr[i+1];
+        (*size)--;
+        return x;
+    }
+
     size_t len() const;
 
     bool operator ==(const QRVector<T>& vec) const;

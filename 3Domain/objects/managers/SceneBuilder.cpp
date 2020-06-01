@@ -4,11 +4,11 @@
 
 #include "SceneBuilder.h"
 
-Scene3DBuilder::Scene3DBuilder (std::shared_ptr<AbstractObject3DFactory> f)
-        :factory(f) {}
+Scene3DBuilder::Scene3DBuilder (std::shared_ptr<AbstractObject3DFactory> f, double width, double height)
+        :factory(f), w(width), h(height) {}
 
 bool Scene3DBuilder::makeCamera() {
-    camera = factory->createCamera(100, 100, Vector3D(0,0,-10));
+    camera = factory->createCamera(w, h, Vector3D(0,0,-10));
     stage++;
     return true;
 }

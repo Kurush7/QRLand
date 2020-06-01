@@ -17,7 +17,9 @@ public:
     virtual std::unique_ptr<Memento> save();
     virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) {visitor->visitPoint3D(p);}
     virtual const Vector3D getPoint() const = 0;
+    virtual const Vector3D getRelativePoint() const = 0;
     virtual void setVector(const Vector3D&) = 0;
+    virtual void setRelativeVector(const Vector3D&) = 0;
     virtual const QRPointStyle& getStyle() const {return style;}
     virtual void setStyle(const QRPointStyle &s) {style = s;}
 
@@ -54,7 +56,9 @@ public:
     QRPoint3D(const double x, const double y, const double z, const Vector3D &bind = Vector3D(), QRPointStyle s = QRPointStyle());
 
     virtual const Vector3D getPoint() const {return vec + bindPoint;}
+    virtual const Vector3D getRelativePoint() const {return vec;}
     virtual void setVector(const Vector3D &v) {vec = v - bindPoint;}
+    virtual void setRelativeVector(const Vector3D &v) {vec = v;}
     virtual const Vector3D& getBind() const {return bindPoint;}
     virtual void setBind(const Vector3D &b) {vec += bindPoint; bindPoint = b; vec -= bindPoint;}
 

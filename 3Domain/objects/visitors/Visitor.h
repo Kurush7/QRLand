@@ -13,13 +13,16 @@
 #include "../BaseObject.h"
 #include "../../Painter.h"
 
-class DrawMethodVisitor;
+const double SELECTION_ERROR = 1.2;
+
+
+class BaseDrawMethodVisitor;
 struct DrawableData {
-    virtual void acceptVisitor(DrawMethodVisitor &v) = 0;
+    virtual void acceptVisitor(std::shared_ptr<BaseDrawMethodVisitor> &v) = 0;
 };
 struct DrawablePoint: public DrawableData {
     DrawablePoint(double x, double y, double z, QRPointStyle style): x(x), y(y), z(z), style(style) {}
-    virtual void acceptVisitor(DrawMethodVisitor &v);
+    virtual void acceptVisitor(std::shared_ptr<BaseDrawMethodVisitor> &v);
     double x, y, z;
     QRPointStyle style;
 };
@@ -27,7 +30,7 @@ struct DrawableEdge: public DrawableData {
     DrawableEdge(double x1, double y1, double z1,
                   double x2, double y2, double z2, QREdgeStyle style)
                   : x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), style(style) {}
-    virtual void acceptVisitor(DrawMethodVisitor &v);
+    virtual void acceptVisitor(std::shared_ptr<BaseDrawMethodVisitor> &v);
     double x1, y1, z1, x2,y2,z2;
     QREdgeStyle style;
 };
@@ -35,25 +38,50 @@ struct DrawableEdge: public DrawableData {
 std::ostream& operator<<(std::ostream &os, const DrawablePoint &p);
 std::ostream& operator<<(std::ostream &os, const DrawableEdge &e);
 
-class DrawMethodVisitor {
+class BaseDrawMethodVisitor {
+public:
+    virtual void visitDrawPoint(DrawablePoint &p) = 0;
+    virtual void visitDrawEdge(DrawableEdge &e) = 0;
+private:
+    std::shared_ptr<Painter> painter;
+};
+
+class DrawMethodVisitor: public BaseDrawMethodVisitor {
 public:
     DrawMethodVisitor(std::shared_ptr<Painter> painter): painter(painter) {}
     void visitDrawPoint(DrawablePoint &p) {
-        cout << p <<'\n';
+        //cout << p <<'\n';
         painter->drawPoint(p.x, p.y, p.style);
     }
     void visitDrawEdge(DrawableEdge &e) {
-        cout << e;
+        //cout << e;
         painter->drawEdge(e.x1,e.y1, e.x2, e.y2, e.style);
     }
 private:
     std::shared_ptr<Painter> painter;
 };
 
+class HideInvisibleDrawMethodVisitor: public BaseDrawMethodVisitor {
+public:
+    HideInvisibleDrawMethodVisitor(double z_min): z_min(z_min) {}
+    void visitDrawPoint(DrawablePoint &p) {
+        cout << "point-z:" << p.z << '\n';
+        visible = p.z > z_min;
+    }
+    void visitDrawEdge(DrawableEdge &e) {
+        //cout << e;
+        visible = e.z1 > z_min && e.z2 > z_min;
+    }
+
+    bool visible;
+private:
+    double z_min;
+};
 
 class DrawVisitor: public Visitor {
 public:
-    DrawVisitor(std::shared_ptr<BaseTransformer3D> t, QRVector<std::shared_ptr<DrawableData>> &data): transformer(t), data(data) {}
+    DrawVisitor(std::shared_ptr<BaseTransformer3D> t, QRVector<std::shared_ptr<DrawableData>> &data,
+            std::shared_ptr<Painter> painter): transformer(t), data(data), painter(painter) {}
     virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
     virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
     virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
@@ -62,6 +90,40 @@ public:
 private:
     std::shared_ptr<BaseTransformer3D> transformer;
     QRVector<std::shared_ptr<DrawableData>> &data;
+    std::shared_ptr<Painter> painter;
 };
+
+class TransformVisitor: public Visitor {
+public:
+    TransformVisitor(std::shared_ptr<BaseTransformer3D> t): transformer(t) {}
+    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
+
+protected:
+    std::shared_ptr<BaseTransformer3D> transformer;
+};
+
+class ScaleCameraVisitor: public TransformVisitor {
+public:
+    ScaleCameraVisitor(std::shared_ptr<BaseTransformer3D> t): TransformVisitor(t) {}
+    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+};
+
+class SelectionVisitor: public Visitor {
+public:
+    SelectionVisitor(double x, double y, std::shared_ptr<BaseTransformer3D> t): x(x), y(y), transformer(t) {}
+    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
+
+    bool is_selected;
+protected:
+    std::shared_ptr<BaseTransformer3D> transformer;
+    double x, y;
+};
+
 
 #endif //BIG3DFLUFFY_VISITOR_H

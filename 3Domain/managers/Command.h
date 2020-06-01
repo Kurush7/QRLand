@@ -46,5 +46,35 @@ private:
     std::shared_ptr<Painter> painter;
 };
 
+class TransformCameraCommand: public SceneCommand {
+public:
+    TransformCameraCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
+            :SceneCommand(s), transformer(trans){}
+
+    virtual std::shared_ptr<Memento> exec();
+
+protected:
+    std::shared_ptr<BaseTransformer3D> transformer;
+};
+
+class ScaleCameraCommand: public TransformCameraCommand {
+public:
+    ScaleCameraCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
+            :TransformCameraCommand(trans, s) {}
+
+    virtual std::shared_ptr<Memento> exec();
+};
+
+class SelectCommand: public SceneCommand {
+public:
+    SelectCommand(double x, double y, std::shared_ptr<BaseScene3D> &s)
+            :SceneCommand(s), x(x), y(y) {}
+
+    virtual std::shared_ptr<Memento> exec();
+private:
+    double x, y;
+};
+
+
 
 #endif //BIG3DFLUFFY_COMMAND_H

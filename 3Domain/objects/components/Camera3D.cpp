@@ -29,7 +29,6 @@ void BaseCamera3D::setHeight(double height) {
 Camera3DMemento::Camera3DMemento(shared_ptr<BaseCamera3D> p) {
     object = p;
     origin = p->getOrigin();
-    bind = p->getBind();
     width = p->getWidth();
     height = p->getHeight();
     projector = p->getProjector();
@@ -42,18 +41,17 @@ void Camera3DMemento::restore() {
     }
     shared_ptr<BaseCamera3D> p(object);
     p->setOrigin(origin);
-    p->setBind(bind);
     p->setWidth(width);
     p->setHeight(height);
     p->setProjector(projector);
 }
 
+// todo get point already
 Camera3D::Camera3D(double w, double h, shared_ptr<ProjectionImp>pr, const Vector3D &_origin,
                        const Vector3D &viewUp, const Vector3D &_bind)
-: BaseCamera3D(w, h, pr), origin(_origin), viewUpVector(viewUp), bind(_bind) {
-    origin -= bind;
+: BaseCamera3D(w, h, pr), origin(new QRPoint3D(_origin, _bind)), viewUpVector(viewUp) {
 }
 
 unique_ptr<BaseTransformer3D> Camera3D::getProjectionTransformer() {
-    return projector->getTransformer(origin, bind, viewUpVector);
+    return projector->getTransformer(origin->getPoint(), origin->getBind(), viewUpVector);
 }

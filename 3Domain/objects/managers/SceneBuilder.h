@@ -24,12 +24,14 @@ protected:
 
 class Scene3DBuilder: public BaseScene3DBuilder {
 public:
-    Scene3DBuilder (std::shared_ptr<AbstractObject3DFactory>f);
+    Scene3DBuilder (std::shared_ptr<AbstractObject3DFactory>f, double width = 10, double height = 10);
     virtual bool makeCamera();
     virtual std::shared_ptr<BaseScene3D> getScene();
 protected:
     std::shared_ptr<AbstractObject3DFactory> factory;
     std::shared_ptr<BaseCamera3D> camera;
+private:
+    double w, h;
 };
 
 

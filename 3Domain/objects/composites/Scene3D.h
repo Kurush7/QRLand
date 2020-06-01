@@ -7,6 +7,7 @@
 
 #include "BaseComposite.h"
 #include "../components/Camera3D.h"
+#include "../managers/SelectionManager.h"
 
 // SCENE IS NOT COMPOSITE!
 
@@ -17,7 +18,9 @@ public:
         p = std::shared_ptr<BaseScene3D>(this, [](void *ptr){});}
     ~BaseScene3D() {p.reset();}
 
-    // todo select-manager, selection
+    virtual QRVector<shared_ptr<BaseObject>> getSelection() = 0;
+    virtual void switchSelection(const ObjectIterator &it) = 0;
+
     virtual bool addObject(std::shared_ptr<BaseObject> obj) = 0;
 
     virtual std::shared_ptr<BaseScene3D> getPointer() {return p;}
@@ -49,10 +52,21 @@ class Scene3D: public BaseScene3D {
 public:
     // todo passing value, std::move
     explicit Scene3D(const QRVector<std::shared_ptr<BaseObject>> &obj, std::shared_ptr<BaseCamera3D> cam)
-    : objects(obj), activeCamera(cam) {}
-    explicit Scene3D(std::shared_ptr<BaseCamera3D> cam): activeCamera(cam) {}
+    : objects(obj), activeCamera(cam),
+    selectionManager(shared_ptr<BaseSelectionManager>(new SelectionManager(objects))) {}
+
+    explicit Scene3D(std::shared_ptr<BaseCamera3D> cam)
+    :activeCamera(cam),
+     selectionManager(shared_ptr<BaseSelectionManager>(new SelectionManager(objects))){}
 
     virtual bool addObject(std::shared_ptr<BaseObject> obj) {objects.push_back(obj);}
+
+    virtual void switchSelection(const ObjectIterator &it) {
+        selectionManager->switchSelection(it);
+    }
+    virtual QRVector<shared_ptr<BaseObject>> getSelection() {
+        return selectionManager->getSelection();
+    }
 
     virtual const QRVector<std::shared_ptr<BaseObject>>& getObjects() {return objects;}
     virtual void setObjects(QRVector<std::shared_ptr<BaseObject>> &obj) {objects = obj;}
@@ -61,6 +75,7 @@ public:
 private:
     QRVector<std::shared_ptr<BaseObject>> objects;
     std::shared_ptr<BaseCamera3D> activeCamera;
+    std::shared_ptr<BaseSelectionManager> selectionManager;
 };
 
 

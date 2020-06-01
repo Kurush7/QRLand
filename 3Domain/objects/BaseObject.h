@@ -40,12 +40,15 @@ public:
     virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) = 0;
     virtual bool isVisible() {return visible;}
     virtual bool isComposite() = 0;
+    virtual bool isSelected() {return selected;}
+    virtual void setSelected(bool x) {selected = x;}
 
     virtual ObjectIterator begin() = 0;
     virtual ObjectIterator end() = 0;
 
 protected:
     bool visible = true;
+    bool selected = false;
 };
 
 

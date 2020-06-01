@@ -14,6 +14,12 @@ public:
     Lab3Facade();
     void draw(std::shared_ptr<Painter>);
     void addModel(std::string filename);
+    void select(double x, double y);
+
+    void move(double dx, double dy, double dz);
+    void scale(double kx, double ky, double kz);
+    void rotate(double dx, double dy, double dz);
+
 private:
     std::shared_ptr<BaseCommandManager> manager;
     std::shared_ptr<AbstractObject3DFactory> factory;
