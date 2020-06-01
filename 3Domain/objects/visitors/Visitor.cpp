@@ -94,16 +94,37 @@ void ScaleCameraVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
 
 void SelectionVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {}
 void SelectionVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
-    auto s = norm(transformer->transform(edge->getStart()->getPoint()));
-    auto e = norm(transformer->transform(edge->getEnd()->getPoint()));
+    auto s = transformer->transform(edge->getStart()->getPoint());
+    auto e = transformer->transform(edge->getEnd()->getPoint());
 
     double a = e[1] - s[1];
     double b = s[0] - e[0];
     double c = -s[0]*a - s[1]*b;
-    double len = (x*a + y*b + c) / sqrt(a*a+b*b);
+    double len_ab = sqrt(a*a+b*b);
+    double len = (x*a + y*b + c) / len_ab;   // from full line to point: perpendicular
+
+    double a1 = a/len_ab, b1 = b/len_ab;    // a1b1 - normal with len 1
+    a1 *= len, b1 *= len;
+    double x1 = x + a1, y1 = y + b1;    // coords of point projection on line
+
+    double len2 = (x1*a + y1*b + c) / len_ab;   // distance from line. we could've chosen wrong normal
+    if (fabs(len2) > QREPS)
+        x1 = x - a1, y1 = y - b1;
+
+    double dx1 = x1 - s[0], dy1 = y1 - s[1];    // vectors with edge points
+    double dx2 = x1 - e[0], dy2 = y1 - e[1];
+
+    if (dx1 * dx2 > -QREPS && dy1 * dy2 > - QREPS) {
+        double len1 = sqrt(dx1*dx1  + dy1*dy1);
+        len2 = sqrt(dx2*dx2  + dy2*dy2);
+        len1 = min(len1,len2);
+        len = sqrt(len * len + len1*len1);
+    }
+
     double val = sqrt(x*x+y*y);
     is_selected |= (fabs(len) + val)/ val < SELECTION_ERROR;
-    //cout << len << ' ' << val << ' ' << (fabs(len) + val)/ val << '\n';
+    cout << "edge " << s[0] << ' ' << s[1] << " <=> " << e[0] << ' ' << e[1] << " :: ";
+    cout << len << ' ' << val << ' ' << (fabs(len) + val)/ val << '\n';
 }
 void SelectionVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
     is_selected = false;
