@@ -63,6 +63,15 @@ shared_ptr<Memento> TransformSelectionCommand::exec() {
     return mem;
 }
 
+shared_ptr<Memento> MoveTransformSelectionCommand::exec() {
+    auto mem = scene->save();
+    // todo group memento with filling new memes
+    auto visitor = shared_ptr<Visitor>(new MoveTransformVisitor(transformer));
+    for (auto x: scene->getSelection())
+        x->acceptVisitor(visitor);
+    return mem;
+}
+
 shared_ptr<Memento> SetColorSelectionCommand::exec() {
     auto mem = scene->save();
     // todo group memento with filling new memes

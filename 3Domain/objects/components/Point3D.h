@@ -60,7 +60,7 @@ public:
     virtual void setVector(const Vector3D &v) {vec = v - bindPoint;}
     virtual void setRelativeVector(const Vector3D &v) {vec = v;}
     virtual const Vector3D& getBind() const {return bindPoint;}
-    virtual void setBind(const Vector3D &b) {vec += bindPoint; bindPoint = b; vec -= bindPoint;}
+    virtual void setBind(const Vector3D &b) {vec += bindPoint - b; bindPoint = b;}
 
 private:
     Vector3D vec;

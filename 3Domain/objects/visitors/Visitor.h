@@ -101,6 +101,14 @@ public:
 
 protected:
     std::shared_ptr<BaseTransformer3D> transformer;
+};
+
+class MoveTransformVisitor: public TransformVisitor {
+public:
+    MoveTransformVisitor(std::shared_ptr<BaseTransformer3D> t): TransformVisitor(t) {}
+    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
+    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
+protected:
     Vector3D frameBind;
 };
 

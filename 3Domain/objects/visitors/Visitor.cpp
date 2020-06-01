@@ -51,16 +51,25 @@ void TransformVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {
     auto vec = point->getRelativePoint();
     vec = transformer->transform(vec);
     point->setRelativeVector(vec);
-    frameBind = point->getBind();
 }
-void TransformVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
-    edge->getStart()->acceptVisitor(p);
-    edge->getEnd()->acceptVisitor(p);
-}
+void TransformVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {}
 void TransformVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
     camera->getOrigin()->acceptVisitor(p);
 }
 void TransformVisitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
+    for (auto x: frame->getObjects())
+        x->acceptVisitor(p);
+
+}
+
+void MoveTransformVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {
+    auto vec = point->getRelativePoint();
+    vec = transformer->transform(vec);
+    point->setRelativeVector(vec);
+    frameBind = point->getBind();
+}
+
+void MoveTransformVisitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
     for (auto x: frame->getObjects())
         x->acceptVisitor(p);
 
@@ -73,10 +82,7 @@ void TransformVisitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
 void BindSetterVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {
     point->setBind(bind);
 }
-void BindSetterVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
-    edge->getStart()->setBind(bind);
-    edge->getEnd()->setBind(bind);
-}
+void BindSetterVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {}
 void BindSetterVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
     camera->getOrigin()->setBind(bind);
 }
@@ -114,7 +120,7 @@ void SelectionVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
     double dx1 = x1 - s[0], dy1 = y1 - s[1];    // vectors with edge points
     double dx2 = x1 - e[0], dy2 = y1 - e[1];
 
-    if (dx1 * dx2 > -QREPS && dy1 * dy2 > - QREPS) {
+    if (dx1 * dx2 > -QREPS && dy1 * dy2 > - QREPS) {    // point is outside 'edge-rectangle'
         double len1 = sqrt(dx1*dx1  + dy1*dy1);
         len2 = sqrt(dx2*dx2  + dy2*dy2);
         len1 = min(len1,len2);

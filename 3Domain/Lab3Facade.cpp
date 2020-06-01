@@ -39,7 +39,7 @@ void Lab3Facade::move(double dx, double dy, double dz) {
     if(scene->isEmptySelection())
         command = shared_ptr<BaseCommand>(new TransformCameraCommand(trans, scene));
     else
-        command = shared_ptr<BaseCommand>(new TransformSelectionCommand(trans, scene));
+        command = shared_ptr<BaseCommand>(new MoveTransformSelectionCommand(trans, scene));
     cout << "move by: " << dx << ' ' << dy << ' ' << dz <<"\nmatrix:" << trans->getMatrix();
     manager->push(command);
 }

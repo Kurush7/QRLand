@@ -87,6 +87,17 @@ protected:
     std::shared_ptr<BaseTransformer3D> transformer;
 };
 
+class MoveTransformSelectionCommand: public SceneCommand {
+public:
+    MoveTransformSelectionCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
+            :SceneCommand(s), transformer(trans){}
+
+    virtual std::shared_ptr<Memento> exec();
+
+protected:
+    std::shared_ptr<BaseTransformer3D> transformer;
+};
+
 class SetColorSelectionCommand: public SceneCommand {
 public:
     SetColorSelectionCommand(ColorKeeper keeper, std::shared_ptr<BaseScene3D> &s)

@@ -8,8 +8,6 @@
 #include "Canvas3DViewer.h"
 #include "../3Domain/Lab3Facade.h"
 
-// todo problem in selection: multiple zones
-
 const double MOVE_UNIT_VAL = 1;
 const double SCALE_UNIT_VAL = 1.05;
 const double ROTATE_UNIT_VAL = 0.05;

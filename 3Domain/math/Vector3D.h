@@ -12,8 +12,6 @@
 
 #include "exceptions/MathException.h"
 
-// todo problem: consider arr[3] or not when operating?
-
 const double QREPS = 1e-9;
 
 class Vector3D {
