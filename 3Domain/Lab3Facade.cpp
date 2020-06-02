@@ -89,5 +89,7 @@ void Lab3Facade::deleteSelection() {
 }
 
 void Lab3Facade::undo() {
+    if (manager->isEmptyUndo())
+        return;
     manager->undo();
 }

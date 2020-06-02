@@ -47,4 +47,17 @@ private:
     QRVector<std::shared_ptr<BaseObject>> memes;
 };
 
+class MementoAccumulator: public Memento {
+public:
+    MementoAccumulator() {}
+    void add(std::shared_ptr<Memento> m) {memes.push_back(m);}
+    virtual void restore() {
+        for (auto meme: memes)
+            meme->restore();
+        memes.clear();
+    }
+private:
+    QRVector<std::shared_ptr<Memento>> memes;
+};
+
 #endif //BIG3DFLUFFY_BASECOMPOSITE_H

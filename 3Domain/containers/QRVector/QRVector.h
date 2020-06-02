@@ -25,6 +25,7 @@ public:
     QRVector(const QRVector<T> &);
     QRVector(QRVector<T>&&);
 
+    void clear() {*size = 0;}
     std::shared_ptr<QRVector<T>> getPointer() {return p;}
 
     QRVector<T>& operator =(const QRVector<T>&);

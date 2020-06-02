@@ -12,6 +12,7 @@ class BaseCommandManager {
 public:
     BaseCommandManager(std::shared_ptr<BaseCareTaker> ct): careTaker(ct) {}
     virtual void push(std::shared_ptr<BaseCommand>) = 0;
+    virtual bool isEmptyUndo() = 0;
     virtual void exec() = 0;
     virtual void execAll() = 0;
     virtual void undo() = 0;
@@ -23,6 +24,7 @@ protected:
 class CommandManager: public BaseCommandManager {
 public:
     CommandManager(): BaseCommandManager(std::shared_ptr<BaseCareTaker> (new CareTaker())) {}
+    virtual bool isEmptyUndo() {return careTaker->isEmpty();}
     virtual void push(std::shared_ptr<BaseCommand> c) {queue.push(c);}
     virtual void exec() {
         auto mem = queue.pop()->exec();

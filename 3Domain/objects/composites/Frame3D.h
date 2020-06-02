@@ -19,12 +19,23 @@ public:
     virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) {visitor->visitFrame3D(p_frame);}
 
     std::shared_ptr<BaseFrame3D> getPointer() {return p_frame;}
+    virtual std::unique_ptr<Memento> save() override;
 
     virtual bool operator==(const BaseFrame3D &b) const = delete;
     virtual BaseFrame3D& operator=(const BaseFrame3D &p) = delete;
 private:
     std::shared_ptr<BaseFrame3D> p_frame;
 };
+
+class Frame3DMemento: public GroupMemento {
+public:
+    Frame3DMemento(std::shared_ptr<BaseFrame3D> obj);
+    virtual void restore();
+
+private:
+    std::shared_ptr<MementoAccumulator> memes;
+};
+
 
 class Frame3D: public BaseFrame3D {
 public:
