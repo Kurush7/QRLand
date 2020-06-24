@@ -5,8 +5,9 @@
 #ifndef BIG3DFLUFFY_PAINTER_H
 #define BIG3DFLUFFY_PAINTER_H
 
-#include "objects/BaseObject.h"
+#include "objects/QRObject.h"
 
+// todo draw_poly
 class Painter {
 public:
     virtual void drawPoint(double x, double y, QRPointStyle) = 0;

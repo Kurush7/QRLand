@@ -5,7 +5,7 @@
 #ifndef BIG3DFLUFFY_LOADSOURCE_H
 #define BIG3DFLUFFY_LOADSOURCE_H
 
-#include "../BaseObject.h"
+#include "objects/QRObject.h"
 #include <fstream>
 
 /*

@@ -5,10 +5,10 @@
 #ifndef KG_QROBJECTS_H
 #define KG_QROBJECTS_H
 
-#include "BaseObject.h"
-#include "components/Point3D.h"
-#include "components/Edge3D.h"
-#include "components/Camera3D.h"
+#include "QRObject.h"
+#include "components/interfaces/QRPoint3D.h"
+#include "components/interfaces/QREdge3D.h"
+#include "components/interfaces/QRCamera3D.h"
 #include "components/Industry.h"
 
 #include "composites/Frame3D.h"

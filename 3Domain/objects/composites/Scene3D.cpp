@@ -6,7 +6,7 @@
 
 using namespace std;
 
-std::unique_ptr<Memento> BaseScene3D::save() {return std::unique_ptr<Memento>(new SceneMemento(p));}
+std::unique_ptr<QRMemento> BaseScene3D::save() {return std::unique_ptr<QRMemento>(new SceneMemento(p));}
 
 SceneMemento::SceneMemento(shared_ptr<BaseScene3D> scene): scene(scene) {
         camera = scene->getActiveCamera();

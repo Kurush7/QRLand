@@ -2,10 +2,10 @@
 // Created by kurush on 30.05.2020.
 //
 
-#ifndef BIG3DFLUFFY_PROJECTION_H
-#define BIG3DFLUFFY_PROJECTION_H
+#ifndef BIG3DFLUFFY_QRPROJECTION_H
+#define BIG3DFLUFFY_QRPROJECTION_H
 
-#include "../../math/QRMath.h"
+#include "../../../math/QRMath.h"
 
 class ProjectionImp {
 public:
@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif //BIG3DFLUFFY_PROJECTION_H
+#endif //BIG3DFLUFFY_QRPROJECTION_H

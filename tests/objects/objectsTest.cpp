@@ -29,12 +29,12 @@ TEST(ObjectTests, Edge3D)
 {
     Point3D p0(0,0,0), p1(1,1,1), p2(2,2,2);
 
-    auto e1 = Edge3D(p0, p1, black), e0 = e1;
+    auto e1 = SimpleEdge3D(p0, p1, black), e0 = e1;
     EXPECT_EQ(e1.getStart(), p0.getPointer());
     EXPECT_EQ(e1.getEnd(), p1.getPointer());
     EXPECT_EQ(e1.getStyle(), QREdgeStyle(black));
 
-    auto e2 = Edge3D(p1, p2, yellow);
+    auto e2 = SimpleEdge3D(p1, p2, yellow);
     auto mem = e1.save();
     e1 = e2;
     EXPECT_EQ(e1, e2);
@@ -59,8 +59,8 @@ TEST(ObjectTests, AbstractFactory) {
     auto factory = shared_ptr<AbstractObject3DFactory>(new BasicObject3DFactory());
     shared_ptr<BasePoint3D> p1 = factory->createPoint(Vector3D(1,2,3));
     shared_ptr<BasePoint3D>  p2 = factory->createPoint(Vector3D(4,5,6));
-    shared_ptr<BaseEdge3D> e = factory->createEdge(p1, p2);
-    shared_ptr<BaseCamera3D> c = factory->createCamera(100, 100, Vector3D(-100,100,0));
+    shared_ptr<QREdge3D> e = factory->createEdge(p1, p2);
+    shared_ptr<QRCamera3D> c = factory->createCamera(100, 100, Vector3D(-100, 100, 0));
 
     int cnt = 0;
     for (auto it = p1->begin(); it != p1->end(); ++it) {
@@ -68,11 +68,11 @@ TEST(ObjectTests, AbstractFactory) {
     }
     EXPECT_EQ(cnt, 0);
 
-    QRVector<shared_ptr<BaseObject>> v1({p1, p2});
-    QRVector<shared_ptr<BaseObject>> v2({e, c});
+    QRVector<shared_ptr<QRObject>> v1({p1, p2});
+    QRVector<shared_ptr<QRObject>> v2({e, c});
 
-    QRDuoVectorIterator<shared_ptr<BaseObject>> beg(v1.getPointer(), v2.getPointer(), false);
-    QRDuoVectorIterator<shared_ptr<BaseObject>> end(v1.getPointer(), v2.getPointer(), true);
+    QRDuoVectorIterator<shared_ptr<QRObject>> beg(v1.getPointer(), v2.getPointer(), false);
+    QRDuoVectorIterator<shared_ptr<QRObject>> end(v1.getPointer(), v2.getPointer(), true);
     cnt = 0;
     for (beg; beg != end; beg++) {
         cnt++;
@@ -91,7 +91,7 @@ TEST(ObjectTests, model3D) {
 
     // hand-testing
     auto mem = model->save();
-    QRVector<shared_ptr<BaseObject>> v;
+    QRVector<shared_ptr<QRObject>> v;
     model->setObjects(v);
     mem->restore();
 }
@@ -110,7 +110,7 @@ TEST(ObjectTests, scene3D) {
     auto scene = sceneDirector.build(sceneBuilder);
 
     auto mem = scene->save();
-    QRVector<shared_ptr<BaseObject>> v;
+    QRVector<shared_ptr<QRObject>> v;
     scene->setObjects(v);
     mem->restore();
 }

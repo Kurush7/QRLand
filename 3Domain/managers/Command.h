@@ -11,7 +11,7 @@
 
 class BaseCommand {
 public:
-    virtual std::shared_ptr<Memento> exec() = 0;
+    virtual std::shared_ptr<QRMemento> exec() = 0;
 };
 
 class SceneCommand: public BaseCommand {
@@ -28,7 +28,7 @@ public:
             std::shared_ptr<BaseScene3D> s)
     :SceneCommand(s), loader(loader), director(director){}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 
 private:
     std::shared_ptr<BaseFrame3DLoader> loader;
@@ -40,7 +40,7 @@ public:
     DrawCommand(std::shared_ptr<Painter> painter, std::shared_ptr<BaseScene3D> s)
             :SceneCommand(s), painter(painter){}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 
 private:
     std::shared_ptr<Painter> painter;
@@ -51,7 +51,7 @@ public:
     TransformCameraCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 
 protected:
     std::shared_ptr<BaseTransformer3D> transformer;
@@ -62,7 +62,7 @@ public:
     ScaleCameraCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
             :TransformCameraCommand(trans, s) {}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 };
 
 class SelectCommand: public SceneCommand {
@@ -70,7 +70,7 @@ public:
     SelectCommand(double x, double y, std::shared_ptr<BaseScene3D> &s)
             :SceneCommand(s), x(x), y(y) {}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 private:
     double x, y;
 };
@@ -81,7 +81,7 @@ public:
     TransformSelectionCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 
 protected:
     std::shared_ptr<BaseTransformer3D> transformer;
@@ -92,7 +92,7 @@ public:
     MoveTransformSelectionCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 
 protected:
     std::shared_ptr<BaseTransformer3D> transformer;
@@ -103,7 +103,7 @@ public:
     SetColorSelectionCommand(ColorKeeper keeper, std::shared_ptr<BaseScene3D> &s)
             :SceneCommand(s), keeper(keeper){}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 
 protected:
     std::shared_ptr<BaseTransformer3D> transformer;
@@ -115,7 +115,7 @@ public:
     DeleteSelectionCommand(std::shared_ptr<BaseScene3D> &s)
             :SceneCommand(s){}
 
-    virtual std::shared_ptr<Memento> exec();
+    virtual std::shared_ptr<QRMemento> exec();
 };
 
 

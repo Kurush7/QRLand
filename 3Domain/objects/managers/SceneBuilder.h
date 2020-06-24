@@ -29,7 +29,7 @@ public:
     virtual std::shared_ptr<BaseScene3D> getScene();
 protected:
     std::shared_ptr<AbstractObject3DFactory> factory;
-    std::shared_ptr<BaseCamera3D> camera;
+    std::shared_ptr<QRCamera3D> camera;
 private:
     double w, h;
 };

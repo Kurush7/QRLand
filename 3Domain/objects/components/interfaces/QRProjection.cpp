@@ -2,7 +2,7 @@
 // Created by kurush on 30.05.2020.
 //
 
-#include "Projection.h"
+#include "QRProjection.h"
 
 using namespace std;
 
@@ -12,5 +12,4 @@ unique_ptr<BaseTransformer3D> OrthogonalProjection::getTransformer(const Vector3
     auto oy = lenNorm(ViewUpVector);
     ProjectionTransformer3DCreator creator(zeroPoint, oy * oz, oy, oz);
     return creator.create();
-    //todo oz * oy is theoretially correct....??!!!!
 }

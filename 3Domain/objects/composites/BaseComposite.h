@@ -5,14 +5,14 @@
 #ifndef BIG3DFLUFFY_BASECOMPOSITE_H
 #define BIG3DFLUFFY_BASECOMPOSITE_H
 
-#include "../BaseObject.h"
+#include "objects/QRObject.h"
 
 
 
 class GroupMemento;
-class BaseComposite: public BaseObject {
+class BaseComposite: public QRObject {
 public:
-    explicit BaseComposite(QRVector<std::shared_ptr<BaseObject>> &obj): objects(obj) {
+    explicit BaseComposite(QRVector<std::shared_ptr<QRObject>> &obj): objects(obj) {
         p = std::shared_ptr<BaseComposite>(this, [](void *ptr){});
     }
     virtual bool isComposite() {return true;}
@@ -21,18 +21,19 @@ public:
         selected = x;
     }
 
-    virtual const QRVector<std::shared_ptr<BaseObject>>& getObjects() {return objects;}
-    virtual void setObjects(QRVector<std::shared_ptr<BaseObject>>&obj) {objects = obj;}
+    // todo iterators only!
+    virtual const QRVector<std::shared_ptr<QRObject>>& getObjects() {return objects;}
+    virtual void setObjects(QRVector<std::shared_ptr<QRObject>>&obj) { objects = obj;}
 
-    virtual std::unique_ptr<Memento> save();
+    virtual std::unique_ptr<QRMemento> save();
 
 private:
     std::shared_ptr<BaseComposite> p;
 protected:
-    QRVector<std::shared_ptr<BaseObject>> objects;
+    QRVector<std::shared_ptr<QRObject>> objects;
 };
 
-class GroupMemento: public Memento {
+class GroupMemento: public QRMemento {
 public:
     GroupMemento(std::shared_ptr<BaseComposite> obj): object(obj) {
         memes = obj->getObjects();
@@ -44,20 +45,20 @@ public:
     }
 private:
     std::weak_ptr<BaseComposite> object;
-    QRVector<std::shared_ptr<BaseObject>> memes;
+    QRVector<std::shared_ptr<QRObject>> memes;
 };
 
-class MementoAccumulator: public Memento {
+class MementoAccumulator: public QRMemento {
 public:
     MementoAccumulator() {}
-    void add(std::shared_ptr<Memento> m) {memes.push_back(m);}
+    void add(std::shared_ptr<QRMemento> m) {memes.push_back(m);}
     virtual void restore() {
         for (auto meme: memes)
             meme->restore();
         memes.clear();
     }
 private:
-    QRVector<std::shared_ptr<Memento>> memes;
+    QRVector<std::shared_ptr<QRMemento>> memes;
 };
 
 #endif //BIG3DFLUFFY_BASECOMPOSITE_H

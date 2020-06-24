@@ -19,7 +19,7 @@ void SceneDrawMethod::collectMetaData() {
     //cout << transformer->getMatrix();
 }
 void SceneDrawMethod::collectPlainData() {
-    auto visitor = shared_ptr<Visitor>(new DrawVisitor(transformer, drawableData, painter));
+    auto visitor = shared_ptr<QRVisitor>(new DrawVisitor(transformer, drawableData, painter));
     for (auto object: scene->getObjects())
         object->acceptVisitor(visitor);
 }

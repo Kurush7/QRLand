@@ -6,11 +6,11 @@
 #define BIG3DFLUFFY_VISITOR_H
 
 
-#include "../components/Point3D.h"
-#include "../components/Edge3D.h"
-#include "../components/Camera3D.h"
+#include "../components/interfaces/QRPoint3D.h"
+#include "../components/interfaces/QREdge3D.h"
+#include "../components/interfaces/QRCamera3D.h"
 #include "../composites/Frame3D.h"
-#include "../BaseObject.h"
+#include "objects/QRObject.h"
 #include "../../Painter.h"
 #include "../../QRConstants.h"
 
@@ -77,13 +77,13 @@ private:
     double z_min;
 };
 
-class DrawVisitor: public Visitor {
+class DrawVisitor: public QRVisitor {
 public:
     DrawVisitor(std::shared_ptr<BaseTransformer3D> t, QRVector<std::shared_ptr<DrawableData>> &data,
             std::shared_ptr<Painter> painter): transformer(t), data(data), painter(painter) {}
-    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
-    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
-    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+    virtual void visitPoint3D(std::shared_ptr<QRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<QREdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<QRCamera3D> camera);
 
 private:
     std::shared_ptr<BaseTransformer3D> transformer;
@@ -91,12 +91,12 @@ private:
     std::shared_ptr<Painter> painter;
 };
 
-class TransformVisitor: public Visitor {
+class TransformVisitor: public QRVisitor {
 public:
     TransformVisitor(std::shared_ptr<BaseTransformer3D> t): transformer(t) {}
-    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
-    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
-    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+    virtual void visitPoint3D(std::shared_ptr<QRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<QREdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<QRCamera3D> camera);
     virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
 
 protected:
@@ -106,18 +106,18 @@ protected:
 class MoveTransformVisitor: public TransformVisitor {
 public:
     MoveTransformVisitor(std::shared_ptr<BaseTransformer3D> t): TransformVisitor(t) {}
-    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
+    virtual void visitPoint3D(std::shared_ptr<QRPoint3D> point);
     virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
 protected:
     Vector3D frameBind;
 };
 
-class BindSetterVisitor: public Visitor {
+class BindSetterVisitor: public QRVisitor {
 public:
     BindSetterVisitor(const Vector3D &bind): bind(bind) {}
-    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
-    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
-    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+    virtual void visitPoint3D(std::shared_ptr<QRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<QREdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<QRCamera3D> camera);
 
 protected:
     Vector3D bind;
@@ -126,15 +126,15 @@ protected:
 class ScaleCameraVisitor: public TransformVisitor {
 public:
     ScaleCameraVisitor(std::shared_ptr<BaseTransformer3D> t): TransformVisitor(t) {}
-    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+    virtual void visitCamera3D(std::shared_ptr<QRCamera3D> camera);
 };
 
-class SelectionVisitor: public Visitor {
+class SelectionVisitor: public QRVisitor {
 public:
     SelectionVisitor(double x, double y, std::shared_ptr<BaseTransformer3D> t): x(x), y(y), transformer(t) {}
-    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
-    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
-    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+    virtual void visitPoint3D(std::shared_ptr<QRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<QREdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<QRCamera3D> camera);
 
     bool is_selected;
 protected:
@@ -142,12 +142,12 @@ protected:
     double x, y;
 };
 
-class SetColorVisitor: public Visitor {
+class SetColorVisitor: public QRVisitor {
 public:
     SetColorVisitor(ColorKeeper keeper): keeper(keeper) {}
-    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point);
-    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge);
-    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera);
+    virtual void visitPoint3D(std::shared_ptr<QRPoint3D> point);
+    virtual void visitEdge3D(std::shared_ptr<QREdge3D> edge);
+    virtual void visitCamera3D(std::shared_ptr<QRCamera3D> camera);
 
     bool is_selected;
 protected:

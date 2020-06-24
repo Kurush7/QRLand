@@ -5,19 +5,19 @@
 #ifndef BIG3DFLUFFY_SELECTIONMANAGER_H
 #define BIG3DFLUFFY_SELECTIONMANAGER_H
 
-#include "../BaseObject.h"
+#include "objects/QRObject.h"
 
 class BaseSelectionManager {
 public:
     virtual bool isEmptySelection() = 0;
     virtual bool isSelected(const ObjectIterator &it) = 0;
     virtual void switchSelection(const ObjectIterator &it) = 0;
-    virtual QRVector<shared_ptr<BaseObject>> getSelection() = 0;
+    virtual QRVector<shared_ptr<QRObject>> getSelection() = 0;
 };
 
 class SelectionManager: public BaseSelectionManager {
 public:
-    SelectionManager (const QRVector<shared_ptr<BaseObject>> &vector): vector(vector) {}
+    SelectionManager (const QRVector<shared_ptr<QRObject>> &vector): vector(vector) {}
     virtual bool isSelected(const ObjectIterator &it) {
         for (int i = 0; i < selection.len(); ++i) {
             if (selection[i] == it)
@@ -37,14 +37,14 @@ public:
         selection.push_back(it);
     }
     virtual bool isEmptySelection() {return selection.isEmpty();}
-    virtual QRVector<shared_ptr<BaseObject>> getSelection() {
-        QRVector<shared_ptr<BaseObject>> ans;
+    virtual QRVector<shared_ptr<QRObject>> getSelection() {
+        QRVector<shared_ptr<QRObject>> ans;
         for (auto s: selection)
             ans.push_back(*s);
         return ans;
     }
 private:
-    const QRVector<shared_ptr<BaseObject>> &vector;
+    const QRVector<shared_ptr<QRObject>> &vector;
     QRVector<ObjectIterator> selection;
 };
 

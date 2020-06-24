@@ -20,7 +20,7 @@ void visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
  */
 
 
-void Visitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
+void QRVisitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
     for (auto obj: frame->getObjects())
         obj->acceptVisitor(this->p);
 }
@@ -28,14 +28,14 @@ void Visitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
 void DrawablePoint::acceptVisitor(std::shared_ptr<BaseDrawMethodVisitor> &v) {v->visitDrawPoint(*this);}
 void DrawableEdge::acceptVisitor(std::shared_ptr<BaseDrawMethodVisitor> &v) {v->visitDrawEdge(*this);}
 
-void DrawVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {
+void DrawVisitor::visitPoint3D(std::shared_ptr<QRPoint3D> point) {
     auto p = point->getPoint();
     p = transformer->transform(p);
     //p = norm(p);
     auto style = point->isSelected()? painter->getSelectionPointStyle() : point->getStyle();
     data.push_front(std::shared_ptr<DrawableData>(new DrawablePoint(p[0], p[1], p[2], style)));
 }
-void DrawVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
+void DrawVisitor::visitEdge3D(std::shared_ptr<QREdge3D> edge) {
     auto pointer = edge->getStart();
     auto ps = norm(transformer->transform(pointer->getPoint()));
     pointer = edge->getEnd();
@@ -44,16 +44,16 @@ void DrawVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
     data.push_back(std::shared_ptr<DrawableData>(new DrawableEdge(ps[0], ps[1], ps[2],
             pe[0], pe[1], pe[2], style)));
 }
-void DrawVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {}
+void DrawVisitor::visitCamera3D(std::shared_ptr<QRCamera3D> camera) {}
 
 
-void TransformVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {
+void TransformVisitor::visitPoint3D(std::shared_ptr<QRPoint3D> point) {
     auto vec = point->getRelativePoint();
     vec = transformer->transform(vec);
     point->setRelativeVector(vec);
 }
-void TransformVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {}
-void TransformVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
+void TransformVisitor::visitEdge3D(std::shared_ptr<QREdge3D> edge) {}
+void TransformVisitor::visitCamera3D(std::shared_ptr<QRCamera3D> camera) {
     camera->getOrigin()->acceptVisitor(p);
 }
 void TransformVisitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
@@ -62,7 +62,7 @@ void TransformVisitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
 
 }
 
-void MoveTransformVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {
+void MoveTransformVisitor::visitPoint3D(std::shared_ptr<QRPoint3D> point) {
     auto vec = point->getRelativePoint();
     vec = transformer->transform(vec);
     point->setRelativeVector(vec);
@@ -75,20 +75,20 @@ void MoveTransformVisitor::visitFrame3D(std::shared_ptr<BaseFrame3D> frame) {
 
     //set new bind for frame
     frameBind = transformer->transform(frameBind);
-    auto vis = shared_ptr<Visitor>(new BindSetterVisitor(frameBind));
+    auto vis = shared_ptr<QRVisitor>(new BindSetterVisitor(frameBind));
     frame->acceptVisitor(vis);
 }
 
-void BindSetterVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {
+void BindSetterVisitor::visitPoint3D(std::shared_ptr<QRPoint3D> point) {
     point->setBind(bind);
 }
-void BindSetterVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {}
-void BindSetterVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
+void BindSetterVisitor::visitEdge3D(std::shared_ptr<QREdge3D> edge) {}
+void BindSetterVisitor::visitCamera3D(std::shared_ptr<QRCamera3D> camera) {
     camera->getOrigin()->setBind(bind);
 }
 
 
-void ScaleCameraVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
+void ScaleCameraVisitor::visitCamera3D(std::shared_ptr<QRCamera3D> camera) {
     camera->getOrigin()->acceptVisitor(p);
     auto w = camera->getWidth(), h = camera->getHeight();
     Vector3D vec(w, h, 0);
@@ -98,8 +98,8 @@ void ScaleCameraVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
 }
 
 
-void SelectionVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {}
-void SelectionVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
+void SelectionVisitor::visitPoint3D(std::shared_ptr<QRPoint3D> point) {}
+void SelectionVisitor::visitEdge3D(std::shared_ptr<QREdge3D> edge) {
     auto s = transformer->transform(edge->getStart()->getPoint());
     auto e = transformer->transform(edge->getEnd()->getPoint());
 
@@ -132,18 +132,18 @@ void SelectionVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
     //cout << "edge " << s[0] << ' ' << s[1] << " <=> " << e[0] << ' ' << e[1] << " :: ";
     //cout << len << ' ' << val << ' ' << (fabs(len) + val)/ val << '\n';
 }
-void SelectionVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {
+void SelectionVisitor::visitCamera3D(std::shared_ptr<QRCamera3D> camera) {
     is_selected = false;
 }
 
 
-void SetColorVisitor::visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) {
+void SetColorVisitor::visitPoint3D(std::shared_ptr<QRPoint3D> point) {
     point->setStyle(keeper.pointStyle);
 }
-void SetColorVisitor::visitEdge3D(std::shared_ptr<BaseEdge3D> edge) {
+void SetColorVisitor::visitEdge3D(std::shared_ptr<QREdge3D> edge) {
     edge->setStyle(keeper.edgeStyle);
 }
-void SetColorVisitor::visitCamera3D(std::shared_ptr<BaseCamera3D> camera) {}
+void SetColorVisitor::visitCamera3D(std::shared_ptr<QRCamera3D> camera) {}
 
 std::ostream& operator<<(std::ostream &os, const DrawablePoint &p) {
     os << "<DrawablePoint:" << p.x << ' '<< p.y << ' ' << p.z << ">";

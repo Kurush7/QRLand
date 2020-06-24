@@ -6,44 +6,53 @@
 #define KG_BASEOBJECT_H
 
 #include <memory>
+#include <vector>
 #include "../math/QRMath.h"
 #include "../containers/QRContainers.h"
 #include "exceptions/QRObjectException.h"
+#include "mementos/QRMemento.h"
+
+
+// todo set into action
+#define wptr std::weak_ptr
+#define sptr std::shared_ptr
+#define uptr std::unique_ptr
+
 
 // todo prototypes for copying
 // todo compares
 
-class BaseQRPoint3D;
-class BaseEdge3D;
-class BaseCamera3D;
+class QRPoint3D;
+class QREdge3D;
+class QRCamera3D;
 class BaseFrame3D;
-class Visitor {
+
+class QRVisitor {
 public:
-    Visitor() {p = std::shared_ptr<Visitor>(this, [](void *ptr){});}
-    virtual void visitPoint3D(std::shared_ptr<BaseQRPoint3D> point) = 0;
-    virtual void visitEdge3D(std::shared_ptr<BaseEdge3D> edge) = 0;
-    virtual void visitCamera3D(std::shared_ptr<BaseCamera3D> camera) = 0;
+    QRVisitor() { p = std::shared_ptr<QRVisitor>(this, [](void *ptr){});}
+    virtual void visitPoint3D(std::shared_ptr<QRPoint3D> point) = 0;
+    virtual void visitEdge3D(std::shared_ptr<QREdge3D> edge) = 0;
+    virtual void visitCamera3D(std::shared_ptr<QRCamera3D> camera) = 0;
     virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
 
 protected:
-    std::shared_ptr<Visitor> p;
+    std::shared_ptr<QRVisitor> p;
 };
 
-class Memento {
-public:
-    virtual void restore() = 0;
-};
 
-class BaseObject;
-using ObjectIterator = QRVectorIterator<std::shared_ptr<BaseObject>>;
+class QRObject;
+using ObjectIterator = QRVectorIterator<std::shared_ptr<QRObject>>;
 
-class BaseObject {
+class QRObject {
 public:
-    virtual std::unique_ptr<Memento> save() = 0;
-    virtual void acceptVisitor(std::shared_ptr<Visitor> visitor) = 0;
+    virtual std::unique_ptr<QRMemento> save() = 0;
+    virtual void acceptVisitor(std::shared_ptr<QRVisitor> visitor) = 0;
+
     virtual bool isVisible() {return visible;}
     virtual bool isComposite() = 0;
     virtual bool isSelected() {return selected;}
+    // todo is_editable
+
     virtual void setSelected(bool x) {selected = x;}
 
     virtual ObjectIterator begin() = 0;
@@ -55,38 +64,7 @@ protected:
 };
 
 
-/*class ComponentIterator: public std::iterator<std::output_iterator_tag, BaseObject> {
-public:
-    ComponentIterator(std::shared_ptr<BaseObject> obj, bool is_end=false): obj(obj), is_end(is_end) {}
-
-    virtual bool operator!=(ComponentIterator const &it) const {return is_end != it.is_end;}
-    virtual bool operator==(ComponentIterator const &it) const {return is_end == it.is_end;}
-
-    virtual const BaseObject& operator*() const {
-        if (obj.expired()) {
-            time_t t = time(nullptr);
-            throw QRBadPointerException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get edge's point!");
-        }
-        return *obj.lock();}
-    virtual const BaseObject* operator->() const {
-        if (obj.expired()) {
-            time_t t = time(nullptr);
-            throw QRBadPointerException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to get edge's point!");
-        }
-        return obj.lock().get();
-    }
-
-    virtual explicit operator bool() {return is_end;}
-
-    virtual ComponentIterator& operator++() {is_end = true; return *this;}
-    virtual ComponentIterator operator++(int) {ComponentIterator x = *this; is_end = true; return x;}
-private:
-    bool is_end = false;
-    std::weak_ptr<BaseObject> obj;
-};*/
-
-
-class Object3D: public BaseObject {
+class QRObject3D: public QRObject {
 public:
     virtual bool isComposite() {return false;}
     virtual ObjectIterator begin() {return ObjectIterator();}

@@ -1,18 +1,15 @@
 //
-// Created by kurush on 30.05.2020.
+// Created by kurush on 24.06.2020.
 //
 
-#ifndef KG_INDUSTRY_H
-#define KG_INDUSTRY_H
+#ifndef BIG3DFLUFFY_SIMPLEINDUSTRY_H
+#define BIG3DFLUFFY_SIMPLEINDUSTRY_H
 
-#include "legacy/SimplePoint3D.h"
-#include "legacy/SimpleEdge3D.h"
-#include "legacy/SimpleCamera3D.h"
+#include "../interfaces/QRIndustry.h"
+#include "SimplePoint3D.h"
+#include "SimpleEdge3D.h"
+#include "SimpleCamera3D.h"
 
-class BaseQRPoint3DCreator {
-public:
-    virtual std::unique_ptr<QRPoint3D> create(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
-};
 
 class QRPoint3DCreator: public BaseQRPoint3DCreator {
 public:
@@ -22,12 +19,6 @@ public:
     }
 private:
     QRPointStyle st;
-};
-
-
-class BaseEdge3DCreator {
-public:
-    virtual std::unique_ptr<QREdge3D> create(std::shared_ptr<QRPoint3D> start, std::shared_ptr<QRPoint3D> end) = 0;
 };
 
 class Edge3DCreator: public BaseEdge3DCreator {
@@ -40,12 +31,6 @@ private:
     QREdgeStyle st;
 };
 
-
-class BaseCamera3DCreator {
-public:
-    virtual std::unique_ptr<QRCamera3D> create(double w, double h,
-                                               const Vector3D &origin) = 0;
-};
 
 // len is the distance from origin to it's bindPoint (strictly by oY)
 class FrontalCamera3DCreator: public BaseCamera3DCreator {
@@ -60,16 +45,6 @@ private:
     std::shared_ptr<ProjectionImp> imp;
     Vector3D viewUp;
     double len;
-};
-
-
-class AbstractObject3DFactory {
-public:
-    virtual std::unique_ptr<QRPoint3D> createPoint(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
-    virtual std::unique_ptr<QREdge3D> createEdge(std::shared_ptr<QRPoint3D> start,
-                                                 std::shared_ptr<QRPoint3D> end) = 0;
-    virtual std::unique_ptr<QRCamera3D> createCamera(double w, double h,
-                                                     const Vector3D &origin) = 0;
 };
 
 class BasicObject3DFactory: public AbstractObject3DFactory {
@@ -88,4 +63,5 @@ private:
     FrontalCamera3DCreator camera_cr = FrontalCamera3DCreator(10);
 };
 
-#endif //KG_INDUSTRY_H
+
+#endif //BIG3DFLUFFY_SIMPLEINDUSTRY_H
