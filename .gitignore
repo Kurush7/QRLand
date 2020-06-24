@@ -492,7 +492,7 @@ docs/
 3Domain/containers/QRVector/VectorBase.h
 3Domain/containers/QRVector/VectorError/
 3Domain/containers/QRVector/QRVectorIterator/
-3Domain/managers/
+3Domain/commands/
 3Domain/math/
 3Domain/objects/
 diagrams/.oop3.vpp.lck

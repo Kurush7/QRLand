@@ -9,5 +9,6 @@ set(source_list ${source_list}
         ${path}/managers/SceneBuilder.cpp
         ${path}/managers/SelectionManager.cpp
         ${path}/exceptions/QRObjectException.cpp
-        ${path}/visitors/Visitor.cpp
+
+        ${path}/visitors/QRVisitor.cpp
         PARENT_SCOPE)

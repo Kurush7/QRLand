@@ -5,9 +5,10 @@
 #ifndef BIG3DFLUFFY_SCENEDRAWMETHOD_H
 #define BIG3DFLUFFY_SCENEDRAWMETHOD_H
 
-#include "../Painter.h"
+#include "../../Painter.h"
 #include "objects/objects.h"
-#include "../containers/QRContainers.h"
+#include "../../containers/QRContainers.h"
+#include "DrawVisitors.h"
 
 class BaseSceneDrawMethod {
 public:

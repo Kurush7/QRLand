@@ -5,8 +5,8 @@
 #ifndef BIG3DFLUFFY_QRMANAGERS_H
 #define BIG3DFLUFFY_QRMANAGERS_H
 
-#include "CareTaker.h"
-#include "Command.h"
-#include "CommandManager.h"
+#include "commands/Command.h"
+#include "commands/CommandManager.h"
+#include "drawManagers/SceneDrawMethod.h"
 
 #endif //BIG3DFLUFFY_QRMANAGERS_H

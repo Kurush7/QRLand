@@ -6,12 +6,12 @@
 #define BIG3DFLUFFY_COMMANDMANAGER_H
 
 #include "Command.h"
-#include "CareTaker.h"
+#include "objects/mementos/CareTaker.h"
 
 class BaseCommandManager {
 public:
     BaseCommandManager(sptr<BaseCareTaker> ct): careTaker(ct) {}
-    virtual void push(sptr<BaseCommand>) = 0;
+    virtual void push(sptr<QRCommand>) = 0;
     virtual bool isEmptyUndo() = 0;
     virtual void exec() = 0;
     virtual void execAll() = 0;
@@ -25,7 +25,7 @@ class CommandManager: public BaseCommandManager {
 public:
     CommandManager(): BaseCommandManager(sptr<BaseCareTaker> (new CareTaker())) {}
     virtual bool isEmptyUndo() {return careTaker->isEmpty();}
-    virtual void push(sptr<BaseCommand> c) {queue.push(c);}
+    virtual void push(sptr<QRCommand> c) {queue.push(c);}
     virtual void exec() {
         auto mem = queue.pop()->exec();
         if (mem != nullptr) careTaker->cache(mem);
@@ -35,7 +35,7 @@ public:
     }
     virtual void undo() {careTaker->restore();}
 private:
-    QRQueue<sptr<BaseCommand>> queue;
+    QRQueue<sptr<QRCommand>> queue;
 };
 
 #endif //BIG3DFLUFFY_COMMANDMANAGER_H

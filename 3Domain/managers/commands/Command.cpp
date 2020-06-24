@@ -3,7 +3,7 @@
 //
 
 #include "Command.h"
-#include "mementos/MultipleMementos.h"
+#include "../../objects/mementos/QRMemento.h"
 
 using namespace std;
 

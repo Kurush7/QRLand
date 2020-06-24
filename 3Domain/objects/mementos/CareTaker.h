@@ -5,8 +5,10 @@
 #ifndef BIG3DFLUFFY_CARETAKER_H
 #define BIG3DFLUFFY_CARETAKER_H
 
-#include "objects/objects.h"
-#include "../containers/QRContainers.h"
+#include <memory>
+#include "QRMemento.h"
+#include "../../QRDefines.h"
+#include "../../containers/QRContainers.h"
 
 class BaseCareTaker {
 public:

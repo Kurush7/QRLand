@@ -1,7 +1,7 @@
 set(path "managers/")
 set(source_list ${source_list}
-        ${path}/CareTaker.cpp
-        ${path}/Command.cpp
-        ${path}/CommandManager.cpp
-        ${path}/SceneDrawMethod.cpp
+        ${path}/drawManagers/SceneDrawMethod.cpp
+        ${path}/drawManagers/DrawVisitors.cpp
+        ${path}/commands/Command.cpp
+        ${path}/commands/CommandManager.cpp
         PARENT_SCOPE)

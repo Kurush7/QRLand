@@ -14,29 +14,12 @@
 #include "../containers/QRContainers.h"
 #include "exceptions/QRObjectException.h"
 #include "mementos/QRMemento.h"
+#include "visitors/QRVisitorInterface.h"
 
 // todo prototypes for copying
 // todo compares
 
 //  TODO GLOBAL: CONST REFERENCES IN FUNCTIONS INSTEAD OF VALUES FOR PTRS
-
-class QRPoint3D;
-class QREdge3D;
-class QRCamera3D;
-class QRFrame3D;
-
-// todo move to visitor directory???
-class QRVisitor {
-public:
-    QRVisitor() { p = sptr<QRVisitor>(this, [](void *ptr){});}
-    virtual void visitPoint3D(sptr<QRPoint3D> point) = 0;
-    virtual void visitEdge3D(sptr<QREdge3D> edge) = 0;
-    virtual void visitCamera3D(sptr<QRCamera3D> camera) = 0;
-    virtual void visitFrame3D(sptr<QRFrame3D> frame);
-
-protected:
-    sptr<QRVisitor> p;
-};
 
 
 class QRObject;

@@ -42,7 +42,7 @@ void SceneDrawMethod::parsePlainData() {
 }
 void SceneDrawMethod::paint() {
     painter->reset();
-    auto visitor = sptr<BaseDrawMethodVisitor> (new DrawMethodVisitor(painter));
+    auto visitor = sptr<QRDrawVisitor> (new DrawMethodVisitor(painter));
     for (auto data: drawableData)
         data->acceptVisitor(visitor);
 
