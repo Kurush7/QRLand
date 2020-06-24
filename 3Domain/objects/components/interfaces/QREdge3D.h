@@ -11,18 +11,18 @@ class Edge3DMemento;
 
 class QREdge3D: public QRObject3D {
 public:
-    QREdge3D(QREdgeStyle s = QREdgeStyle()): style(s) {p = std::shared_ptr<QREdge3D>(this, [](void *ptr){});}
+    QREdge3D(QREdgeStyle s = QREdgeStyle()): style(s) {p = sptr<QREdge3D>(this, [](void *ptr){});}
     ~QREdge3D() {p.reset();}
 
-    virtual void acceptVisitor(std::shared_ptr<QRVisitor> visitor) {visitor->visitEdge3D(p);}
-    virtual std::unique_ptr<QRMemento> save();
+    virtual void acceptVisitor(sptr<QRVisitor> visitor) {visitor->visitEdge3D(p);}
+    virtual uptr<QRMemento> save();
     virtual bool isValid() const = 0;
 
-    virtual const std::shared_ptr<QRPoint3D> getStart() const = 0;
-    virtual void setStart(std::shared_ptr<QRPoint3D>) = 0;
+    virtual const sptr<QRPoint3D> getStart() const = 0;
+    virtual void setStart(sptr<QRPoint3D>) = 0;
 
-    virtual const std::shared_ptr<QRPoint3D> getEnd() const = 0;
-    virtual void setEnd(std::shared_ptr<QRPoint3D>) = 0;
+    virtual const sptr<QRPoint3D> getEnd() const = 0;
+    virtual void setEnd(sptr<QRPoint3D>) = 0;
 
     virtual const QREdgeStyle& getStyle() const {return style;}
     virtual void setStyle(const QREdgeStyle &s) {style = s;}
@@ -32,7 +32,7 @@ public:
 
 private:
     QREdgeStyle style;
-    std::shared_ptr<QREdge3D> p;
+    sptr<QREdge3D> p;
 };
 
 

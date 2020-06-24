@@ -26,7 +26,7 @@ public:
     QRVector(QRVector<T>&&);
 
     void clear() {*size = 0;}
-    std::shared_ptr<QRVector<T>> getPointer() {return p;}
+    sptr<QRVector<T>> getPointer() {return p;}
 
     QRVector<T>& operator =(const QRVector<T>&);
     QRVector<T>& operator =(const QRVector<T>&&);
@@ -77,8 +77,8 @@ public:
     bool isEqual(const QRVector<T>& vec) const;
     bool isNotEqual(const QRVector<T>& vec) const;
 private:
-    std::shared_ptr<T[]> arr;
-    std::shared_ptr<QRVector<T>> p;
+    sptr<T[]> arr;
+    sptr<QRVector<T>> p;
     void grow();
 };
 
@@ -91,7 +91,7 @@ template<typename T>
 void QRVector<T>::grow() {
     try {
         max_size *= 2;
-        auto new_arr = std::shared_ptr<T[]>(new T[max_size]);
+        auto new_arr = sptr<T[]>(new T[max_size]);
         for (size_t i = 0; i < *size; ++i)
             new_arr[i] = arr[i];
         arr = new_arr;
@@ -103,13 +103,13 @@ void QRVector<T>::grow() {
 
 template<typename T>
 QRVector<T>::QRVector(size_t sz):VectorBase(sz) {
-    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
+    p = sptr<QRVector>(this, [](void *ptr){});
     try {
         max_size = DEFAULT_SIZE;
         while (max_size < sz)
             max_size *= 2;
-        size = shared_ptr<size_t>(new size_t(sz));
-        this->arr = std::shared_ptr<T[]>(new T[max_size]);
+        size = sptr<size_t>(new size_t(sz));
+        this->arr = sptr<T[]>(new T[max_size]);
     }
     catch (bad_alloc &exc) {
         throw ErrorAlloc(__FILE__, __LINE__, __TIME__, "can't allocate memory");
@@ -118,7 +118,7 @@ QRVector<T>::QRVector(size_t sz):VectorBase(sz) {
 
 template<typename T>
 QRVector<T>::QRVector(size_t sz, T *vec): VectorBase(sz) {
-    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
+    p = sptr<QRVector>(this, [](void *ptr){});
     if (!vec)
         throw ErrorNullptr(__FILE__, __LINE__, __TIME__, "can't initialize vector with nullptr");
     try {
@@ -134,7 +134,7 @@ QRVector<T>::QRVector(size_t sz, T *vec): VectorBase(sz) {
 
 template<typename T>
 QRVector<T>::QRVector(std::initializer_list<T> initList): QRVector(initList.size()) {
-    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
+    p = sptr<QRVector>(this, [](void *ptr){});
     size_t i = 0;
     for (auto &elem : initList)
         arr[i] = elem;
@@ -142,7 +142,7 @@ QRVector<T>::QRVector(std::initializer_list<T> initList): QRVector(initList.size
 
 template<typename T>
 QRVector<T>::QRVector(const QRVector<T> &vec): QRVector() {
-    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
+    p = sptr<QRVector>(this, [](void *ptr){});
     while (max_size < vec.len())
         grow();
 
@@ -153,7 +153,7 @@ QRVector<T>::QRVector(const QRVector<T> &vec): QRVector() {
 
 template<typename T>
 QRVector<T>::QRVector(QRVector<T> &&vec) {
-    p = std::shared_ptr<QRVector>(this, [](void *ptr){});
+    p = sptr<QRVector>(this, [](void *ptr){});
     arr = vec.arr;
     size = vec.size;
     max_size = vec.max_size;

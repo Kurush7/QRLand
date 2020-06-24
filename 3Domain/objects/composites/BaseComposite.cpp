@@ -3,4 +3,4 @@
 //
 #include "BaseComposite.h"
 
-std::unique_ptr<QRMemento> BaseComposite::save() {return unique_ptr<QRMemento>(new GroupMemento(p));}
+uptr<QRMemento> BaseComposite::save() {return uptr<QRMemento>(new GroupMemento(p));}

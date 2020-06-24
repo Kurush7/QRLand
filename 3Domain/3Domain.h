@@ -7,7 +7,7 @@
 
 #include "exceptions/QRException.h"
 #include "containers/QRContainers.h"
-#include "objects/QRObjects.h"
+#include "objects/objects.h"
 #include "math/QRMath.h"
 #include "Painter.h"
 

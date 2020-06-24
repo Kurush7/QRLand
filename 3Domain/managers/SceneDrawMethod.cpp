@@ -5,7 +5,7 @@
 #include "SceneDrawMethod.h"
 
 
-void SceneDrawMethod::draw(std::shared_ptr<BaseScene3D> s, std::shared_ptr<Painter> p) {
+void SceneDrawMethod::draw(sptr<BaseScene3D> s, sptr<Painter> p) {
     scene = s;
     painter = p;
 
@@ -19,7 +19,7 @@ void SceneDrawMethod::collectMetaData() {
     //cout << transformer->getMatrix();
 }
 void SceneDrawMethod::collectPlainData() {
-    auto visitor = shared_ptr<QRVisitor>(new DrawVisitor(transformer, drawableData, painter));
+    auto visitor = sptr<QRVisitor>(new DrawVisitor(transformer, drawableData, painter));
     for (auto object: scene->getObjects())
         object->acceptVisitor(visitor);
 }
@@ -31,7 +31,7 @@ void SceneDrawMethod::parsePlainData() {
     // todo parse invisible for camera
     /*auto visitor = new HideInvisibleDrawMethodVisitor(c->getOrigin()->getPoint()[2]);
     cout << "origin-z: " << c->getOrigin()->getPoint()[2] << '\n';
-    auto ptr = shared_ptr<BaseDrawMethodVisitor>(visitor);
+    auto ptr = sptr<BaseDrawMethodVisitor>(visitor);
     for (size_t i = 0; i < drawableData.len(); ++i) {
         drawableData[i]->acceptVisitor(ptr);
         if (!visitor->visible) {
@@ -42,7 +42,7 @@ void SceneDrawMethod::parsePlainData() {
 }
 void SceneDrawMethod::paint() {
     painter->reset();
-    auto visitor = shared_ptr<BaseDrawMethodVisitor> (new DrawMethodVisitor(painter));
+    auto visitor = sptr<BaseDrawMethodVisitor> (new DrawMethodVisitor(painter));
     for (auto data: drawableData)
         data->acceptVisitor(visitor);
 

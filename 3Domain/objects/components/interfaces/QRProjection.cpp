@@ -6,7 +6,7 @@
 
 using namespace std;
 
-unique_ptr<BaseTransformer3D> OrthogonalProjection::getTransformer(const Vector3D &origin,
+uptr<BaseTransformer3D> OrthogonalProjection::getTransformer(const Vector3D &origin,
                                          const Vector3D &zeroPoint, const Vector3D &ViewUpVector) {
     auto oz = lenNorm(zeroPoint - origin);
     auto oy = lenNorm(ViewUpVector);

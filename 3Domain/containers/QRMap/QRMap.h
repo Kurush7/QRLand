@@ -42,7 +42,7 @@ using namespace std;
 
 template <typename Key, typename Val>
 void QRMap<Key, Val>::add(const Key &k, const Val &v) {
-    auto p = std::shared_ptr<HashNode<Key>>(new QRMapNode<Key, Val>(k, v));
+    auto p = sptr<HashNode<Key>>(new QRMapNode<Key, Val>(k, v));
     hashTable.add(p);
 }
 

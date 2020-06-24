@@ -10,16 +10,16 @@ MoveTransformer3DCreator::MoveTransformer3DCreator(double dx, double dy, double 
     matrix = makeID();
     matrix[0][3] = dx, matrix[1][3] = dy, matrix[2][3] = dz;
 }
-unique_ptr<BaseTransformer3D> MoveTransformer3DCreator::create() {
-    return unique_ptr<BaseTransformer3D>(new Transformer3D(matrix));
+uptr<BaseTransformer3D> MoveTransformer3DCreator::create() {
+    return uptr<BaseTransformer3D>(new Transformer3D(matrix));
 }
 
 ScaleTransformer3DCreator::ScaleTransformer3DCreator(double kx, double ky, double kz) {
     matrix = makeID();
     matrix[0][0] = kx, matrix[1][1] = ky, matrix[2][2] = kz;
 }
-unique_ptr<BaseTransformer3D> ScaleTransformer3DCreator::create() {
-    return unique_ptr<BaseTransformer3D>(new Transformer3D(matrix));
+uptr<BaseTransformer3D> ScaleTransformer3DCreator::create() {
+    return uptr<BaseTransformer3D>(new Transformer3D(matrix));
 }
 
 
@@ -54,8 +54,8 @@ Matrix3D RotateTransformer3DCreator::createOneRotateMatrix(double rad, axis ax) 
     return matr;
 }
 
-unique_ptr<BaseTransformer3D> RotateTransformer3DCreator::create() {
-    return unique_ptr<BaseTransformer3D>(new Transformer3D(matrix));
+uptr<BaseTransformer3D> RotateTransformer3DCreator::create() {
+    return uptr<BaseTransformer3D>(new Transformer3D(matrix));
 }
 
 
@@ -73,6 +73,6 @@ ProjectionTransformer3DCreator::ProjectionTransformer3DCreator(const Vector3D &b
     matrix = rot * matrix;
 }
 
-unique_ptr<BaseTransformer3D> ProjectionTransformer3DCreator::create() {
-    return unique_ptr<BaseTransformer3D>(new Transformer3D(matrix));
+uptr<BaseTransformer3D> ProjectionTransformer3DCreator::create() {
+    return uptr<BaseTransformer3D>(new Transformer3D(matrix));
 }

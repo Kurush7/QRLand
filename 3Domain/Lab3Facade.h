@@ -5,7 +5,7 @@
 #ifndef KG_LAB3FACADE_H
 #define KG_LAB3FACADE_H
 
-#include "objects/QRObjects.h"
+#include "objects/objects.h"
 
 #include "managers/QRManagers.h"
 #include "Painter.h"
@@ -13,7 +13,7 @@
 
 class Lab3Facade {
 public:
-    Lab3Facade(std::shared_ptr<BasePainterCreator> cr);
+    Lab3Facade(sptr<BasePainterCreator> cr);
     void draw();
     void addModel(std::string filename);
     void select(double x, double y);
@@ -30,10 +30,10 @@ public:
     bool isEmptySelection() {return scene->isEmptySelection();}
 
 private:
-    std::shared_ptr<BasePainterCreator> painterCreator;
-    std::shared_ptr<BaseCommandManager> manager;
-    std::shared_ptr<AbstractObject3DFactory> factory;
-    std::shared_ptr<BaseScene3D> scene;
+    sptr<BasePainterCreator> painterCreator;
+    sptr<BaseCommandManager> manager;
+    sptr<AbstractObject3DFactory> factory;
+    sptr<BaseScene3D> scene;
 
 };
 

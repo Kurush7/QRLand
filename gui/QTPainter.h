@@ -50,15 +50,15 @@ class QTPainterCreator: public BasePainterCreator {
 public:
     explicit QTPainterCreator(Canvas3DViewer *canvas): canvas(canvas) {}
 protected:
-    virtual std::shared_ptr<Painter> getPainter() override {
+    virtual sptr<Painter> getPainter() override {
         if (!painter)
             painter = create();
         else
             painter->reset();
         return painter;
     }
-    virtual std::shared_ptr<Painter> create()  {
-        return std::shared_ptr<Painter>(new QTPainter(canvas));
+    virtual sptr<Painter> create()  {
+        return sptr<Painter>(new QTPainter(canvas));
     }
 private:
     Canvas3DViewer *canvas;

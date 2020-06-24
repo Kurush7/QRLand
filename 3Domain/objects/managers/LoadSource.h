@@ -38,8 +38,8 @@ public:
 
 class LoadSource {
 public:
-    virtual void reopen(shared_ptr<LoadData> data) = 0;
-    virtual void accept(shared_ptr<SourceVisitor> visitor) = 0;
+    virtual void reopen(sptr<LoadData> data) = 0;
+    virtual void accept(sptr<SourceVisitor> visitor) = 0;
 
     virtual int readInt() = 0;
     virtual double readDouble() = 0;
@@ -47,9 +47,9 @@ public:
 
 class FileSource: public LoadSource {
 public:
-    explicit FileSource(shared_ptr<LoadData> data);
-    virtual void reopen(shared_ptr<LoadData> data);
-    virtual void accept(shared_ptr<SourceVisitor> visitor) {visitor->visitFileSource(*this);}
+    explicit FileSource(sptr<LoadData> data);
+    virtual void reopen(sptr<LoadData> data);
+    virtual void accept(sptr<SourceVisitor> visitor) {visitor->visitFileSource(*this);}
 
     virtual int readInt() {return read<int>();}
     virtual double readDouble() {return read<double>();}

@@ -12,11 +12,11 @@
 
 class QRPoint3DMemento: public QRMemento {
 public:
-    QRPoint3DMemento(std::shared_ptr<QRPoint3D>);
+    QRPoint3DMemento(sptr<QRPoint3D>);
     virtual void restore();
 
 private:
-    std::weak_ptr<QRPoint3D> object;
+    wptr<QRPoint3D> object;
     Vector3D point, bind;
     QRPointStyle style;
 };

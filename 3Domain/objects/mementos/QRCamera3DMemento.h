@@ -10,14 +10,14 @@
 
 class Camera3DMemento: public QRMemento {
 public:
-    Camera3DMemento(std::shared_ptr<QRCamera3D>);
+    Camera3DMemento(sptr<QRCamera3D>);
     virtual void restore();
 
 private:
-    std::weak_ptr<QRCamera3D> object;
-    std::shared_ptr<QRPoint3D> origin;
+    wptr<QRCamera3D> object;
+    sptr<QRPoint3D> origin;
     double width, height;
-    std::shared_ptr<ProjectionImp> projector;
+    sptr<ProjectionImp> projector;
 };
 
 #endif //BIG3DFLUFFY_QRCAMERA3DMEMENTO_H

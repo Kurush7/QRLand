@@ -4,9 +4,9 @@
 
 #include "Frame3D.h"
 
-std::unique_ptr<QRMemento> BaseFrame3D::save() {return unique_ptr<QRMemento>(new Frame3DMemento(p_frame));}
+uptr<QRMemento> BaseFrame3D::save() {return uptr<QRMemento>(new Frame3DMemento(p_frame));}
 
-Frame3DMemento::Frame3DMemento(std::shared_ptr<BaseFrame3D> obj): GroupMemento(obj), memes(new MementoAccumulator()) {
+Frame3DMemento::Frame3DMemento(sptr<BaseFrame3D> obj): GroupMemento(obj), memes(new MementoAccumulator()) {
     for (auto x: obj->getObjects())
         memes->add(x->save());
 }

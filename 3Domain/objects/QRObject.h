@@ -7,17 +7,13 @@
 
 #include <memory>
 #include <vector>
+
+#include "../QRDefines.h"
+
 #include "../math/QRMath.h"
 #include "../containers/QRContainers.h"
 #include "exceptions/QRObjectException.h"
 #include "mementos/QRMemento.h"
-
-
-// todo set into action
-#define wptr std::weak_ptr
-#define sptr std::shared_ptr
-#define uptr std::unique_ptr
-
 
 // todo prototypes for copying
 // todo compares
@@ -27,26 +23,27 @@ class QREdge3D;
 class QRCamera3D;
 class BaseFrame3D;
 
+// todo move to visitor directory???
 class QRVisitor {
 public:
-    QRVisitor() { p = std::shared_ptr<QRVisitor>(this, [](void *ptr){});}
-    virtual void visitPoint3D(std::shared_ptr<QRPoint3D> point) = 0;
-    virtual void visitEdge3D(std::shared_ptr<QREdge3D> edge) = 0;
-    virtual void visitCamera3D(std::shared_ptr<QRCamera3D> camera) = 0;
-    virtual void visitFrame3D(std::shared_ptr<BaseFrame3D> frame);
+    QRVisitor() { p = sptr<QRVisitor>(this, [](void *ptr){});}
+    virtual void visitPoint3D(sptr<QRPoint3D> point) = 0;
+    virtual void visitEdge3D(sptr<QREdge3D> edge) = 0;
+    virtual void visitCamera3D(sptr<QRCamera3D> camera) = 0;
+    virtual void visitFrame3D(sptr<BaseFrame3D> frame);
 
 protected:
-    std::shared_ptr<QRVisitor> p;
+    sptr<QRVisitor> p;
 };
 
 
 class QRObject;
-using ObjectIterator = QRVectorIterator<std::shared_ptr<QRObject>>;
+using ObjectIterator = QRVectorIterator<sptr<QRObject>>;
 
 class QRObject {
 public:
-    virtual std::unique_ptr<QRMemento> save() = 0;
-    virtual void acceptVisitor(std::shared_ptr<QRVisitor> visitor) = 0;
+    virtual uptr<QRMemento> save() = 0;
+    virtual void acceptVisitor(sptr<QRVisitor> visitor) = 0;
 
     virtual bool isVisible() {return visible;}
     virtual bool isComposite() = 0;
@@ -71,7 +68,7 @@ public:
     virtual ObjectIterator end()  {return ObjectIterator();}
 };
 
-
+// todo move to textures directory/file
 class QRColor {
 public:
     // todo accurate color string mapping

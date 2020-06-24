@@ -15,34 +15,34 @@ public:
     virtual bool loadPoints() = 0;
     virtual bool loadEdges() = 0;
 
-    virtual std::shared_ptr<BaseFrame3D> getFrame() = 0;
+    virtual sptr<BaseFrame3D> getFrame() = 0;
     virtual bool isReady() {return stage == built_stage;}
 
 protected:
 
     int stage = 0, built_stage = 2;
     bool isBuilt = false;
-    std::shared_ptr<BaseFrame3D> frame;
+    sptr<BaseFrame3D> frame;
 
 };
 
 class Frame3DLoader: public BaseFrame3DLoader {
 public:
-    Frame3DLoader (std::shared_ptr<LoadSource> src,  std::shared_ptr<AbstractObject3DFactory>f);
+    Frame3DLoader (sptr<LoadSource> src,  sptr<AbstractObject3DFactory>f);
     virtual bool loadPoints();
     virtual bool loadEdges();
-    virtual std::shared_ptr<BaseFrame3D> getFrame();
+    virtual sptr<BaseFrame3D> getFrame();
 protected:
-    std::shared_ptr<LoadSource> source;
-    std::shared_ptr<AbstractObject3DFactory> factory;
-    QRVector<std::shared_ptr<QRPoint3D>> points;
-    QRVector<std::shared_ptr<QRObject>> objects;
+    sptr<LoadSource> source;
+    sptr<AbstractObject3DFactory> factory;
+    QRVector<sptr<QRPoint3D>> points;
+    QRVector<sptr<QRObject>> objects;
 };
 
 
 class FrameLoadDirector {
 public:
-    std::shared_ptr<BaseFrame3D> load(shared_ptr<BaseFrame3DLoader> loader)
+    sptr<BaseFrame3D> load(sptr<BaseFrame3DLoader> loader)
     {
         if (loader->loadPoints() && loader->loadEdges()) return loader->getFrame();
 

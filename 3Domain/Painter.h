@@ -22,14 +22,14 @@ public:
 
 class BasePainterCreator {
 public:
-    virtual std::shared_ptr<Painter> getPainter() {
+    virtual sptr<Painter> getPainter() {
         if (!painter)
             painter = create();
         return painter;
     }
 protected:
-    virtual std::shared_ptr<Painter> create() = 0;
-    std::shared_ptr<Painter> painter = nullptr;
+    virtual sptr<Painter> create() = 0;
+    sptr<Painter> painter = nullptr;
 };
 
 

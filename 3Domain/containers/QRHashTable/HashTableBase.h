@@ -8,6 +8,8 @@
 #include <iostream>
 #include <memory>
 
+#include "../../QRDefines.h"
+
 class HashTableBase {
 public:
     HashTableBase();
@@ -22,7 +24,7 @@ protected:
     static const size_t DEFAULT_SIZE = 4;
     static constexpr double MAX_ALPHA = 3.0;
 
-    std::shared_ptr<size_t> capacity;
+    sptr<size_t> capacity;
     size_t curSize;
 };
 

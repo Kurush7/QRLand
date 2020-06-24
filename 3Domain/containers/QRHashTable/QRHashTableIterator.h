@@ -15,10 +15,10 @@ class QRHashTableIterator : public std::iterator<std::output_iterator_tag, T>
 {
 private:
     friend class QRHashTable<T>;
-    QRHashTableIterator(const std::shared_ptr<std::shared_ptr<HashNode<T>>[]> &,
-                        const std::shared_ptr<size_t> &, bool is_end = false);
-    QRHashTableIterator(const std::shared_ptr<std::shared_ptr<HashNode<T>>[]> &,
-                        const std::shared_ptr<size_t> &, size_t, const std::shared_ptr<HashNode<T>>&);
+    QRHashTableIterator(const sptr<sptr<HashNode<T>>[]> &,
+                        const sptr<size_t> &, bool is_end = false);
+    QRHashTableIterator(const sptr<sptr<HashNode<T>>[]> &,
+                        const sptr<size_t> &, size_t, const sptr<HashNode<T>>&);
 public:
     QRHashTableIterator(const QRHashTableIterator &) = default;
     ~QRHashTableIterator() = default;
@@ -35,17 +35,17 @@ public:
     virtual QRHashTableIterator<T> operator++(int);
 
 protected:
-    std::weak_ptr<std::shared_ptr<HashNode<T>>[]> table;
-    std::weak_ptr<size_t> capacity;
+    wptr<sptr<HashNode<T>>[]> table;
+    wptr<size_t> capacity;
     size_t tableIndex = 0;
-    std::weak_ptr<HashNode<T>> curNode;
+    wptr<HashNode<T>> curNode;
 private:
     bool setNextValid();
 };
 
 template <typename T>
-QRHashTableIterator<T>::QRHashTableIterator(const  shared_ptr<shared_ptr<HashNode<T>>[]>  &t,
-                                            const shared_ptr<size_t> &capacity, bool is_end)
+QRHashTableIterator<T>::QRHashTableIterator(const  sptr<sptr<HashNode<T>>[]>  &t,
+                                            const sptr<size_t> &capacity, bool is_end)
 : table(t), capacity(capacity) {
     tableIndex = is_end? *capacity: 0;
     if (!is_end) {
@@ -57,12 +57,12 @@ QRHashTableIterator<T>::QRHashTableIterator(const  shared_ptr<shared_ptr<HashNod
 }
 
 template <typename T>
-QRHashTableIterator<T>::QRHashTableIterator(const std::shared_ptr<std::shared_ptr<HashNode<T>>[]> &t,
-                                            const std::shared_ptr<size_t> &capacity, size_t tabInd,
-                                            const std::shared_ptr<HashNode<T>> &cN)
+QRHashTableIterator<T>::QRHashTableIterator(const sptr<sptr<HashNode<T>>[]> &t,
+                                            const sptr<size_t> &capacity, size_t tabInd,
+                                            const sptr<HashNode<T>> &cN)
 : table(t), capacity(capacity), tableIndex(tabInd) {
     if (cN)
-        curNode = weak_ptr<HashNode<T>>(cN);
+        curNode = wptr<HashNode<T>>(cN);
     else
         setNextValid();
 }
@@ -83,7 +83,7 @@ bool QRHashTableIterator<T>::operator!=(QRHashTableIterator const &it) const {
 template <typename T>
 QRHashTableIterator<T>::operator bool() const {
     try {
-        auto n = shared_ptr<size_t>(capacity);
+        auto n = sptr<size_t>(capacity);
         return tableIndex < *n;
     }
     catch (bad_weak_ptr &exc) {
@@ -96,7 +96,7 @@ QRHashTableIterator<T>::operator bool() const {
 template <typename T>
 const T& QRHashTableIterator<T>::operator*() const {
     try {
-        auto cN = shared_ptr<HashNode<T>>(curNode);
+        auto cN = sptr<HashNode<T>>(curNode);
         return cN->key;
     }
     catch (bad_weak_ptr &exc) {
@@ -108,7 +108,7 @@ const T& QRHashTableIterator<T>::operator*() const {
 template <typename T>
 const T* QRHashTableIterator<T>::operator->() const {
     try {
-        auto cN = shared_ptr<HashNode<T>>(curNode);
+        auto cN = sptr<HashNode<T>>(curNode);
         return &cN->key;
     }
     catch (bad_weak_ptr &exc) {
@@ -120,12 +120,12 @@ const T* QRHashTableIterator<T>::operator->() const {
 template <typename T>
 bool QRHashTableIterator<T>::setNextValid() {
     try {
-        auto n = shared_ptr<size_t>(capacity);
+        auto n = sptr<size_t>(capacity);
         if (tableIndex == *n)
             return true;
 
         auto cN = curNode.lock();
-        auto t = shared_ptr<std::shared_ptr<HashNode<T>>[]>(table);
+        auto t = sptr<sptr<HashNode<T>>[]>(table);
         if (tableIndex < *n) {
             if (cN && cN->next) {
                 cN = cN->next;
@@ -136,7 +136,7 @@ bool QRHashTableIterator<T>::setNextValid() {
                     cN = ++tableIndex < *n ? t[tableIndex] : nullptr;
             }
         }
-        curNode = weak_ptr<HashNode<T>>(cN);
+        curNode = wptr<HashNode<T>>(cN);
         return tableIndex == *n;
     }
     catch (bad_weak_ptr &exc) {
@@ -159,7 +159,7 @@ QRHashTableIterator<T>& QRHashTableIterator<T>::operator++()
             throw QRHashTableBadIterator(__FILE__, __LINE__, asctime(localtime(&t)),
                                          "Failed to get HashTable size while incrementing!");
         }
-        curNode = weak_ptr<HashNode<T>>();
+        curNode = wptr<HashNode<T>>();
         tableIndex = *n;
     }
 }

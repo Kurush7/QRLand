@@ -37,14 +37,14 @@ public:
 
     void clear() noexcept;
     QRHashTableIterator<T> add(const T &);    // returns iterator of added element
-    void add(const std::shared_ptr<HashNode<T>>);
+    void add(const sptr<HashNode<T>>);
     QRHashTableIterator<T> erase(const T &);  // returns iterator of next element or nullptr
-    const std::shared_ptr<HashNode<T>> getNode(const T&);
+    const sptr<HashNode<T>> getNode(const T&);
     bool has(const T &) const noexcept;
 
 
 private:
-    std::shared_ptr<std::shared_ptr<HashNode<T>>[]> createEmptyTable(size_t);
+    sptr<sptr<HashNode<T>>[]> createEmptyTable(size_t);
     void copyTable(const QRHashTable &);
     void moveTable(QRHashTable &);
     void grow() noexcept;
@@ -52,7 +52,7 @@ private:
     size_t makeHash(const T&, size_t) const;
     size_t getFitSize(size_t);
 
-    std::shared_ptr<std::shared_ptr<HashNode<T>>[]> table = nullptr;
+    sptr<sptr<HashNode<T>>[]> table = nullptr;
 };
 
 
@@ -131,7 +131,7 @@ QRHashTableIterator<T> QRHashTable<T>::add(const T &key) {
             return end();
         }
 
-        auto x = shared_ptr<HashNode<T>>(new HashNode<T>(key, table[hash]));
+        auto x = sptr<HashNode<T>>(new HashNode<T>(key, table[hash]));
         table[hash] = x;
         curSize++;
 
@@ -145,7 +145,7 @@ QRHashTableIterator<T> QRHashTable<T>::add(const T &key) {
 }
 
 template <typename T>
-void QRHashTable<T>::add(const std::shared_ptr<HashNode<T>> nd) {
+void QRHashTable<T>::add(const sptr<HashNode<T>> nd) {
     try {
         if (curSize > *capacity * MAX_ALPHA)
             grow();
@@ -159,7 +159,7 @@ void QRHashTable<T>::add(const std::shared_ptr<HashNode<T>> nd) {
             return;
         }
 
-        auto x = shared_ptr<HashNode<T>>(nd->clone());
+        auto x = sptr<HashNode<T>>(nd->clone());
         x->next = table[hash];
         table[hash] = x;
         curSize++;
@@ -175,7 +175,7 @@ template <typename T>
 QRHashTableIterator<T> QRHashTable<T>::erase(const T &key) {
     size_t hash = makeHash(key, *capacity);
 
-    shared_ptr<HashNode<T>> node = table[hash], prevNode;
+    sptr<HashNode<T>> node = table[hash], prevNode;
     while (node != nullptr && !(node->key == key)) {
         prevNode = node;
         node = node->next;
@@ -212,7 +212,7 @@ bool QRHashTable<T>::has(const T &key) const noexcept {
 }
 
 template <typename T>
-const std::shared_ptr<HashNode<T>> QRHashTable<T>::getNode(const T &key) {
+const sptr<HashNode<T>> QRHashTable<T>::getNode(const T &key) {
     size_t hash = makeHash(key, *capacity);
 
     auto node = table[hash];
@@ -232,9 +232,9 @@ void QRHashTable<T>::clear() noexcept {
 
 
 template <typename T>
-shared_ptr<shared_ptr<HashNode<T>>[]> QRHashTable<T>::createEmptyTable(size_t sz) {
+sptr<sptr<HashNode<T>>[]> QRHashTable<T>::createEmptyTable(size_t sz) {
     try {
-        shared_ptr<shared_ptr<HashNode<T>>[]> newTable(new shared_ptr<HashNode<T>>[sz]{nullptr});
+        sptr<sptr<HashNode<T>>[]> newTable(new sptr<HashNode<T>>[sz]{nullptr});
         return newTable;
     }
     catch(const std::bad_alloc &exc) {
@@ -247,7 +247,7 @@ template <typename T>
 void QRHashTable<T>::copyTable(const QRHashTable &copyTable) {
     try {
         auto newTable = createEmptyTable(*copyTable.capacity);
-        shared_ptr<HashNode<T>> head, node, copyHead;
+        sptr<HashNode<T>> head, node, copyHead;
 
         for (size_t i = 0; i < *copyTable.capacity; ++i) {
             copyHead = copyTable.table[i];
@@ -289,7 +289,7 @@ void QRHashTable<T>::grow() noexcept {
         size_t newCapacity = *capacity * 2;
         auto newTable = createEmptyTable(newCapacity);
 
-        shared_ptr<HashNode<T>> node, next;
+        sptr<HashNode<T>> node, next;
         for (size_t i = 0; i < *capacity; i++) {
             node = table[i];
             while (node != nullptr) {

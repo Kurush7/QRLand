@@ -11,11 +11,11 @@ template <typename Key, typename Val>
 class QRMapNode: public HashNode<Key> {
 public:
     QRMapNode(const Key &k, const Val &v): HashNode<Key>(k), val(v) {}
-    QRMapNode(const Key &k, const Val &v, const shared_ptr<HashNode<Key>> next): HashNode<Key>(k, next), val(v) {}
+    QRMapNode(const Key &k, const Val &v, const sptr<HashNode<Key>> next): HashNode<Key>(k, next), val(v) {}
 
-    virtual std::shared_ptr<HashNode<Key>> clone() const override {
+    virtual sptr<HashNode<Key>> clone() const override {
         auto p = new QRMapNode<Key, Val>(this->key, val, this->next);
-        return std::shared_ptr<HashNode<Key>>(p);
+        return sptr<HashNode<Key>>(p);
     }
 
     Val val;

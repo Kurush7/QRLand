@@ -4,7 +4,7 @@
 
 #include "QRPoint3DMemento.h"
 
-QRPoint3DMemento::QRPoint3DMemento(shared_ptr<QRPoint3D> p) {
+QRPoint3DMemento::QRPoint3DMemento(sptr<QRPoint3D> p) {
     object = p;
     point = p->getPoint();
     bind = p->getBind();
@@ -16,7 +16,7 @@ void QRPoint3DMemento::restore() {
         time_t t = time(nullptr);
         throw QRBadPointerException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to create memento!");
     }
-    shared_ptr<QRPoint3D> p(object);
+    sptr<QRPoint3D> p(object);
     p->setVector(point);
     p->setBind(bind);
     p->setStyle(style);

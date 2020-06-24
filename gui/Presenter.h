@@ -39,8 +39,8 @@ private:
 
     MainWindow &window;
 
-    std::shared_ptr<BasePainterCreator> creator;
-    std::shared_ptr<Lab3Facade> facade;
+    sptr<BasePainterCreator> creator;
+    sptr<Lab3Facade> facade;
 };
 
 

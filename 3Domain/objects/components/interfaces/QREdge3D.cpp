@@ -7,6 +7,6 @@
 
 using namespace std;
 
-unique_ptr<QRMemento> QREdge3D::save() {
-    return unique_ptr<QRMemento>(new Edge3DMemento(p));
+uptr<QRMemento> QREdge3D::save() {
+    return uptr<QRMemento>(new Edge3DMemento(p));
 }

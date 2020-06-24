@@ -5,72 +5,72 @@
 #ifndef BIG3DFLUFFY_COMMAND_H
 #define BIG3DFLUFFY_COMMAND_H
 
-#include "../objects/QRObjects.h"
+#include "objects/objects.h"
 #include "../Painter.h"
 #include "SceneDrawMethod.h"
 
 class BaseCommand {
 public:
-    virtual std::shared_ptr<QRMemento> exec() = 0;
+    virtual sptr<QRMemento> exec() = 0;
 };
 
 class SceneCommand: public BaseCommand {
 public:
-    SceneCommand(std::shared_ptr<BaseScene3D> s): scene(s) {}
+    SceneCommand(sptr<BaseScene3D> s): scene(s) {}
 protected:
-    std::shared_ptr<BaseScene3D> scene;
+    sptr<BaseScene3D> scene;
 };
 
 
 class AddModelCommand: public SceneCommand {
 public:
-    AddModelCommand(FrameLoadDirector director, std::shared_ptr<BaseFrame3DLoader> loader,
-            std::shared_ptr<BaseScene3D> s)
+    AddModelCommand(FrameLoadDirector director, sptr<BaseFrame3DLoader> loader,
+            sptr<BaseScene3D> s)
     :SceneCommand(s), loader(loader), director(director){}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 
 private:
-    std::shared_ptr<BaseFrame3DLoader> loader;
+    sptr<BaseFrame3DLoader> loader;
     FrameLoadDirector director;
 };
 
 class DrawCommand: public SceneCommand {
 public:
-    DrawCommand(std::shared_ptr<Painter> painter, std::shared_ptr<BaseScene3D> s)
+    DrawCommand(sptr<Painter> painter, sptr<BaseScene3D> s)
             :SceneCommand(s), painter(painter){}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 
 private:
-    std::shared_ptr<Painter> painter;
+    sptr<Painter> painter;
 };
 
 class TransformCameraCommand: public SceneCommand {
 public:
-    TransformCameraCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
+    TransformCameraCommand(sptr<BaseTransformer3D> &trans, sptr<BaseScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 
 protected:
-    std::shared_ptr<BaseTransformer3D> transformer;
+    sptr<BaseTransformer3D> transformer;
 };
 
 class ScaleCameraCommand: public TransformCameraCommand {
 public:
-    ScaleCameraCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
+    ScaleCameraCommand(sptr<BaseTransformer3D> &trans, sptr<BaseScene3D> &s)
             :TransformCameraCommand(trans, s) {}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 };
 
 class SelectCommand: public SceneCommand {
 public:
-    SelectCommand(double x, double y, std::shared_ptr<BaseScene3D> &s)
+    SelectCommand(double x, double y, sptr<BaseScene3D> &s)
             :SceneCommand(s), x(x), y(y) {}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 private:
     double x, y;
 };
@@ -78,44 +78,44 @@ private:
 
 class TransformSelectionCommand: public SceneCommand {
 public:
-    TransformSelectionCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
+    TransformSelectionCommand(sptr<BaseTransformer3D> &trans, sptr<BaseScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 
 protected:
-    std::shared_ptr<BaseTransformer3D> transformer;
+    sptr<BaseTransformer3D> transformer;
 };
 
 class MoveTransformSelectionCommand: public SceneCommand {
 public:
-    MoveTransformSelectionCommand(std::shared_ptr<BaseTransformer3D> &trans, std::shared_ptr<BaseScene3D> &s)
+    MoveTransformSelectionCommand(sptr<BaseTransformer3D> &trans, sptr<BaseScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 
 protected:
-    std::shared_ptr<BaseTransformer3D> transformer;
+    sptr<BaseTransformer3D> transformer;
 };
 
 class SetColorSelectionCommand: public SceneCommand {
 public:
-    SetColorSelectionCommand(ColorKeeper keeper, std::shared_ptr<BaseScene3D> &s)
+    SetColorSelectionCommand(ColorKeeper keeper, sptr<BaseScene3D> &s)
             :SceneCommand(s), keeper(keeper){}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 
 protected:
-    std::shared_ptr<BaseTransformer3D> transformer;
+    sptr<BaseTransformer3D> transformer;
     ColorKeeper keeper;
 };
 
 class DeleteSelectionCommand: public SceneCommand {
 public:
-    DeleteSelectionCommand(std::shared_ptr<BaseScene3D> &s)
+    DeleteSelectionCommand(sptr<BaseScene3D> &s)
             :SceneCommand(s){}
 
-    virtual std::shared_ptr<QRMemento> exec();
+    virtual sptr<QRMemento> exec();
 };
 
 

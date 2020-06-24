@@ -7,8 +7,8 @@
 
 using namespace std;
 
-unique_ptr<QRMemento> QRCamera3D::save() {
-    return unique_ptr<QRMemento>(new Camera3DMemento(p));
+uptr<QRMemento> QRCamera3D::save() {
+    return uptr<QRMemento>(new Camera3DMemento(p));
 }
 
 double QRCamera3D::getWidth() const {

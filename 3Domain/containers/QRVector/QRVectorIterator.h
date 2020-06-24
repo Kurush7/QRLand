@@ -16,7 +16,7 @@ public:
     friend class QRVector<T>;
 
     QRVectorIterator() {}
-    QRVectorIterator(const std::shared_ptr<T[]> vect, const std::shared_ptr<size_t> sz, size_t ind = 0);
+    QRVectorIterator(const sptr<T[]> vect, const sptr<size_t> sz, size_t ind = 0);
     QRVectorIterator(const QRVectorIterator<T>& iter);
     QRVectorIterator<T>& operator=(const QRVectorIterator<T>& iter);
 
@@ -32,16 +32,16 @@ public:
     bool operator !=(const QRVectorIterator<T>& iter) const;
 
 private:
-    std::weak_ptr<T[]> vec;
-    std::weak_ptr<size_t> size;
+    wptr<T[]> vec;
+    wptr<size_t> size;
 protected:
     size_t index = 0;
 };
 
 template<typename T>
-QRVectorIterator<T>::QRVectorIterator(const std::shared_ptr<T[]> vect, const std::shared_ptr<size_t> sz, size_t ind) {
-    vec = std::weak_ptr<T[]>(vect);
-    size = std::weak_ptr<size_t>(sz);
+QRVectorIterator<T>::QRVectorIterator(const sptr<T[]> vect, const sptr<size_t> sz, size_t ind) {
+    vec = wptr<T[]>(vect);
+    size = wptr<size_t>(sz);
     index = ind;
 }
 
@@ -79,7 +79,7 @@ template<typename T>
 T& QRVectorIterator<T>::operator*() {
     if (vec.expired())
         throw ErrorDeletedObj(__FILE__, __LINE__, "vector not exists", __TIME__);
-    std::shared_ptr<T[]> copyPtr(vec);
+    sptr<T[]> copyPtr(vec);
     return copyPtr[index];
 }
 
@@ -87,7 +87,7 @@ template<typename T>
 T* QRVectorIterator<T>::operator->() {
     if (vec.expired())
         throw ErrorDeletedObj(__FILE__, __LINE__, "vector not exists", __TIME__);
-    std::shared_ptr<T[]> copyPtr(vec);
+    sptr<T[]> copyPtr(vec);
     return &copyPtr[index];
 }
 
@@ -95,7 +95,7 @@ template<typename T>
 const T& QRVectorIterator<T>::operator*() const {
     if (vec.expired())
         throw ErrorDeletedObj(__FILE__, __LINE__, __TIME__, "vector not exists");
-    std::shared_ptr<T[]> copyPtr(vec);
+    sptr<T[]> copyPtr(vec);
     return copyPtr[index];
 }
 
@@ -103,7 +103,7 @@ template<typename T>
 const T* QRVectorIterator<T>::operator->() const {
     if (vec.expired())
         throw ErrorDeletedObj(__FILE__, __LINE__, __TIME__, "vector not exists");
-    std::shared_ptr<T[]> copyPtr(vec);
+    sptr<T[]> copyPtr(vec);
     return &copyPtr[index];
 }
 

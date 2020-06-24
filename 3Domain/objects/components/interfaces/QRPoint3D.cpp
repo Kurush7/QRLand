@@ -7,8 +7,8 @@
 
 using namespace std;
 
-unique_ptr<QRMemento> QRPoint3D::save() {
-    return unique_ptr<QRMemento>(new QRPoint3DMemento(p));
+uptr<QRMemento> QRPoint3D::save() {
+    return uptr<QRMemento>(new QRPoint3DMemento(p));
 }
 
 bool QRPoint3D::operator==(const QRPoint3D &b) const {

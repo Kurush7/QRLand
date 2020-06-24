@@ -4,7 +4,7 @@
 
 #include "QREdge3DMemento.h"
 
-Edge3DMemento::Edge3DMemento(shared_ptr<QREdge3D> p) {
+Edge3DMemento::Edge3DMemento(sptr<QREdge3D> p) {
     object = p;
     start = p->getStart();
     end = p->getEnd();
@@ -20,7 +20,7 @@ void Edge3DMemento::restore() {
         time_t t = time(nullptr);
         throw QRBadPointException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to create memento!");
     }
-    shared_ptr<QREdge3D> p(object);
+    sptr<QREdge3D> p(object);
     p->setStart(start.lock());
     p->setEnd(end.lock());
     p->setStyle(style);

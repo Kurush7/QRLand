@@ -20,7 +20,7 @@ public:
     virtual bool isEmpty() const;
     operator bool() const;
 protected:
-    std::shared_ptr<size_t> size;
+    sptr<size_t> size;
     size_t max_size;
 };
 

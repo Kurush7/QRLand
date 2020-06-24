@@ -9,21 +9,21 @@
 
 class SimpleEdge3D: public QREdge3D {
 public:
-    SimpleEdge3D(std::shared_ptr<QRPoint3D> start, std::shared_ptr<QRPoint3D> end, QREdgeStyle s = QREdgeStyle());
+    SimpleEdge3D(sptr<QRPoint3D> start, sptr<QRPoint3D> end, QREdgeStyle s = QREdgeStyle());
     SimpleEdge3D(QRPoint3D &start, QRPoint3D &end, QREdgeStyle s = QREdgeStyle());
 
     virtual bool isValid() const {return !start.expired() && !end.expired();}
 
-    virtual const std::shared_ptr<QRPoint3D> getStart() const;
-    virtual void setStart(std::shared_ptr<QRPoint3D> p) { start = p;}
+    virtual const sptr<QRPoint3D> getStart() const;
+    virtual void setStart(sptr<QRPoint3D> p) { start = p;}
 
-    virtual const std::shared_ptr<QRPoint3D> getEnd() const;
-    virtual void setEnd(std::shared_ptr<QRPoint3D> p) { end = p;}
+    virtual const sptr<QRPoint3D> getEnd() const;
+    virtual void setEnd(sptr<QRPoint3D> p) { end = p;}
 
     virtual bool operator==(const QREdge3D &b) const;
 
 private:
-    std::weak_ptr<QRPoint3D> start, end;
+    wptr<QRPoint3D> start, end;
 };
 
 

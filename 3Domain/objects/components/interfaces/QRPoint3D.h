@@ -11,12 +11,12 @@ class QRPoint3DMemento;
 
 class QRPoint3D: public QRObject3D {
 public:
-    QRPoint3D(QRPointStyle s = QRPointStyle()): style(s) {p = std::shared_ptr<QRPoint3D>(this, [](void *ptr){});}
+    QRPoint3D(QRPointStyle s = QRPointStyle()): style(s) {p = sptr<QRPoint3D>(this, [](void *ptr){});}
     ~QRPoint3D() {p.reset();}
 
-    virtual std::unique_ptr<QRMemento> save();
-    virtual void acceptVisitor(std::shared_ptr<QRVisitor> visitor) {visitor->visitPoint3D(p);}
-    std::shared_ptr<QRPoint3D> getPointer() {return p;}
+    virtual uptr<QRMemento> save();
+    virtual void acceptVisitor(sptr<QRVisitor> visitor) {visitor->visitPoint3D(p);}
+    sptr<QRPoint3D> getPointer() {return p;}
 
     virtual const Vector3D getPoint() const = 0;
     virtual const Vector3D getRelativePoint() const = 0;
@@ -34,7 +34,7 @@ public:
     virtual QRPoint3D& operator=(const QRPoint3D &p) { style = p.style;}
 private:
     QRPointStyle style;
-    std::shared_ptr<QRPoint3D> p;
+    sptr<QRPoint3D> p;
 };
 
 

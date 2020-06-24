@@ -12,8 +12,8 @@
 class GroupMemento;
 class BaseComposite: public QRObject {
 public:
-    explicit BaseComposite(QRVector<std::shared_ptr<QRObject>> &obj): objects(obj) {
-        p = std::shared_ptr<BaseComposite>(this, [](void *ptr){});
+    explicit BaseComposite(QRVector<sptr<QRObject>> &obj): objects(obj) {
+        p = sptr<BaseComposite>(this, [](void *ptr){});
     }
     virtual bool isComposite() {return true;}
     virtual void setSelected(bool x) {
@@ -22,20 +22,20 @@ public:
     }
 
     // todo iterators only!
-    virtual const QRVector<std::shared_ptr<QRObject>>& getObjects() {return objects;}
-    virtual void setObjects(QRVector<std::shared_ptr<QRObject>>&obj) { objects = obj;}
+    virtual const QRVector<sptr<QRObject>>& getObjects() {return objects;}
+    virtual void setObjects(QRVector<sptr<QRObject>>&obj) { objects = obj;}
 
-    virtual std::unique_ptr<QRMemento> save();
+    virtual uptr<QRMemento> save();
 
 private:
-    std::shared_ptr<BaseComposite> p;
+    sptr<BaseComposite> p;
 protected:
-    QRVector<std::shared_ptr<QRObject>> objects;
+    QRVector<sptr<QRObject>> objects;
 };
 
 class GroupMemento: public QRMemento {
 public:
-    GroupMemento(std::shared_ptr<BaseComposite> obj): object(obj) {
+    GroupMemento(sptr<BaseComposite> obj): object(obj) {
         memes = obj->getObjects();
     }
     virtual void restore() {
@@ -44,21 +44,21 @@ public:
         object.lock()->setObjects(memes);
     }
 private:
-    std::weak_ptr<BaseComposite> object;
-    QRVector<std::shared_ptr<QRObject>> memes;
+    wptr<BaseComposite> object;
+    QRVector<sptr<QRObject>> memes;
 };
 
 class MementoAccumulator: public QRMemento {
 public:
     MementoAccumulator() {}
-    void add(std::shared_ptr<QRMemento> m) {memes.push_back(m);}
+    void add(sptr<QRMemento> m) {memes.push_back(m);}
     virtual void restore() {
         for (auto meme: memes)
             meme->restore();
         memes.clear();
     }
 private:
-    QRVector<std::shared_ptr<QRMemento>> memes;
+    QRVector<sptr<QRMemento>> memes;
 };
 
 #endif //BIG3DFLUFFY_BASECOMPOSITE_H

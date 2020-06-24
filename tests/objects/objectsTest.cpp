@@ -56,11 +56,11 @@ TEST(ObjectTests, Camera3D) {
 
 TEST(ObjectTests, AbstractFactory) {
     // todo perform testing
-    auto factory = shared_ptr<AbstractObject3DFactory>(new BasicObject3DFactory());
-    shared_ptr<BasePoint3D> p1 = factory->createPoint(Vector3D(1,2,3));
-    shared_ptr<BasePoint3D>  p2 = factory->createPoint(Vector3D(4,5,6));
-    shared_ptr<QREdge3D> e = factory->createEdge(p1, p2);
-    shared_ptr<QRCamera3D> c = factory->createCamera(100, 100, Vector3D(-100, 100, 0));
+    auto factory = sptr<AbstractObject3DFactory>(new BasicObject3DFactory());
+    sptr<BasePoint3D> p1 = factory->createPoint(Vector3D(1,2,3));
+    sptr<BasePoint3D>  p2 = factory->createPoint(Vector3D(4,5,6));
+    sptr<QREdge3D> e = factory->createEdge(p1, p2);
+    sptr<QRCamera3D> c = factory->createCamera(100, 100, Vector3D(-100, 100, 0));
 
     int cnt = 0;
     for (auto it = p1->begin(); it != p1->end(); ++it) {
@@ -68,11 +68,11 @@ TEST(ObjectTests, AbstractFactory) {
     }
     EXPECT_EQ(cnt, 0);
 
-    QRVector<shared_ptr<QRObject>> v1({p1, p2});
-    QRVector<shared_ptr<QRObject>> v2({e, c});
+    QRVector<sptr<QRObject>> v1({p1, p2});
+    QRVector<sptr<QRObject>> v2({e, c});
 
-    QRDuoVectorIterator<shared_ptr<QRObject>> beg(v1.getPointer(), v2.getPointer(), false);
-    QRDuoVectorIterator<shared_ptr<QRObject>> end(v1.getPointer(), v2.getPointer(), true);
+    QRDuoVectorIterator<sptr<QRObject>> beg(v1.getPointer(), v2.getPointer(), false);
+    QRDuoVectorIterator<sptr<QRObject>> end(v1.getPointer(), v2.getPointer(), true);
     cnt = 0;
     for (beg; beg != end; beg++) {
         cnt++;
@@ -81,36 +81,36 @@ TEST(ObjectTests, AbstractFactory) {
 }
 
 TEST(ObjectTests, model3D) {
-    auto factory = shared_ptr<AbstractObject3DFactory>(new BasicObject3DFactory());
-    auto data = shared_ptr<LoadData> (new FileLoadData("test.txt"));
-    auto source = shared_ptr<LoadSource>(new FileSource(data));
-    auto loader = shared_ptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
+    auto factory = sptr<AbstractObject3DFactory>(new BasicObject3DFactory());
+    auto data = sptr<LoadData> (new FileLoadData("test.txt"));
+    auto source = sptr<LoadSource>(new FileSource(data));
+    auto loader = sptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
     auto director = FrameLoadDirector();
     auto model = director.load(loader);
     EXPECT_NE(model, nullptr);
 
     // hand-testing
     auto mem = model->save();
-    QRVector<shared_ptr<QRObject>> v;
+    QRVector<sptr<QRObject>> v;
     model->setObjects(v);
     mem->restore();
 }
 
 TEST(ObjectTests, scene3D) {
-    auto factory = shared_ptr<AbstractObject3DFactory>(new BasicObject3DFactory());
-    auto data = shared_ptr<LoadData> (new FileLoadData("test.txt"));
-    auto source = shared_ptr<LoadSource>(new FileSource(data));
-    auto loader = shared_ptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
+    auto factory = sptr<AbstractObject3DFactory>(new BasicObject3DFactory());
+    auto data = sptr<LoadData> (new FileLoadData("test.txt"));
+    auto source = sptr<LoadSource>(new FileSource(data));
+    auto loader = sptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
     auto director = FrameLoadDirector();
     auto model = director.load(loader);
 
 
-    auto sceneBuilder = std::shared_ptr<BaseScene3DBuilder> (new Scene3DBuilder(factory));
+    auto sceneBuilder = sptr<BaseScene3DBuilder> (new Scene3DBuilder(factory));
     auto sceneDirector = SceneBuildDirector();
     auto scene = sceneDirector.build(sceneBuilder);
 
     auto mem = scene->save();
-    QRVector<shared_ptr<QRObject>> v;
+    QRVector<sptr<QRObject>> v;
     scene->setObjects(v);
     mem->restore();
 }

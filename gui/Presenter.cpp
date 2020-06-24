@@ -8,8 +8,8 @@
 using namespace std;
 
 Presenter::Presenter(MainWindow &w): window(w) {
-    creator = shared_ptr<BasePainterCreator>(new QTPainterCreator(window.canvas));
-    facade = shared_ptr<Lab3Facade>(new Lab3Facade(creator));
+    creator = sptr<BasePainterCreator>(new QTPainterCreator(window.canvas));
+    facade = sptr<Lab3Facade>(new Lab3Facade(creator));
 }
 
 void Presenter::backChangeColor() {

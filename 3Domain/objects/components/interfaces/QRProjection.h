@@ -9,13 +9,13 @@
 
 class ProjectionImp {
 public:
-    virtual std::unique_ptr<BaseTransformer3D> getTransformer(const Vector3D &origin,
+    virtual uptr<BaseTransformer3D> getTransformer(const Vector3D &origin,
             const Vector3D &zeroPoint, const Vector3D &ViewUpVector) = 0;
 };
 
 class OrthogonalProjection: public ProjectionImp {
 public:
-    virtual std::unique_ptr<BaseTransformer3D> getTransformer(const Vector3D &origin,
+    virtual uptr<BaseTransformer3D> getTransformer(const Vector3D &origin,
                                              const Vector3D &zeroPoint, const Vector3D &ViewUpVector);
 };
 

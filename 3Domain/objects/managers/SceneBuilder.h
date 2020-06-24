@@ -13,23 +13,23 @@ public:
     virtual bool makeCamera() = 0;
     virtual bool placeElements() {stage++; return true;}
 
-    virtual std::shared_ptr<BaseScene3D> getScene() = 0;
+    virtual sptr<BaseScene3D> getScene() = 0;
     virtual bool isReady() {return stage == built_stage;}
 
 protected:
     int stage = 0, built_stage = 2;
     bool isBuilt = false;
-    std::shared_ptr<BaseScene3D> scene;
+    sptr<BaseScene3D> scene;
 };
 
 class Scene3DBuilder: public BaseScene3DBuilder {
 public:
-    Scene3DBuilder (std::shared_ptr<AbstractObject3DFactory>f, double width = 10, double height = 10);
+    Scene3DBuilder (sptr<AbstractObject3DFactory>f, double width = 10, double height = 10);
     virtual bool makeCamera();
-    virtual std::shared_ptr<BaseScene3D> getScene();
+    virtual sptr<BaseScene3D> getScene();
 protected:
-    std::shared_ptr<AbstractObject3DFactory> factory;
-    std::shared_ptr<QRCamera3D> camera;
+    sptr<AbstractObject3DFactory> factory;
+    sptr<QRCamera3D> camera;
 private:
     double w, h;
 };
@@ -37,7 +37,7 @@ private:
 
 class SceneBuildDirector {
 public:
-    std::shared_ptr<BaseScene3D> build(shared_ptr<BaseScene3DBuilder> loader)
+    sptr<BaseScene3D> build(sptr<BaseScene3DBuilder> loader)
     {
         if (loader->makeCamera() && loader->placeElements()) return loader->getScene();
 

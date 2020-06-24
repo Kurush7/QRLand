@@ -10,12 +10,12 @@
 
 class Edge3DMemento: public QRMemento {
 public:
-    Edge3DMemento(std::shared_ptr<QREdge3D>);
+    Edge3DMemento(sptr<QREdge3D>);
     virtual void restore();
 
 private:
-    std::weak_ptr<QREdge3D> object;
-    std::weak_ptr<QRPoint3D> start, end;
+    wptr<QREdge3D> object;
+    wptr<QRPoint3D> start, end;
     QREdgeStyle style;
 };
 

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-shared_ptr<QRMemento> AddModelCommand::exec() {
+sptr<QRMemento> AddModelCommand::exec() {
     auto model = director.load(loader);
     if (!model)
         throw QRBadSourceException(__FILE__, __LINE__, __TIME__, "failed to read model from file!");
@@ -15,36 +15,36 @@ shared_ptr<QRMemento> AddModelCommand::exec() {
     return mem;
 }
 
-shared_ptr<QRMemento> DrawCommand::exec() {
+sptr<QRMemento> DrawCommand::exec() {
     SceneDrawMethod draw;
     draw.draw(scene, painter);
     return nullptr;
 }
 
-shared_ptr<QRMemento> TransformCameraCommand::exec() {
+sptr<QRMemento> TransformCameraCommand::exec() {
     auto camera = scene->getActiveCamera();
     auto mem = camera->save();
 
-    auto visitor = shared_ptr<QRVisitor>(new TransformVisitor(transformer));
+    auto visitor = sptr<QRVisitor>(new TransformVisitor(transformer));
     camera->acceptVisitor(visitor);
     return mem;
 }
 
-shared_ptr<QRMemento> ScaleCameraCommand::exec() {
+sptr<QRMemento> ScaleCameraCommand::exec() {
     auto camera = scene->getActiveCamera();
     auto mem = camera->save();
 
-    auto visitor = shared_ptr<QRVisitor>(new ScaleCameraVisitor(transformer));
+    auto visitor = sptr<QRVisitor>(new ScaleCameraVisitor(transformer));
     camera->acceptVisitor(visitor);
     return mem;
 }
 
-shared_ptr<QRMemento> SelectCommand::exec() {
+sptr<QRMemento> SelectCommand::exec() {
     auto camera = scene->getActiveCamera();
 
-    auto transformer = shared_ptr<BaseTransformer3D>(camera->getProjectionTransformer());
+    auto transformer = sptr<BaseTransformer3D>(camera->getProjectionTransformer());
     auto visitor = new SelectionVisitor(x,y, transformer);
-    auto pnt =  shared_ptr<QRVisitor>(visitor);
+    auto pnt =  sptr<QRVisitor>(visitor);
     for (auto it = scene->getObjects().begin(); it != scene->getObjects().end(); ++it) {
         visitor->is_selected = false;
         it->get()->acceptVisitor(pnt);
@@ -56,41 +56,41 @@ shared_ptr<QRMemento> SelectCommand::exec() {
 }
 
 
-shared_ptr<QRMemento> TransformSelectionCommand::exec() {
+sptr<QRMemento> TransformSelectionCommand::exec() {
     auto memes = new MementoAccumulator();
 
-    auto visitor = shared_ptr<QRVisitor>(new TransformVisitor(transformer));
+    auto visitor = sptr<QRVisitor>(new TransformVisitor(transformer));
     for (auto x: scene->getSelection()) {
         memes->add(x->save());
         x->acceptVisitor(visitor);
     }
-    return shared_ptr<QRMemento>(memes);
+    return sptr<QRMemento>(memes);
 }
 
-shared_ptr<QRMemento> MoveTransformSelectionCommand::exec() {
+sptr<QRMemento> MoveTransformSelectionCommand::exec() {
     auto memes = new MementoAccumulator();
 
-    auto visitor = shared_ptr<QRVisitor>(new MoveTransformVisitor(transformer));
+    auto visitor = sptr<QRVisitor>(new MoveTransformVisitor(transformer));
     for (auto x: scene->getSelection()) {
         memes->add(x->save());
         x->acceptVisitor(visitor);
     }
-    return shared_ptr<QRMemento>(memes);
+    return sptr<QRMemento>(memes);
 }
 
-shared_ptr<QRMemento> SetColorSelectionCommand::exec() {
+sptr<QRMemento> SetColorSelectionCommand::exec() {
     auto memes = new MementoAccumulator();
 
-    auto visitor = shared_ptr<QRVisitor>(new SetColorVisitor(keeper));
+    auto visitor = sptr<QRVisitor>(new SetColorVisitor(keeper));
     for (auto x: scene->getSelection()) {
         memes->add(x->save());
         x->acceptVisitor(visitor);
     }
-    return shared_ptr<QRMemento>(memes);
+    return sptr<QRMemento>(memes);
 }
 
 
-shared_ptr<QRMemento> DeleteSelectionCommand::exec() {
+sptr<QRMemento> DeleteSelectionCommand::exec() {
     auto mem = scene->save();
     QRVector<ObjectIterator> selected;
     // todo accurate delete: smart iterators & another system

@@ -46,13 +46,13 @@ private:
 
 class BaseTransformer3DCreator {
 public:
-    virtual std::unique_ptr<BaseTransformer3D> create() = 0;
+    virtual uptr<BaseTransformer3D> create() = 0;
 };
 
 class MoveTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     MoveTransformer3DCreator(double dx, double dy, double dz);
-    virtual std::unique_ptr<BaseTransformer3D> create();
+    virtual uptr<BaseTransformer3D> create();
 private:
     Matrix3D matrix;
 };
@@ -60,7 +60,7 @@ private:
 class ScaleTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     ScaleTransformer3DCreator(double kx, double ky, double kz);
-    virtual std::unique_ptr<BaseTransformer3D> create();
+    virtual uptr<BaseTransformer3D> create();
 private:
     Matrix3D matrix;
 };
@@ -68,7 +68,7 @@ private:
 class RotateTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     RotateTransformer3DCreator(double dx, double dy, double dz);
-    virtual std::unique_ptr<BaseTransformer3D> create();
+    virtual uptr<BaseTransformer3D> create();
 private:
     enum axis {ox, oy, oz};
     Matrix3D createOneRotateMatrix(double rad, axis ax);
@@ -79,7 +79,7 @@ private:
 class ProjectionTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     ProjectionTransformer3DCreator(const Vector3D &base, const Vector3D &ox, const Vector3D &oy, const Vector3D &oz);
-    virtual std::unique_ptr<BaseTransformer3D> create();
+    virtual uptr<BaseTransformer3D> create();
 private:
     Matrix3D matrix;
 };

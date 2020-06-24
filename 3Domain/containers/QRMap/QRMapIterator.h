@@ -25,7 +25,7 @@ public:
 
     const QRPair<Key, Val> unit() const {
         try {
-            auto cN = reinterpret_cast<QRMapNode<Key, Val>*>(shared_ptr<HashNode<Key>>(this->curNode).get());
+            auto cN = reinterpret_cast<QRMapNode<Key, Val>*>(sptr<HashNode<Key>>(this->curNode).get());
             return make_pair(cN->key, cN->val);
         }
         catch (bad_weak_ptr &exc) {
@@ -35,7 +35,7 @@ public:
     }
     const Key key() const {
         try {
-            auto cN = reinterpret_cast<QRMapNode<Key, Val>*>(shared_ptr<HashNode<Key>>(this->curNode).get());
+            auto cN = reinterpret_cast<QRMapNode<Key, Val>*>(sptr<HashNode<Key>>(this->curNode).get());
             return cN->key;
         }
         catch (bad_weak_ptr &exc) {
@@ -45,7 +45,7 @@ public:
     }
     const Val value() const {
         try {
-            auto cN = reinterpret_cast<QRMapNode<Key, Val>*>(shared_ptr<HashNode<Key>>(this->curNode).get());
+            auto cN = reinterpret_cast<QRMapNode<Key, Val>*>(sptr<HashNode<Key>>(this->curNode).get());
             return cN->val;
         }
         catch (bad_weak_ptr &exc) {

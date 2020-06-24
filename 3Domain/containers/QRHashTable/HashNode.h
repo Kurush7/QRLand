@@ -12,12 +12,12 @@ class HashNode
 {
 public:
     HashNode() = default;
-    HashNode(const T &, const std::shared_ptr<HashNode<T>>);
+    HashNode(const T &, const sptr<HashNode<T>>);
     HashNode(const T &);
     HashNode(const HashNode &);
     HashNode(HashNode &&) noexcept;
 
-    virtual std::shared_ptr<HashNode> clone() const;
+    virtual sptr<HashNode> clone() const;
 
     ~HashNode() = default;
 
@@ -28,18 +28,18 @@ public:
     bool operator!=(const HashNode &node) const;
 
     T key;
-    std::shared_ptr<HashNode<T>> next = nullptr;
+    sptr<HashNode<T>> next = nullptr;
 };
 
 using namespace std;
 
 template <typename T>
-shared_ptr<HashNode<T>> HashNode<T>::clone() const {
-    return shared_ptr<HashNode<T>>(new HashNode<T>(key, next));
+sptr<HashNode<T>> HashNode<T>::clone() const {
+    return sptr<HashNode<T>>(new HashNode<T>(key, next));
 }
 
 template <typename T>
-HashNode<T>::HashNode(const T &key, const shared_ptr<HashNode<T>> next): key(key), next(next) {}
+HashNode<T>::HashNode(const T &key, const sptr<HashNode<T>> next): key(key), next(next) {}
 
 template <typename T>
 HashNode<T>::HashNode(const T &key): key(key), next(nullptr) {}

@@ -5,23 +5,23 @@
 #ifndef BIG3DFLUFFY_CARETAKER_H
 #define BIG3DFLUFFY_CARETAKER_H
 
-#include "../objects/QRObjects.h"
+#include "objects/objects.h"
 #include "../containers/QRContainers.h"
 
 class BaseCareTaker {
 public:
-    virtual void cache(std::shared_ptr<QRMemento> mem) = 0;
+    virtual void cache(sptr<QRMemento> mem) = 0;
     virtual bool isEmpty() = 0;
     virtual void restore() = 0;
 };
 
 class CareTaker: public BaseCareTaker {
 public:
-    virtual void cache(std::shared_ptr<QRMemento> mem) {mementos.push(mem);}
+    virtual void cache(sptr<QRMemento> mem) {mementos.push(mem);}
     virtual void restore() {mementos.pop()->restore();}
     virtual bool isEmpty() {return mementos.isEmpty();}
 private:
-    QRStack<std::shared_ptr<QRMemento>> mementos;
+    QRStack<sptr<QRMemento>> mementos;
 };
 
 

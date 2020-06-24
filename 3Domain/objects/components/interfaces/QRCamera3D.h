@@ -13,14 +13,14 @@ class Camera3DMemento;
 
 class QRCamera3D: public QRObject3D {
 public:
-    QRCamera3D(double w, double h, std::shared_ptr<ProjectionImp>pr): width(w), height(h), projector(pr){
-        p = std::shared_ptr<QRCamera3D>(this, [](void *ptr){});}
+    QRCamera3D(double w, double h, sptr<ProjectionImp>pr): width(w), height(h), projector(pr){
+        p = sptr<QRCamera3D>(this, [](void *ptr){});}
     ~QRCamera3D() {p.reset();}
 
-    virtual void acceptVisitor(std::shared_ptr<QRVisitor> visitor) {visitor->visitCamera3D(p);}
+    virtual void acceptVisitor(sptr<QRVisitor> visitor) {visitor->visitCamera3D(p);}
 
-    virtual std::unique_ptr<QRMemento> save();
-    virtual std::unique_ptr<BaseTransformer3D> getProjectionTransformer() = 0;
+    virtual uptr<QRMemento> save();
+    virtual uptr<BaseTransformer3D> getProjectionTransformer() = 0;
 
     virtual bool operator==(const QRCamera3D &b) const {return getOrigin() == b.getOrigin() &&
                                                                  getBind() == b.getBind() && width == b.width &&
@@ -33,21 +33,21 @@ public:
     double getHeight() const;
     void setHeight(double height);
 
-    virtual const std::shared_ptr<QRPoint3D> getOrigin() const = 0;
-    virtual void setOrigin(std::shared_ptr<QRPoint3D>) = 0;
+    virtual const sptr<QRPoint3D> getOrigin() const = 0;
+    virtual void setOrigin(sptr<QRPoint3D>) = 0;
 
     virtual const Vector3D& getBind() const = 0;
     virtual void setBind(const Vector3D&) = 0;
 
-    virtual const std::shared_ptr<ProjectionImp> getProjector() const {return projector;}
-    virtual const void setProjector(std::shared_ptr<ProjectionImp> p) {projector = p;}
+    virtual const sptr<ProjectionImp> getProjector() const {return projector;}
+    virtual const void setProjector(sptr<ProjectionImp> p) {projector = p;}
 
-    std::weak_ptr<QRCamera3D> getPointer() {return p;}
+    wptr<QRCamera3D> getPointer() {return p;}
 
 private:
-    std::shared_ptr<QRCamera3D> p;
+    sptr<QRCamera3D> p;
 protected:
-    std::shared_ptr<ProjectionImp> projector;
+    sptr<ProjectionImp> projector;
     double width, height;
 };
 

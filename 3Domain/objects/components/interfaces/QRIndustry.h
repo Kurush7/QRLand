@@ -11,28 +11,28 @@
 
 class BaseQRPoint3DCreator {
 public:
-    virtual std::unique_ptr<QRPoint3D> create(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
+    virtual uptr<QRPoint3D> create(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
 };
 
 class BaseEdge3DCreator {
 public:
-    virtual std::unique_ptr<QREdge3D> create(std::shared_ptr<QRPoint3D> start, std::shared_ptr<QRPoint3D> end) = 0;
+    virtual uptr<QREdge3D> create(sptr<QRPoint3D> start, sptr<QRPoint3D> end) = 0;
 };
 
 
 class BaseCamera3DCreator {
 public:
-    virtual std::unique_ptr<QRCamera3D> create(double w, double h,
+    virtual uptr<QRCamera3D> create(double w, double h,
                                                const Vector3D &origin) = 0;
 };
 
 
 class AbstractObject3DFactory {
 public:
-    virtual std::unique_ptr<QRPoint3D> createPoint(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
-    virtual std::unique_ptr<QREdge3D> createEdge(std::shared_ptr<QRPoint3D> start,
-                                                 std::shared_ptr<QRPoint3D> end) = 0;
-    virtual std::unique_ptr<QRCamera3D> createCamera(double w, double h,
+    virtual uptr<QRPoint3D> createPoint(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
+    virtual uptr<QREdge3D> createEdge(sptr<QRPoint3D> start,
+                                                 sptr<QRPoint3D> end) = 0;
+    virtual uptr<QRCamera3D> createCamera(double w, double h,
                                                      const Vector3D &origin) = 0;
 };
 

@@ -4,7 +4,7 @@
 
 #include "QRCamera3DMemento.h"
 
-Camera3DMemento::Camera3DMemento(shared_ptr<QRCamera3D> p) {
+Camera3DMemento::Camera3DMemento(sptr<QRCamera3D> p) {
     object = p;
     origin = p->getOrigin();
     width = p->getWidth();
@@ -17,7 +17,7 @@ void Camera3DMemento::restore() {
         time_t t = time(nullptr);
         throw QRBadPointerException(__FILE__, __LINE__, asctime(localtime(&t)), "Failed to create memento!");
     }
-    shared_ptr<QRCamera3D> p(object);
+    sptr<QRCamera3D> p(object);
     p->setOrigin(origin);
     p->setWidth(width);
     p->setHeight(height);

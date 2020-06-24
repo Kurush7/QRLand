@@ -10,6 +10,8 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include "../QRDefines.h"
+
 class QRException: public std::exception {
 public:
     QRException(const char *file, int line, const char *time, const char *msg);
