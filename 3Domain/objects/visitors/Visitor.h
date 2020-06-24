@@ -6,10 +6,8 @@
 #define BIG3DFLUFFY_VISITOR_H
 
 
-#include "../components/interfaces/QRPoint3D.h"
-#include "../components/interfaces/QREdge3D.h"
-#include "../components/interfaces/QRCamera3D.h"
-#include "../composites/Frame3D.h"
+#include "../components/interfaces.h"
+#include "../composites/interfaces.h"
 #include "objects/QRObject.h"
 #include "../../Painter.h"
 #include "../../QRConstants.h"
@@ -97,7 +95,7 @@ public:
     virtual void visitPoint3D(sptr<QRPoint3D> point);
     virtual void visitEdge3D(sptr<QREdge3D> edge);
     virtual void visitCamera3D(sptr<QRCamera3D> camera);
-    virtual void visitFrame3D(sptr<BaseFrame3D> frame);
+    virtual void visitFrame3D(sptr<QRFrame3D> frame);
 
 protected:
     sptr<BaseTransformer3D> transformer;
@@ -107,7 +105,7 @@ class MoveTransformVisitor: public TransformVisitor {
 public:
     MoveTransformVisitor(sptr<BaseTransformer3D> t): TransformVisitor(t) {}
     virtual void visitPoint3D(sptr<QRPoint3D> point);
-    virtual void visitFrame3D(sptr<BaseFrame3D> frame);
+    virtual void visitFrame3D(sptr<QRFrame3D> frame);
 protected:
     Vector3D frameBind;
 };

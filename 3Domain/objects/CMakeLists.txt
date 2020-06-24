@@ -1,11 +1,9 @@
 add_subdirectory(components)
 add_subdirectory(mementos)
+add_subdirectory(composites)
 
 set(path "objects/")
 set(source_list ${source_list}
-        ${path}/composites/BaseComposite.cpp
-        ${path}/composites/Frame3D.cpp
-        ${path}/composites/Scene3D.cpp
         ${path}/managers/LoadSource.cpp
         ${path}/managers/FrameLoader.cpp
         ${path}/managers/SceneBuilder.cpp

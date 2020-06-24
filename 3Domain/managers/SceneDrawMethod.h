@@ -11,20 +11,20 @@
 
 class BaseSceneDrawMethod {
 public:
-    virtual void draw(sptr<BaseScene3D> s, sptr<Painter> p) = 0;
+    virtual void draw(sptr<QRScene3D> s, sptr<Painter> p) = 0;
 protected:
     virtual void collectMetaData() = 0;
     virtual void collectPlainData() = 0;
     virtual void parsePlainData() = 0;
     virtual void paint() = 0;
 
-    sptr<BaseScene3D> scene;
+    sptr<QRScene3D> scene;
 };
 
 
 class SceneDrawMethod {
 public:
-    virtual void draw(sptr<BaseScene3D> s, sptr<Painter> p);
+    virtual void draw(sptr<QRScene3D> s, sptr<Painter> p);
 protected:
     virtual void collectMetaData();
     virtual void collectPlainData();
@@ -33,7 +33,7 @@ protected:
 private:
     QRVector<sptr<DrawableData>> drawableData;
     sptr<BaseTransformer3D> transformer;
-    sptr<BaseScene3D> scene;
+    sptr<QRScene3D> scene;
     sptr<Painter> painter;
 };
 

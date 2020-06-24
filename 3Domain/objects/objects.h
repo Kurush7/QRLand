@@ -9,7 +9,8 @@
 #include "components/interfaces.h"
 #include "components/legacy.h"
 
-#include "composites/Frame3D.h"
+#include "composites/interfaces.h"
+#include "composites/legacy.h"
 
 #include "managers/LoadSource.h"
 #include "managers/FrameLoader.h"

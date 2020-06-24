@@ -10,7 +10,7 @@
 
 /*
 LoadData defines, which source to open (one interface, may be widened in base class: for auth-data etc.)
-LoadSource represents concrete loader (from file/db....). Has basic 'read' template function. if params
+LoadSource represents concrete loader (from file/db....). Has basic 'read' ala-template function. if params
 are needed for the request (e.g., sql-request body), visitor should be added, which puts the params
 into concrete source, then calls 'data' (and source will have the params inside)
 */

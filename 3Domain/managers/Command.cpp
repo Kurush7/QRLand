@@ -3,6 +3,7 @@
 //
 
 #include "Command.h"
+#include "mementos/MultipleMementos.h"
 
 using namespace std;
 

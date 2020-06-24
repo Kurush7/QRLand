@@ -16,16 +16,16 @@ public:
 
 class SceneCommand: public BaseCommand {
 public:
-    SceneCommand(sptr<BaseScene3D> s): scene(s) {}
+    SceneCommand(sptr<QRScene3D> s): scene(s) {}
 protected:
-    sptr<BaseScene3D> scene;
+    sptr<QRScene3D> scene;
 };
 
 
 class AddModelCommand: public SceneCommand {
 public:
     AddModelCommand(FrameLoadDirector director, sptr<BaseFrame3DLoader> loader,
-            sptr<BaseScene3D> s)
+            sptr<QRScene3D> s)
     :SceneCommand(s), loader(loader), director(director){}
 
     virtual sptr<QRMemento> exec();
@@ -37,7 +37,7 @@ private:
 
 class DrawCommand: public SceneCommand {
 public:
-    DrawCommand(sptr<Painter> painter, sptr<BaseScene3D> s)
+    DrawCommand(sptr<Painter> painter, sptr<QRScene3D> s)
             :SceneCommand(s), painter(painter){}
 
     virtual sptr<QRMemento> exec();
@@ -48,7 +48,7 @@ private:
 
 class TransformCameraCommand: public SceneCommand {
 public:
-    TransformCameraCommand(sptr<BaseTransformer3D> &trans, sptr<BaseScene3D> &s)
+    TransformCameraCommand(sptr<BaseTransformer3D> &trans, sptr<QRScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
     virtual sptr<QRMemento> exec();
@@ -59,7 +59,7 @@ protected:
 
 class ScaleCameraCommand: public TransformCameraCommand {
 public:
-    ScaleCameraCommand(sptr<BaseTransformer3D> &trans, sptr<BaseScene3D> &s)
+    ScaleCameraCommand(sptr<BaseTransformer3D> &trans, sptr<QRScene3D> &s)
             :TransformCameraCommand(trans, s) {}
 
     virtual sptr<QRMemento> exec();
@@ -67,7 +67,7 @@ public:
 
 class SelectCommand: public SceneCommand {
 public:
-    SelectCommand(double x, double y, sptr<BaseScene3D> &s)
+    SelectCommand(double x, double y, sptr<QRScene3D> &s)
             :SceneCommand(s), x(x), y(y) {}
 
     virtual sptr<QRMemento> exec();
@@ -78,7 +78,7 @@ private:
 
 class TransformSelectionCommand: public SceneCommand {
 public:
-    TransformSelectionCommand(sptr<BaseTransformer3D> &trans, sptr<BaseScene3D> &s)
+    TransformSelectionCommand(sptr<BaseTransformer3D> &trans, sptr<QRScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
     virtual sptr<QRMemento> exec();
@@ -89,7 +89,7 @@ protected:
 
 class MoveTransformSelectionCommand: public SceneCommand {
 public:
-    MoveTransformSelectionCommand(sptr<BaseTransformer3D> &trans, sptr<BaseScene3D> &s)
+    MoveTransformSelectionCommand(sptr<BaseTransformer3D> &trans, sptr<QRScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
     virtual sptr<QRMemento> exec();
@@ -100,7 +100,7 @@ protected:
 
 class SetColorSelectionCommand: public SceneCommand {
 public:
-    SetColorSelectionCommand(ColorKeeper keeper, sptr<BaseScene3D> &s)
+    SetColorSelectionCommand(ColorKeeper keeper, sptr<QRScene3D> &s)
             :SceneCommand(s), keeper(keeper){}
 
     virtual sptr<QRMemento> exec();
@@ -112,7 +112,7 @@ protected:
 
 class DeleteSelectionCommand: public SceneCommand {
 public:
-    DeleteSelectionCommand(sptr<BaseScene3D> &s)
+    DeleteSelectionCommand(sptr<QRScene3D> &s)
             :SceneCommand(s){}
 
     virtual sptr<QRMemento> exec();

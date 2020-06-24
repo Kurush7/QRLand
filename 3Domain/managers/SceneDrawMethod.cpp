@@ -5,7 +5,7 @@
 #include "SceneDrawMethod.h"
 
 
-void SceneDrawMethod::draw(sptr<BaseScene3D> s, sptr<Painter> p) {
+void SceneDrawMethod::draw(sptr<QRScene3D> s, sptr<Painter> p) {
     scene = s;
     painter = p;
 

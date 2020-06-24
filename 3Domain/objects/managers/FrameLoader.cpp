@@ -46,10 +46,10 @@ bool Frame3DLoader::loadEdges() {
     return true;
 }
 
-sptr<BaseFrame3D> Frame3DLoader::getFrame() {
+sptr<QRFrame3D> Frame3DLoader::getFrame() {
     if (!isReady()) return nullptr;
     if (isBuilt) return frame;
-    frame = sptr<BaseFrame3D>(new Frame3D(objects));
+    frame = sptr<QRFrame3D>(new SimpleFrame3D(objects));
     isBuilt = true;
     return frame;
 }

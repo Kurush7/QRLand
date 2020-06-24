@@ -33,7 +33,7 @@ private:
     sptr<BasePainterCreator> painterCreator;
     sptr<BaseCommandManager> manager;
     sptr<AbstractObject3DFactory> factory;
-    sptr<BaseScene3D> scene;
+    sptr<QRScene3D> scene;
 
 };
 

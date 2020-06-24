@@ -20,7 +20,7 @@ void visitFrame3D(sptr<BaseFrame3D> frame) {
  */
 
 
-void QRVisitor::visitFrame3D(sptr<BaseFrame3D> frame) {
+void QRVisitor::visitFrame3D(sptr<QRFrame3D> frame) {
     for (auto obj: frame->getObjects())
         obj->acceptVisitor(this->p);
 }
@@ -56,7 +56,7 @@ void TransformVisitor::visitEdge3D(sptr<QREdge3D> edge) {}
 void TransformVisitor::visitCamera3D(sptr<QRCamera3D> camera) {
     camera->getOrigin()->acceptVisitor(p);
 }
-void TransformVisitor::visitFrame3D(sptr<BaseFrame3D> frame) {
+void TransformVisitor::visitFrame3D(sptr<QRFrame3D> frame) {
     for (auto x: frame->getObjects())
         x->acceptVisitor(p);
 
@@ -69,7 +69,7 @@ void MoveTransformVisitor::visitPoint3D(sptr<QRPoint3D> point) {
     frameBind = point->getBind();
 }
 
-void MoveTransformVisitor::visitFrame3D(sptr<BaseFrame3D> frame) {
+void MoveTransformVisitor::visitFrame3D(sptr<QRFrame3D> frame) {
     for (auto x: frame->getObjects())
         x->acceptVisitor(p);
 

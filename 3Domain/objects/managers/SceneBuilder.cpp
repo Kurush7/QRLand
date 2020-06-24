@@ -13,10 +13,10 @@ bool Scene3DBuilder::makeCamera() {
     return true;
 }
 
-sptr<BaseScene3D> Scene3DBuilder::getScene() {
+sptr<QRScene3D> Scene3DBuilder::getScene() {
     if (!isReady()) return nullptr;
     if (isBuilt) return scene;
-    scene = sptr<BaseScene3D>(new Scene3D(camera));
+    scene = sptr<QRScene3D>(new SimpleScene3D(camera));
     isBuilt = true;
     return scene;
 }
