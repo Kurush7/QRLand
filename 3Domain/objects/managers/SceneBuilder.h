@@ -6,7 +6,7 @@
 #define BIG3DFLUFFY_SCENEBUILDER_H
 
 #include "../composites/Scene3D.h"
-#include "../components/Industry.h"
+#include "../components/interfaces/QRIndustry.h"
 
 class BaseScene3DBuilder {
 public:

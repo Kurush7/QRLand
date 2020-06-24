@@ -6,7 +6,7 @@
 #define BIG3DFLUFFY_FRAMELOADER_H
 
 #include "../composites/Frame3D.h"
-#include "../components/Industry.h"
+#include "../components/interfaces/QRIndustry.h"
 #include "LoadSource.h"
 
 

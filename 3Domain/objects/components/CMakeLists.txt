@@ -5,7 +5,6 @@ set(source_list ${source_list}
         ${path}/interfaces/QRCamera3D.cpp
         ${path}/interfaces/QRProjection.cpp
 
-        ${path}/Industry.cpp
 
         ${path}/legacy/SimplePoint3D.cpp
         ${path}/legacy/SimpleEdge3D.cpp

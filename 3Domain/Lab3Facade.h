@@ -6,6 +6,7 @@
 #define KG_LAB3FACADE_H
 
 #include "objects/QRObjects.h"
+
 #include "managers/QRManagers.h"
 #include "Painter.h"
 
