@@ -5,6 +5,8 @@
 #ifndef BIG3DFLUFFY_QRDEFINES_H
 #define BIG3DFLUFFY_QRDEFINES_H
 
+#include <memory>
+
 // todo out from 3Domain up
 #define wptr std::weak_ptr
 #define sptr std::shared_ptr

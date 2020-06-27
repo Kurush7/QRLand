@@ -15,6 +15,15 @@
     switchNormal() - set opposite normal. Constructor defines a normal randomly
     getSize() - number of points in a polygon
  */
+
+enum PolyPosition {
+    BEHIND = -1,
+    FRONT = 1,
+    ON = 0
+};
+
+using PolygonIterator = QRVectorIterator<sptr<QRPolygon3D>>;
+
 class QRPolygon3D: public QRObject3D {
 public:
     QRPolygon3D() {p = sptr<QRPolygon3D>(this, [](void *ptr){});}
@@ -29,7 +38,7 @@ public:
     virtual const Vector3D getPlane() const = 0;
     virtual const Vector3D getNormal() const = 0;
     virtual void switchNormal() = 0;
-    virtual int where(const Vector3D&) const = 0;
+    virtual PolyPosition where(const Vector3D&) const = 0;
 
     virtual int getSize() const = 0;
 

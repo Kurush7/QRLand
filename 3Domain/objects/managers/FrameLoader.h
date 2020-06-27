@@ -24,7 +24,6 @@ protected:
     int stage = 0, built_stage = 2;
     bool isBuilt = false;
     sptr<QRFrame3D> frame;
-
 };
 
 class Frame3DLoader: public BaseFrame3DLoader {

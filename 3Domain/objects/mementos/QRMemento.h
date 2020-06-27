@@ -5,7 +5,7 @@
 #ifndef BIG3DFLUFFY_QRMEMENTO_H
 #define BIG3DFLUFFY_QRMEMENTO_H
 
-
+#include "QRDefines.h"
 
 class QRMemento {
 public:

@@ -15,6 +15,7 @@ class QRCamera3D;
 class QRFrame3D;
 class QRPolygon3D;
 
+// todo currently not needed at all?!
 class QRVisitor {
 public:
     QRVisitor() { p = sptr<QRVisitor>(this, [](void *ptr){});}

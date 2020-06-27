@@ -11,7 +11,11 @@ QColor defineColor(QRColor c) {
 }
 QRColor defineColor(QColor c) {
     QRColor st;
-    c.getRgb(&st.r, &st.g, &st.b);
+    int a,b,d;
+    c.getRgb(&a, &b, &d);
+    st.r = a;
+    st.g = b;
+    st.b = d;
     return st;
 }
 

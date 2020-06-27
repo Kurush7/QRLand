@@ -38,9 +38,6 @@ public:
 
     virtual void setSelected(bool x) {selected = x;}
 
-    virtual ObjectIterator begin() = 0;
-    virtual ObjectIterator end() = 0;
-
 protected:
     bool visible = true;
     bool selected = false;
@@ -50,8 +47,16 @@ protected:
 class QRObject3D: public QRObject {
 public:
     virtual bool isComposite() {return false;}
-    virtual ObjectIterator begin() {return ObjectIterator();}
-    virtual ObjectIterator end()  {return ObjectIterator();}
+};
+
+class QRComposite: public QRObject {
+public:
+    explicit QRComposite() { p = sptr<QRComposite>(this, [](void *ptr){}); }
+    virtual bool isComposite() {return true;}
+    virtual void setSelected(bool x) = 0;
+
+private:
+    sptr<QRComposite> p;
 };
 
 #endif //KG_BASEOBJECT_H

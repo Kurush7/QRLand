@@ -5,7 +5,6 @@
 #ifndef BIG3DFLUFFY_QRSCENE3D_H
 #define BIG3DFLUFFY_QRSCENE3D_H
 
-#include "QRComposite.h"
 #include "../../components/interfaces/QRCamera3D.h"
 #include "../../managers/SelectionManager.h"
 

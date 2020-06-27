@@ -22,7 +22,7 @@ public:
     virtual const Vector3D getPlane() const {auto p = normal; p[3] = d; return p;}
     virtual const Vector3D getNormal() const {return normal;}
     virtual void switchNormal() {normal = -1 * normal; d *= -1;}
-    virtual int where(const Vector3D &v) const;
+    virtual PolyPosition where(const Vector3D &v) const;
 
     virtual int getSize() const {return points.getSize();}
 

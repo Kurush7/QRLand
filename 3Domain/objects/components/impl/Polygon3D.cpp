@@ -20,8 +20,9 @@ bool Polygon3D::operator==(const QRPolygon3D &b) const {
     return !(my || it);     // have same dimension
 }
 
-int Polygon3D::where(const Vector3D &v) const {
-    return sign(v[0]*normal[0] + v[1]*normal[1] + v[2]*normal[2] + v[3]*d);
+PolyPosition Polygon3D::where(const Vector3D &v) const {
+    auto x = sign(v[0]*normal[0] + v[1]*normal[1] + v[2]*normal[2] + v[3]*d);
+    return (x == 1? FRONT : (x == -1? BEHIND : ON));
 }
 
 void Polygon3D::definePlane() {
