@@ -7,14 +7,15 @@
 
 #include "QRPoint3D.h"
 
-class Edge3DMemento;
+// todo: simple impl-n of an Edge keeps weak_ptrs for points..... probably shared is a better choice
+
 
 class QREdge3D: public QRObject3D {
 public:
     QREdge3D(QREdgeStyle s = QREdgeStyle()): style(s) {p = sptr<QREdge3D>(this, [](void *ptr){});}
     ~QREdge3D() {p.reset();}
 
-    virtual void acceptVisitor(sptr<QRVisitor> visitor) {visitor->visitEdge3D(p);}
+    virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitEdge3D(p);}
     virtual uptr<QRMemento> save();
     virtual bool isValid() const = 0;
 

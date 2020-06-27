@@ -9,7 +9,7 @@
 
 #include "objects/objects.h"
 #include "objects/visitors/QRVisitor.h"
-#include "../../Painter.h"
+#include "QRPainter.h"
 #include "../drawManagers/SceneDrawMethod.h"
 #include "../../objects/mementos/MultipleMementos.h"
 
@@ -38,13 +38,13 @@ private:
 };
 class DrawCommand: public SceneCommand {
 public:
-    DrawCommand(sptr<Painter> painter, sptr<QRScene3D> s)
+    DrawCommand(sptr<QRPainter> painter, sptr<QRScene3D> s)
             :SceneCommand(s), painter(painter){}
 
     virtual sptr<QRMemento> exec();
 
 private:
-    sptr<Painter> painter;
+    sptr<QRPainter> painter;
 };
 
 class SelectCommand: public SceneCommand {

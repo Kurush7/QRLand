@@ -25,11 +25,11 @@ protected:
 
 class Scene3DBuilder: public BaseScene3DBuilder {
 public:
-    Scene3DBuilder (sptr<AbstractObject3DFactory>f, double width = 10, double height = 10);
+    Scene3DBuilder (sptr<QRObject3DFactory>f, double width = 10, double height = 10);
     virtual bool makeCamera();
     virtual sptr<QRScene3D> getScene();
 protected:
-    sptr<AbstractObject3DFactory> factory;
+    sptr<QRObject3DFactory> factory;
     sptr<QRCamera3D> camera;
 private:
     double w, h;

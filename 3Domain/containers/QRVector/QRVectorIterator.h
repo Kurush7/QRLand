@@ -25,8 +25,11 @@ public:
     virtual T* operator ->();
     virtual const T* operator ->() const;
 
+    virtual explicit operator bool() const {return index < *size.lock();}   // todo not tested
+
     virtual QRVectorIterator<T>& operator ++();
     virtual QRVectorIterator<T> operator ++(int);
+    virtual QRVectorIterator<T>& operator +(int);
 
     bool operator ==(const QRVectorIterator<T>& iter) const;
     bool operator !=(const QRVectorIterator<T>& iter) const;
@@ -63,6 +66,15 @@ QRVectorIterator<T>& QRVectorIterator<T>::operator ++() {
     if (size.expired())
         throw ErrorDeletedObj(__FILE__, __LINE__, "vector not exists", __TIME__);
     if(index < *size.lock()) index++;
+    return *this;
+}
+
+template<typename T>
+QRVectorIterator<T>& QRVectorIterator<T>::operator +(int x) {
+    if (size.expired())
+        throw ErrorDeletedObj(__FILE__, __LINE__, "vector not exists", __TIME__);
+    if(index+x < *size.lock()) index+= x;
+    else index = *size.lock();
     return *this;
 }
 

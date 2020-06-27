@@ -8,7 +8,7 @@ using namespace std;
 
 Lab3Facade::Lab3Facade(sptr<BasePainterCreator> cr): painterCreator(cr) {
     manager = sptr<BaseCommandManager> (new CommandManager());
-    factory = sptr<AbstractObject3DFactory> (new BasicObject3DFactory());
+    factory = sptr<QRObject3DFactory> (new SimpleBasicObject3DFactory());
 
     auto director = SceneBuildDirector();
     auto builder = sptr<BaseScene3DBuilder>(new Scene3DBuilder(factory, 40, 40));

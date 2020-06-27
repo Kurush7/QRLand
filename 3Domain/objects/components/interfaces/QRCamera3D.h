@@ -9,15 +9,13 @@
 #include "QRPoint3D.h"
 #include "QRProjection.h"
 
-class Camera3DMemento;
-
 class QRCamera3D: public QRObject3D {
 public:
     QRCamera3D(double w, double h, sptr<ProjectionImp>pr): width(w), height(h), projector(pr){
         p = sptr<QRCamera3D>(this, [](void *ptr){});}
     ~QRCamera3D() {p.reset();}
 
-    virtual void acceptVisitor(sptr<QRVisitor> visitor) {visitor->visitCamera3D(p);}
+    virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitCamera3D(p);}
 
     virtual uptr<QRMemento> save();
     virtual uptr<BaseTransformer3D> getProjectionTransformer() = 0;

@@ -8,7 +8,7 @@
 #include "objects/objects.h"
 
 #include "managers/QRManagers.h"
-#include "Painter.h"
+#include "QRPainter.h"
 
 
 class Lab3Facade {
@@ -32,7 +32,7 @@ public:
 private:
     sptr<BasePainterCreator> painterCreator;
     sptr<BaseCommandManager> manager;
-    sptr<AbstractObject3DFactory> factory;
+    sptr<QRObject3DFactory> factory;
     sptr<QRScene3D> scene;
 
 };

@@ -8,5 +8,6 @@
 #include "Vector3D.h"
 #include "Matrix3D.h"
 #include "Transformer3D.h"
+#include "Functions.h"
 
 #endif //KG_QRMATH_H

@@ -4,7 +4,7 @@
 
 #include "FrameLoader.h"
 
-Frame3DLoader::Frame3DLoader (sptr<LoadSource> src,  sptr<AbstractObject3DFactory>f)
+Frame3DLoader::Frame3DLoader (sptr<LoadSource> src,  sptr<QRObject3DFactory>f)
 : source(src), factory(f) {}
 
 bool Frame3DLoader::loadPoints() {

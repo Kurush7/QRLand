@@ -7,7 +7,8 @@
 
 #include "objects/QRObject.h"
 
-class QRPoint3DMemento;
+class QRPoint3D;
+using PointIterator = QRVectorIterator<sptr<QRPoint3D>>;
 
 class QRPoint3D: public QRObject3D {
 public:
@@ -15,7 +16,7 @@ public:
     ~QRPoint3D() {p.reset();}
 
     virtual uptr<QRMemento> save();
-    virtual void acceptVisitor(sptr<QRVisitor> visitor) {visitor->visitPoint3D(p);}
+    virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitPoint3D(p);}
     sptr<QRPoint3D> getPointer() {return p;}
 
     virtual const Vector3D getPoint() const = 0;

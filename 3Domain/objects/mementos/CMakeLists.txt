@@ -4,6 +4,7 @@ set(source_list ${source_list}
         ${path}/QREdge3DMemento.cpp
         ${path}/QRCamera3DMemento.cpp
         ${path}/QRFrame3DMemento.cpp
+        ${path}/QRPolygon3DMemento.cpp
         ${path}/QRSceneMemento.cpp
         ${path}/CareTaker.cpp
         PARENT_SCOPE)

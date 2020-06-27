@@ -31,6 +31,7 @@ public:
     QRVector<T>& operator =(const QRVector<T>&);
     QRVector<T>& operator =(const QRVector<T>&&);
     QRVector<T>& operator =(std::initializer_list<T>);
+    QRVector<T>& operator =(const QRVectorIterator<T> &it);
 
     QRVectorIterator<T> begin() const;
     QRVectorIterator<T> end() const;
@@ -48,7 +49,6 @@ public:
         (*size)--;
         return arr[*size];
     }
-
     T pop(size_t ind) {
         if(*size <= ind)
             throw ErrorIndex(__FILE__, __LINE__, __TIME__, "pop from bad index");
@@ -58,7 +58,6 @@ public:
         (*size)--;
         return x;
     }
-
     T pop(QRVectorIterator<T> it) {
         size_t ind = it.index;
         if(*size <= ind)
@@ -69,8 +68,9 @@ public:
         (*size)--;
         return x;
     }
-
     size_t len() const;
+
+    void reverse();
 
     bool operator ==(const QRVector<T>& vec) const;
     bool operator !=(const QRVector<T>& vec) const;
@@ -137,7 +137,7 @@ QRVector<T>::QRVector(std::initializer_list<T> initList): QRVector(initList.size
     p = sptr<QRVector>(this, [](void *ptr){});
     size_t i = 0;
     for (auto &elem : initList)
-        arr[i] = elem;
+        arr[i++] = elem;
 }
 
 template<typename T>
@@ -215,7 +215,13 @@ size_t QRVector<T>::len() const {
 }
 
 template<typename T>
-QRVector<T> &QRVector<T>::operator =(const QRVector<T> &newVec) {
+void QRVector<T>::reverse() {   // todo not tested
+    for (size_t i = 0; i < *size / 2; ++i)
+        swap(arr[i], arr[*size - i - 1]);
+}
+
+template<typename T>
+QRVector<T>& QRVector<T>::operator =(const QRVector<T> &newVec) {
     while (max_size < newVec.len())
         grow();
 
@@ -225,7 +231,7 @@ QRVector<T> &QRVector<T>::operator =(const QRVector<T> &newVec) {
 }
 
 template<typename T>
-QRVector<T> &QRVector<T>::operator =(const QRVector<T> &&newVec) {
+QRVector<T>& QRVector<T>::operator =(const QRVector<T> &&newVec) {
     // todo
     size = newVec.size;
     max_size = newVec.max_size;
@@ -236,7 +242,7 @@ QRVector<T> &QRVector<T>::operator =(const QRVector<T> &&newVec) {
 }
 
 template<typename T>
-QRVector<T> &QRVector<T>::operator =(std::initializer_list<T> initList) {
+QRVector<T>& QRVector<T>::operator =(std::initializer_list<T> initList) {
     grow(initList.size());
 
     QRVectorIterator<T> iter(arr, size);
@@ -246,6 +252,13 @@ QRVector<T> &QRVector<T>::operator =(std::initializer_list<T> initList) {
     }
 
     return *this;
+}
+
+template<typename T>
+QRVector<T>& QRVector<T>::operator =(const QRVectorIterator<T> &it) {
+    *size = 0;
+    for (auto i = it; i; i++)
+        push_back(*i);
 }
 
 template<typename T>

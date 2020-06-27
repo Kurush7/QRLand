@@ -8,80 +8,36 @@
 
 using namespace std;
 
-TEST(ObjectTests, Point3D)
+TEST(ObjectTests, polygon)
 {
-    Point3D p0, p1, p2(Vector3D(1,2,3));
-    auto cr = Point3DCreator(QRPointStyle(green));
+    sptr<QRPoint3D> p1(new Point3D(0, 0, 0));
+    sptr<QRPoint3D> p2(new Point3D(5, 0, 0));
+    sptr<QRPoint3D> p3(new Point3D(0, 7, 0));
+    sptr<QRPoint3D> p4(new Point3D(0, 0, 4));
 
-    auto p = cr.create(Vector3D(1,2,3), Vector3D(1,1,1));
-    EXPECT_EQ(p->getPoint(), Vector3D(1,2,3));
-    EXPECT_EQ(p->getBind(), Vector3D(1,1,1));
-    EXPECT_EQ(p->getStyle(), QRPointStyle(green));
+    auto txt = sptr<QRTexture>(new ColorTexture(QRColor("red")));
+    auto cr = Polygon3DCreator(txt);
+    auto x = sptr<QRPolygon3D>(cr.create({p1,p2,p3}));
+    EXPECT_EQ(**x->getPoints(), *p1);
+    EXPECT_EQ(**(x->getPoints()+1), *p2);
+    EXPECT_EQ(**(x->getPoints()+2), *p3);
+    EXPECT_EQ(x->getSize(), 3);
+    EXPECT_EQ(x->getNormal() == Vector3D(0,0,1,1) || x->getNormal() == Vector3D(0,0,-1,1), true);
+    EXPECT_EQ(x->getTexture()->getColor(), txt->getColor());
 
-    auto mem = p1.save();
-    p1 = p2;
-    EXPECT_EQ(p1, p2);
+    Polygon3D a(QRVector<sptr<QRPoint3D>>({p1,p2,p3}), DEFAULT_TEXTURE);
+    Polygon3D b(QRVector<sptr<QRPoint3D>>({p1,p2,p3}), DEFAULT_TEXTURE);
+    Polygon3D c = a;
+    auto mem = a.save();
+    a = b;
+    EXPECT_EQ(a, b);
     mem->restore();
-    EXPECT_EQ(p1, p0);
+    EXPECT_EQ(a, c);
 }
 
-TEST(ObjectTests, Edge3D)
-{
-    Point3D p0(0,0,0), p1(1,1,1), p2(2,2,2);
-
-    auto e1 = SimpleEdge3D(p0, p1, black), e0 = e1;
-    EXPECT_EQ(e1.getStart(), p0.getPointer());
-    EXPECT_EQ(e1.getEnd(), p1.getPointer());
-    EXPECT_EQ(e1.getStyle(), QREdgeStyle(black));
-
-    auto e2 = SimpleEdge3D(p1, p2, yellow);
-    auto mem = e1.save();
-    e1 = e2;
-    EXPECT_EQ(e1, e2);
-    mem->restore();
-    EXPECT_EQ(e1, e0);
-
-    auto cr = Edge3DCreator(QREdgeStyle(yellow));
-    auto e3 = cr.create(p2.getPointer(), p1.getPointer());
-    EXPECT_EQ(e3->getStart(), p2.getPointer());
-    EXPECT_EQ(e3->getEnd(), p1.getPointer());
-    EXPECT_EQ(e3->getStyle(), QREdgeStyle(yellow));
-}
-
-TEST(ObjectTests, Camera3D) {
-    // todo perform testing
-    FrontalCamera3DCreator x(100);
-    auto cam = x.create(100, 100, Vector3D(0,0,0));
-}
-
-TEST(ObjectTests, AbstractFactory) {
-    // todo perform testing
-    auto factory = sptr<AbstractObject3DFactory>(new BasicObject3DFactory());
-    sptr<BasePoint3D> p1 = factory->createPoint(Vector3D(1,2,3));
-    sptr<BasePoint3D>  p2 = factory->createPoint(Vector3D(4,5,6));
-    sptr<QREdge3D> e = factory->createEdge(p1, p2);
-    sptr<QRCamera3D> c = factory->createCamera(100, 100, Vector3D(-100, 100, 0));
-
-    int cnt = 0;
-    for (auto it = p1->begin(); it != p1->end(); ++it) {
-        cnt++;
-    }
-    EXPECT_EQ(cnt, 0);
-
-    QRVector<sptr<QRObject>> v1({p1, p2});
-    QRVector<sptr<QRObject>> v2({e, c});
-
-    QRDuoVectorIterator<sptr<QRObject>> beg(v1.getPointer(), v2.getPointer(), false);
-    QRDuoVectorIterator<sptr<QRObject>> end(v1.getPointer(), v2.getPointer(), true);
-    cnt = 0;
-    for (beg; beg != end; beg++) {
-        cnt++;
-    }
-    EXPECT_EQ(cnt, 4);
-}
 
 TEST(ObjectTests, model3D) {
-    auto factory = sptr<AbstractObject3DFactory>(new BasicObject3DFactory());
+    auto factory = sptr<QRObject3DFactory>(new SimpleBasicObject3DFactory());
     auto data = sptr<LoadData> (new FileLoadData("test.txt"));
     auto source = sptr<LoadSource>(new FileSource(data));
     auto loader = sptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
@@ -97,7 +53,7 @@ TEST(ObjectTests, model3D) {
 }
 
 TEST(ObjectTests, scene3D) {
-    auto factory = sptr<AbstractObject3DFactory>(new BasicObject3DFactory());
+    auto factory = sptr<QRObject3DFactory>(new SimpleBasicObject3DFactory());
     auto data = sptr<LoadData> (new FileLoadData("test.txt"));
     auto source = sptr<LoadSource>(new FileSource(data));
     auto loader = sptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));

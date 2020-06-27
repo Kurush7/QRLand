@@ -31,6 +31,16 @@ public:
     virtual const char* what() const noexcept override;
 };
 
+class QRBadSizeException: public QRObjectException
+{
+public:
+    QRBadSizeException(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRBadSizeException() = default;
+
+    virtual const char* what() const noexcept override;
+};
+
+
 
 
 #endif //QR_OBJECTEXCEPTION_H

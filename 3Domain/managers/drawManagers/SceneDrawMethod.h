@@ -5,14 +5,14 @@
 #ifndef BIG3DFLUFFY_SCENEDRAWMETHOD_H
 #define BIG3DFLUFFY_SCENEDRAWMETHOD_H
 
-#include "../../Painter.h"
+#include "QRPainter.h"
 #include "objects/objects.h"
 #include "../../containers/QRContainers.h"
 #include "DrawVisitors.h"
 
 class BaseSceneDrawMethod {
 public:
-    virtual void draw(sptr<QRScene3D> s, sptr<Painter> p) = 0;
+    virtual void draw(sptr<QRScene3D> s, sptr<QRPainter> p) = 0;
 protected:
     virtual void collectMetaData() = 0;
     virtual void collectPlainData() = 0;
@@ -25,7 +25,7 @@ protected:
 
 class SceneDrawMethod {
 public:
-    virtual void draw(sptr<QRScene3D> s, sptr<Painter> p);
+    virtual void draw(sptr<QRScene3D> s, sptr<QRPainter> p);
 protected:
     virtual void collectMetaData();
     virtual void collectPlainData();
@@ -35,7 +35,7 @@ private:
     QRVector<sptr<DrawableData>> drawableData;
     sptr<BaseTransformer3D> transformer;
     sptr<QRScene3D> scene;
-    sptr<Painter> painter;
+    sptr<QRPainter> painter;
 };
 
 #endif //BIG3DFLUFFY_SCENEDRAWMETHOD_H

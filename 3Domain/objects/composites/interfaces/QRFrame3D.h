@@ -17,7 +17,7 @@ public:
     }
     ~QRFrame3D() {p_frame.reset();}
 
-    virtual void acceptVisitor(sptr<QRVisitor> visitor) {visitor->visitFrame3D(p_frame);}
+    virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitFrame3D(p_frame);}
 
     sptr<QRFrame3D> getPointer() {return p_frame;}
     virtual uptr<QRMemento> save() override;

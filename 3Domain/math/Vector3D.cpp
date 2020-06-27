@@ -8,6 +8,9 @@ Vector3D::Vector3D() {}
 Vector3D::Vector3D(double x, double y, double z) {
     arr[0] = x, arr[1] = y, arr[2] = z;
 }
+Vector3D::Vector3D(double x, double y, double z, double p) {
+    arr[0] = x, arr[1] = y, arr[2] = z, arr[3] = p;
+}
 Vector3D::Vector3D(const double _arr[4]) {
     arr[0] = _arr[0], arr[1] = _arr[1];
     arr[2] = _arr[2], arr[3] = _arr[3];
@@ -87,11 +90,26 @@ Vector3D operator *(const Vector3D &a0, const Vector3D &b0) {
     return c;
 }
 
-Vector3D operator /(const Vector3D &a, double x) {
+Vector3D operator *(const Vector3D &a, double x) {
     Vector3D b = a;
     b[0] *= x;
     b[1] *= x;
     b[2] *= x;
+    return b;
+}
+Vector3D operator *(double x, const Vector3D &a) {
+    Vector3D b = a;
+    b[0] *= x;
+    b[1] *= x;
+    b[2] *= x;
+    return b;
+}
+
+Vector3D operator /(const Vector3D &a, double x) {
+    Vector3D b = a;
+    b[0] /= x;
+    b[1] /= x;
+    b[2] /= x;
     return b;
 }
 
@@ -115,6 +133,7 @@ Vector3D lenNorm(const Vector3D &a) {
         b[0] /= x;
         b[1] /= x;
         b[2] /= x;
+        // todo needed b[3] /= x???
     }
     return b;
 }

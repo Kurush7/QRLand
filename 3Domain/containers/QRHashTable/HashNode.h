@@ -6,6 +6,7 @@
 #define OOP_HASHNODE_H
 
 #include <memory>
+#include "QRDefines.h"
 
 template <typename T>
 class HashNode

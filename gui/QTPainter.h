@@ -15,7 +15,7 @@
 QColor defineColor(QRColor c);
 QRColor defineColor(QColor c);
 
-class QTPainter: public Painter {
+class QTPainter: public QRPainter {
 public:
     QTPainter(Canvas3DViewer *c): canvas(c) {}
     virtual void drawPoint(double x, double y, QRPointStyle s) {
@@ -50,15 +50,15 @@ class QTPainterCreator: public BasePainterCreator {
 public:
     explicit QTPainterCreator(Canvas3DViewer *canvas): canvas(canvas) {}
 protected:
-    virtual sptr<Painter> getPainter() override {
+    virtual sptr<QRPainter> getPainter() override {
         if (!painter)
             painter = create();
         else
             painter->reset();
         return painter;
     }
-    virtual sptr<Painter> create()  {
-        return sptr<Painter>(new QTPainter(canvas));
+    virtual sptr<QRPainter> create()  {
+        return sptr<QRPainter>(new QTPainter(canvas));
     }
 private:
     Canvas3DViewer *canvas;

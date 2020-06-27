@@ -8,6 +8,7 @@
 #include "QRObject.h"
 #include "components/interfaces.h"
 #include "components/legacy.h"
+#include "components/impl.h"
 
 #include "composites/interfaces.h"
 #include "composites/legacy.h"

@@ -10,7 +10,7 @@
 #include "../components/interfaces.h"
 #include "../composites/interfaces.h"
 #include "objects/QRObject.h"
-#include "../../Painter.h"
+#include "QRPainter.h"
 #include "../../QRConstants.h"
 
 class TransformVisitor: public QRVisitor {

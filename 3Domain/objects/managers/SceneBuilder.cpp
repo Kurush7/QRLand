@@ -4,7 +4,7 @@
 
 #include "SceneBuilder.h"
 
-Scene3DBuilder::Scene3DBuilder (sptr<AbstractObject3DFactory> f, double width, double height)
+Scene3DBuilder::Scene3DBuilder (sptr<QRObject3DFactory> f, double width, double height)
         :factory(f), w(width), h(height) {}
 
 bool Scene3DBuilder::makeCamera() {
