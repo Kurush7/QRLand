@@ -43,7 +43,7 @@ sptr<QRMemento> ScaleCameraCommand::exec() {
 sptr<QRMemento> SelectCommand::exec() {
     auto camera = scene->getActiveCamera();
 
-    auto transformer = sptr<BaseTransformer3D>(camera->getProjectionTransformer());
+    auto transformer = sptr<QRTransformer3D>(camera->getProjectionTransformer());
     auto visitor = new SelectionVisitor(x,y, transformer);
     auto pnt =  sptr<QRVisitor>(visitor);
     for (auto it = scene->getObjects().begin(); it != scene->getObjects().end(); ++it) {

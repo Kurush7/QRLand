@@ -6,7 +6,7 @@
 
 QRPoint3DMemento::QRPoint3DMemento(sptr<QRPoint3D> p) {
     object = p;
-    point = p->getPoint();
+    point = p->getVector();
     bind = p->getBind();
     style = p->getStyle();
 }

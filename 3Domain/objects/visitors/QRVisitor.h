@@ -15,19 +15,19 @@
 
 class TransformVisitor: public QRVisitor {
 public:
-    TransformVisitor(sptr<BaseTransformer3D> t): transformer(t) {}
+    TransformVisitor(sptr<QRTransformer3D> t): transformer(t) {}
     virtual void visitPoint3D(sptr<QRPoint3D> point);
     virtual void visitEdge3D(sptr<QREdge3D> edge);
     virtual void visitCamera3D(sptr<QRCamera3D> camera);
     virtual void visitFrame3D(sptr<QRFrame3D> frame);
 
 protected:
-    sptr<BaseTransformer3D> transformer;
+    sptr<QRTransformer3D> transformer;
 };
 
 class MoveTransformVisitor: public TransformVisitor {
 public:
-    MoveTransformVisitor(sptr<BaseTransformer3D> t): TransformVisitor(t) {}
+    MoveTransformVisitor(sptr<QRTransformer3D> t): TransformVisitor(t) {}
     virtual void visitPoint3D(sptr<QRPoint3D> point);
     virtual void visitFrame3D(sptr<QRFrame3D> frame);
 protected:
@@ -47,20 +47,20 @@ protected:
 
 class ScaleCameraVisitor: public TransformVisitor {
 public:
-    ScaleCameraVisitor(sptr<BaseTransformer3D> t): TransformVisitor(t) {}
+    ScaleCameraVisitor(sptr<QRTransformer3D> t): TransformVisitor(t) {}
     virtual void visitCamera3D(sptr<QRCamera3D> camera);
 };
 
 class SelectionVisitor: public QRVisitor {
 public:
-    SelectionVisitor(double x, double y, sptr<BaseTransformer3D> t): x(x), y(y), transformer(t) {}
+    SelectionVisitor(double x, double y, sptr<QRTransformer3D> t): x(x), y(y), transformer(t) {}
     virtual void visitPoint3D(sptr<QRPoint3D> point);
     virtual void visitEdge3D(sptr<QREdge3D> edge);
     virtual void visitCamera3D(sptr<QRCamera3D> camera);
 
     bool is_selected;
 protected:
-    sptr<BaseTransformer3D> transformer;
+    sptr<QRTransformer3D> transformer;
     double x, y;
 };
 

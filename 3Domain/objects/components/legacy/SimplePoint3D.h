@@ -13,8 +13,8 @@ public:
     SimplePoint3D(const Vector3D &vec, const Vector3D &bind = Vector3D(), QRPointStyle s = QRPointStyle());
     SimplePoint3D(const double x, const double y, const double z, const Vector3D &bind = Vector3D(), QRPointStyle s = QRPointStyle());
 
-    virtual const Vector3D getPoint() const {return vec + bindPoint;}
-    virtual const Vector3D getRelativePoint() const {return vec;}
+    virtual const Vector3D getVector() const {return vec + bindPoint;}
+    virtual const Vector3D getRelativeVector() const {return vec;}
     virtual void setVector(const Vector3D &v) {vec = v - bindPoint;}
     virtual void setRelativeVector(const Vector3D &v) {vec = v;}
     virtual const Vector3D& getBind() const {return bindPoint;}

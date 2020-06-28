@@ -31,11 +31,11 @@ public:
     virtual const char* what() const noexcept override;
 };
 
-class QRBadSizeException: public QRObjectException
+class QRBadParamException: public QRObjectException
 {
 public:
-    QRBadSizeException(const char *file, int line, const char *time, const char *msg);
-    virtual ~QRBadSizeException() = default;
+    QRBadParamException(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRBadParamException() = default;
 
     virtual const char* what() const noexcept override;
 };

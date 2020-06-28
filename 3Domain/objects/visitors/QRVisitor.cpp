@@ -26,7 +26,7 @@ void QRVisitor::visitFrame3D(sptr<QRFrame3D> frame) {
 }
 
 void TransformVisitor::visitPoint3D(sptr<QRPoint3D> point) {
-    auto vec = point->getRelativePoint();
+    auto vec = point->getRelativeVector();
     vec = transformer->transform(vec);
     point->setRelativeVector(vec);
 }
@@ -41,7 +41,7 @@ void TransformVisitor::visitFrame3D(sptr<QRFrame3D> frame) {
 }
 
 void MoveTransformVisitor::visitPoint3D(sptr<QRPoint3D> point) {
-    auto vec = point->getRelativePoint();
+    auto vec = point->getRelativeVector();
     vec = transformer->transform(vec);
     point->setRelativeVector(vec);
     frameBind = point->getBind();
@@ -78,8 +78,8 @@ void ScaleCameraVisitor::visitCamera3D(sptr<QRCamera3D> camera) {
 
 void SelectionVisitor::visitPoint3D(sptr<QRPoint3D> point) {}
 void SelectionVisitor::visitEdge3D(sptr<QREdge3D> edge) {
-    auto s = transformer->transform(edge->getStart()->getPoint());
-    auto e = transformer->transform(edge->getEnd()->getPoint());
+    auto s = transformer->transform(edge->getStart()->getVector());
+    auto e = transformer->transform(edge->getEnd()->getVector());
 
     double a = e[1] - s[1];
     double b = s[0] - e[0];

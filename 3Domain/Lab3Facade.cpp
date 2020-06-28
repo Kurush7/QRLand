@@ -33,7 +33,7 @@ void Lab3Facade::draw() {
 
 void Lab3Facade::move(double dx, double dy, double dz) {
     auto creator = sptr<BaseTransformer3DCreator> (new MoveTransformer3DCreator(dx,dy,dz));
-    auto trans = sptr<BaseTransformer3D>(creator->create());
+    auto trans = sptr<QRTransformer3D>(creator->create());
 
     sptr<QRCommand> command;
     if(scene->isEmptySelection())
@@ -45,7 +45,7 @@ void Lab3Facade::move(double dx, double dy, double dz) {
 }
 void Lab3Facade::scale(double kx, double ky, double kz) {
     auto creator = sptr<BaseTransformer3DCreator> (new ScaleTransformer3DCreator(kx,ky,kz));
-    auto trans = sptr<BaseTransformer3D>(creator->create());
+    auto trans = sptr<QRTransformer3D>(creator->create());
 
     sptr<QRCommand> command;
     if(scene->isEmptySelection())
@@ -58,7 +58,7 @@ void Lab3Facade::scale(double kx, double ky, double kz) {
 }
 void Lab3Facade::rotate(double dx, double dy, double dz) {
     auto creator = sptr<BaseTransformer3DCreator> (new RotateTransformer3DCreator(dx,dy,dz));
-    auto trans = sptr<BaseTransformer3D>(creator->create());
+    auto trans = sptr<QRTransformer3D>(creator->create());
 
     sptr<QRCommand> command;
     if(scene->isEmptySelection())

@@ -11,7 +11,7 @@
 #include "Matrix3D.h"
 
 
-class BaseTransformer3D {
+class QRTransformer3D {
 public:
     virtual Matrix3D transformRight(const Matrix3D &m) = 0;
     virtual Matrix3D transformLeft(const Matrix3D &m) = 0;
@@ -26,7 +26,7 @@ public:
     virtual void accumulate(const Matrix3D &m) {accumulateLeft(m);};
 };
 
-class Transformer3D: public BaseTransformer3D {
+class Transformer3D: public QRTransformer3D {
 public:
     Transformer3D(const Matrix3D &m): matrix(m) {}
     virtual Matrix3D transformRight(const Matrix3D &m) {return m * matrix;}
@@ -46,13 +46,14 @@ private:
 
 class BaseTransformer3DCreator {
 public:
-    virtual uptr<BaseTransformer3D> create() = 0;
+    virtual uptr<QRTransformer3D> create() = 0;
 };
 
 class MoveTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     MoveTransformer3DCreator(double dx, double dy, double dz);
-    virtual uptr<BaseTransformer3D> create();
+    MoveTransformer3DCreator(const Vector3D &v): MoveTransformer3DCreator(v[0],v[1],v[2]) {}
+    virtual uptr<QRTransformer3D> create();
 private:
     Matrix3D matrix;
 };
@@ -60,7 +61,8 @@ private:
 class ScaleTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     ScaleTransformer3DCreator(double kx, double ky, double kz);
-    virtual uptr<BaseTransformer3D> create();
+    ScaleTransformer3DCreator(const Vector3D &v): ScaleTransformer3DCreator(v[0],v[1],v[2]) {}
+    virtual uptr<QRTransformer3D> create();
 private:
     Matrix3D matrix;
 };
@@ -68,7 +70,8 @@ private:
 class RotateTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     RotateTransformer3DCreator(double dx, double dy, double dz);
-    virtual uptr<BaseTransformer3D> create();
+    RotateTransformer3DCreator(const Vector3D &v): RotateTransformer3DCreator(v[0],v[1],v[2]) {}
+    virtual uptr<QRTransformer3D> create();
 private:
     enum axis {ox, oy, oz};
     Matrix3D createOneRotateMatrix(double rad, axis ax);
@@ -79,7 +82,7 @@ private:
 class ProjectionTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     ProjectionTransformer3DCreator(const Vector3D &base, const Vector3D &ox, const Vector3D &oy, const Vector3D &oz);
-    virtual uptr<BaseTransformer3D> create();
+    virtual uptr<QRTransformer3D> create();
 private:
     Matrix3D matrix;
 };

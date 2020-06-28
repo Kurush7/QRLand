@@ -8,7 +8,7 @@ void DrawablePoint::acceptVisitor(sptr<QRDrawVisitor> &v) {v->visitDrawPoint(*th
 void DrawableEdge::acceptVisitor(sptr<QRDrawVisitor> &v) {v->visitDrawEdge(*this);}
 
 void DrawVisitor::visitPoint3D(sptr<QRPoint3D> point) {
-    auto p = point->getPoint();
+    auto p = point->getVector();
     p = transformer->transform(p);
     //p = norm(p);
     auto style = point->isSelected()? painter->getSelectionPointStyle() : point->getStyle();
@@ -16,9 +16,9 @@ void DrawVisitor::visitPoint3D(sptr<QRPoint3D> point) {
 }
 void DrawVisitor::visitEdge3D(sptr<QREdge3D> edge) {
     auto pointer = edge->getStart();
-    auto ps = norm(transformer->transform(pointer->getPoint()));
+    auto ps = norm(transformer->transform(pointer->getVector()));
     pointer = edge->getEnd();
-    auto pe = norm(transformer->transform(pointer->getPoint()));
+    auto pe = norm(transformer->transform(pointer->getVector()));
     auto style = edge->isSelected()? painter->getSelectionEdgeStyle() : edge->getStyle();
     data.push_back(sptr<DrawableData>(new DrawableEdge(ps[0], ps[1], ps[2],
                                                        pe[0], pe[1], pe[2], style)));

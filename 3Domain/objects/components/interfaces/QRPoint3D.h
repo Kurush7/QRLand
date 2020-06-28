@@ -19,8 +19,8 @@ public:
     virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitPoint3D(p);}
     sptr<QRPoint3D> getPointer() {return p;}
 
-    virtual const Vector3D getPoint() const = 0;
-    virtual const Vector3D getRelativePoint() const = 0;
+    virtual const Vector3D getVector() const = 0;
+    virtual const Vector3D getRelativeVector() const = 0;   // todo erase
 
     virtual void setVector(const Vector3D&) = 0;
     virtual void setRelativeVector(const Vector3D&) = 0;

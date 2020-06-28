@@ -10,7 +10,6 @@
 
 // SCENE IS NOT COMPOSITE! IT'S JUST HERE FOR COMFORTABLE ACCESS
 
-class SceneMemento;
 class QRScene3D {
 public:
     QRScene3D() {

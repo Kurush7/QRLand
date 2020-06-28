@@ -16,26 +16,34 @@ public:
     ~QRCamera3D() {p.reset();}
 
     virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitCamera3D(p);}
-
     virtual uptr<QRMemento> save();
-    virtual uptr<BaseTransformer3D> getProjectionTransformer() = 0;
 
-    virtual bool operator==(const QRCamera3D &b) const {return getOrigin() == b.getOrigin() &&
-                                                                 getBind() == b.getBind() && width == b.width &&
-                                                                 height == b.height;}
-    virtual QRCamera3D& operator=(const QRCamera3D &p) {}
+    virtual uptr<QRTransformer3D> getProjectionTransformer() = 0; // todo needed? not implemented in working camera
+
+    virtual void move(const Vector3D &move) = 0;
+    virtual void scale(double sx, double sy) = 0;
+    virtual void scale(double scale) = 0;
+    virtual void rotate(const Vector3D &rotate) = 0;
+
+    // todo deprecated. delete
+    virtual const Vector3D& getBind() const = 0;
+    virtual void setBind(const Vector3D &b) = 0;
+
+    // todo
+    //virtual bool operator==(const QRCamera3D &b) const = 0;
+    //virtual QRCamera3D& operator=(const QRCamera3D &p) {}
 
 // getters & setters
-    double getWidth() const;
-    void setWidth(double width);
-    double getHeight() const;
-    void setHeight(double height);
+    // todo planes.......
+    double getWidth() const {return width;}
+    void setWidth(double w) {width = w;}
+    double getHeight() const {return height;}
+    void setHeight(double h) {h = height;}
 
     virtual const sptr<QRPoint3D> getOrigin() const = 0;
     virtual void setOrigin(sptr<QRPoint3D>) = 0;
 
-    virtual const Vector3D& getBind() const = 0;
-    virtual void setBind(const Vector3D&) = 0;
+    // todo add binds
 
     virtual const sptr<ProjectionImp> getProjector() const {return projector;}
     virtual const void setProjector(sptr<ProjectionImp> p) {projector = p;}

@@ -9,14 +9,14 @@
 
 class ProjectionImp {
 public:
-    virtual uptr<BaseTransformer3D> getTransformer(const Vector3D &origin,
-            const Vector3D &zeroPoint, const Vector3D &ViewUpVector) = 0;
+    virtual uptr<QRTransformer3D> getTransformer(const Vector3D &origin,
+                                                 const Vector3D &zeroPoint, const Vector3D &ViewUpVector) = 0;
 };
 
 class OrthogonalProjection: public ProjectionImp {
 public:
-    virtual uptr<BaseTransformer3D> getTransformer(const Vector3D &origin,
-                                             const Vector3D &zeroPoint, const Vector3D &ViewUpVector);
+    virtual uptr<QRTransformer3D> getTransformer(const Vector3D &origin,
+                                                 const Vector3D &zeroPoint, const Vector3D &ViewUpVector);
 };
 
 

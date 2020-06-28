@@ -33,7 +33,7 @@ protected:
     virtual void paint();
 private:
     QRVector<sptr<DrawableData>> drawableData;
-    sptr<BaseTransformer3D> transformer;
+    sptr<QRTransformer3D> transformer;
     sptr<QRScene3D> scene;
     sptr<QRPainter> painter;
 };

@@ -64,7 +64,7 @@ public:
     virtual sptr<QRMemento> exec();
 
 protected:
-    sptr<BaseTransformer3D> transformer;
+    sptr<QRTransformer3D> transformer;
     ColorKeeper keeper;
 };
 class DeleteSelectionCommand: public SceneCommand {
@@ -79,37 +79,37 @@ public:
 // todo fuck
 class TransformSelectionCommand: public SceneCommand {
 public:
-    TransformSelectionCommand(sptr<BaseTransformer3D> &trans, sptr<QRScene3D> &s)
+    TransformSelectionCommand(sptr<QRTransformer3D> &trans, sptr<QRScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
     virtual sptr<QRMemento> exec();
 
 protected:
-    sptr<BaseTransformer3D> transformer;
+    sptr<QRTransformer3D> transformer;
 };
 class MoveTransformSelectionCommand: public SceneCommand {
 public:
-    MoveTransformSelectionCommand(sptr<BaseTransformer3D> &trans, sptr<QRScene3D> &s)
+    MoveTransformSelectionCommand(sptr<QRTransformer3D> &trans, sptr<QRScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
     virtual sptr<QRMemento> exec();
 
 protected:
-    sptr<BaseTransformer3D> transformer;
+    sptr<QRTransformer3D> transformer;
 };
 class TransformCameraCommand: public SceneCommand {
 public:
-    TransformCameraCommand(sptr<BaseTransformer3D> &trans, sptr<QRScene3D> &s)
+    TransformCameraCommand(sptr<QRTransformer3D> &trans, sptr<QRScene3D> &s)
             :SceneCommand(s), transformer(trans){}
 
     virtual sptr<QRMemento> exec();
 
 protected:
-    sptr<BaseTransformer3D> transformer;
+    sptr<QRTransformer3D> transformer;
 };
 class ScaleCameraCommand: public TransformCameraCommand {
 public:
-    ScaleCameraCommand(sptr<BaseTransformer3D> &trans, sptr<QRScene3D> &s)
+    ScaleCameraCommand(sptr<QRTransformer3D> &trans, sptr<QRScene3D> &s)
             :TransformCameraCommand(trans, s) {}
 
     virtual sptr<QRMemento> exec();

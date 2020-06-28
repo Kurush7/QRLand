@@ -59,14 +59,14 @@ private:
 
 class DrawVisitor: public QRVisitor {
 public:
-    DrawVisitor(sptr<BaseTransformer3D> t, QRVector<sptr<DrawableData>> &data,
+    DrawVisitor(sptr<QRTransformer3D> t, QRVector<sptr<DrawableData>> &data,
                 sptr<QRPainter> painter): transformer(t), data(data), painter(painter) {}
     virtual void visitPoint3D(sptr<QRPoint3D> point);
     virtual void visitEdge3D(sptr<QREdge3D> edge);
     virtual void visitCamera3D(sptr<QRCamera3D> camera);
 
 private:
-    sptr<BaseTransformer3D> transformer;
+    sptr<QRTransformer3D> transformer;
     QRVector<sptr<DrawableData>> &data;
     sptr<QRPainter> painter;
 };

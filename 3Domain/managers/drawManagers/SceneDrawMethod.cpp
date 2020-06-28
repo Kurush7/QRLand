@@ -30,7 +30,7 @@ void SceneDrawMethod::parsePlainData() {
 
     // todo parse invisible for camera
     /*auto visitor = new HideInvisibleDrawMethodVisitor(c->getOrigin()->getPoint()[2]);
-    cout << "origin-z: " << c->getOrigin()->getPoint()[2] << '\n';
+    cout << "origin-z: " << c->getOrigin()->getVector()[2] << '\n';
     auto ptr = sptr<BaseDrawMethodVisitor>(visitor);
     for (size_t i = 0; i < drawableData.len(); ++i) {
         drawableData[i]->acceptVisitor(ptr);

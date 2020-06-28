@@ -10,6 +10,6 @@ SimpleCamera3D::SimpleCamera3D(double w, double h, sptr<ProjectionImp>pr, const 
         : QRCamera3D(w, h, pr), origin(new SimplePoint3D(_origin, _bind)), viewUpVector(viewUp) {
 }
 
-uptr<BaseTransformer3D> SimpleCamera3D::getProjectionTransformer() {
-    return projector->getTransformer(origin->getPoint(), origin->getBind(), viewUpVector);
+uptr<QRTransformer3D> SimpleCamera3D::getProjectionTransformer() {
+    return projector->getTransformer(origin->getVector(), origin->getBind(), viewUpVector);
 }

@@ -8,6 +8,9 @@
 #include "../../QRObject.h"
 #include "../../components/interfaces/QRPolygon3D.h"
 
+class QRPolyModel3D;
+using ModelIterator = QRVectorIterator<sptr<QRPolyModel3D>>;
+
 class QRPolyModel3D: public QRComposite {
 public:
     explicit QRPolyModel3D(): QRComposite() {

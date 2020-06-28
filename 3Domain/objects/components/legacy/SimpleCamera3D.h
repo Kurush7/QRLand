@@ -16,12 +16,18 @@ public:
     virtual bool isVisible(){return false;}
 
 
-    virtual uptr<BaseTransformer3D> getProjectionTransformer();
+    virtual uptr<QRTransformer3D> getProjectionTransformer();
 
     virtual const sptr<QRPoint3D> getOrigin() const {return origin;}
     virtual void setOrigin(sptr<QRPoint3D> p) { origin = p;}
     virtual const Vector3D& getBind() const {return origin->getBind();}
     virtual void setBind(const Vector3D &b) {origin->setBind(b);}
+
+    // todo for class just to stay alive
+    virtual void move(const Vector3D &move) {}
+    virtual void scale(double sx, double sy) {}
+    virtual void scale(double scale) {}
+    virtual void rotate(const Vector3D &rotate) {}
 
 private:
     Vector3D viewUpVector;
