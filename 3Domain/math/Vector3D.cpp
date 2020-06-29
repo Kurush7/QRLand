@@ -128,12 +128,18 @@ Vector3D norm(const Vector3D &a) {
 
 Vector3D lenNorm(const Vector3D &a) {
     Vector3D b = a;
-    double x = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+    double x = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2] + a[3]*a[3]);
     if (fabs(x) > QREPS) {
         b[0] /= x;
         b[1] /= x;
         b[2] /= x;
-        // todo needed b[3] /= x???
+        b[3] /= x;
+        // todo needed b[3] /= x: check its usages
     }
     return b;
+}
+
+double vectorLen(const Vector3D &v) {
+    // todo v[3] considered. all is good, yet accuracy needed....(((
+    return sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2] + v[3]*v[3]);
 }

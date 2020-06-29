@@ -38,13 +38,13 @@ private:
 };
 class DrawCommand: public SceneCommand {
 public:
-    DrawCommand(sptr<QRPainter> painter, sptr<QRScene3D> s)
+    DrawCommand(sptr<QRImage> painter, sptr<QRScene3D> s)
             :SceneCommand(s), painter(painter){}
 
     virtual sptr<QRMemento> exec();
 
 private:
-    sptr<QRPainter> painter;
+    sptr<QRImage> painter;
 };
 
 class SelectCommand: public SceneCommand {

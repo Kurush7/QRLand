@@ -10,7 +10,7 @@
 // todo draw_poly
 /* interface for drawers used in 3Domain.
  */
-class QRPainter {
+class QRImage {
 public:
     virtual void drawPoint(double x, double y, QRPointStyle) = 0;
     virtual void drawEdge(double x1, double y1, double x2, double y2, QREdgeStyle) = 0;
@@ -24,14 +24,14 @@ public:
 
 class BasePainterCreator {
 public:
-    virtual sptr<QRPainter> getPainter() {
+    virtual sptr<QRImage> getPainter() {
         if (!painter)
             painter = create();
         return painter;
     }
 protected:
-    virtual sptr<QRPainter> create() = 0;
-    sptr<QRPainter> painter = nullptr;
+    virtual sptr<QRImage> create() = 0;
+    sptr<QRImage> painter = nullptr;
 };
 
 

@@ -20,6 +20,8 @@ void visitFrame3D(sptr<BaseFrame3D> frame) {
 
 #include "QRVisitor.h"
 
+// todo camera visitors are fucked up after changing get/setOrigin interface
+
 void QRVisitor::visitFrame3D(sptr<QRFrame3D> frame) {
     for (auto obj: frame->getObjects())
         obj->acceptVisitor(this->p);
@@ -32,7 +34,7 @@ void TransformVisitor::visitPoint3D(sptr<QRPoint3D> point) {
 }
 void TransformVisitor::visitEdge3D(sptr<QREdge3D> edge) {}
 void TransformVisitor::visitCamera3D(sptr<QRCamera3D> camera) {
-    camera->getOrigin()->acceptVisitor(p);
+    // todo fuck camera->getOrigin()->acceptVisitor(p);
 }
 void TransformVisitor::visitFrame3D(sptr<QRFrame3D> frame) {
     for (auto x: frame->getObjects())
@@ -62,12 +64,12 @@ void BindSetterVisitor::visitPoint3D(sptr<QRPoint3D> point) {
 }
 void BindSetterVisitor::visitEdge3D(sptr<QREdge3D> edge) {}
 void BindSetterVisitor::visitCamera3D(sptr<QRCamera3D> camera) {
-    camera->getOrigin()->setBind(bind);
+    //camera->getOrigin()->setBind(bind);
 }
 
 
 void ScaleCameraVisitor::visitCamera3D(sptr<QRCamera3D> camera) {
-    camera->getOrigin()->acceptVisitor(p);
+    //camera->getOrigin()->acceptVisitor(p);
     auto w = camera->getWidth(), h = camera->getHeight();
     Vector3D vec(w, h, 0);
     vec = transformer->transform(vec);

@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(VERBOSE=1)
 set(CMAKE_AUTOGEN_VERBOSE on)
 set(CMAKE_VERBOSE_MAKEFILE on)
-set(DRAW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/2Domain)
+set(DRAW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/2DomainOld)
 
 # QT includes
 find_package(Qt5 COMPONENTS Core Widgets PrintSupport REQUIRED)
@@ -18,11 +18,13 @@ set(QT_INCLUDES
 
 include_directories(3Domain)
 add_subdirectory(3Domain)
-link_directories(${CMAKE_SOURCE_DIR}/3D_draw_module)
+
+
+include_directories(2DomainOld)
+add_subdirectory(2DomainOld)
 
 include_directories(2Domain)
 add_subdirectory(2Domain)
-link_directories(${CMAKE_SOURCE_DIR}/2D_draw_module)
 
 add_subdirectory(tests)
 

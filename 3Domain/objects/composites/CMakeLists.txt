@@ -6,4 +6,8 @@ set(source_list ${source_list}
 
         ${path}/legacy/SimpleFrame3D.cpp
         ${path}/legacy/SimpleScene3D.cpp
+
+        ${path}/impl/PolyScene3D.cpp
+        ${path}/impl/polyModel/PolyModel.cpp
+        ${path}/impl/polyModel/PolyModelCreator.cpp
         PARENT_SCOPE)

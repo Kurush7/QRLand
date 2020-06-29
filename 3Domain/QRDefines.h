@@ -6,11 +6,7 @@
 #define BIG3DFLUFFY_QRDEFINES_H
 
 #include <memory>
-
-// todo out from 3Domain up
-#define wptr std::weak_ptr
-#define sptr std::shared_ptr
-#define uptr std::unique_ptr
+#include "../globalDefines.h"
 
 // todo not good
 #define DEFAULT_TEXTURE  sptr<QRTexture>(new ColorTexture("blue"))

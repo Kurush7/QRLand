@@ -23,6 +23,7 @@ public:
 private:
     QRVector<sptr<QRPolyModel3D>> models;
     sptr<QRCamera3D> camera;
+    // todo coords and transforms are kept here
 };
 
 

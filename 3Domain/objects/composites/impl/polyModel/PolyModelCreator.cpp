@@ -6,9 +6,9 @@
 
 bool CubeModelCreator::createPoints() {
     double b = a / 2;
-    for (double x = pos[0] - b; x < pos[0]+3*b; x += a)
-        for (double y = pos[1] - b; y < pos[1]+3*b; y += a)
-            for (double z = pos[2] - b; z < pos[2]+3*b; z += a)
+    for (double x = -b; x < +3*b; x += a)
+        for (double y = -b; y < 3*b; y += a)
+            for (double z = -b; z < +3*b; z += a)
                 points.push_back(sptr<QRPoint3D>(new Point3D(x,y,z)));
 }
 bool CubeModelCreator::createPolygons() {
@@ -18,8 +18,9 @@ bool CubeModelCreator::createPolygons() {
                 new Polygon3D({points[arr[i][0]], points[arr[i][1]],
                                    points[arr[i][2]], points[arr[i][3]]}, texture)));
 
+    Vector3D zero;
     for (auto p: polygons)
-        if (p->where(pos) == FRONT)
+        if (p->where(zero) == FRONT)
             p->switchNormal();
 }
 

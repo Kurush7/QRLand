@@ -4,10 +4,13 @@
 
 #include "Camera3D.h"
 
+Camera3D::Camera3D(double w, double h, const sptr<ProjectionImp> &p, const Vector3D &o, double s,
+                   double n, double f): QRCamera3D(w,h,p), origin(o), screen(s), nearCutter(n), farCutter(f) {}
+
 void Camera3D::move(const Vector3D &move) {
     auto cr = MoveTransformer3DCreator (move);
     auto t = cr.create();
-    origin->setVector(t->transform(origin->getVector()));
+    origin = t->transform(origin);
 }
 
 void Camera3D::scale(double sx, double sy) {
@@ -27,6 +30,6 @@ void Camera3D::scale(double scale) {
 void Camera3D::rotate(const Vector3D &rotate) {
     auto cr = RotateTransformer3DCreator (rotate);
     auto t = cr.create();
-    planeVector = t->transform(planeVector);
-    viewUpVector = t->transform(viewUpVector); // todo is correct??
+    deepVector = t->transform(deepVector);
+    viewUpVector = t->transform(viewUpVector);
 }

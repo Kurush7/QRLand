@@ -21,18 +21,14 @@ Matrix3D::Matrix3D() {
     }
 }
 Matrix3D::Matrix3D(const std::initializer_list<std::initializer_list<double>> &lst) {
-    if (lst.size() != 4) {
-        time_t t = time(nullptr);
-        throw QRMathWrongDimension(__FILE__, __LINE__, asctime(localtime(&t)),
+    if (lst.size() != 4)
+        throw QRMathWrongDimension(__FILE__, __LINE__, __TIME__,
                                    "Bad matrix init-list (rows)!", lst.size(), 4);
-    }
     int i = 0, j = 0;
     for (auto line: lst) {
-        if (line.size() != 4) {
-            time_t t = time(nullptr);
-            throw QRMathWrongDimension(__FILE__, __LINE__, asctime(localtime(&t)),
+        if (line.size() != 4)
+            throw QRMathWrongDimension(__FILE__, __LINE__, __TIME__,
                                        "Bad matrix init-list (columns)!", lst.size(), 4);
-        }
         for (auto x: line)
             matrix[i][j++] = x;
         j = 0;
@@ -41,11 +37,9 @@ Matrix3D::Matrix3D(const std::initializer_list<std::initializer_list<double>> &l
 }
 
 Vector3D& Matrix3D::operator[](int ind) {
-    if (ind < 0 || ind > 3) {
-        time_t t = time(nullptr);
-        throw QRMathWrongDimension(__FILE__, __LINE__, asctime(localtime(&t)),
+    if (ind < 0 || ind > 3)
+        throw QRMathWrongDimension(__FILE__, __LINE__, __TIME__,
                                    "Bad matrix row index!", ind, 3);
-    }
     return matrix[ind];
 }
 

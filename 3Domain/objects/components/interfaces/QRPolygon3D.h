@@ -6,7 +6,7 @@
 #define BIG3DFLUFFY_QRPOLYGON3D_H
 
 #include "QRPoint3D.h"
-#include "../../textures/QRTexture.h"
+#include "../../../textures/QRTexture.h"
 
 /**
     getPlane(): abcd of a plane

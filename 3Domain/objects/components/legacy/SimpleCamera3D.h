@@ -18,8 +18,8 @@ public:
 
     virtual uptr<QRTransformer3D> getProjectionTransformer();
 
-    virtual const sptr<QRPoint3D> getOrigin() const {return origin;}
-    virtual void setOrigin(sptr<QRPoint3D> p) { origin = p;}
+    virtual const Vector3D& getOrigin() const {return origin->getVector();}
+    virtual void setOrigin(const Vector3D &p) { origin->setVector(p);}
     virtual const Vector3D& getBind() const {return origin->getBind();}
     virtual void setBind(const Vector3D &b) {origin->setBind(b);}
 

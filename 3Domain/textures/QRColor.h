@@ -7,12 +7,11 @@
 
 #include <map>
 #include <string>
-#include "objects/textures/QRColor.h"
 
 // todo move to textures directory/file
 class QRColor {
 public:
-    // todo accurate color string mapping
+    // todo accurate color string mapping: base class with map and 'addName' method
     QRColor() {}
     QRColor (std::string name) {
         if (name == "white") r = b = g = 255;
@@ -24,9 +23,9 @@ public:
     QRColor(int r, int g, int b, int alpha=255): r(r), g(g), b(b), alpha(alpha) {}
     bool operator==(const QRColor &c) const{return r==c.r && b==c.b && g==c.g;}
     u_char r=0, g=0, b=0, alpha=255;
-
-
 };
+
+// used for point & edge drawing. legacy code
 class Style {
 public:
     Style() {}

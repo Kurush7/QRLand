@@ -7,9 +7,13 @@
 
 #include "objects/QRObject.h"
 
-class QRPoint3D;
 using PointIterator = QRVectorIterator<sptr<QRPoint3D>>;
 
+/**
+ it must be guaranteed that 4th coordinate (projective) in Vector3D-representation equals 0!
+ 0, because point is not supposed itself to be used for projection management, and some functions
+ like vectorLen or normalization use 4th coord equally to others when in Vector3D
+ */
 class QRPoint3D: public QRObject3D {
 public:
     QRPoint3D(QRPointStyle s = QRPointStyle()): style(s) {p = sptr<QRPoint3D>(this, [](void *ptr){});}

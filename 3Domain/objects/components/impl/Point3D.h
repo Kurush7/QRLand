@@ -7,8 +7,14 @@
 
 #include "../interfaces/QRPoint3D.h"
 
-// bind operations not supported for this instance
+/**
+ bind operations not supported for this instance
+ Point keeps vector without considering 4th coordinate (projection one). one must be accurate working with
+ Vector3D representation of a point, for it uses 4th coord same as others!
+ when setting a vector, 4th coordinate is simply zeroed (todo normalize instead?)
 
+ Relative methods are legacy from times when points keps their bind. todo not needed any more?
+ */
 class Point3D: public QRPoint3D {
 public:
     Point3D() {}
@@ -17,7 +23,7 @@ public:
 
     virtual const Vector3D getVector() const {return vec;}
     virtual const Vector3D getRelativeVector() const {return getVector();}
-    virtual void setVector(const Vector3D &v) {vec = v;}
+    virtual void setVector(const Vector3D &v) {vec = v; vec[3] = 0;}
     virtual void setRelativeVector(const Vector3D &v) {setVector(v);}
 
     virtual const Vector3D& getBind() const {return vec;}

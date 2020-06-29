@@ -8,6 +8,7 @@
 #include "QRMemento.h"
 #include "../components/interfaces/QRCamera3D.h"
 
+// todo memorize screen, far-near distances
 class Camera3DMemento: public QRMemento {
 public:
     Camera3DMemento(sptr<QRCamera3D>);
@@ -15,7 +16,7 @@ public:
 
 private:
     wptr<QRCamera3D> object;
-    sptr<QRPoint3D> origin;
+    Vector3D origin;
     double width, height;
     sptr<ProjectionImp> projector;
 };

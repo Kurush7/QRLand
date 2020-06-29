@@ -12,7 +12,7 @@
 
 class BaseSceneDrawMethod {
 public:
-    virtual void draw(sptr<QRScene3D> s, sptr<QRPainter> p) = 0;
+    virtual void draw(sptr<QRScene3D> s, sptr<QRImage> p) = 0;
 protected:
     virtual void collectMetaData() = 0;
     virtual void collectPlainData() = 0;
@@ -25,7 +25,7 @@ protected:
 
 class SceneDrawMethod {
 public:
-    virtual void draw(sptr<QRScene3D> s, sptr<QRPainter> p);
+    virtual void draw(sptr<QRScene3D> s, sptr<QRImage> p);
 protected:
     virtual void collectMetaData();
     virtual void collectPlainData();
@@ -35,7 +35,7 @@ private:
     QRVector<sptr<DrawableData>> drawableData;
     sptr<QRTransformer3D> transformer;
     sptr<QRScene3D> scene;
-    sptr<QRPainter> painter;
+    sptr<QRImage> painter;
 };
 
 #endif //BIG3DFLUFFY_SCENEDRAWMETHOD_H

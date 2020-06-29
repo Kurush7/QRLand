@@ -5,10 +5,10 @@
 #ifndef BIG3DFLUFFY_POLYMODELCREATOR_H
 #define BIG3DFLUFFY_POLYMODELCREATOR_H
 
-#include "../composites/interfaces/QRPolyModel3D.h"
-#include "../composites/impl/PolyModel.h"
-#include "../components/impl/Point3D.h"
-#include "../components/impl/Polygon3D.h"
+#include "../../interfaces/QRPolyModel3D.h"
+#include "PolyModel.h"
+#include "../../../components/impl/Polygon3D.h"
+#include "../../../components/impl/Point3D.h"
 
 class QRPolyModelCreator {
 public:
@@ -32,8 +32,8 @@ public:
     virtual bool createPoints();
     virtual bool createPolygons();
 
-    sptr<QRPolyModel3D> create(Vector3D _pos, double _a, sptr<QRTexture> txt = nullptr) {
-        pos = _pos, a = _a;
+    sptr<QRPolyModel3D> create(double _a, sptr<QRTexture> txt = nullptr) {
+        a = _a;
         if (txt) texture = txt;
         if (createPoints() && createPolygons()) return getModel();
         return nullptr;
@@ -44,7 +44,6 @@ protected:
 private:
     sptr<QRTexture> texture = DEFAULT_TEXTURE;
     double a;
-    Vector3D pos;
 };
 
 #endif //BIG3DFLUFFY_POLYMODELCREATOR_H

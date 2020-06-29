@@ -9,13 +9,13 @@
 
 #include "../3Domain/3Domain.h"
 #include <QColor>
-#include "../2Domain/Canvas3DViewer.h"
+#include "../2DomainOld/Canvas3DViewer.h"
 
 
 QColor defineColor(QRColor c);
 QRColor defineColor(QColor c);
 
-class QTPainter: public QRPainter {
+class QTPainter: public QRImage {
 public:
     QTPainter(Canvas3DViewer *c): canvas(c) {}
     virtual void drawPoint(double x, double y, QRPointStyle s) {
@@ -50,15 +50,15 @@ class QTPainterCreator: public BasePainterCreator {
 public:
     explicit QTPainterCreator(Canvas3DViewer *canvas): canvas(canvas) {}
 protected:
-    virtual sptr<QRPainter> getPainter() override {
+    virtual sptr<QRImage> getPainter() override {
         if (!painter)
             painter = create();
         else
             painter->reset();
         return painter;
     }
-    virtual sptr<QRPainter> create()  {
-        return sptr<QRPainter>(new QTPainter(canvas));
+    virtual sptr<QRImage> create()  {
+        return sptr<QRImage>(new QTPainter(canvas));
     }
 private:
     Canvas3DViewer *canvas;

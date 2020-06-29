@@ -8,6 +8,7 @@
 #include "../interfaces/QRIndustry.h"
 #include "Point3D.h"
 #include "Polygon3D.h"
+#include "Camera3D.h"
 
 class Point3DCreator: public QRPoint3DCreator {
 public:
@@ -32,6 +33,19 @@ public:
 private:
     sptr<QRTexture> texture;
 };
+
+class CameraCreator: public QRCamera3DCreator {
+public:
+    // todo CameraCreator() {imp = sptr<ProjectionImp>(new ???)}
+    virtual uptr<QRCamera3D> create(double w, double h,
+                                    const Vector3D &origin) {
+        return uptr<QRCamera3D>(new Camera3D(w, h, imp, origin, screen, screen));
+    }
+private:
+    sptr<ProjectionImp> imp;
+    double screen = 100;
+};
+
 
 
 #endif //BIG3DFLUFFY_INDUSTRY_H
