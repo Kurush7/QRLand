@@ -6,8 +6,7 @@
 #include <QLocale>
 #include <QLibraryInfo>
 
-
-#include "gui/MainWindow.h"
+#include "gui/wip1/MainWindow.h"
 
 using namespace std;
 

@@ -9,7 +9,7 @@ QRPolySceneMemento::QRPolySceneMemento(sptr<QRPolyScene3D> scene): scene(scene) 
     models = scene->getModels();
     memes->add(camera->save());
     for (auto x: models)
-        memes->add(x->save());
+        memes->add(x.fst->save());
 }
 
 void QRPolySceneMemento::restore() {

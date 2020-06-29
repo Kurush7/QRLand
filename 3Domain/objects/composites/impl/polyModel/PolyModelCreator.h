@@ -14,9 +14,11 @@ class QRPolyModelCreator {
 public:
     virtual bool createPoints() = 0;
     virtual bool createPolygons() = 0;
+    virtual sptr<QRPolyModel3D> create() = 0;
 
 protected:
     virtual sptr<QRPolyModel3D> getModel() = 0;
+    virtual void clearPrev() {}
     sptr<QRPolyModel3D> model;
 };
 
@@ -29,18 +31,23 @@ protected:
 
 class CubeModelCreator: public PrimitivePolyModelCreator {
 public:
+    CubeModelCreator(double _a, sptr<QRTexture> txt = nullptr) {setParams(_a, txt);}
     virtual bool createPoints();
     virtual bool createPolygons();
 
-    sptr<QRPolyModel3D> create(double _a, sptr<QRTexture> txt = nullptr) {
-        a = _a;
-        if (txt) texture = txt;
+    virtual sptr<QRPolyModel3D> create() {
         if (createPoints() && createPolygons()) return getModel();
         return nullptr;
+    }
+    void setParams(double _a, sptr<QRTexture> txt = nullptr) {
+        a = _a;
+        if (txt) texture = txt;
+        clearPrev();
     }
 
 protected:
     virtual sptr<QRPolyModel3D> getModel();
+    virtual void clearPrev() {texture = DEFAULT_TEXTURE; points.clear(); polygons.clear(); model = nullptr;}
 private:
     sptr<QRTexture> texture = DEFAULT_TEXTURE;
     double a;

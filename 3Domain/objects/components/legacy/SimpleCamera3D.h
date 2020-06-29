@@ -18,6 +18,7 @@ public:
 
     virtual uptr<QRTransformer3D> getProjectionTransformer();
 
+    // todo fuck: getVector() is tmp, returning ref
     virtual const Vector3D& getOrigin() const {return origin->getVector();}
     virtual void setOrigin(const Vector3D &p) { origin->setVector(p);}
     virtual const Vector3D& getBind() const {return origin->getBind();}

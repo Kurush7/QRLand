@@ -7,13 +7,13 @@
 using namespace std;
 
 QRCanvas::QRCanvas(int w, int h, QWidget *parent, QColor fill)
-        : QWidget(parent), width(w), height(h) {
-    setFixedSize(w, h);
+        : QRActionManager(parent), width(w), height(h) {
     //QPalette p(palette());
     //p.setColor(QPalette::Background, QColor(255,255,255,255));
     //setAutoFillBackground(true);
     //setPalette(p);
 
+    setFixedSize(w, h);
     bgColor = fill;
 
     img = sptr<QImage>(new QImage(w, h, QImage::Format_ARGB32));

@@ -6,6 +6,7 @@
 #define BIG3DFLUFFY_COMPOSITE_INTERFACES_H
 
 #include "interfaces/QRFrame3D.h"
+#include "interfaces/QRPolyScene3D.h"
 #include "interfaces/QRPolyModel3D.h"
 
 #endif //BIG3DFLUFFY_COMPOSITE_INTERFACES_H

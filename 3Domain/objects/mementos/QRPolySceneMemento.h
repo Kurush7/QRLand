@@ -16,7 +16,7 @@ public:
 private:
     wptr<QRPolyScene3D> scene;
     sptr<QRCamera3D> camera;
-    QRVector<sptr<QRPolyModel3D>> models;
+    QRVector<RawModel> models;
     sptr<MementoAccumulator> memes;
 };
 

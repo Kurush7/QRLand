@@ -6,6 +6,7 @@ set(CMAKE_AUTOUIC ON)
 add_library(2domain_lib STATIC
         QRCanvas.cpp
         QRCanvasViewer.cpp
+        QRActionManager.cpp
         ImageQT.cpp
         )
 

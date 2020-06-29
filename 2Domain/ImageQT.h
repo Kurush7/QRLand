@@ -17,7 +17,7 @@ public:
     ImageQT(const sptr<QRCanvas> &canvas): canvas(canvas) {}
     virtual void setPixel(int x, int y, const QRColor &color) {
         // todo too long
-        canvas->getImage()->setPixelColor(x, y, defineColor(color);)
+        canvas->getImage()->setPixelColor(x, y, defineColor(color));
     }
     virtual void repaint() {canvas->repaint();}
     virtual void refillBg() {canvas->refillBg();}

@@ -10,6 +10,7 @@
 
 class QRPolyModel3D;
 using ModelIterator = QRVectorIterator<sptr<QRPolyModel3D>>;
+using ModelIteratorPtr = sptr<ModelIterator>;
 
 class QRPolyModel3D: public QRComposite {
 public:

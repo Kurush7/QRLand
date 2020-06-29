@@ -5,7 +5,7 @@
 #ifndef BIG3DFLUFFY_COMMANDMANAGER_H
 #define BIG3DFLUFFY_COMMANDMANAGER_H
 
-#include "Command.h"
+#include "QRCommandInterface.h"
 #include "objects/mementos/CareTaker.h"
 
 class BaseCommandManager {

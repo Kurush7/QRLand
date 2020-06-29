@@ -17,6 +17,8 @@
 std::ostream& operator<<(std::ostream &os, const DrawablePoint &p);
 std::ostream& operator<<(std::ostream &os, const DrawableEdge &e);
 
+// todo visitors are fucked up after changing drawer interface
+
 class QRDrawVisitor {
 public:
     virtual void visitDrawPoint(DrawablePoint &p) = 0;
@@ -30,11 +32,11 @@ public:
     DrawMethodVisitor(sptr<QRImage> painter): painter(painter) {}
     void visitDrawPoint(DrawablePoint &p) {
         //cout << p <<'\n';
-        painter->drawPoint(p.x, p.y, p.style);
+        //painter->drawPoint(p.x, p.y, p.style);
     }
     void visitDrawEdge(DrawableEdge &e) {
         //cout << e;
-        painter->drawEdge(e.x1,e.y1, e.x2, e.y2, e.style);
+        //painter->drawEdge(e.x1,e.y1, e.x2, e.y2, e.style);
     }
 private:
     sptr<QRImage> painter;

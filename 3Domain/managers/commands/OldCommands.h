@@ -1,34 +1,18 @@
 //
-// Created by kurush on 31.05.2020.
+// Created by kurush on 29.06.2020.
 //
 
-#ifndef BIG3DFLUFFY_COMMAND_H
-#define BIG3DFLUFFY_COMMAND_H
+#ifndef BIG3DFLUFFY_OLDCOMMANDS_H
+#define BIG3DFLUFFY_OLDCOMMANDS_H
 
-// todo file structure
-
-#include "objects/objects.h"
-#include "objects/visitors/QRVisitor.h"
-#include "QRPainter.h"
-#include "../drawManagers/SceneDrawMethod.h"
-#include "../../objects/mementos/MultipleMementos.h"
-
-class QRCommand {
-public:
-    virtual sptr<QRMemento> exec() = 0;
-};
-class SceneCommand: public QRCommand {
-public:
-    SceneCommand(sptr<QRScene3D> s): scene(s) {}
-protected:
-    sptr<QRScene3D> scene;
-};
+#include "QRCommandInterface.h"
+#include "../../objects/visitors/QRVisitor.h"
 
 class AddModelCommand: public SceneCommand {
 public:
     AddModelCommand(FrameLoadDirector director, sptr<BaseFrame3DLoader> loader,
-            sptr<QRScene3D> s)
-    :SceneCommand(s), loader(loader), director(director){}
+                    sptr<QRScene3D> s)
+            :SceneCommand(s), loader(loader), director(director){}
 
     virtual sptr<QRMemento> exec();
 
@@ -115,5 +99,4 @@ public:
     virtual sptr<QRMemento> exec();
 };
 
-
-#endif //BIG3DFLUFFY_COMMAND_H
+#endif //BIG3DFLUFFY_OLDCOMMANDS_H

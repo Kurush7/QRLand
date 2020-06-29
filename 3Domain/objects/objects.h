@@ -12,6 +12,7 @@
 
 #include "composites/interfaces.h"
 #include "composites/legacy.h"
+#include "composites/impl.h"
 
 #include "managers/LoadSource.h"
 #include "managers/FrameLoader.h"

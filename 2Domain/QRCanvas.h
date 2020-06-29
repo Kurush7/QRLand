@@ -6,9 +6,10 @@
 #define KG_GRAPHICFIELD_H
 
 #include "QRCanvasViewer.h"
+#include "QRActionManager.h"
 
 
-class QRCanvas : public QWidget {
+class QRCanvas : public QRActionManager {
 Q_OBJECT
 public:
     explicit QRCanvas(int w, int h, QWidget *parent = nullptr,

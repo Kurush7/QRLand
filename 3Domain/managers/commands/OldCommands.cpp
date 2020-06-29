@@ -1,11 +1,9 @@
 //
-// Created by kurush on 31.05.2020.
+// Created by kurush on 29.06.2020.
 //
 
-#include "Command.h"
-#include "../../objects/mementos/QRMemento.h"
+#include "OldCommands.h"
 
-using namespace std;
 
 sptr<QRMemento> AddModelCommand::exec() {
     auto model = director.load(loader);

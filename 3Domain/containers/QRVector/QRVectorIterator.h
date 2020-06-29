@@ -13,7 +13,7 @@
 template <typename T>
 class QRVectorIterator: public std::iterator<std::output_iterator_tag, T> {
 public:
-    friend class QRVector<T>;
+    //  todo delete friend class QRVector<T>;
 
     QRVectorIterator() {}
     QRVectorIterator(const sptr<T[]> vect, const sptr<size_t> sz, size_t ind = 0);
@@ -34,11 +34,10 @@ public:
     bool operator ==(const QRVectorIterator<T>& iter) const;
     bool operator !=(const QRVectorIterator<T>& iter) const;
 
-private:
+    size_t index = 0;
+protected:
     wptr<T[]> vec;
     wptr<size_t> size;
-protected:
-    size_t index = 0;
 };
 
 template<typename T>

@@ -26,7 +26,7 @@ public:
     const QRPair<Key, Val> unit() const {
         try {
             auto cN = reinterpret_cast<QRMapNode<Key, Val>*>(sptr<HashNode<Key>>(this->curNode).get());
-            return make_pair(cN->key, cN->val);
+            return makeQRPair(cN->key, cN->val);
         }
         catch (bad_weak_ptr &exc) {
             time_t t = time(NULL);

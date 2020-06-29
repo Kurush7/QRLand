@@ -5,7 +5,8 @@
 #ifndef BIG3DFLUFFY_QRMANAGERS_H
 #define BIG3DFLUFFY_QRMANAGERS_H
 
-#include "commands/Command.h"
+#include "managers/commands/QRCommandInterface.h"
+#include "managers/commands/PolySceneCommands.h"
 #include "commands/CommandManager.h"
 #include "drawManagers/SceneDrawMethod.h"
 
