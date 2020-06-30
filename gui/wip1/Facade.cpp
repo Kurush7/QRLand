@@ -20,9 +20,9 @@ void Facade::addCube(double a, double x, double y, double z, QRColor c) {
 }
 
 void Facade::draw() {
-    // todo auto command = sptr<QRCommand>(new DrawCommand(painterCreator->getPainter(), scene));
-    //manager->push(command);
-   // manager->execAll();
+    auto command = sptr<QRCommand>(new RenderCmd(image, scene));
+    manager->push(command);
+    manager->execAll();
 }
 
 void Facade::moveCamera(double dx, double dy, double dz) {

@@ -16,15 +16,15 @@ set(QT_INCLUDES
         Qt5::Gui
         Qt5::Widgets)
 
-include_directories(3Domain)
-include_directories(renderStuff)
 include_directories(2Domain)
+include_directories(3Domain)
+include_directories(controlStuff)
 include_directories(gui)
 
 add_subdirectory(3Domain)
-add_subdirectory(renderStuff)
 #add_subdirectory(2DomainOld)
 add_subdirectory(2Domain)
+add_subdirectory(controlStuff)
 add_subdirectory(tests)
 add_subdirectory(gui)
 
@@ -48,7 +48,8 @@ target_link_libraries(main.exe
         widgets_lib
         2domain_lib
         3domain_lib
-        render_lib)
+        control_lib
+        )
 
 add_custom_command(
         TARGET main.exe POST_BUILD

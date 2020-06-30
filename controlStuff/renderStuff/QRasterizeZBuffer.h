@@ -32,13 +32,14 @@ public:
         free(zbuf);
     }
 
-    // data may be spoiled! (reversed only, actually)
+    // data may be spoiled! (reversed and rounded, both guaranteed!)
     void draw(RenderPolygon &poly, const sptr<QRTexture> &texture);
 
 private:
     int w, h;
     double **zbuf;
     sptr<QRImage> img;
+    sptr<QRTexture> texture;
 
     void fillRow(int xl, int xr, int y);
 };

@@ -6,7 +6,7 @@
 #define BIG3DFLUFFY_OLDCOMMANDS_H
 
 #include "QRCommandInterface.h"
-#include "../../objects/visitors/QRVisitor.h"
+#include "objects/visitors/QRVisitor.h"
 
 /* todo deprecated
 class AddModelCommand: public SceneCommand {

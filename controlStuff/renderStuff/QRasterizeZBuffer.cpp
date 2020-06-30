@@ -4,7 +4,8 @@
 
 #include "QRasterizeZBuffer.h"
 
-void QRasterizeZBuffer::draw(RenderPolygon &poly, const sptr<QRTexture> &texture) {
+void QRasterizeZBuffer::draw(RenderPolygon &poly, const sptr<QRTexture> &txt) {
+    texture = txt;
     if (!isRightRotate(poly[0], poly[1], poly[2]))
         poly.reverse();
 
@@ -49,5 +50,7 @@ void QRasterizeZBuffer::draw(RenderPolygon &poly, const sptr<QRTexture> &texture
 }
 
 void QRasterizeZBuffer::fillRow(int xl, int xr, int y) {
-
+    // todo add lights here
+    for (int x = xl; x <= xr; ++x)
+        img->setPixel(x, y, texture->getColor());
 }

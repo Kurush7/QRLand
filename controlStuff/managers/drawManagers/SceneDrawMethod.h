@@ -7,7 +7,7 @@
 
 #include "QRPainter.h"
 #include "objects/objects.h"
-#include "../../containers/QRContainers.h"
+#include "containers/QRContainers.h"
 #include "DrawVisitors.h"
 
 class BaseSceneDrawMethod {

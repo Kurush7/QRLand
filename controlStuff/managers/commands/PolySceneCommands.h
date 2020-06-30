@@ -7,6 +7,7 @@
 
 #include "QRCommandInterface.h"
 #include "objects/composites/impl.h"
+#include "../../renderStuff/QRender.h"
 
 class MoveCameraCmd: public PolySceneCommand {
 public:
@@ -47,6 +48,16 @@ public:
 private:
     sptr<QRPolyModelCreator> cr;
     Vector3D v;
+};
+
+class RenderCmd: public PolySceneCommand {
+public:
+    RenderCmd(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &s)
+            :PolySceneCommand(s), img(img) {}
+
+    virtual sptr<QRMemento> exec();
+private:
+    sptr<QRImage> img;
 };
 
 

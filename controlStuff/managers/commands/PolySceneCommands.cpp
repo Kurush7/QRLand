@@ -30,3 +30,8 @@ sptr<QRMemento> AddModelCmd::exec() {
     scene->addModel(cr->create(), v);
     return mem;
 }
+
+sptr<QRMemento> RenderCmd::exec() {
+    render(img, scene);
+    return nullptr;
+}

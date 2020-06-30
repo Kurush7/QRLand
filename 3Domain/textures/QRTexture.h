@@ -9,6 +9,7 @@
 
 class QRTexture {
 public:
+    // todo color by coordinate, method 'is singleColor'
     virtual QRColor getColor() const = 0;
 };
 

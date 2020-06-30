@@ -9,7 +9,7 @@
 #include "objects/composites/interfaces.h"
 #include "objects/QRObject.h"
 #include "QRPainter.h"
-#include "../../QRConstants.h"
+#include "QRConstants.h"
 #include "DrawData.h"
 
 #include "objects/visitors/QRVisitorInterface.h"

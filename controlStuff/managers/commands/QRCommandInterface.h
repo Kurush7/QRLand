@@ -8,7 +8,7 @@
 
 #include "objects/objects.h"
 #include "../drawManagers/SceneDrawMethod.h"
-#include "../../objects/mementos/MultipleMementos.h"
+#include "objects/mementos/MultipleMementos.h"
 #include "../../../globalDefines.h"
 
 class QRCommand {
