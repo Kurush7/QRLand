@@ -4,7 +4,7 @@
 
 #include "OldCommands.h"
 
-
+/*
 sptr<QRMemento> AddModelCommand::exec() {
     auto model = director.load(loader);
     if (!model)
@@ -99,4 +99,4 @@ sptr<QRMemento> DeleteSelectionCommand::exec() {
     for (auto x: selected)
         scene->deleteObject(x);
     return mem;
-}
+}*/

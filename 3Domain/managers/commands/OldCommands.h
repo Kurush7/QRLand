@@ -8,6 +8,7 @@
 #include "QRCommandInterface.h"
 #include "../../objects/visitors/QRVisitor.h"
 
+/* todo deprecated
 class AddModelCommand: public SceneCommand {
 public:
     AddModelCommand(FrameLoadDirector director, sptr<BaseFrame3DLoader> loader,
@@ -97,6 +98,6 @@ public:
             :TransformCameraCommand(trans, s) {}
 
     virtual sptr<QRMemento> exec();
-};
+};*/
 
 #endif //BIG3DFLUFFY_OLDCOMMANDS_H

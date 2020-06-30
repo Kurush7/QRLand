@@ -22,6 +22,9 @@ public:
     virtual void repaint() {canvas->repaint();}
     virtual void refillBg() {canvas->refillBg();}
 
+    virtual int getWidth() {return canvas->getWidth();}
+    virtual int getHeight() {return canvas->getHeight();}
+
 private:
     sptr<QRCanvas> canvas;
 };

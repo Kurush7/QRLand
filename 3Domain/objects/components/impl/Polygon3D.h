@@ -16,11 +16,15 @@ public:
     Polygon3D(initializer_list<sptr<QRPoint3D>> lst,
             const sptr<QRTexture> t);
 
+    // todo points are not fully copied!!!!
+    virtual sptr<QRObject3D> copy() {return sptr<Polygon3D>(new Polygon3D(points,texture));}
+
     virtual PointIterator getPoints() const {return points.begin();}
     virtual void setPoints(const PointIterator &it) {points = it; definePlane();}
 
     virtual const Vector3D getPlane() const {auto p = normal; p[3] = d; return p;}
     virtual const Vector3D getNormal() const {return normal;}
+    virtual void updateNormal() {definePlane();}
     virtual void switchNormal() {normal = -1 * normal; d *= -1;}
     virtual PolyPosition where(const Vector3D &v) const;
 

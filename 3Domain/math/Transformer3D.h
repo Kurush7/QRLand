@@ -11,6 +11,8 @@
 #include "Matrix3D.h"
 
 
+// todo creators return shared, not unique????? NO
+
 class QRTransformer3D {
 public:
     virtual Matrix3D transformRight(const Matrix3D &m) = 0;
@@ -28,7 +30,7 @@ public:
 
 class Transformer3D: public QRTransformer3D {
 public:
-    Transformer3D(const Matrix3D &m): matrix(m) {}
+    explicit Transformer3D(const Matrix3D &m = makeID()): matrix(m) {}
     virtual Matrix3D transformRight(const Matrix3D &m) {return m * matrix;}
     virtual Matrix3D transformLeft(const Matrix3D &m) {return matrix * m;}
 
@@ -39,16 +41,23 @@ public:
 
     virtual Matrix3D getMatrix() {return matrix;}
 
-private:
+protected:
     Matrix3D matrix;
 };
+
+// todo as creator
+class AxisChangeTransformer: public Transformer3D {
+public:
+    AxisChangeTransformer(const Vector3D &origin, const Vector3D &oX,
+                          const Vector3D &oY, const Vector3D &oZ);
+};
+
 
 
 class BaseTransformer3DCreator {
 public:
     virtual uptr<QRTransformer3D> create() = 0;
 };
-
 class MoveTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     MoveTransformer3DCreator(double dx, double dy, double dz);
@@ -57,7 +66,6 @@ public:
 private:
     Matrix3D matrix;
 };
-
 class ScaleTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     ScaleTransformer3DCreator(double kx, double ky, double kz);
@@ -66,7 +74,6 @@ public:
 private:
     Matrix3D matrix;
 };
-
 class RotateTransformer3DCreator: public BaseTransformer3DCreator {
 public:
     RotateTransformer3DCreator(double dx, double dy, double dz);
@@ -78,13 +85,12 @@ private:
 
     Matrix3D matrix;
 };
-
 class ProjectionTransformer3DCreator: public BaseTransformer3DCreator {
 public:
-    ProjectionTransformer3DCreator(const Vector3D &base, const Vector3D &ox, const Vector3D &oy, const Vector3D &oz);
+    ProjectionTransformer3DCreator(double x, double y, double z);
+    ProjectionTransformer3DCreator(const Vector3D &v);
     virtual uptr<QRTransformer3D> create();
 private:
     Matrix3D matrix;
 };
-
 #endif //KG_TRANSFORMER3D_H

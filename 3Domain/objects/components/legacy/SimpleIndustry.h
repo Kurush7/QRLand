@@ -10,7 +10,8 @@
 #include "SimpleEdge3D.h"
 #include "SimpleCamera3D.h"
 
-
+// todo deprecated
+/*
 class SimplePoint3DCreator: public QRPoint3DCreator {
 public:
     explicit SimplePoint3DCreator(QRPointStyle s = QRPointStyle()): st(s) {}
@@ -62,6 +63,6 @@ private:
     SimpleEdge3DCreator edge_cr = SimpleEdge3DCreator(ec);
     SimpleFrontalCamera3DCreator camera_cr = SimpleFrontalCamera3DCreator(10);
 };
-
+*/
 
 #endif //BIG3DFLUFFY_SIMPLEINDUSTRY_H

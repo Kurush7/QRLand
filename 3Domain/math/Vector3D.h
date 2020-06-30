@@ -52,4 +52,6 @@ Vector3D operator *(const Vector3D&, double);
 Vector3D operator *(double, const Vector3D&);
 Vector3D operator /(const Vector3D&, double);
 
+double scalar(const Vector3D &a, const Vector3D &b);
+
 #endif //KG_VECTOR3D_H

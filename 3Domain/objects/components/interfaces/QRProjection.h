@@ -13,11 +13,5 @@ public:
                                                  const Vector3D &zeroPoint, const Vector3D &ViewUpVector) = 0;
 };
 
-class OrthogonalProjection: public ProjectionImp {
-public:
-    virtual uptr<QRTransformer3D> getTransformer(const Vector3D &origin,
-                                                 const Vector3D &zeroPoint, const Vector3D &ViewUpVector);
-};
-
 
 #endif //BIG3DFLUFFY_QRPROJECTION_H

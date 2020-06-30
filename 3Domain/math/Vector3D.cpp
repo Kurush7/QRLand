@@ -17,11 +17,12 @@ Vector3D::Vector3D(const double _arr[4]) {
 }
 
 Vector3D::Vector3D(const std::initializer_list<double> &lst) {
-    if (lst.size() != 3) {
+    /*todo 3 or 4 possible.... or 2
+     if (lst.size() != 3) {
         time_t t = time(nullptr);
         throw QRMathWrongDimension(__FILE__, __LINE__, asctime(localtime(&t)),
                                   "Bad vector init-list!", lst.size(), 3);
-    }
+    }*/
     char i = 0;
     for (auto x: lst) {
         arr[i++] = x;
@@ -134,7 +135,6 @@ Vector3D lenNorm(const Vector3D &a) {
         b[1] /= x;
         b[2] /= x;
         b[3] /= x;
-        // todo needed b[3] /= x: check its usages
     }
     return b;
 }
@@ -142,4 +142,8 @@ Vector3D lenNorm(const Vector3D &a) {
 double vectorLen(const Vector3D &v) {
     // todo v[3] considered. all is good, yet accuracy needed....(((
     return sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2] + v[3]*v[3]);
+}
+
+double scalar(const Vector3D &a, const Vector3D &b) {
+    return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }

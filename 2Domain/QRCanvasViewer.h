@@ -5,7 +5,7 @@
 #ifndef BIG3DFLUFFY_QRCANVASVIEWER_H
 #define BIG3DFLUFFY_QRCANVASVIEWER_H
 
-#include <QGraphicsView>
+#include <QImage>
 #include <algorithm>
 
 #include "../globalDefines.h"

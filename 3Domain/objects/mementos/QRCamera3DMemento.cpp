@@ -9,7 +9,6 @@ Camera3DMemento::Camera3DMemento(sptr<QRCamera3D> p) {
     origin = p->getOrigin();
     width = p->getWidth();
     height = p->getHeight();
-    projector = p->getProjector();
 }
 
 void Camera3DMemento::restore() {
@@ -21,5 +20,4 @@ void Camera3DMemento::restore() {
     p->setOrigin(origin);
     p->setWidth(width);
     p->setHeight(height);
-    p->setProjector(projector);
 }

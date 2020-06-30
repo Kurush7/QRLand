@@ -10,7 +10,7 @@ set(source_list ${source_list}
         ${path}/impl/Polygon3D.cpp
         ${path}/impl/Camera3D.cpp
 
-        ${path}/legacy/SimplePoint3D.cpp
-        ${path}/legacy/SimpleEdge3D.cpp
-        ${path}/legacy/SimpleCamera3D.cpp
+        #${path}/legacy/SimplePoint3D.cpp
+        #${path}/legacy/SimpleEdge3D.cpp
+        #${path}/legacy/SimpleCamera3D.cpp
         PARENT_SCOPE)

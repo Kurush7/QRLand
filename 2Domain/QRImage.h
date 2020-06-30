@@ -14,6 +14,9 @@ public:
     virtual void setPixel(int x, int y, const QRColor &color) = 0;
     virtual void repaint() = 0;
     virtual void refillBg() = 0;
+
+    virtual int getWidth() = 0;
+    virtual int getHeight() = 0;
 };
 
 class QRImageCreator {

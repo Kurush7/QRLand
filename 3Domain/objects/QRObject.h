@@ -47,6 +47,7 @@ protected:
 class QRObject3D: public QRObject {
 public:
     virtual bool isComposite() {return false;}
+    virtual sptr<QRObject3D> copy() = 0;
 };
 
 class QRComposite: public QRObject {

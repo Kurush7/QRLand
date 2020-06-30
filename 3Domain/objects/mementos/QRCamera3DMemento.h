@@ -18,7 +18,6 @@ private:
     wptr<QRCamera3D> object;
     Vector3D origin;
     double width, height;
-    sptr<ProjectionImp> projector;
 };
 
 #endif //BIG3DFLUFFY_QRCAMERA3DMEMENTO_H

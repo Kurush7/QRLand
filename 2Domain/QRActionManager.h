@@ -5,7 +5,6 @@
 #ifndef BIG3DFLUFFY_QRACTIONMANAGER_H
 #define BIG3DFLUFFY_QRACTIONMANAGER_H
 
-#include <QGraphicsView>
 #include <QWidget>
 #include <vector>
 #include <QKeyEvent>

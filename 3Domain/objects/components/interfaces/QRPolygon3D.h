@@ -37,6 +37,7 @@ public:
 
     virtual const Vector3D getPlane() const = 0;
     virtual const Vector3D getNormal() const = 0;
+    virtual void updateNormal() = 0;
     virtual void switchNormal() = 0;
     virtual PolyPosition where(const Vector3D&) const = 0;
 

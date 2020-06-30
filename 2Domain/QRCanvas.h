@@ -5,9 +5,10 @@
 #ifndef KG_GRAPHICFIELD_H
 #define KG_GRAPHICFIELD_H
 
+#include <QPainter>
+
 #include "QRCanvasViewer.h"
 #include "QRActionManager.h"
-
 
 class QRCanvas : public QRActionManager {
 Q_OBJECT
@@ -22,6 +23,9 @@ public:
     void refillBg();
 
     sptr<QImage> getImage() {return img;}
+
+    int getWidth() {return width;}
+    int getHeight() {return height;}
 
 protected:
     int width, height;

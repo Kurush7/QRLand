@@ -20,6 +20,7 @@ public:
     Point3D() {}
     Point3D(const Vector3D &vec, QRPointStyle s = QRPointStyle());
     Point3D(const double x, const double y, const double z, QRPointStyle s = QRPointStyle());
+    virtual sptr<QRObject3D> copy() {return sptr<QRPoint3D>(new Point3D(vec, getStyle()));}
 
     virtual const Vector3D getVector() const {return vec;}
     virtual const Vector3D getRelativeVector() const {return getVector();}
