@@ -8,6 +8,7 @@ set(source_list ${source_list}
 
         ${path}/impl/Point3D.cpp
         ${path}/impl/Polygon3D.cpp
+        ${path}/impl/Camera3D.cpp
 
         ${path}/legacy/SimplePoint3D.cpp
         ${path}/legacy/SimpleEdge3D.cpp

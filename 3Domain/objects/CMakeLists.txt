@@ -1,6 +1,7 @@
 add_subdirectory(components)
 add_subdirectory(mementos)
 add_subdirectory(managers)
+add_subdirectory(lights)
 add_subdirectory(composites)
 
 set(path "objects/")

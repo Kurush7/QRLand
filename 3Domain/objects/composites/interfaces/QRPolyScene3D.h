@@ -8,6 +8,7 @@
 #include "../../components/interfaces/QRCamera3D.h"
 #include "../../managers/SelectionManager.h"
 #include "../../composites/interfaces/QRPolyModel3D.h"
+#include "objects/lights/light.h"
 
 /**
  todo
@@ -38,7 +39,7 @@ public:
     virtual RawModelIterator getModels() const = 0;
     virtual void setModels(RawModelIterator) = 0;
 
-    // todo lights
+    virtual void addLight(const sptr<QRLight> &ligth) = 0;
 
 private:
     sptr<QRPolyScene3D> p;

@@ -8,10 +8,8 @@ using namespace std;
 
 Facade::Facade(sptr<QRImage> img): image(img) {
     manager = sptr<BaseCommandManager> (new CommandManager());
-    //todo scene builder
-    //auto director = SceneBuildDirector();
-    //auto builder = sptr<BaseScene3DBuilder>(new Scene3DBuilder(factory, 40, 40));
-    //scene = director.build(builder);
+    auto cr = PolySceneCreator();
+    auto scene = cr.create();
 }
 
 void Facade::addCube(double a, double x, double y, double z, QRColor c) {
@@ -26,7 +24,6 @@ void Facade::draw() {
     //manager->push(command);
    // manager->execAll();
 }
-
 
 void Facade::moveCamera(double dx, double dy, double dz) {
     auto command = sptr<QRCommand>(new MoveCameraCmd(Vector3D(dx,dy,dz), scene));

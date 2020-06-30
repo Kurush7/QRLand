@@ -23,9 +23,9 @@ public:
     sptr<QRPolyModel3D> getPointer() {return p_model;}
     virtual uptr<QRMemento> save();
 
-    virtual const PolygonIterator& getPolygons() const = 0;
-    virtual const PointIterator& getPoints() const = 0;
-    virtual void setValues(const PointIterator &pt, const PolygonIterator &pg) = 0;   // for memento only! ?todo friend?
+    virtual PolygonIterator getPolygons() const = 0;
+    virtual PointIterator getPoints() const = 0;
+    virtual void setValues(PointIterator pt, PolygonIterator pg) = 0;   // for memento only! ?todo friend?
 
     virtual double getRadius() const = 0;   // radius of circumscribed sphere
 

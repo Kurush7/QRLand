@@ -17,9 +17,9 @@ class PolyModel: public QRPolyModel3D {
 public:
     PolyModel(const PointIterator &pt, const PolygonIterator &pg) {setValues(pt, pg);}
 
-    virtual const PolygonIterator& getPolygons() const {return polygons.begin();}
-    virtual const PointIterator& getPoints() const {return points.begin();}
-    virtual void setValues(const PointIterator &pt, const PolygonIterator &pg);
+    virtual PolygonIterator getPolygons() const {return polygons.begin();}
+    virtual PointIterator getPoints() const {return points.begin();}
+    virtual void setValues(PointIterator pt, PolygonIterator pg);
     virtual void setSelected(bool x) {
         for (auto p: points)
             p->setSelected(x);

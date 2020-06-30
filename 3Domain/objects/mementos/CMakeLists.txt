@@ -6,6 +6,7 @@ set(source_list ${source_list}
         ${path}/QRFrame3DMemento.cpp
         ${path}/QRPolygon3DMemento.cpp
         ${path}/QRPolyModelMemento.cpp
+        ${path}/QRPolySceneMemento.cpp
         ${path}/QRSceneMemento.cpp
         ${path}/CareTaker.cpp
         PARENT_SCOPE)

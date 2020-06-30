@@ -4,7 +4,7 @@
 
 #include "PolyModel.h"
 
-void PolyModel::setValues(const PointIterator &pt, const PolygonIterator &pg) {
+void PolyModel::setValues(PointIterator pt, PolygonIterator pg) {
     points = pt,
     polygons = pg;
     defineRadius();
