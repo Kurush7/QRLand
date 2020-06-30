@@ -8,7 +8,11 @@
 #include "QRDefines.h"
 #include "objects/objects.h"
 
+//  convex polygon
 using RenderPolygon = QRVector<Vector3D>;
+
+// cuts convex 2d-poly (ignores oZ) with rectangle, returns NEW cut convex polygon
+
 RenderPolygon cutPolyRect(const sptr<QRPolygon3D> &poly, double l, double r, double u, double d);
 RenderPolygon cutPolyRect(const sptr<QRPolygon3D> &poly, const Vector3D &screenData) {
     double x = screenData[0], y = screenData[1], w = screenData[2], h = screenData[3];

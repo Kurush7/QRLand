@@ -4,6 +4,7 @@
 
 #include "QRender.h"
 #include "QRPolyRectCutter.h"
+#include "QRasterizeZBuffer.h"
 
 void render (const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene) {
     auto camera = scene->getActiveCamera();
@@ -50,10 +51,15 @@ void render (const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene) {
                 -img->getHeight()/screenData[3]/2, 1,0));
         auto t = mcr.create();
         t->accumulate(scr.create()->getMatrix());   // todo order?
+
+        // init zbuffer
+        auto zbuf = QRasterizeZBuffer(img);
+
         for (auto poly: front) {
             RenderPolygon drawPoly = cutPolyRect(poly, screenData);
             for (auto &x: drawPoly)
                 x = t->transform(x);    // to image coords
+            zbuf.draw(drawPoly, poly->getTexture());
         }
     }
 }

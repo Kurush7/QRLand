@@ -12,4 +12,10 @@ inline char sign(double x) {
     return x > QREPS? 1 : (x < -QREPS? -1 : 0);
 }
 
+// todo not ints
+inline int QRound(double x) {
+    int y = x;
+    return x >= y + 0.5? y+1 : y;
+}
+
 #endif //BIG3DFLUFFY_FUNCTIONS_H

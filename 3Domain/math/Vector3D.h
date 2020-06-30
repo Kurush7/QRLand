@@ -11,6 +11,7 @@
 
 #include "exceptions/MathException.h"
 #include "QRConstants.h"
+#include "Functions.h"
 
 /**
 4-dimensional vector with no regard to projective coordinates (no special management for 4-th value),
@@ -53,5 +54,8 @@ Vector3D operator *(double, const Vector3D&);
 Vector3D operator /(const Vector3D&, double);
 
 double scalar(const Vector3D &a, const Vector3D &b);
+
+// for 2dim-vectors. others ignored
+bool isRightRotate(const Vector3D &a, const Vector3D &b, const Vector3D &c);
 
 #endif //KG_VECTOR3D_H

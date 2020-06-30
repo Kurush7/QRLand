@@ -147,3 +147,8 @@ double vectorLen(const Vector3D &v) {
 double scalar(const Vector3D &a, const Vector3D &b) {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }
+
+bool isRightRotate(const Vector3D &a, const Vector3D &b, const Vector3D &c) {
+    auto v1 = b-a, v2 =  c-b;
+    return sign(v1[0] * v2[1] - v1[1] * v2[0]) < 0;
+}
