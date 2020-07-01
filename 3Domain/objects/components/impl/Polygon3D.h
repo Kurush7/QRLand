@@ -24,6 +24,11 @@ public:
 
     virtual const Vector3D getPlane() const {auto p = normal; p[3] = d; return p;}
     virtual const Vector3D getNormal() const {return normal;}
+    virtual void setNormal(const Vector3D &n) {
+        normal = n;
+        normal = lenNorm(normal);
+        d = -scalar(normal, points[0]->getVector());
+    }
     virtual void updateNormal() {definePlane();}
     virtual void switchNormal() {normal = -1 * normal; d *= -1;}
     virtual PolyPosition where(const Vector3D &v) const;

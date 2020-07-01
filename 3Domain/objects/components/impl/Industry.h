@@ -43,7 +43,7 @@ public:
     }
 private:
     sptr<ProjectionImp> imp;
-    double screen = 100;
+    double screen = SCENE_DIST;
 };
 
 

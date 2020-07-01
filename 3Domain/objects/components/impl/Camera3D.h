@@ -55,18 +55,22 @@ public:
     virtual double getHeight() const {return height;}
     virtual void setHeight(double h) {h = height; defineFrustrum();}
 
+    virtual const Vector3D& getBind() const {return bind;}
+    virtual void setBind(const Vector3D &b) {bind = b;}
+
     // todo not all params considered
     virtual bool operator==(const QRCamera3D &b) const {return origin == b.getOrigin() &&
                                                                width == b.getWidth() &&
                                                                height == b.getHeight();}
 private:
-    Vector3D origin, viewUpVector, deepVector;
+    Vector3D origin, viewUpVector, deepVector, bind;
     double nearCutter, farCutter, screen;
     Vector3D frustrum[6];
 
     sptr<QRTransformer3D> axisTransformer, projector;
 
     void defineAxisTransformer();
+    void defineProjectionTransformer();
     void defineFrustrum();
 
 };

@@ -6,6 +6,7 @@
 #define KG_VECTOR3D_H
 
 #include <ctime>
+#include <iostream>
 #include <cmath>
 #include <initializer_list>
 
@@ -54,8 +55,12 @@ Vector3D operator *(double, const Vector3D&);
 Vector3D operator /(const Vector3D&, double);
 
 double scalar(const Vector3D &a, const Vector3D &b);
+double cos(const Vector3D &a, const Vector3D &b);
 
 // for 2dim-vectors. others ignored
 bool isRightRotate(const Vector3D &a, const Vector3D &b, const Vector3D &c);
+
+
+std::ostream& operator<<(std::ostream &os, const Vector3D &v);
 
 #endif //KG_VECTOR3D_H

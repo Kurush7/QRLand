@@ -145,10 +145,20 @@ double vectorLen(const Vector3D &v) {
 }
 
 double scalar(const Vector3D &a, const Vector3D &b) {
-    return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+    return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]+a[3]*b[3];
 }
 
 bool isRightRotate(const Vector3D &a, const Vector3D &b, const Vector3D &c) {
-    auto v1 = b-a, v2 =  c-b;
+    auto v1 = b-a, v2 =  c-a;
     return sign(v1[0] * v2[1] - v1[1] * v2[0]) < 0;
+}
+
+double cos(const Vector3D &a, const Vector3D &b) {
+    return scalar(a,b) / vectorLen(a) / vectorLen(b);
+}
+
+
+std::ostream& operator<<(std::ostream &os, const Vector3D &v) {
+    os << "<Vector3D: " << v[0] << ' ' << v[1] << ' ' << v[2] << ' ' << v[3] << ">";
+    return os;
 }

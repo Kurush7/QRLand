@@ -40,9 +40,8 @@ public:
     virtual void scale(double scale) = 0;
     virtual void rotate(const Vector3D &rotate) = 0;
 
-    // todo deprecated. delete
-    virtual const Vector3D& getBind() const {}
-    virtual void setBind(const Vector3D &b) {}
+    virtual const Vector3D& getBind() const = 0;
+    virtual void setBind(const Vector3D &b) = 0;
 
     // todo isVisibleSphere
     // todo to camera coords?

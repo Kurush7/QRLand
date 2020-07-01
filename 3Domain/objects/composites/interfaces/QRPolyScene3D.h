@@ -18,6 +18,7 @@
 using ItemsMap = std::map<int, sptr<QRPolyModel3D>>;
 using RawModel = QRPair<sptr<QRPolyModel3D>, sptr<QRTransformer3D>>;
 using RawModelIterator = QRVectorIterator<QRPair<sptr<QRPolyModel3D>, sptr<QRTransformer3D>>>;
+using LightIterator = QRVectorIterator<sptr<QRLight>>;
 
 class QRPolyScene3D {
 public:
@@ -40,6 +41,7 @@ public:
     virtual void setModels(RawModelIterator) = 0;
 
     virtual void addLight(const sptr<QRLight> &ligth) = 0;
+    virtual LightIterator getLights() = 0;
 
 private:
     sptr<QRPolyScene3D> p;

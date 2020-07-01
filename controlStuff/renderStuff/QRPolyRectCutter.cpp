@@ -35,7 +35,7 @@ RenderPolygon cutPolyRect(const sptr<QRPolygon3D> &poly, double l, double r, dou
 
     int i = 0;
     for (auto it = pointsBegin; it; ++it) {
-        P[i++] = it->get()->getVector();
+        P.push_back(it->get()->getVector());
     }
     int Np = P.getSize(), Nw = 5;
 

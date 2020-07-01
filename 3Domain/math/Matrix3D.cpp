@@ -98,14 +98,14 @@ Matrix3D operator *(const Matrix3D &a, const Matrix3D &b) {
 }
 Vector3D operator *(const Matrix3D &m, const Vector3D &v0) {
     Vector3D ans, v = v0;
-    v[3] = 1;
+    v[3] = 1;   // todo fuck
 
     for (int i = 0; i < 4; ++i) {
         ans[i] = 0;
             for (int k = 0; k < 4; ++k)
                 ans[i] += m[i][k] * v[k];
     }
-    ans[3] = 0;
+    //ans[3] = 0;     // todo fuck?
     return ans;
 }
 

@@ -21,7 +21,8 @@ bool Polygon3D::operator==(const QRPolygon3D &b) const {
 }
 
 PolyPosition Polygon3D::where(const Vector3D &v) const {
-    auto x = sign(scalar(normal, v));
+    auto x = sign(scalar(normal, v) + d);
+    //cout << "where: " << v << ' ' << normal << ' ' << d << " => " << (int) x << '\n';
     return (x == 1? FRONT : (x == -1? BEHIND : ON));
 }
 
@@ -33,6 +34,6 @@ void Polygon3D::definePlane() {
     const Vector3D v1 = points[1]->getVector() - points[0]->getVector(),
                    v2 = points[2]->getVector() - points[1]->getVector();
     normal = lenNorm(v1 * v2);
-    d = normal[3];
+    d = -scalar(normal, points[0]->getVector());
     normal[3] = 1;
 }

@@ -10,11 +10,14 @@ using namespace std;
 Presenter::Presenter(MainWindow &w): window(w) {
     image = sptr<QRImage>(new ImageQT(window.canvas));
     facade = sptr<Facade>(new Facade(image));
+
+    facade->addCube(10,0,0,0, QRColor("red"));
+    facade->draw();
 }
 
 void Presenter::backChangeColor() {
-    window.canvas->setBgColor(window.backColorEdit->getColor());
-    window.canvas->repaint();
+    //window.canvas->setBgColor(window.backColorEdit->getColor());
+    //window.canvas->repaint();
 }
 
 void Presenter::transform(QRKey d) {
@@ -42,7 +45,8 @@ void Presenter::defineTransformParams(double &x, double &y, double &z, QRKey d) 
         val = SCALE_UNIT_VAL;
     }
 
-    if (d == QRKey_A || d == QRKey_S || d == QRKey_E) {
+    // w instead of s, for y-axis is turned.... todo fuck
+    if (d == QRKey_A || d == QRKey_W || d == QRKey_E) {
         if (window.scaleRad->isChecked())
             val = 1 / val;
         else

@@ -4,7 +4,8 @@
 
 #include "QRPolySceneMemento.h"
 
-QRPolySceneMemento::QRPolySceneMemento(sptr<QRPolyScene3D> scene): scene(scene) {
+QRPolySceneMemento::QRPolySceneMemento(sptr<QRPolyScene3D> scene)
+: scene(scene), memes(new MementoAccumulator) {
     camera = scene->getActiveCamera();
     models = scene->getModels();
     memes->add(camera->save());

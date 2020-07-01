@@ -20,6 +20,7 @@ public:
     virtual void setModels(RawModelIterator it) {models = it;}
 
     virtual void addLight(const sptr<QRLight> &light) {lights.push_back(light);}
+    virtual LightIterator getLights() {return lights.begin();}
 
     // todo
     //virtual void deleteModel(const ModelIterator &it) {models.pop(it);}

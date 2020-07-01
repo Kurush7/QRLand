@@ -9,7 +9,8 @@ using namespace std;
 Facade::Facade(sptr<QRImage> img): image(img) {
     manager = sptr<BaseCommandManager> (new CommandManager());
     auto cr = PolySceneCreator();
-    auto scene = cr.create();
+    scene = cr.create();
+    scene->getActiveCamera()->setBind(Vector3D(0,0,0)); // todo
 }
 
 void Facade::addCube(double a, double x, double y, double z, QRColor c) {
@@ -26,14 +27,17 @@ void Facade::draw() {
 }
 
 void Facade::moveCamera(double dx, double dy, double dz) {
+    cout << "move by: " << Vector3D(dx,dy,dz) << '\n';
     auto command = sptr<QRCommand>(new MoveCameraCmd(Vector3D(dx,dy,dz), scene));
     manager->push(command);
 }
 void Facade::scaleCamera(double kx, double ky, double kz) {
+    cout << "scale by: " << Vector3D(kx,ky,kz) << '\n';
     auto command = sptr<QRCommand>(new ScaleCameraCmd(Vector3D(kx,ky,kz), scene));
     manager->push(command);
 }
 void Facade::rotateCamera(double dx, double dy, double dz) {
+    cout << "rotate by: " << Vector3D(dx,dy,dz) << '\n';
     auto command = sptr<QRCommand>(new RotateCameraCmd(Vector3D(dx,dy,dz), scene));
     manager->push(command);
 }

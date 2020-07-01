@@ -13,18 +13,12 @@
 
 class QRasterizeZBuffer {
 public:
-    explicit QRasterizeZBuffer(const sptr<QRImage> &img): img(img) {
+    explicit QRasterizeZBuffer(const sptr<QRImage> &img, const LightIterator &lights)
+    : img(img), lights(lights) {
         w = img->getWidth();
         h = img->getHeight();
-        auto c = QRColor("black");
         zbuf = (double**) malloc (sizeof(double*) * h);
-        for (int i = 0; i < h; ++i) {
-            zbuf[i] = (double *) malloc(sizeof(double) * w);
-            for (int j = 0; j < w; ++j) {
-                zbuf[i][j] = -QRINF;
-                img->setPixel(i, j, c);
-            }
-        }
+        clearBuf();
     }
     ~QRasterizeZBuffer() {
         for (int i = 0; i < h; ++i)
@@ -33,15 +27,18 @@ public:
     }
 
     // data may be spoiled! (reversed and rounded, both guaranteed!)
-    void draw(RenderPolygon &poly, const sptr<QRTexture> &texture);
+    void draw(RenderPolygon &poly, const sptr<QRTexture> &texture, const Vector3D &normal);
 
 private:
     int w, h;
     double **zbuf;
     sptr<QRImage> img;
     sptr<QRTexture> texture;
+    LightIterator lights;
+    Vector3D normal;
 
-    void fillRow(int xl, int xr, int y);
+    void fillRow(int xl, int xr, int y, int zl, int zr);
+    void clearBuf();
 };
 
 

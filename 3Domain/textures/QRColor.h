@@ -7,6 +7,9 @@
 
 #include <map>
 #include <string>
+#include <iostream>
+
+#include "../QRDefines.h"
 
 // todo move to textures directory/file
 class QRColor {
@@ -54,6 +57,6 @@ public:
 };
 
 
-
+std::ostream& operator<<(std::ostream &os, const QRColor &c);
 
 #endif //BIG3DFLUFFY_QRCOLOR_H

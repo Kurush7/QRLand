@@ -37,6 +37,7 @@ public:
 
     virtual const Vector3D getPlane() const = 0;
     virtual const Vector3D getNormal() const = 0;
+    virtual void setNormal(const Vector3D&) = 0;   // TODO VERY ACCURATE WITH THIS
     virtual void updateNormal() = 0;
     virtual void switchNormal() = 0;
     virtual PolyPosition where(const Vector3D&) const = 0;
@@ -56,6 +57,7 @@ private:
     sptr<QRPolygon3D> p;
 };
 
+std::ostream& operator<<(std::ostream &os, const sptr<QRPolygon3D> &p);
 
 
 #endif //BIG3DFLUFFY_QRPOLYGON3D_H

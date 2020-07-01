@@ -76,6 +76,8 @@ void MainWindow::decorate() {
         (*lay)->getLayout()->setAlignment(Qt::AlignCenter);
     }
 
+    moveRad->setChecked(true);
+
     addBtn->setFixedWidth(140);
     xDropEdit->setFixedWidth(64);
     yDropEdit->setFixedWidth(64);
