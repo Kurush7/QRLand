@@ -19,6 +19,10 @@ public:
         // todo too long
         canvas->getImage()->setPixelColor(x, y, defineColor(color));
     }
+    virtual const QRColor getPixel(int x, int y) const {
+        return defineColor(canvas->getImage()->pixelColor(x, y));
+    }
+
     virtual void repaint() {canvas->repaint();}
     virtual void refillBg() {canvas->refillBg();}
 

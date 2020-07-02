@@ -73,8 +73,8 @@ void Presenter::undo() {
 
 void Presenter::addCube(double a) {
     double x = window.xDropEdit->text().toDouble();
-    double y = window.xDropEdit->text().toDouble();
-    double z = window.xDropEdit->text().toDouble();
+    double y = window.yDropEdit->text().toDouble();
+    double z = window.zDropEdit->text().toDouble();
     QColor c = window.figureColorEdit->getColor();
     QRColor qrc = defineColor(c);
     facade->addCube(a, x, y, z, qrc);

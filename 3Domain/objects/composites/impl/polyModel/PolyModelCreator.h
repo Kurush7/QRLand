@@ -40,9 +40,10 @@ public:
         return nullptr;
     }
     void setParams(double _a, sptr<QRTexture> txt = nullptr) {
-        a = _a;
-        if (txt) texture = txt;
         clearPrev();
+        a = _a;
+        if (txt)
+            texture = txt;
     }
 
 protected:

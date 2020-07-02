@@ -24,6 +24,10 @@ Vector3D intersectionPoint(const Vector3D &p1, const Vector3D &p2, const Vector3
     Vector3D res;
     res[0] = -(pc*wb - pb*wc) / zn;
     res[1] = -(pa*wc - pc*wa) / zn;
+    if (fabs(p2[0] - p1[0]) > QREPS)
+        res[2] = p1[2] + (p2[2] - p1[2]) * (res[0] - p1[0]) / (p2[0] - p1[0]);
+    else
+        res[2] = p1[2] + (p2[2] - p1[2]) * (res[1] - p1[1]) / (p2[1] - p1[1]);
     return res;
 }
 

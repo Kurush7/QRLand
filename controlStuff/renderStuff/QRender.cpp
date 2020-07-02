@@ -73,9 +73,15 @@ void render (const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene) {
 
         cout << "to image: " << t->getMatrix() << "\n\n";
         for (auto poly: front) {
+
             //cout << "before cut: " << poly << '\n';
             RenderPolygon drawPoly = cutPolyRect(poly, screenData);
             if (drawPoly.getSize() < 3) continue;
+
+            /*cout << "to draw: ";
+            for (auto p: drawPoly)
+                cout << p << ' ' ;
+            cout << '\n';*/
 
             for (auto &x: drawPoly)
                 x = t->transform(x);    // to image coords

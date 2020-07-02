@@ -10,9 +10,9 @@ void QRasterizeZBuffer::draw(RenderPolygon &poly, const sptr<QRTexture> &txt, co
     if (isRightRotate(poly[0], poly[1], poly[2]))   // needed right, but y = -y, so...
         poly.reverse();
 
-    for (auto p: poly)
-        cout << p << ' ' ;
-    cout << '\n';
+    ///for (auto p: poly)
+        ///cout << p[2] << ' ' ;
+    ///cout << '\n';
 
     int left = 0, right = -1, ll, rr;   // ll - after left, rr - after right
     int n = poly.getSize();
@@ -40,13 +40,14 @@ void QRasterizeZBuffer::draw(RenderPolygon &poly, const sptr<QRTexture> &txt, co
     // horizontals are impossible
     bl = (poly[ll][0] - poly[left][0]+0.) / (poly[left][1] - poly[ll][1]+0.);
     br = (poly[rr][0] - poly[right][0]+0.) / (poly[right][1] - poly[rr][1]+0.);
-    cout << "**********ANGLES*******:  " << bl << ' ' << br << '\n';
+    //cout << "**********ANGLES*******:  " << bl << ' ' << br << '\n';
 
     double zl, zr, dzl, dzr;
     zl = poly[left][2];
-    dzl = (poly[ll][2] - zl) / (poly[left][1] - poly[ll][1]+0.);
+    dzl = (poly[ll][2] - zl) / (poly[ll][1] - poly[left][1]+0.);
     zr = poly[right][2];
-    dzr = (poly[rr][2] - zr) / (poly[right][1] - poly[rr][1]+0.);
+    dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1]+0.);
+    cout << "z: " << dzl << ' ' << dzr << '\n';
 
     // from min y to max. axis: (0,0) is up-left
     while(true) {
@@ -60,23 +61,23 @@ void QRasterizeZBuffer::draw(RenderPolygon &poly, const sptr<QRTexture> &txt, co
                 rr = (right+1 + n) % n;
                 br = (poly[rr][0] - poly[right][0]) / (poly[right][1] - poly[rr][1] + 0.);
                 zr = poly[right][2];
-                dzr = (poly[rr][2] - zr) / (poly[right][1] - poly[rr][1]+0.);
-                cout << "**********ANGLES*******:  " << bl << ' ' << br << '\n';
+                dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1]+0.);
+                //cout << "**********ANGLES*******:  " << bl << ' ' << br << '\n';
             }
             left = ll;
             ll = (left-1 + n) % n;
             bl = (poly[ll][0] - poly[left][0]) / (poly[left][1] - poly[ll][1] + 0.);
             zl = poly[left][2];
-            dzl = (poly[ll][2] - zl) / (poly[left][1] - poly[ll][1]+0.);
-            cout << "**********ANGLES*******:  " << bl << ' ' << br << '\n';
+            dzl = (poly[ll][2] - zl) / (poly[ll][1] - poly[left][1]+0.);
+            cout << "z: " << dzl << ' ' << dzr << '\n';
         }
         else if (y > poly[rr][1]) {
             right = rr;
             rr = (right+1 + n) % n;
             br = (poly[rr][0] - poly[right][0]) / (poly[right][1] - poly[rr][1] + 0.);
             zr = poly[right][2];
-            dzr = (poly[rr][2] - zr) / (poly[right][1] - poly[rr][1]+0.);
-            cout << "**********ANGLES*******:  " << bl << ' ' << br << '\n';
+            dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1]+0.);
+            cout << "z: " << dzl << ' ' << dzr << '\n';
         }
         xl = xl - bl;   // ax+by+c=0 -> x=-c/a +y*(-b/a)
         xr = xr - br;
@@ -88,14 +89,17 @@ void QRasterizeZBuffer::draw(RenderPolygon &poly, const sptr<QRTexture> &txt, co
 void QRasterizeZBuffer::fillRow(int xl, int xr, int y, int zl ,int zr) {
     xl = max(0, xl);
     xr = min(img->getWidth()-1, xr);
+    y = min(img->getHeight()-1, y);   // todo change getter so that cutter works correctly
     if (xl == xr) return;
     double dz = (zr - zl + 0.) / (xr - xl + 0.);
     double z = zl;
-    cout << "fill: x[" << xl << ' ' << xr << "] y: " << y << '\n';
+    //cout << "fill: x[" << xl << ' ' << xr << "] y: " << y << '\n';
     // todo add lights here
     // todo manage z-buffering
     for (int x = xl; x <= xr; ++x) {
-        if (z < zbuf[x][y]) {
+        if (z - zbuf[x][y] < QREPS) {
+            //if (zbuf[x][y] != QRINF)
+                //cout << "from: " << zbuf[x][y] << " to: " << z << ' ' << dz << '\n';
             Vector3D i = {0,0,0,0};
             for (auto li = lights; li; ++li)
                 i += (*li).get()->getIntensity({0, 0, 0}, normal); // todo no pos here
@@ -104,8 +108,13 @@ void QRasterizeZBuffer::fillRow(int xl, int xr, int y, int zl ,int zr) {
             c.r = i[0] * c.r;
             c.g = i[1] * c.g;
             c.b = i[2] * c.b;
-            //todo cout << c << '\n';
             //cout << i << " => " << (int)c.r << ' ' << (int)c.g << ' ' << (int)c.b << '\n';
+            if (fabs(z - zbuf[x][y]) < QREPS) { // todo not needed
+                auto cc = img->getPixel(x,y);
+                c.r = (c.r + cc.r) / 2;
+                c.g = (c.g + cc.g) / 2;
+                c.b = (c.b + cc.b) / 2;
+            }
             img->setPixel(x, y, c);
             zbuf[x][y] = z;
             z += dz;
