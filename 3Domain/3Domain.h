@@ -10,7 +10,6 @@
 #include "managers/QRManagers.h"
 #include "math/QRMath.h"
 #include "objects/objects.h"
-#include "QRPainter.h"
 #include "textures/textures.h"
 
 #endif //KG_3DOMAIN_H

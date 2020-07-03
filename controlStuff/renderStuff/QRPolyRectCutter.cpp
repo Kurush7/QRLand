@@ -16,6 +16,7 @@ inline bool checkIntersection(const Vector3D &a, const Vector3D &b, const Vector
 }
 
 Vector3D intersectionPoint(const Vector3D &p1, const Vector3D &p2, const Vector3D &w1, const Vector3D &w2) {
+    // todo sets interPoint out of rectangle-limits
     double pa = p1[1] - p2[1], wa = w1[1] - w2[1];
     double pb = p2[0] - p1[0], wb = w2[0] - w1[0];
     double pc = - pa * p1[0] - pb * p1[1];
@@ -31,7 +32,7 @@ Vector3D intersectionPoint(const Vector3D &p1, const Vector3D &p2, const Vector3
     return res;
 }
 
-RenderPolygon cutPolyRect(const sptr<QRPolygon3D> &poly, double l, double r, double u, double d) {
+RenderPolygon cutPolyRect(const QRPolygon3D *poly, double l, double r, double u, double d) {
     auto pointsBegin = poly->getPoints();
     RenderPolygon cutter({{l,d}, {r,d}, {r,u}, {l,u}, {l,d}}), P,Q;
     Vector3D S, interP;
@@ -74,7 +75,7 @@ RenderPolygon cutPolyRect(const sptr<QRPolygon3D> &poly, double l, double r, dou
    return P;
 }
 
-RenderPolygon cutPolyRect(const sptr<QRPolygon3D> &poly, const Vector3D &screenData) {
+RenderPolygon cutPolyRect(const QRPolygon3D *poly, const Vector3D &screenData) {
     double x = screenData[0], y = screenData[1], w = screenData[2], h = screenData[3];
     return cutPolyRect(poly, x - w/2, x + w/2, y + h/2, y - h/2);
 }

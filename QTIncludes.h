@@ -24,5 +24,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QCheckBox>
+#include <QKeyEvent>
+#include <QMouseEvent>
 
 #endif //BIG3DFLUFFY_QTINCLUDES_H

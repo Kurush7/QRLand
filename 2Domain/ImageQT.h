@@ -14,13 +14,15 @@ QRColor defineColor(QColor c);
 
 class ImageQT: public QRImage {
 public:
-    ImageQT(const sptr<QRCanvas> &canvas): canvas(canvas) {}
+    ImageQT(const sptr<QRCanvas> &canvas): canvas(canvas) {
+        image = canvas->getImage().get();
+    }
     virtual void setPixel(int x, int y, const QRColor &color) {
         // todo too long
-        canvas->getImage()->setPixelColor(x, y, defineColor(color));
+        image->setPixelColor(x, y, QColor(color.r, color.g, color.b));
     }
     virtual const QRColor getPixel(int x, int y) const {
-        return defineColor(canvas->getImage()->pixelColor(x, y));
+        return defineColor(image->pixelColor(x, y));
     }
 
     virtual void repaint() {canvas->repaint();}
@@ -31,6 +33,7 @@ public:
 
 private:
     sptr<QRCanvas> canvas;
+    QImage *image;
 };
 
 

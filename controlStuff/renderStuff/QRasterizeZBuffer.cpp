@@ -4,131 +4,107 @@
 
 #include "QRasterizeZBuffer.h"
 
-void QRasterizeZBuffer::draw(RenderPolygon &poly, const sptr<QRTexture> &txt, const Vector3D &norm) {
+// todo kinda brezenham?
+void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
+    poly = _poly;
+    n = size;
     normal = norm;
-    texture = txt;
-    if (isRightRotate(poly[0], poly[1], poly[2]))   // needed right, but y = -y, so...
-        poly.reverse();
+    // todo poly of ints?
+    // needed right, but y = -y, so...
+    dir = isRightRotate(poly[0], poly[1], poly[2])? -1 : 1;
 
-    ///for (auto p: poly)
-        ///cout << p[2] << ' ' ;
-    ///cout << '\n';
-
-    int left = 0, right = -1, ll, rr;   // ll - after left, rr - after right
-    int n = poly.getSize();
+    ll = 0, rr = -1;
+    int maxY = -1;
     for (int i = 0; i < n; ++i) {
-        poly[i][0] = QRound(poly[i][0]);
-        poly[i][1] = QRound(poly[i][1]);
-        if (poly[i][1] < poly[left][1])
-            left = right = i;
-        else if (poly[i][1] == poly[left][1]) {
-            if (poly[i][0] < poly[left][0]) right = left, left = i;
-            else right = i;
+        poly[i][0] = min(w-1, QRound(poly[i][0]));  // some hardcode: digital len of(-50,50) is 101,
+        poly[i][1] = min(h-1, QRound(poly[i][1])); // yet double's is 100. so translation after cutting becomes a bit dull....
+        maxY = max((int)poly[i][1], maxY);
+        if (poly[i][1] < poly[ll][1])
+            ll = rr = i;
+        else if (poly[i][1] == poly[ll][1]) {
+            if (poly[i][0] < poly[ll][0]) rr = ll, ll = i;
+            else rr = i;
         }
     }
-    for (auto p: poly)
-        cout << p << ' ' ;
+
+    for (int i = 0; i < size; ++i)
+        cout << poly[i] << ' ';
     cout << '\n';
 
-    if (right == -1) right = left;
-    ll = (left-1 + n) % n;
-    rr = (right+1) % n;
+    if (rr == -1) rr = ll;
+    jumpL();
+    jumpR();
+    xl = poly[left][0] , xr = poly[right][0];
+    y = poly[left][1];
 
-    double xl = poly[left][0] , xr = poly[right][0];
-    int y = poly[left][1];
-    double bl, br;
-    // horizontals are impossible
-    bl = (poly[ll][0] - poly[left][0]+0.) / (poly[left][1] - poly[ll][1]+0.);
-    br = (poly[rr][0] - poly[right][0]+0.) / (poly[right][1] - poly[rr][1]+0.);
-    //cout << "**********ANGLES*******:  " << bl << ' ' << br << '\n';
-
-    double zl, zr, dzl, dzr;
-    zl = poly[left][2];
-    dzl = (poly[ll][2] - zl) / (poly[ll][1] - poly[left][1]+0.);
-    zr = poly[right][2];
-    dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1]+0.);
-    cout << "z: " << dzl << ' ' << dzr << '\n';
-
-    // from min y to max. axis: (0,0) is up-left
-    while(true) {
-        fillRow(QRound(xl), QRound(xr), y, zl, zr);
+    while(y < maxY) {
+        xli = QRound(xl);
+        xri = QRound(xr);
+        fillRow();
         y++;
         if (y > poly[ll][1]) {
             if (y > poly[rr][1]) {
-                if (rr == ll || (ll == right && left == rr))
-                    break;
-                right = rr;
-                rr = (right+1 + n) % n;
-                br = (poly[rr][0] - poly[right][0]) / (poly[right][1] - poly[rr][1] + 0.);
-                zr = poly[right][2];
-                dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1]+0.);
-                //cout << "**********ANGLES*******:  " << bl << ' ' << br << '\n';
+                //if (rr == ll) break;
+                jumpR();
             }
-            left = ll;
-            ll = (left-1 + n) % n;
-            bl = (poly[ll][0] - poly[left][0]) / (poly[left][1] - poly[ll][1] + 0.);
-            zl = poly[left][2];
-            dzl = (poly[ll][2] - zl) / (poly[ll][1] - poly[left][1]+0.);
-            cout << "z: " << dzl << ' ' << dzr << '\n';
+            jumpL();
+            //if (ll == right && left == rr) break;
         }
-        else if (y > poly[rr][1]) {
-            right = rr;
-            rr = (right+1 + n) % n;
-            br = (poly[rr][0] - poly[right][0]) / (poly[right][1] - poly[rr][1] + 0.);
-            zr = poly[right][2];
-            dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1]+0.);
-            cout << "z: " << dzl << ' ' << dzr << '\n';
-        }
-        xl = xl - bl;   // ax+by+c=0 -> x=-c/a +y*(-b/a)
-        xr = xr - br;
+        else if (y > poly[rr][1]) jumpR();
+
+        xl -= bl;   // ax+by+c=0 -> x=-c/a +y*(-b/a)
+        xr -= br;
         zl += dzl;
         zr += dzr;
     }
 }
 
-void QRasterizeZBuffer::fillRow(int xl, int xr, int y, int zl ,int zr) {
-    xl = max(0, xl);
-    xr = min(img->getWidth()-1, xr);
-    y = min(img->getHeight()-1, y);   // todo change getter so that cutter works correctly
-    if (xl == xr) return;
-    double dz = (zr - zl + 0.) / (xr - xl + 0.);
+void QRasterizeZBuffer::fillRow() {
+    if (xli == xri) return;
+
     double z = zl;
-    //cout << "fill: x[" << xl << ' ' << xr << "] y: " << y << '\n';
-    // todo add lights here
-    // todo manage z-buffering
-    for (int x = xl; x <= xr; ++x) {
+    double dz = (zr - zl + 0.) / (xri - xli + 0.);
+
+    for (int x = xli; x <= xri; ++x) {
         if (z - zbuf[x][y] < QREPS) {
-            //if (zbuf[x][y] != QRINF)
-                //cout << "from: " << zbuf[x][y] << " to: " << z << ' ' << dz << '\n';
-            Vector3D i = {0,0,0,0};
-            for (auto li = lights; li; ++li)
-                i += (*li).get()->getIntensity({0, 0, 0}, normal); // todo no pos here
-            QRColor c = texture->getColor();
-            //cout <<(int)c.r << ' ' << (int)c.g << ' ' << (int)c.b << ":: ";
-            c.r = i[0] * c.r;
-            c.g = i[1] * c.g;
-            c.b = i[2] * c.b;
-            //cout << i << " => " << (int)c.r << ' ' << (int)c.g << ' ' << (int)c.b << '\n';
+            QRColor c = colorManager->getColor(normal);
+
             if (fabs(z - zbuf[x][y]) < QREPS) { // todo not needed
-                auto cc = img->getPixel(x,y);
+                auto cc = img->getPixel(x,y);   // todo too long
                 c.r = (c.r + cc.r) / 2;
                 c.g = (c.g + cc.g) / 2;
                 c.b = (c.b + cc.b) / 2;
             }
             img->setPixel(x, y, c);
             zbuf[x][y] = z;
-            z += dz;
         }
+        z += dz;
     }
 }
 
 void QRasterizeZBuffer::clearBuf() {
+    // todo prepare data, then std::copy
+    // or image to have fill method
     auto c = QRColor("black");
     for (int i = 0; i < h; ++i) {
-        zbuf[i] = (double *) malloc(sizeof(double) * w);
         for (int j = 0; j < w; ++j) {
             zbuf[i][j] = QRINF;
             img->setPixel(i, j, c);
         }
     }
+}
+
+inline void QRasterizeZBuffer::jumpL() {
+    left = ll;
+    ll = (left-dir + n) % n;    // todo not accurate?
+    bl = (poly[ll][0] - poly[left][0]) / (poly[left][1] - poly[ll][1] + 0.);
+    zl = poly[left][2];
+    dzl = (poly[ll][2] - zl) / (poly[ll][1] - poly[left][1]+0.);
+}
+inline void QRasterizeZBuffer::jumpR() {
+    right = rr;
+    rr = (right+dir + n) % n;   // todo not accurate?
+    br = (poly[rr][0] - poly[right][0]) / (poly[right][1] - poly[rr][1] + 0.);
+    zr = poly[right][2];
+    dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1]+0.);
 }

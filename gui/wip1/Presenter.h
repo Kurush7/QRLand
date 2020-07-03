@@ -4,9 +4,11 @@
 #include <QObject>
 #include <fstream>
 #include <QMessageBox>
+#include <chrono>
 
 #include "2Domain.h"
 #include "Facade.h"
+
 
 const double MOVE_UNIT_VAL = 1;
 const double SCALE_UNIT_VAL = 1.05;
@@ -19,13 +21,15 @@ class Presenter: public QObject {
 Q_OBJECT
 public:
     explicit Presenter(MainWindow &w);
-    void backChangeColor();
     void undo();
     void transform(QRKey);
     void addCube(double a);
 
 private:
     void defineTransformParams(double&, double&, double&, QRKey);
+    void draw(bool reset=false);
+    double draw_time_msec = 0;
+    int draw_cnt = 0;
 
     MainWindow &window;
 

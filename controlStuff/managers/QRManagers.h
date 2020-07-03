@@ -8,6 +8,5 @@
 #include "managers/commands/QRCommandInterface.h"
 #include "managers/commands/PolySceneCommands.h"
 #include "commands/CommandManager.h"
-#include "drawManagers/SceneDrawMethod.h"
 
 #endif //BIG3DFLUFFY_QRMANAGERS_H

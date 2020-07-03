@@ -1,6 +1,7 @@
 set(path "renderStuff")
 set(source_list ${source_list}
-        ${path}/QRender.cpp
+        ${path}/QRenderer.cpp
         ${path}/QRPolyRectCutter.cpp
         ${path}/QRasterizeZBuffer.cpp
+        ${path}/QRColorManager.cpp
         PARENT_SCOPE)

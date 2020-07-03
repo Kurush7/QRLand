@@ -11,7 +11,7 @@
 #include <initializer_list>
 
 #include "exceptions/MathException.h"
-#include "QRConstants.h"
+#include "../QRConstants.h"
 #include "Functions.h"
 
 /**

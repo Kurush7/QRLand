@@ -5,10 +5,9 @@
 #ifndef BIG3DFLUFFY_QRACTIONMANAGER_H
 #define BIG3DFLUFFY_QRACTIONMANAGER_H
 
-#include <QWidget>
 #include <vector>
-#include <QKeyEvent>
-#include <QMouseEvent>
+#include "../QTIncludes.h"
+#include "QRConstants.h"
 
 enum QRKey {
     NOKEY,
@@ -24,7 +23,7 @@ struct QRModifiers {
 class QRActionManager: public QWidget {
     Q_OBJECT
 public:
-    QRActionManager(QWidget *parent = nullptr): QWidget(parent) { setFocusPolicy(Qt::StrongFocus); }
+    QRActionManager(QWidget *parent = nullptr);
 
 signals:
     void QRKeyPressed(QRKey, QRModifiers);
@@ -33,12 +32,16 @@ signals:
     // todo lkm, pkm, mapping to real coords (not here!)
     void QRMousePressed(double x, double y, QRModifiers);
 
+private slots:
+    void slotBtnTimerAlarm() {isButtonBlocked = false;};
 private:
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void keyReleaseEvent(QKeyEvent *) override;
     virtual void mousePressEvent(QMouseEvent *) override;
 
     QRModifiers mods;
+    QTimer btnTimer;
+    bool isButtonBlocked = true;
 };
 
 

@@ -2,7 +2,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(source_list "")
+set(source_list "" renderStuff/QRColorManager.cpp renderStuff/QRColorManager.h renderStuff.h)
 add_subdirectory(managers)
 add_subdirectory(renderStuff)
 

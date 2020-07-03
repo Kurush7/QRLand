@@ -2,22 +2,19 @@
 
 #include <QtGui>
 #include <QMessageBox>
+
 #include "Presenter.h"
 #include "MainWindow.h"
 
 using namespace std;
+using namespace chrono;
 
 Presenter::Presenter(MainWindow &w): window(w) {
     image = sptr<QRImage>(new ImageQT(window.canvas));
     facade = sptr<Facade>(new Facade(image));
 
     facade->addCube(10,0,0,0, QRColor("red"));
-    facade->draw();
-}
-
-void Presenter::backChangeColor() {
-    //window.canvas->setBgColor(window.backColorEdit->getColor());
-    //window.canvas->repaint();
+    draw();
 }
 
 void Presenter::transform(QRKey d) {
@@ -31,7 +28,7 @@ void Presenter::transform(QRKey d) {
     else {
         facade->scaleCamera(x,y,z);
     }
-    facade->draw();
+    draw(window.scaleRad->isChecked());
 }
 
 
@@ -68,7 +65,7 @@ void Presenter::defineTransformParams(double &x, double &y, double &z, QRKey d) 
 
 void Presenter::undo() {
     facade->undo();
-    facade->draw();
+    draw();
 }
 
 void Presenter::addCube(double a) {
@@ -78,5 +75,20 @@ void Presenter::addCube(double a) {
     QColor c = window.figureColorEdit->getColor();
     QRColor qrc = defineColor(c);
     facade->addCube(a, x, y, z, qrc);
+    draw(true);
+}
+
+void Presenter::draw(bool reset) {
+    static int cnt = 0;
+    if (reset) draw_cnt = 0, draw_time_msec = 0;
+
+    system_clock::time_point start = system_clock::now();
     facade->draw();
+    system_clock::time_point end = system_clock::now();
+    double time = (end - start).count();    // nanosecs
+    time /= 1e6;  // milisecs
+    draw_time_msec = (draw_time_msec * draw_cnt + time) / (draw_cnt+1);
+    draw_cnt++;
+    window.drawTimeLabel->setText("среднее ремя отрисовки: " + QString::number(draw_time_msec) +
+    " msec ... (" + QString::number(int(1000/draw_time_msec) )+ " FPS)");
 }

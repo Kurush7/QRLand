@@ -6,10 +6,8 @@
 #define KG_LAB3FACADE_H
 
 #include "objects/objects.h"
-
 #include "managers/QRManagers.h"
-#include "QRPainter.h"
-
+#include "renderStuff.h"
 
 class Facade {
 public:
@@ -27,6 +25,7 @@ private:
     sptr<QRImage> image;
     sptr<BaseCommandManager> manager;
     sptr<QRPolyScene3D> scene;
+    sptr<QRenderer> renderer;
 };
 
 

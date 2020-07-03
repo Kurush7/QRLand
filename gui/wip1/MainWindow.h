@@ -30,9 +30,10 @@ private:
     QRadioButton *moveRad, *rotateRad, *scaleRad;
 
     QRLabel *settingsLabel;
-    QRLabel *backColorLabel, *figureColorLabel;
-    ColorEdit *backColorEdit, *figureColorEdit;
+    QRLabel *figureColorLabel;
+    ColorEdit *figureColorEdit;
 
+    QRLabel *drawTimeLabel;
     QRLabel *addLabel;
     QRLabel *xDropLabel, *yDropLabel, *zDropLabel;
     QLineEdit *xDropEdit, *yDropEdit, *zDropEdit;

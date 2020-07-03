@@ -2,12 +2,11 @@
 // Created by kurush on 31.05.2020.
 //
 
-#ifndef BIG3DFLUFFY_QRPAINTER_H
-#define BIG3DFLUFFY_QRPAINTER_H
+#ifndef BIG3DFLUFFY_QRIMAGE_H
+#define BIG3DFLUFFY_QRIMAGE_H
 
 #include "objects/QRObject.h"
 #include "../3Domain/textures/textures.h"
-
 
 class QRImage {
 public:
@@ -32,4 +31,4 @@ protected:
 };
 
 
-#endif //BIG3DFLUFFY_QRPAINTER_H
+#endif //BIG3DFLUFFY_QRIMAGE_H

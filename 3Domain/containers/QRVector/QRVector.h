@@ -27,6 +27,7 @@ public:
 
     void clear() {*size = 0;}
     sptr<QRVector<T>> getPointer() {return p;}
+    T* getPureArray() {return arr.get();}
 
     QRVector<T>& operator =(const QRVector<T>&);
     QRVector<T>& operator =(const QRVector<T>&&);
@@ -192,22 +193,18 @@ void QRVector<T>::push_front(const T &val) {
 
 template<typename T>
 T& QRVector<T>::operator[](size_t index) {
-    return this->getElem(index);
+    return arr[index];
 }
 
 template<typename T>
 const T& QRVector<T>::operator[](size_t index) const {
-    return this->getElem(index);
+    return arr[index];
 }
-
-
 
 template<typename T>
 std::ostream& operator <<(std::ostream &os, const QRVector<T> &vec) {
     os << "<QRVector of " << vec.len() << ' ' << "elements>";
 }
-
-
 
 template<typename T>
 size_t QRVector<T>::len() const {

@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     canvas = sptr<QRCanvas> (new QRCanvas(500, 500, this,
                         QColor(40, 40, 40)));
-    presenter = sptr<Presenter>(new Presenter(*this));
 
     moveRad = new QRadioButton("move", this);
     rotateRad = new QRadioButton("rotate", this);
@@ -23,16 +22,15 @@ MainWindow::MainWindow(QWidget *parent)
     settingsLabel = new QRLabel("настройки", 120, this);
 
     addLabel = new QRLabel("добавление модели:", 140, this);
-    backColorLabel = new QRLabel("цвет фона", 100, this);
     figureColorLabel = new QRLabel("цвет модели", 100,this);
     xDropLabel = new QRLabel("x", 10,this);
     yDropLabel = new QRLabel("y", 10,this);
     zDropLabel = new QRLabel("z", 10,this);
+    drawTimeLabel = new QRLabel("время отрисовки:", 500,this);
 
     xDropEdit = new QLineEdit();
     yDropEdit = new QLineEdit();
     zDropEdit = new QLineEdit();
-    backColorEdit = new ColorEdit();
     figureColorEdit = new ColorEdit();
 
     addBtn = new QPushButton("добавить модель", this);
@@ -40,17 +38,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui = new QRLayoutManager("global", QRHor);
     ui->addLayers("left right", QRVert);
-    ui->addWidgets({{"canvas", canvas.get()}}, "left");
+    ui->addWidgets({{"canvas", canvas.get()}, {"label", drawTimeLabel}}, "left");
 
     ui->goToPath("right");
     ui->addLayers("settings $ add", QRVert);
 
-    ui->addLayers("label move scale rotate color undo", QRHor, "settings");
+    ui->addLayers("label move scale rotate undo", QRHor, "settings");
     ui->addWidgets({{"radio", moveRad}}, "settings/move");
     ui->addWidgets({{"radio", scaleRad}}, "settings/scale");
     ui->addWidgets({{"radio", rotateRad}}, "settings/rotate");
     ui->addWidgets({{"label", settingsLabel}}, "settings/label");
-    ui->addWidgets({{"label", backColorLabel}, {"color", backColorEdit}}, "settings/color");
     ui->addWidgets({{"undo", undoBtn}}, "settings/undo");
 
     ui->addLayers("label add color coords button", QRHor, "add");
@@ -67,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     decorate();
     addLogic();
+    presenter = sptr<Presenter>(new Presenter(*this));
 }
 
 void MainWindow::decorate() {
@@ -82,7 +80,6 @@ void MainWindow::decorate() {
     xDropEdit->setFixedWidth(64);
     yDropEdit->setFixedWidth(64);
     zDropEdit->setFixedWidth(64);
-    backColorEdit->setFixedWidth(64);
     figureColorEdit->setFixedWidth(64);
 
     undoBtn->setFixedWidth(64);
@@ -90,16 +87,12 @@ void MainWindow::decorate() {
     addLabel->setObjectName("headerLabel");
     settingsLabel->setObjectName("headerLabel");
 
-    backColorEdit->setColor(QColor(40, 40, 40));
     figureColorEdit->setColor(QColor(40, 40, 160));
 }
 
 void MainWindow::addLogic() {
     connect(canvas.get(), &QRCanvas::QRKeyPressed, [this](QRKey k, QRModifiers m){presenter->transform(k);});
-
-    connect(backColorEdit, &QPushButton::clicked, [this]() {presenter->backChangeColor();});
     connect(addBtn, &QPushButton::clicked, [this]() {presenter->addCube( 10);});
-
     connect(undoBtn, &QPushButton::clicked, [this]() {presenter->undo();});
 }
 

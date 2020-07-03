@@ -32,6 +32,6 @@ sptr<QRMemento> AddModelCmd::exec() {
 }
 
 sptr<QRMemento> RenderCmd::exec() {
-    render(img, scene);
+    render->render();
     return nullptr;
 }

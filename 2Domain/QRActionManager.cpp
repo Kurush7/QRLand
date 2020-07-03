@@ -4,7 +4,17 @@
 
 #include "QRActionManager.h"
 
+QRActionManager::QRActionManager(QWidget *parent): QWidget(parent) {
+    setFocusPolicy(Qt::StrongFocus);
+    connect(&btnTimer, SIGNAL(timeout()), this, SLOT(slotBtnTimerAlarm()));
+    btnTimer.setInterval(BUTTON_REPRESS_TIME_MSEC);
+    btnTimer.start();
+}
+
 void QRActionManager::keyPressEvent(QKeyEvent *event) {
+    if (isButtonBlocked) return;
+    isButtonBlocked = true;
+
     switch(event->key()) {
         case Qt::SHIFT: mods.shift = true; return;
         case Qt::ALT: mods.alt = true; return;

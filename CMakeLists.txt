@@ -20,6 +20,7 @@ include_directories(2Domain)
 include_directories(3Domain)
 include_directories(controlStuff)
 include_directories(gui)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(3Domain)
 #add_subdirectory(2DomainOld)
