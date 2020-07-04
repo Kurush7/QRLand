@@ -21,48 +21,46 @@ Matrix3D::Matrix3D() {
     }
 }
 Matrix3D::Matrix3D(const std::initializer_list<std::initializer_list<double>> &lst) {
-    if (lst.size() != 4)
-        throw QRMathWrongDimension(__FILE__, __LINE__, __TIME__,
-                                   "Bad matrix init-list (rows)!", lst.size(), 4);
     int i = 0, j = 0;
     for (auto line: lst) {
-        if (line.size() != 4)
-            throw QRMathWrongDimension(__FILE__, __LINE__, __TIME__,
-                                       "Bad matrix init-list (columns)!", lst.size(), 4);
-        for (auto x: line)
-            matrix[i][j++] = x;
+        for (auto x: line) matrix[i][j++] = x;
         j = 0;
         i++;
     }
 }
 
 Vector3D& Matrix3D::operator[](int ind) {
-    if (ind < 0 || ind > 3)
-        throw QRMathWrongDimension(__FILE__, __LINE__, __TIME__,
-                                   "Bad matrix row index!", ind, 3);
     return matrix[ind];
 }
 
 const Vector3D& Matrix3D::operator[](int ind) const{
-    if (ind < 0 || ind > 3) {
-        time_t t = time(nullptr);
-        throw QRMathWrongDimension(__FILE__, __LINE__, asctime(localtime(&t)),
-                                   "Bad matrix row index!", ind, 3);
-    }
     return matrix[ind];
 }
 
 Matrix3D& Matrix3D::operator +=(const Matrix3D &m) {
-    for (int i = 0; i < 4; ++i)
-        for (int j = 0; j < 4; ++j)
-            matrix[i][j] += m[i][j];
+    matrix[0][0] += m[0][0];
+    matrix[0][1] += m[0][1];
+    matrix[0][2] += m[0][2];
+    matrix[0][3] += m[0][3];
+    matrix[1][0] += m[1][0];
+    matrix[1][1] += m[1][1];
+    matrix[1][2] += m[1][2];
+    matrix[1][3] += m[1][3];
+    matrix[2][0] += m[2][0];
+    matrix[2][1] += m[2][1];
+    matrix[2][2] += m[2][2];
+    matrix[2][3] += m[2][3];
+    matrix[3][0] += m[3][0];
+    matrix[3][1] += m[3][1];
+    matrix[3][2] += m[3][2];
+    matrix[3][3] += m[3][3];
     return *this;
 }
 Matrix3D& Matrix3D::operator *=(const Matrix3D &a) {
-    auto m = (*this * a);
+    auto c = ((*this)*a).matrix;
     for (int i = 0; i < 4; ++i)
-        matrix[i] = m[i];
-    return *this;
+        matrix[i] = c[i];
+    return (*this);
 }
 
 
@@ -81,11 +79,24 @@ bool operator !=(const Matrix3D &a, const Matrix3D &b) {
     return true;
 }
 
-Matrix3D operator +(const Matrix3D &a, const Matrix3D &b) {
+Matrix3D operator +(const Matrix3D &a, const Matrix3D &m) {
     Matrix3D c = a;
-    for (int i = 0; i < 4; ++i)
-        for (int j = 0; j < 4; ++j)
-            c[i][j] += b[i][j];
+    c[0][0] += m[0][0];
+    c[0][1] += m[0][1];
+    c[0][2] += m[0][2];
+    c[0][3] += m[0][3];
+    c[1][0] += m[1][0];
+    c[1][1] += m[1][1];
+    c[1][2] += m[1][2];
+    c[1][3] += m[1][3];
+    c[2][0] += m[2][0];
+    c[2][1] += m[2][1];
+    c[2][2] += m[2][2];
+    c[2][3] += m[2][3];
+    c[3][0] += m[3][0];
+    c[3][1] += m[3][1];
+    c[3][2] += m[3][2];
+    c[3][3] += m[3][3];
     return c;
 }
 Matrix3D operator *(const Matrix3D &a, const Matrix3D &b) {
@@ -96,17 +107,12 @@ Matrix3D operator *(const Matrix3D &a, const Matrix3D &b) {
                 c[i][j] += a[i][k] * b[k][j];
     return c;
 }
-Vector3D operator *(const Matrix3D &m, const Vector3D &v0) {
-    Vector3D ans, v = v0;
-    v[3] = 1;   // todo fuck
-
-    for (int i = 0; i < 4; ++i) {
-        ans[i] = 0;
-            for (int k = 0; k < 4; ++k)
-                ans[i] += m[i][k] * v[k];
-    }
-    //ans[3] = 0;     // todo fuck?
-    return ans;
+Vector3D operator *(const Matrix3D &m, const Vector3D &v) {
+    return Vector3D({
+        m[0][0]*v[0]+m[0][1]*v[1] + m[0][2]*v[2] + m[0][3],
+    m[1][0]*v[0]+m[1][1]*v[1] + m[1][2]*v[2] + m[1][3],
+    m[2][0]*v[0]+m[2][1]*v[1] + m[2][2]*v[2] + m[2][3],
+    m[3][0]*v[0]+m[3][1]*v[1] + m[3][2]*v[2] + m[3][3]});
 }
 
 std::ostream& operator<<(std::ostream &os, const Matrix3D &m) {

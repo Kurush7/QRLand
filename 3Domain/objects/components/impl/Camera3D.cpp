@@ -81,9 +81,8 @@ void Camera3D::defineProjectionTransformer() {
 }
 
 bool Camera3D::isVisibleSphere(const Vector3D &c, double rad) {
-    // todo check
-    Vector3D center = axisTransformer->transform(c);
-    center[3] = 1;
+    Vector3D center {c[0], c[1], c[2], 1};  // todo 1 is not necessary here.... for now (see to matrix*vector todo)
+    center = axisTransformer->transform(center);
     for(int i = 0; i < 6; ++i)
         if(scalar(center, frustrum[i]) > rad)
             return false;

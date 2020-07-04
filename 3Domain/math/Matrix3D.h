@@ -14,7 +14,7 @@ public:
     Matrix3D(const std::initializer_list<std::initializer_list<double>> &);
 
     Matrix3D& operator +=(const Matrix3D&);
-    Matrix3D& operator *=(const Matrix3D&);
+    Matrix3D& operator *=(const Matrix3D&);     // TODO too slow to use
 
     Vector3D& operator[](int);
     const Vector3D& operator[](int) const;
@@ -26,7 +26,7 @@ bool operator ==(const Matrix3D&, const Matrix3D&);
 bool operator !=(const Matrix3D&, const Matrix3D&);
 Matrix3D operator +(const Matrix3D&, const Matrix3D&);
 Matrix3D operator *(const Matrix3D&, const Matrix3D&);
-Vector3D operator *(const Matrix3D&, const Vector3D&);
+Vector3D operator *(const Matrix3D&, const Vector3D&);  // todo v[3] considered to be 1!!!
 
 Matrix3D makeID();
 Matrix3D makeNull();

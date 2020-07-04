@@ -36,7 +36,7 @@ public:
 
     virtual Vector3D transform(const Vector3D &v) {return matrix * v;}
 
-    virtual void accumulateRight(const Matrix3D &m) {matrix *= matrix;};
+    virtual void accumulateRight(const Matrix3D &m) {matrix = matrix * matrix;};
     virtual void accumulateLeft(const Matrix3D &m) {matrix = m * matrix;};
 
     virtual Matrix3D getMatrix() {return matrix;}

@@ -28,30 +28,31 @@ public:
     explicit Vector3D(const double [4]);
     Vector3D(const std::initializer_list<double> &);
 
-
-    double& operator[](int);
+    Vector3D& operator +=(const Vector3D&);
+    Vector3D& operator -=(const Vector3D&);
+    Vector3D& operator /=(double);
+    inline double& operator[](int);
     const double& operator[](int) const;
+
+    void normSelf();
+    void lenNormSelf();
 
     double arr[4] = {0,0,0,0};
 };
-
-Vector3D& operator +=(const Vector3D&, const Vector3D&);
-Vector3D& operator -=(const Vector3D&, const Vector3D&);
-Vector3D& operator /=(const Vector3D&, double);
 
 const Vector3D XVector(1,0,0,0);
 const Vector3D ZeroVector(0,0,0,0);
 const Vector3D YVector(0,1,0,0);
 const Vector3D ZVector(0,0,1,0);
 
-Vector3D norm(const Vector3D&); // manage 4th axis value
+Vector3D norm(const Vector3D&); // manage 4th axis value, if 0 - does nothing
 Vector3D lenNorm(const Vector3D&);
 double vectorLen(const Vector3D&);
 bool operator ==(const Vector3D&, const Vector3D&);
 bool operator !=(const Vector3D&, const Vector3D&);
 Vector3D operator +(const Vector3D&, const Vector3D&);
 Vector3D operator -(const Vector3D&, const Vector3D&);
-Vector3D operator *(const Vector3D&, const Vector3D&);  // vector product
+Vector3D operator *(const Vector3D&, const Vector3D&);  // 3dim-vector product, 4th is 0
 Vector3D operator *(const Vector3D&, double);
 Vector3D operator *(double, const Vector3D&);
 Vector3D operator /(const Vector3D&, double);
