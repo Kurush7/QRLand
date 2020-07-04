@@ -58,47 +58,51 @@ void QRenderer::render () {
         points_cnt = points.getSize();
 
         // stage 2. delete not front-face polygons
-        auto v = ZeroVector;    // todo fuck test point for normal redefinition
-        v = modelTransformer->transform(v);
-        v = cameraTransformer->transform(v);
+        auto transZero = modelTransformer->transform(ZeroVector);   // for normal testing
+        transZero = cameraTransformer->transform(transZero);
+        PolyPosition vPlace;
 
         front.clear();
         for (auto it = model->getPolygons(); it; ++it) {
             poly = it->get();
+            vPlace = poly->where(ZeroVector);
             poly->updateNormal();   // good normal, in camera's coordinates
-            if (poly->where(v) == FRONT)        // todo fucking hardcode
+            if (poly->where(transZero) != vPlace)
                 poly->switchNormal();
-
             if (camera->isFrontFace(poly->getNormal())) front.push_back(poly);
         }
         front_size = front.getSize();
 
-        // stage 3: project points into screen  todo z-coord?!!!
+        // stage 3: project points into screen  todo z-coord: now not controlled. mb scale z's [-1;1]
         for (size_t i = 0; i < points_cnt; ++i) {
-            auto vec = points[i]->getVector();
-            vec[3] = 1;
+            auto vec = points[i]->getVector(); vec[3] = 1;
             vec = projector->transform(vec);
-            vec = norm(vec);
             points[i]->setVector(norm(vec));
         }
 
         // stage 4: render cut polys, then transform to image's coords and draw
-
         for (size_t i = 0; i < front_size; ++i) {
-            // todo setScreenData before cycle
             RenderPolygon drawPoly = cutPolyRect(front[i], screenData);
             if (drawPoly.getSize() < 3) continue;
 
-            for (auto &x: drawPoly)
-                x = imageTransformer->transform(x);    // to image coords
+            for (auto &x: drawPoly)      // polygon's points to image coords
+                x = imageTransformer->transform(x);
             colorManager->setTexture(front[i]->getTexture());
             zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), front[i]->getNormal());
         }
 
         // restore model's point
-        for (size_t i = 0; i < points_cnt; ++i)
+        for (size_t i = 0; i < points_cnt; ++i) {
             points[i]->setVector(old_points[i]);
+        }
+        for (auto it = model->getPolygons(); it; ++it) {
+            poly = it->get();
+            vPlace = poly->where(transZero);
+            poly->updateNormal();
+            if (poly->where(ZeroVector) != vPlace)
+                poly->switchNormal();
+        }
     }
-    //cout <<'\n';
+    cout << '\n';
     image->repaint();
 }
