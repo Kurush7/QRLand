@@ -9,7 +9,7 @@ SimplePoint3D::SimplePoint3D(const Vector3D &_vec, const Vector3D &bind, QRPoint
     vec -= bind;
 }
 
-SimplePoint3D::SimplePoint3D(const double x, const double y, const double z, const Vector3D &bind, QRPointStyle s)
+SimplePoint3D::SimplePoint3D(const float x, const float y, const float z, const Vector3D &bind, QRPointStyle s)
         : QRPoint3D(s), vec(x, y, z), bindPoint(bind) {
     vec -= bind;
 }

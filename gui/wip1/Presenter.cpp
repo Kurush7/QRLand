@@ -18,7 +18,7 @@ Presenter::Presenter(MainWindow &w): window(w) {
 }
 
 void Presenter::transform(QRKey d) {
-    double x, y, z;
+    float x, y, z;
     defineTransformParams(x,y,z, d);
 
     if (window.moveRad->isChecked())
@@ -32,8 +32,8 @@ void Presenter::transform(QRKey d) {
 }
 
 
-void Presenter::defineTransformParams(double &x, double &y, double &z, QRKey d) {
-    double val = 0;
+void Presenter::defineTransformParams(float &x, float &y, float &z, QRKey d) {
+    float val = 0;
     if (window.moveRad->isChecked())
         val = MOVE_UNIT_VAL;
     else if (window.rotateRad->isChecked())
@@ -68,10 +68,10 @@ void Presenter::undo() {
     draw();
 }
 
-void Presenter::addCube(double a) {
-    double x = window.xDropEdit->text().toDouble();
-    double y = window.yDropEdit->text().toDouble();
-    double z = window.zDropEdit->text().toDouble();
+void Presenter::addCube(float a) {
+    float x = window.xDropEdit->text().toDouble();
+    float y = window.yDropEdit->text().toDouble();
+    float z = window.zDropEdit->text().toDouble();
     QColor c = window.figureColorEdit->getColor();
     QRColor qrc = defineColor(c);
     facade->addCube(a, x, y, z, qrc);
@@ -85,7 +85,7 @@ void Presenter::draw(bool reset) {
     system_clock::time_point start = system_clock::now();
     facade->draw();
     system_clock::time_point end = system_clock::now();
-    double time = (end - start).count();    // nanosecs
+    float time = (end - start).count();    // nanosecs
     time /= 1e6;  // milisecs
     if (draw_cnt > 1000) draw_cnt = 0;
     draw_time_msec = (draw_time_msec * draw_cnt + time) / (draw_cnt+1);

@@ -60,7 +60,7 @@ public:
 };
 class MoveTransformer3DCreator: public BaseTransformer3DCreator {
 public:
-    MoveTransformer3DCreator(double dx, double dy, double dz);
+    MoveTransformer3DCreator(float dx, float dy, float dz);
     MoveTransformer3DCreator(const Vector3D &v): MoveTransformer3DCreator(v[0],v[1],v[2]) {}
     virtual uptr<QRTransformer3D> create();
 private:
@@ -68,7 +68,7 @@ private:
 };
 class ScaleTransformer3DCreator: public BaseTransformer3DCreator {
 public:
-    ScaleTransformer3DCreator(double kx, double ky, double kz);
+    ScaleTransformer3DCreator(float kx, float ky, float kz);
     ScaleTransformer3DCreator(const Vector3D &v): ScaleTransformer3DCreator(v[0],v[1],v[2]) {}
     virtual uptr<QRTransformer3D> create();
 private:
@@ -76,18 +76,18 @@ private:
 };
 class RotateTransformer3DCreator: public BaseTransformer3DCreator {
 public:
-    RotateTransformer3DCreator(double dx, double dy, double dz);
+    RotateTransformer3DCreator(float dx, float dy, float dz);
     RotateTransformer3DCreator(const Vector3D &v): RotateTransformer3DCreator(v[0],v[1],v[2]) {}
     virtual uptr<QRTransformer3D> create();
 private:
     enum axis {ox, oy, oz};
-    Matrix3D createOneRotateMatrix(double rad, axis ax);
+    Matrix3D createOneRotateMatrix(float rad, axis ax);
 
     Matrix3D matrix;
 };
 class ProjectionTransformer3DCreator: public BaseTransformer3DCreator {
 public:
-    ProjectionTransformer3DCreator(double x, double y, double z);
+    ProjectionTransformer3DCreator(float x, float y, float z);
     ProjectionTransformer3DCreator(const Vector3D &v);
     virtual uptr<QRTransformer3D> create();
 private:

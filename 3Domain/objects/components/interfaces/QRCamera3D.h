@@ -19,7 +19,7 @@
  */
 class QRCamera3D: public QRObject3D {
 public:
-    QRCamera3D(double w, double h): width(w), height(h) {
+    QRCamera3D(float w, float h): width(w), height(h) {
         p = sptr<QRCamera3D>(this, [](void *ptr){});}
     ~QRCamera3D() {p.reset();}
 
@@ -28,7 +28,7 @@ public:
 
     virtual sptr<QRTransformer3D> getAxisTransformer() const = 0;
     virtual sptr<QRTransformer3D> getProjectionTransformer() const = 0;
-    virtual bool isVisibleSphere(const Vector3D &center, double rad) = 0;
+    virtual bool isVisibleSphere(const Vector3D &center, float rad) = 0;
     virtual bool isFrontFace(const Vector3D &normal) = 0;
 
     // v[0], v[1] - x,y of center, v[2] - width, v[3] = height
@@ -36,8 +36,8 @@ public:
 
 
     virtual void move(const Vector3D &move) = 0;
-    virtual void scale(double sx, double sy) = 0;
-    virtual void scale(double scale) = 0;
+    virtual void scale(float sx, float sy) = 0;
+    virtual void scale(float scale) = 0;
     virtual void rotate(const Vector3D &rotate) = 0;
 
     virtual const Vector3D& getBind() const = 0;
@@ -51,10 +51,10 @@ public:
     //virtual QRCamera3D& operator=(const QRCamera3D &p) {}
 
 // getters & setters
-    virtual double getWidth() const = 0;
-    virtual void setWidth(double w) = 0;
-    virtual double getHeight() const = 0;
-    virtual void setHeight(double h) = 0;
+    virtual float getWidth() const = 0;
+    virtual void setWidth(float w) = 0;
+    virtual float getHeight() const = 0;
+    virtual void setHeight(float h) = 0;
 
     virtual const Vector3D& getOrigin() const = 0;
     virtual void setOrigin(const Vector3D&) = 0;
@@ -66,7 +66,7 @@ public:
 private:
     sptr<QRCamera3D> p;
 protected:
-    double width, height;
+    float width, height;
 };
 
 #endif //BIG3DFLUFFY_QRCAMERA3D_H

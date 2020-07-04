@@ -10,7 +10,7 @@
 
 class SimpleCamera3D: public QRCamera3D {
 public:
-    SimpleCamera3D(double w, double h, sptr<ProjectionImp>p, const Vector3D &origin,
+    SimpleCamera3D(float w, float h, sptr<ProjectionImp>p, const Vector3D &origin,
                    const Vector3D &viewUp = Vector3D(), const Vector3D &bind = Vector3D());
 
     virtual bool isVisible(){return false;}
@@ -26,8 +26,8 @@ public:
 
     // todo for class just to stay alive
     virtual void move(const Vector3D &move) {}
-    virtual void scale(double sx, double sy) {}
-    virtual void scale(double scale) {}
+    virtual void scale(float sx, float sy) {}
+    virtual void scale(float scale) {}
     virtual void rotate(const Vector3D &rotate) {}
 
 private:

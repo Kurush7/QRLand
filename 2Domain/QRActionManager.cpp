@@ -48,8 +48,8 @@ void QRActionManager::keyReleaseEvent(QKeyEvent *event) {
 
 
 void QRActionManager::mousePressEvent(QMouseEvent *event) {
-    double x = event->pos().x();
-    double y = event->pos().y();
+    float x = event->pos().x();
+    float y = event->pos().y();
 
     emit QRMousePressed(x, y, mods);
 }

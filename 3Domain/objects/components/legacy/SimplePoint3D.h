@@ -11,7 +11,7 @@ class SimplePoint3D: public QRPoint3D {
 public:
     SimplePoint3D() { vec -= bindPoint;}
     SimplePoint3D(const Vector3D &vec, const Vector3D &bind = Vector3D(), QRPointStyle s = QRPointStyle());
-    SimplePoint3D(const double x, const double y, const double z, const Vector3D &bind = Vector3D(), QRPointStyle s = QRPointStyle());
+    SimplePoint3D(const float x, const float y, const float z, const Vector3D &bind = Vector3D(), QRPointStyle s = QRPointStyle());
 
     virtual const Vector3D getVector() const {return vec + bindPoint;}
     virtual const Vector3D getRelativeVector() const {return vec;}

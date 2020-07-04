@@ -20,7 +20,7 @@ Matrix3D::Matrix3D() {
         matrix[i][i] = 1;
     }
 }
-Matrix3D::Matrix3D(const std::initializer_list<std::initializer_list<double>> &lst) {
+Matrix3D::Matrix3D(const std::initializer_list<std::initializer_list<float>> &lst) {
     int i = 0, j = 0;
     for (auto line: lst) {
         for (auto x: line) matrix[i][j++] = x;

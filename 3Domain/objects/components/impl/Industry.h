@@ -37,13 +37,13 @@ private:
 class CameraCreator: public QRCamera3DCreator {
 public:
     // todo CameraCreator() {imp = sptr<ProjectionImp>(new ???)}
-    virtual uptr<QRCamera3D> create(double w, double h,
+    virtual uptr<QRCamera3D> create(float w, float h,
                                     const Vector3D &origin) {
         return uptr<QRCamera3D>(new Camera3D(w, h, origin, screen, screen));
     }
 private:
     sptr<ProjectionImp> imp;
-    double screen = SCENE_DIST;
+    float screen = SCENE_DIST;
 };
 
 

@@ -10,9 +10,9 @@
 
 #include "QTPainter.h"
 
-const double MOVE_UNIT_VAL = 1;
-const double SCALE_UNIT_VAL = 1.05;
-const double ROTATE_UNIT_VAL = 0.05;
+const float MOVE_UNIT_VAL = 1;
+const float SCALE_UNIT_VAL = 1.05;
+const float ROTATE_UNIT_VAL = 0.05;
 
 
 class MainWindow;
@@ -28,14 +28,14 @@ public:
     void openFile();
     void undo();
 
-    void select(double x, double y);
+    void select(float x, float y);
     void selChangeColor();
     void selDelete();
 
     void transform(TransformStateDir);
 
 private:
-    void defineTransformParams(double&, double&, double&, TransformStateDir);
+    void defineTransformParams(float&, float&, float&, TransformStateDir);
 
     MainWindow &window;
 

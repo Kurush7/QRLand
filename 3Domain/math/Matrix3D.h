@@ -11,7 +11,7 @@
 class Matrix3D {
 public:
     Matrix3D();
-    Matrix3D(const std::initializer_list<std::initializer_list<double>> &);
+    Matrix3D(const std::initializer_list<std::initializer_list<float>> &);
 
     Matrix3D& operator +=(const Matrix3D&);
     Matrix3D& operator *=(const Matrix3D&);     // TODO too slow to use

@@ -13,11 +13,11 @@ class Facade {
 public:
     Facade(sptr<QRImage> img);
     void draw();
-    void addCube(double a, double x, double y, double z, QRColor c);
+    void addCube(float a, float x, float y, float z, QRColor c);
 
-    void moveCamera(double dx, double dy, double dz);
-    void scaleCamera(double kx, double ky, double kz);
-    void rotateCamera(double dx, double dy, double dz);
+    void moveCamera(float dx, float dy, float dz);
+    void scaleCamera(float kx, float ky, float kz);
+    void rotateCamera(float dx, float dy, float dz);
 
     void undo();
 

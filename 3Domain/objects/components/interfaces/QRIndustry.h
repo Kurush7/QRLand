@@ -28,7 +28,7 @@ public:
 
 class QRCamera3DCreator {
 public:
-    virtual uptr<QRCamera3D> create(double w, double h,
+    virtual uptr<QRCamera3D> create(float w, float h,
                                                const Vector3D &origin) = 0;
 };
 
@@ -38,7 +38,7 @@ public:
     virtual uptr<QRPoint3D> createPoint(const Vector3D &vec, const Vector3D &bind = Vector3D()) = 0;
     virtual uptr<QREdge3D> createEdge(sptr<QRPoint3D> start,
                                                  sptr<QRPoint3D> end) = 0;
-    virtual uptr<QRCamera3D> createCamera(double w, double h,
+    virtual uptr<QRCamera3D> createCamera(float w, float h,
                                                      const Vector3D &origin) = 0;
 };
 

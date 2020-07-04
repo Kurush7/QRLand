@@ -36,8 +36,8 @@ private:
 // len is the distance from origin to it's bindPoint (strictly by oY)
 class SimpleFrontalCamera3DCreator: public QRCamera3DCreator {
 public: // todo magic constant 010
-    SimpleFrontalCamera3DCreator(double len): viewUp(0, 1, 0), len(len), imp(new OrthogonalProjection) {}
-    virtual uptr<QRCamera3D> create(double w, double h,
+    SimpleFrontalCamera3DCreator(float len): viewUp(0, 1, 0), len(len), imp(new OrthogonalProjection) {}
+    virtual uptr<QRCamera3D> create(float w, float h,
                                                const Vector3D &origin) {
         return uptr<QRCamera3D>(new SimpleCamera3D(w, h, imp, origin,
                                                               viewUp, Vector3D(origin + Vector3D({0,0,len}))));
@@ -45,7 +45,7 @@ public: // todo magic constant 010
 private:
     sptr<ProjectionImp> imp;
     Vector3D viewUp;
-    double len;
+    float len;
 };
 
 class SimpleBasicObject3DFactory: public QRObject3DFactory {
@@ -55,7 +55,7 @@ public:
                                                    const Vector3D &bind = Vector3D()) {return point_cr.create(vec,bind);}
     virtual uptr<QREdge3D> createEdge(sptr<QRPoint3D> start,
                                                  sptr<QRPoint3D> end) {return edge_cr.create(start, end);}
-    virtual uptr<QRCamera3D> createCamera(double w, double h,
+    virtual uptr<QRCamera3D> createCamera(float w, float h,
                                                      const Vector3D &origin) {return camera_cr.create(w,h,origin);}
 private:
     QRColor pc, ec;

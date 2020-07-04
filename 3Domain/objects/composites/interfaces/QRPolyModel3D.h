@@ -27,7 +27,7 @@ public:
     virtual PointIterator getPoints() const = 0;
     virtual void setValues(PointIterator pt, PolygonIterator pg) = 0;   // for memento only! ?todo friend?
 
-    virtual double getRadius() const = 0;   // radius of circumscribed sphere
+    virtual float getRadius() const = 0;   // radius of circumscribed sphere
 
     virtual bool operator==(const QRPolyModel3D &b) const;
     //virtual QRModel3D& operator=(const QRModel3D &p) = delete;      // todo!!!

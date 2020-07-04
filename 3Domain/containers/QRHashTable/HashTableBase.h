@@ -22,7 +22,7 @@ public:
 
 protected:
     static const size_t DEFAULT_SIZE = 4;
-    static constexpr double MAX_ALPHA = 3.0;
+    static constexpr float MAX_ALPHA = 3.0;
 
     sptr<size_t> capacity;
     size_t curSize;

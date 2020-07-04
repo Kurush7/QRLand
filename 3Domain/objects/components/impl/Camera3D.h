@@ -26,21 +26,21 @@
 // todo bridge: projection implementation
 class Camera3D: public QRCamera3D {
 public:
-    Camera3D(double w, double h, const Vector3D &origin, double screen,
-             double nearCutter, double farCutter = QRINF);
+    Camera3D(float w, float h, const Vector3D &origin, float screen,
+             float nearCutter, float farCutter = QRINF);
     virtual sptr<QRObject3D> copy() {return sptr<QRCamera3D>(new Camera3D(width, height,
             origin, screen, nearCutter, farCutter));}
 
     virtual bool isVisible(){return false;}
 
     virtual void move(const Vector3D &move);
-    virtual void scale(double sx, double sy);
-    virtual void scale(double scale);
+    virtual void scale(float sx, float sy);
+    virtual void scale(float scale);
     virtual void rotate(const Vector3D &rotate);
 
     virtual sptr<QRTransformer3D> getAxisTransformer() const {return axisTransformer;}
     virtual sptr<QRTransformer3D> getProjectionTransformer() const {return projector;}
-    virtual bool isVisibleSphere(const Vector3D &center, double rad);
+    virtual bool isVisibleSphere(const Vector3D &center, float rad);
 
     // todo normal must already be transformed!!!!!!
     virtual bool isFrontFace(const Vector3D &normal);
@@ -50,10 +50,10 @@ public:
     virtual const Vector3D& getOrigin() const {return origin;}
     virtual void setOrigin(const Vector3D &p) { origin = p; defineAxisTransformer();}
 
-    virtual double getWidth() const {return width;}
-    virtual void setWidth(double w) {width = w; defineFrustrum();}
-    virtual double getHeight() const {return height;}
-    virtual void setHeight(double h) {h = height; defineFrustrum();}
+    virtual float getWidth() const {return width;}
+    virtual void setWidth(float w) {width = w; defineFrustrum();}
+    virtual float getHeight() const {return height;}
+    virtual void setHeight(float h) {h = height; defineFrustrum();}
 
     virtual const Vector3D& getBind() const {return bind;}
     virtual void setBind(const Vector3D &b) {bind = b;}
@@ -64,7 +64,7 @@ public:
                                                                height == b.getHeight();}
 private:
     Vector3D origin, viewUpVector, deepVector, bind;
-    double nearCutter, farCutter, screen;
+    float nearCutter, farCutter, screen;
     Vector3D frustrum[6];
 
     sptr<QRTransformer3D> axisTransformer, projector;

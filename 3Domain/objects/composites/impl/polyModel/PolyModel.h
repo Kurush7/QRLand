@@ -27,12 +27,12 @@ public:
             p->setSelected(x);
     }
 
-    virtual double getRadius() const {return radius;}
+    virtual float getRadius() const {return radius;}
 
 private:
     QRVector<sptr<QRPoint3D>> points;
     QRVector<sptr<QRPolygon3D>> polygons;
-    double radius = 0;
+    float radius = 0;
 
     void defineRadius();
 };

@@ -45,7 +45,7 @@ private:
     sptr<QRTexture> texture;
 
     Vector3D normal; // normal: len(a,b,c) = 1, d=1;
-    double d;  // plane's d: ax+by+c+D=0
+    float d;  // plane's d: ax+by+c+D=0
 
     void definePlane();
 };

@@ -13,7 +13,7 @@ using RenderPolygon = QRVector<Vector3D>;
 
 // cuts convex 2d-poly (ignores oZ) with rectangle, returns NEW cut convex polygon
 
-RenderPolygon cutPolyRect(const QRPolygon3D *poly, double l, double r, double u, double d);
+RenderPolygon cutPolyRect(const QRPolygon3D *poly, float l, float r, float u, float d);
 RenderPolygon cutPolyRect(const QRPolygon3D *poly, const Vector3D &screenData);
 
 

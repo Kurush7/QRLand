@@ -11,7 +11,7 @@
 class CustomDoubleValidator : public QDoubleValidator{
     QStringList _decimalPoints;
 public:
-    CustomDoubleValidator(double bottom, double top, int decimals, QObject *parent = Q_NULLPTR)
+    CustomDoubleValidator(float bottom, float top, int decimals, QObject *parent = Q_NULLPTR)
     : QDoubleValidator(bottom, top, decimals, parent)
     {
         _decimalPoints.append(".");
@@ -39,7 +39,7 @@ public:
         }
         // check range of value
         bool isNumber;
-        double value = locale().toDouble(s, &isNumber);
+        float value = locale().toDouble(s, &isNumber);
         if (isNumber && bottom() <= value && value <= top()) {
             return QValidator::Acceptable;
         }

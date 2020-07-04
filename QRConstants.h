@@ -5,12 +5,12 @@
 #ifndef BIG3DFLUFFY_QRCONSTANTS_H
 #define BIG3DFLUFFY_QRCONSTANTS_H
 
-const double QREPS = 1e-9;
-const double QRINF = 1e9;
+const float QREPS = 1e-9;
+const float QRINF = 1e9;
 
-const double SELECTION_ERROR = 1.05;    // for selection of frame model on click
+const float SELECTION_ERROR = 1.05;    // for selection of frame model on click
 
-const double BUTTON_REPRESS_TIME_MSEC = 1000/60;
+const float BUTTON_REPRESS_TIME_MSEC = 1000/60;
 
 const int MAX_LIGHT_CNT = 10;
 const int MAX_POINT_CNT = 1e6;

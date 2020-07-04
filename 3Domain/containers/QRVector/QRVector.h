@@ -11,7 +11,7 @@
 #include <iostream>
 #include "VectorBase.h"
 
-const double DEFAULT_SIZE = 8;
+const float DEFAULT_SIZE = 8;
 
 template <typename T>
 class QRVectorIterator;

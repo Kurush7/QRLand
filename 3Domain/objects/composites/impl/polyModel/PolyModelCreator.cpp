@@ -5,10 +5,10 @@
 #include "PolyModelCreator.h"
 
 bool CubeModelCreator::createPoints() {
-    double b = a / 2;
-    for (double x = -b; x < +3*b; x += a)
-        for (double y = -b; y < 3*b; y += a)
-            for (double z = -b; z < +3*b; z += a)
+    float b = a / 2;
+    for (float x = -b; x < +3*b; x += a)
+        for (float y = -b; y < 3*b; y += a)
+            for (float z = -b; z < +3*b; z += a)
                 points.push_back(sptr<QRPoint3D>(new Point3D(x,y,z)));
     return true;
 }

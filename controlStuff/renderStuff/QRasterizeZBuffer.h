@@ -19,9 +19,9 @@ public:
     : img(_img.get()), colorManager(man) {
         w = img->getWidth();
         h = img->getHeight();
-        zbuf = (double**) malloc (sizeof(double*) * h);
+        zbuf = (float**) malloc (sizeof(float*) * h);
         for (int i = 0; i < h; ++i)
-            zbuf[i] = (double *) malloc(sizeof(double) * w);
+            zbuf[i] = (float *) malloc(sizeof(float) * w);
         clearBuf();
     }
     ~QRasterizeZBuffer() {
@@ -36,10 +36,9 @@ public:
 
 private:
     int w, h;
-    double **zbuf;
+    float **zbuf;
     QRImage *img;
     QRColorManager *colorManager;
-    Vector3D normal;
 
     void fillRow();
 
@@ -48,12 +47,13 @@ private:
 
     // draw data
     Vector3D *poly;
+    QRColor c;
     int n;
     int dir;
     int left, right, ll, rr;     // ll - after left, rr - after right
-    double bl, br, dzl, dzr;
+    float bl, br, dzl, dzr;
     int xli, xri, y;
-    double zl, zr, xl, xr;
+    float zl, zr, xl, xr;
 };
 
 

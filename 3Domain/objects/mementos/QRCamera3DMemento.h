@@ -17,7 +17,7 @@ public:
 private:
     wptr<QRCamera3D> object;
     Vector3D origin;
-    double width, height;
+    float width, height;
 };
 
 #endif //BIG3DFLUFFY_QRCAMERA3DMEMENTO_H

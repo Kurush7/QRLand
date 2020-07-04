@@ -20,7 +20,7 @@ TEST(HTconstructorTests, constructor_default)
     QRHashTable<string> table1;
     EXPECT_EQ(table1.size(), 0);
 
-    QRHashTable<vector<vector<pair<double, string>>>> table2;
+    QRHashTable<vector<vector<pair<float, string>>>> table2;
     EXPECT_EQ(table2.size(), 0);
 }
 

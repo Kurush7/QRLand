@@ -52,7 +52,7 @@ public:
 
 class SelectionVisitor: public QRVisitor {
 public:
-    SelectionVisitor(double x, double y, sptr<QRTransformer3D> t): x(x), y(y), transformer(t) {}
+    SelectionVisitor(float x, float y, sptr<QRTransformer3D> t): x(x), y(y), transformer(t) {}
     virtual void visitPoint3D(sptr<QRPoint3D> point);
     virtual void visitEdge3D(sptr<QREdge3D> edge);
     virtual void visitCamera3D(sptr<QRCamera3D> camera);
@@ -60,7 +60,7 @@ public:
     bool is_selected;
 protected:
     sptr<QRTransformer3D> transformer;
-    double x, y;
+    float x, y;
 };
 
 class SetColorVisitor: public QRVisitor {

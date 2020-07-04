@@ -10,9 +10,9 @@
 #include "Facade.h"
 
 
-const double MOVE_UNIT_VAL = 1;
-const double SCALE_UNIT_VAL = 1.05;
-const double ROTATE_UNIT_VAL = 0.05;
+const float MOVE_UNIT_VAL = 1;
+const float SCALE_UNIT_VAL = 1.05;
+const float ROTATE_UNIT_VAL = 0.05;
 
 const int REPAINT_TIME = 100;
 
@@ -23,12 +23,12 @@ public:
     explicit Presenter(MainWindow &w);
     void undo();
     void transform(QRKey);
-    void addCube(double a);
+    void addCube(float a);
 
 private:
-    void defineTransformParams(double&, double&, double&, QRKey);
+    void defineTransformParams(float&, float&, float&, QRKey);
     void draw(bool reset=false);
-    double draw_time_msec = 0;
+    float draw_time_msec = 0;
     size_t draw_cnt = 0;
 
     MainWindow &window;

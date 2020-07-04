@@ -41,7 +41,7 @@ void Presenter::openFile() {
     }
 }
 
-void Presenter::select(double x, double y) {
+void Presenter::select(float x, float y) {
     facade->select(x, y);
     facade->draw();
     window.visibilityManager->setActive("selection", !facade->isEmptySelection());
@@ -60,7 +60,7 @@ void Presenter::selDelete() {
 }
 
 void Presenter::transform(TransformStateDir d) {
-    double x, y, z;
+    float x, y, z;
     defineTransformParams(x,y,z, d);
 
     if (window.moveRad->isChecked())
@@ -74,8 +74,8 @@ void Presenter::transform(TransformStateDir d) {
 }
 
 
-void Presenter::defineTransformParams(double &x, double &y, double &z, TransformStateDir d) {
-    double val = 0;
+void Presenter::defineTransformParams(float &x, float &y, float &z, TransformStateDir d) {
+    float val = 0;
     if (window.moveRad->isChecked())
         val = MOVE_UNIT_VAL;
     else if (window.rotateRad->isChecked())

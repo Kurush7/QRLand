@@ -142,7 +142,7 @@ void MainWindow::addLogic() {
     connect(openFileBtn, &QPushButton::clicked, [this]() {presenter->openFile();});
     connect(modelLoadBtn, &QPushButton::clicked, [this]() {presenter->loadModel();});
 
-    connect(canvas, &Canvas3DViewer::mousePressed, [this](double x, double y) {presenter->select(x, y);});
+    connect(canvas, &Canvas3DViewer::mousePressed, [this](float x, float y) {presenter->select(x, y);});
     //connect(selBindBtn, &QPushButton::clicked, [this]() {presenter->selBind();});
     connect(selPointColorEdit, &QPushButton::clicked, [this]() {presenter->selChangeColor();});
     connect(selEdgeColorEdit, &QPushButton::clicked, [this]() {presenter->selChangeColor();});

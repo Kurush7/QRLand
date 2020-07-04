@@ -31,7 +31,7 @@ protected:
 
 class CubeModelCreator: public PrimitivePolyModelCreator {
 public:
-    CubeModelCreator(double _a, sptr<QRTexture> txt = nullptr) {setParams(_a, txt);}
+    CubeModelCreator(float _a, sptr<QRTexture> txt = nullptr) {setParams(_a, txt);}
     virtual bool createPoints();
     virtual bool createPolygons();
 
@@ -39,7 +39,7 @@ public:
         if (createPoints() && createPolygons()) return getModel();
         return nullptr;
     }
-    void setParams(double _a, sptr<QRTexture> txt = nullptr) {
+    void setParams(float _a, sptr<QRTexture> txt = nullptr) {
         clearPrev();
         a = _a;
         if (txt)
@@ -51,7 +51,7 @@ protected:
     virtual void clearPrev() {texture = DEFAULT_TEXTURE; points.clear(); polygons.clear(); model = nullptr;}
 private:
     sptr<QRTexture> texture = DEFAULT_TEXTURE;
-    double a;
+    float a;
 };
 
 #endif //BIG3DFLUFFY_POLYMODELCREATOR_H

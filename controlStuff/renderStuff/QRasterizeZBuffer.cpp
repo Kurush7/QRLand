@@ -8,28 +8,35 @@
 void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
     poly = _poly;
     n = size;
-    normal = norm;
-    // todo poly of ints?
+    c = colorManager->getColor(norm);   // todo not acceptable for mapping, so....
+
     // needed right, but y = -y, so...
     dir = isRightRotate(poly[0], poly[1], poly[2])? -1 : 1;
 
+    // todo load inted points before managing polys, which will be just integer indexes
+
     ll = 0, rr = -1;
     int maxY = -1;
+    int myI = 0;
     for (int i = 0; i < n; ++i) {
-        poly[i][0] = min(w-1, QRound(poly[i][0]));  // some hardcode: digital len of(-50,50) is 101,
-        poly[i][1] = min(h-1, QRound(poly[i][1])); // yet double's is 100. so translation after cutting becomes a bit dull....
-        maxY = max((int)poly[i][1], maxY);
-        if (poly[i][1] < poly[ll][1])
-            ll = rr = i;
-        else if (poly[i][1] == poly[ll][1]) {
-            if (poly[i][0] < poly[ll][0]) rr = ll, ll = i;
-            else rr = i;
-        }
-    }
+        // some hardcode: digital len of(-50,50) is 101,
+        // yet float's is 100. so translation after cutting becomes a bit dull....
+        poly[myI][0] = min(w-1, QRound(poly[i][0]));
+        poly[myI][1] = min(h-1, QRound(poly[i][1]));
+        // used for: 2 points after cutting and discreting being the same (to avoid nan as 0/0 in bl, br)
+        if (i && poly[i][0] == poly[i-1][0] && poly[i][1] == poly[i-1][1]) continue;
 
-    //for (int i = 0; i < size; ++i)
-    //    cout << poly[i] << ' ';
-    //cout << '\n';
+        maxY = max((int)poly[myI][1], maxY);
+        if (poly[myI][1] < poly[ll][1])
+            ll = rr = myI;
+        else if (poly[myI][1] == poly[ll][1]) {
+            if (poly[myI][0] < poly[ll][0]) rr = ll, ll = myI;
+            else rr = myI;
+        }
+        myI++;
+    }
+    if (poly[0][0] == poly[myI-1][0] && poly[0][1] == poly[myI-1][1]) myI--;
+    n = myI;
 
     if (rr == -1) rr = ll;
     jumpL();
@@ -44,11 +51,9 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
         y++;
         if (y > poly[ll][1]) {
             if (y > poly[rr][1]) {
-                //if (rr == ll) break;
                 jumpR();
             }
             jumpL();
-            //if (ll == right && left == rr) break;
         }
         else if (y > poly[rr][1]) jumpR();
 
@@ -62,19 +67,10 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
 void QRasterizeZBuffer::fillRow() {
     if (xli == xri) return;
 
-    double z = zl;
-    double dz = (zr - zl + 0.) / (xri - xli + 0.);
-
+    float z = zl;
+    float dz = (zr - zl + 0.) / (xri - xli + 0.);
     for (int x = xli; x <= xri; ++x) {
         if (z - zbuf[x][y] < QREPS) {
-            QRColor c = colorManager->getColor(normal);
-
-            if (fabs(z - zbuf[x][y]) < QREPS) { // todo not needed
-                auto cc = img->getPixel(x,y);   // todo too long
-                c.r = (c.r + cc.r) / 2;
-                c.g = (c.g + cc.g) / 2;
-                c.b = (c.b + cc.b) / 2;
-            }
             img->setPixel(x, y, c);
             zbuf[x][y] = z;
         }
@@ -83,9 +79,7 @@ void QRasterizeZBuffer::fillRow() {
 }
 
 void QRasterizeZBuffer::clearBuf() {
-    // todo prepare data, then std::copy
-    // or image to have fill method
-    auto c = QRColor("black");
+    c = QRColor("black");
     for (int i = 0; i < h; ++i) {
         for (int j = 0; j < w; ++j)
             zbuf[i][j] = QRINF;

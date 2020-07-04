@@ -25,7 +25,7 @@ public:
         data[ind++] = color.r;
         data[ind++] = color.g;
         data[ind++] = color.b;
-        data[ind++] = color.alpha;
+        data[ind] = color.alpha;
     }
     virtual const QRColor getPixel(int x, int y) const {
         QRColor color;
@@ -33,7 +33,7 @@ public:
         color.r = data[ind++];
         color.g = data[ind++];
         color.b = data[ind++];
-        color.alpha = data[ind++];
+        color.alpha = data[ind];
         return color;
     }
 

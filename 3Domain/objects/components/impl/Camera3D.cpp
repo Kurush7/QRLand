@@ -4,8 +4,8 @@
 
 #include "Camera3D.h"
 
-Camera3D::Camera3D(double w, double h, const Vector3D &o, double s,
-                   double n, double f): QRCamera3D(w,h), origin(o), screen(s), nearCutter(n), farCutter(f) {
+Camera3D::Camera3D(float w, float h, const Vector3D &o, float s,
+                   float n, float f): QRCamera3D(w,h), origin(o), screen(s), nearCutter(n), farCutter(f) {
     viewUpVector = {0,1,0,0};
     deepVector = {0,0,1,0};
     bind = origin;
@@ -21,14 +21,14 @@ void Camera3D::move(const Vector3D &move) {
     defineAxisTransformer();
 }
 
-void Camera3D::scale(double sx, double sy) {
+void Camera3D::scale(float sx, float sy) {
     if (sx < QREPS || sy < QREPS)
         throw QRBadParamException(__FILE__, __LINE__, __TIME__, "negative scale for camera");
     width *= sx;
     height *= sy;
 }
 
-void Camera3D::scale(double scale) {
+void Camera3D::scale(float scale) {
     if (scale < QREPS)
         throw QRBadParamException(__FILE__, __LINE__, __TIME__, "negative scale for camera");
     width *= scale;
@@ -80,7 +80,7 @@ void Camera3D::defineProjectionTransformer() {
     projector = ProjectionTransformer3DCreator(0,0,screen).create();
 }
 
-bool Camera3D::isVisibleSphere(const Vector3D &c, double rad) {
+bool Camera3D::isVisibleSphere(const Vector3D &c, float rad) {
     Vector3D center {c[0], c[1], c[2], 1};  // todo 1 is not necessary here.... for now (see to matrix*vector todo)
     center = axisTransformer->transform(center);
     for(int i = 0; i < 6; ++i)

@@ -34,12 +34,12 @@ private:
 
 class SelectCommand: public SceneCommand {
 public:
-    SelectCommand(double x, double y, sptr<QRScene3D> &s)
+    SelectCommand(float x, float y, sptr<QRScene3D> &s)
             :SceneCommand(s), x(x), y(y) {}
 
     virtual sptr<QRMemento> exec();
 private:
-    double x, y;
+    float x, y;
 };
 class SetColorSelectionCommand: public SceneCommand {
 public:

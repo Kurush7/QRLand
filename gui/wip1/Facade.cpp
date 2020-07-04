@@ -14,7 +14,7 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     renderer = sptr<QRenderer>(new QRenderer(image, scene));
 }
 
-void Facade::addCube(double a, double x, double y, double z, QRColor c) {
+void Facade::addCube(float a, float x, float y, float z, QRColor c) {
     auto txt = sptr<QRTexture>(new ColorTexture(c));
     auto cr = sptr<QRPolyModelCreator>(new CubeModelCreator(a, txt));
     auto command = sptr<QRCommand>(new AddModelCmd(cr, Vector3D(x,y,z), scene));
@@ -27,17 +27,17 @@ void Facade::draw() {
     manager->execAll();
 }
 
-void Facade::moveCamera(double dx, double dy, double dz) {
+void Facade::moveCamera(float dx, float dy, float dz) {
     //cout << "move by: " << Vector3D(dx,dy,dz) << '\n';
     auto command = sptr<QRCommand>(new MoveCameraCmd(Vector3D(dx,dy,dz), scene));
     manager->push(command);
 }
-void Facade::scaleCamera(double kx, double ky, double kz) {
+void Facade::scaleCamera(float kx, float ky, float kz) {
     //cout << "scale by: " << Vector3D(kx,ky,kz) << '\n';
     auto command = sptr<QRCommand>(new ScaleCameraCmd(Vector3D(kx,ky,kz), scene));
     manager->push(command);
 }
-void Facade::rotateCamera(double dx, double dy, double dz) {
+void Facade::rotateCamera(float dx, float dy, float dz) {
     //cout << "rotate by: " << Vector3D(dx,dy,dz) << '\n';
     auto command = sptr<QRCommand>(new RotateCameraCmd(Vector3D(dx,dy,dz), scene));
     manager->push(command);

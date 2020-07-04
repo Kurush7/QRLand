@@ -30,7 +30,7 @@ signals:
     void QRKeyReleased(QRKey, QRModifiers);
 
     // todo lkm, pkm, mapping to real coords (not here!)
-    void QRMousePressed(double x, double y, QRModifiers);
+    void QRMousePressed(float x, float y, QRModifiers);
 
 private slots:
     void slotBtnTimerAlarm() {isButtonBlocked = false;};

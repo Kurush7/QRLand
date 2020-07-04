@@ -18,14 +18,14 @@ QRColor defineColor(QColor c);
 class QTPainter: public QRImage {
 public:
     QTPainter(Canvas3DViewer *c): canvas(c) {}
-    virtual void drawPoint(double x, double y, QRPointStyle s) {
+    virtual void drawPoint(float x, float y, QRPointStyle s) {
         points.push_back(new Point(x, y, defineColor(s.color)));
     }
-    virtual void drawEdge(double x1, double y1, double x2, double y2, QREdgeStyle s) {
+    virtual void drawEdge(float x1, float y1, float x2, float y2, QREdgeStyle s) {
         lines.push_back(new Line(x1, y1, x2, y2, defineColor(s.color)));
     }
 
-    virtual void setFrame(double x_center, double y_center, double w, double h) {
+    virtual void setFrame(float x_center, float y_center, float w, float h) {
         canvas->setFromBorders(Borders(x_center-w/2, x_center+w/2, y_center-h/2,  y_center+h/2));
     }
 
