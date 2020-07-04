@@ -26,5 +26,6 @@
 #include <QCheckBox>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QtOpenGL/QGLWidget>
 
 #endif //BIG3DFLUFFY_QTINCLUDES_H

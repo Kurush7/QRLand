@@ -31,7 +31,7 @@ void QRenderer::render () {
     imageTransformer->accumulate(scr.create()->getMatrix());
 
     // init zbuffer, fill in black
-    zbuf.clearBuf();
+    //zbuf.clearBuf();
     image->repaint();
     return;
 

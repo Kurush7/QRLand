@@ -28,6 +28,8 @@ public:
     int getHeight() {return height;}
 
 protected:
+    QLabel *imageLabel;
+
     int width, height;
     QColor bgColor;
     QRCanvasViewer viewer;
