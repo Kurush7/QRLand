@@ -6,38 +6,34 @@
 
 using namespace std;
 
+
 QRCanvas::QRCanvas(int w, int h, QWidget *parent, QColor fill)
         : QRActionManager(parent), width(w), height(h) {
-    //QPalette p(palette());
-    //p.setColor(QPalette::Background, QColor(255,255,255,255));
-    //setAutoFillBackground(true);
-    //setPalette(p);
-    imageLabel = new QLabel(this);
-    imageLabel->setBackgroundRole(QPalette::Base);
-    imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    imageLabel->setScaledContents(true);
+    setFixedSize(w,h);
 
-    setFixedSize(w, h);
-    bgColor = fill;
 
-    img = sptr<QImage>(new QImage(w, h, QImage::Format_ARGB32));
-    zoomed_img = sptr<QImage>(new QImage(w, h, QImage::Format_ARGB32));
-    viewer = QRCanvasViewer(img);
+    pixels = new uchar[width*height*4];
+    for (int i = 0; i < width*height*4; ++i)
+        pixels[i] = 127;
 
-    refillBg();
     repaint();
 }
 
-void QRCanvas::refillBg() {
-    for (int i = 0; i < width; ++i)
-        for (int j = 0; j < height; ++j)
-            img->setPixelColor(i, j, bgColor);
-    repaint();
+void QRCanvas::initializeGL() {
+    //glClearColor(0.0, 0.0, 0.0, 1.0);
+
+    //glEnable(GL_DEPTH_TEST);
+    //glShadeModel(GL_FLAT);
+    //glEnable(GL_CULL_FACE);
+    //glEnable(GL_TEXTURE_2D);
 }
 
-void QRCanvas::paintEvent(QPaintEvent *event)
-{
-    QPainter painterMain(this);
-    viewer.drawOn(zoomed_img);  // copy from img to zoomed_img with zooming
-    painterMain.drawImage(QRect(0,0, width, height), *zoomed_img);
+void QRCanvas::resizeGL(int width, int height) {
+    // todo
 }
+
+void QRCanvas::paintGL() {
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+}
+

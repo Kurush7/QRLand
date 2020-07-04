@@ -20,7 +20,7 @@ struct QRModifiers {
 };
 
 
-class QRActionManager: public QWidget {
+class QRActionManager: public QGLWidget {
     Q_OBJECT
 public:
     QRActionManager(QWidget *parent = nullptr);

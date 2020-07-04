@@ -27,9 +27,9 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
         }
     }
 
-    for (int i = 0; i < size; ++i)
-        cout << poly[i] << ' ';
-    cout << '\n';
+    //for (int i = 0; i < size; ++i)
+    //    cout << poly[i] << ' ';
+    //cout << '\n';
 
     if (rr == -1) rr = ll;
     jumpL();
@@ -87,11 +87,12 @@ void QRasterizeZBuffer::clearBuf() {
     // or image to have fill method
     auto c = QRColor("black");
     for (int i = 0; i < h; ++i) {
-        for (int j = 0; j < w; ++j) {
+        for (int j = 0; j < w; ++j)
             zbuf[i][j] = QRINF;
-            img->setPixel(i, j, c);
-        }
     }
+    uchar* data = img->getData();
+    for (int i = 0; i < w*h*4; ++i)
+        data[i] = 0;
 }
 
 inline void QRasterizeZBuffer::jumpL() {

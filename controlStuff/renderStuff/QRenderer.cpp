@@ -31,9 +31,7 @@ void QRenderer::render () {
     imageTransformer->accumulate(scr.create()->getMatrix());
 
     // init zbuffer, fill in black
-    //zbuf.clearBuf();
-    image->repaint();
-    return;
+    zbuf.clearBuf();
 
     auto models = scene->getModels();
     for (; models; ++models) {
@@ -101,6 +99,6 @@ void QRenderer::render () {
         for (size_t i = 0; i < points_cnt; ++i)
             points[i]->setVector(old_points[i]);
     }
-    cout <<'\n';
+    //cout <<'\n';
     image->repaint();
 }

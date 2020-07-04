@@ -29,7 +29,7 @@ private:
     void defineTransformParams(double&, double&, double&, QRKey);
     void draw(bool reset=false);
     double draw_time_msec = 0;
-    int draw_cnt = 0;
+    size_t draw_cnt = 0;
 
     MainWindow &window;
 

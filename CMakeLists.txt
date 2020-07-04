@@ -8,13 +8,16 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 set(DRAW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/2DomainOld)
 
 # QT includes
-find_package(Qt5 COMPONENTS Core Widgets PrintSupport REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets OpenGL PrintSupport REQUIRED)
+find_package(OpenGL)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(QT_INCLUDES
         Qt5::Core
         Qt5::Gui
-        Qt5::Widgets)
+        Qt5::Widgets
+        )
 
 include_directories(2Domain)
 include_directories(3Domain)
@@ -51,6 +54,10 @@ target_link_libraries(main.exe
         3domain_lib
         control_lib
         )
+
+#target_compile_options(main.exe PUBLIC -lGL -lGLU -lglut)
+qt5_use_modules(main.exe Widgets OpenGL)
+target_link_libraries(main.exe ${QT_LIBRARIES} ${OPENGL_LIBRARIES})
 
 add_custom_command(
         TARGET main.exe POST_BUILD

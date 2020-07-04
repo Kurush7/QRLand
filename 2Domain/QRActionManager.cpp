@@ -4,7 +4,7 @@
 
 #include "QRActionManager.h"
 
-QRActionManager::QRActionManager(QWidget *parent): QWidget(parent) {
+QRActionManager::QRActionManager(QWidget *parent): QGLWidget(parent) {
     setFocusPolicy(Qt::StrongFocus);
     connect(&btnTimer, SIGNAL(timeout()), this, SLOT(slotBtnTimerAlarm()));
     btnTimer.setInterval(BUTTON_REPRESS_TIME_MSEC);

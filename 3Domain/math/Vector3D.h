@@ -28,14 +28,16 @@ public:
     explicit Vector3D(const double [4]);
     Vector3D(const std::initializer_list<double> &);
 
-    Vector3D& operator +=(const Vector3D&);
-    Vector3D& operator -=(const Vector3D&);
-    Vector3D& operator /=(double);
+
     double& operator[](int);
     const double& operator[](int) const;
 
     double arr[4] = {0,0,0,0};
 };
+
+Vector3D& operator +=(const Vector3D&, const Vector3D&);
+Vector3D& operator -=(const Vector3D&, const Vector3D&);
+Vector3D& operator /=(const Vector3D&, double);
 
 const Vector3D XVector(1,0,0,0);
 const Vector3D ZeroVector(0,0,0,0);

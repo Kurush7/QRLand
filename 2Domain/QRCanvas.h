@@ -15,25 +15,23 @@ Q_OBJECT
 public:
     explicit QRCanvas(int w, int h, QWidget *parent = nullptr,
                     QColor fill = Qt::white);
-    virtual ~QRCanvas() = default;
+    virtual ~QRCanvas() {delete pixels;}
 
-    virtual void paintEvent(QPaintEvent *event);
-
-    void setBgColor(QColor c) {bgColor = c;}
-    void refillBg();
-
-    sptr<QImage> getImage() {return img;}
+    uchar* getData() {return pixels;}
 
     int getWidth() {return width;}
     int getHeight() {return height;}
 
 protected:
-    QLabel *imageLabel;
+    void initializeGL();
+    void paintGL();
+    void resizeGL(int width, int height);
+
+protected:
+    sptr<QImage> img;
 
     int width, height;
-    QColor bgColor;
-    QRCanvasViewer viewer;
-    sptr<QImage> img, zoomed_img;
+    uchar *pixels;
 };
 
 #endif //KG_GRAPHICFIELD_H

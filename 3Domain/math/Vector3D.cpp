@@ -47,9 +47,9 @@ const double& Vector3D::operator[](int ind) const {
     return arr[ind];
 }
 
-Vector3D& Vector3D::operator +=(const Vector3D &v) {
-    arr[0] += v.arr[0], arr[1] += v.arr[1];
-    arr[2] += v.arr[2], arr[3] += v.arr[3];
+Vector3D& operator +=(const Vector3D &a, const Vector3D &b) {
+    a.arr[0] += v.arr[0], arr[1] += v.arr[1];
+    a.arr[2] += v.arr[2], arr[3] += v.arr[3];
     return *this;
 }
 Vector3D& Vector3D::operator -=(const Vector3D &v) {

@@ -27,5 +27,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QtOpenGL/QGLWidget>
+#include <QOpenGLTexture>
+
 
 #endif //BIG3DFLUFFY_QTINCLUDES_H
