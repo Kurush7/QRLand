@@ -11,8 +11,5 @@
 #define sptr std::shared_ptr
 #define uptr std::unique_ptr
 
-const float SCENE_DIST = 10;
-const float PROJECTIVE_COEF = 1/100;
-
 
 #endif //BIG3DFLUFFY_GLOBALDEFINES_H

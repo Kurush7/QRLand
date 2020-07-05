@@ -24,12 +24,21 @@
  */
 
 // todo bridge: projection implementation
+
+class Camera3DMemento;
 class Camera3D: public QRCamera3D {
 public:
+    friend class Camera3DMemento;
+
     Camera3D(float w, float h, const Vector3D &origin, float screen,
              float nearCutter, float farCutter = QRINF);
+    ~Camera3D() {p.reset();}
     virtual sptr<QRObject3D> copy() {return sptr<QRCamera3D>(new Camera3D(width, height,
             origin, screen, nearCutter, farCutter));}
+    virtual uptr<QRMemento> save();
+    virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitCamera3D(p);}
+    wptr<QRCamera3D> getPointer() {return p;}
+
 
     virtual bool isVisible(){return false;}
 
@@ -63,6 +72,7 @@ public:
                                                                width == b.getWidth() &&
                                                                height == b.getHeight();}
 private:
+    sptr<Camera3D> p;
     Vector3D origin, viewUpVector, deepVector, bind;
     float nearCutter, farCutter, screen;
     Vector3D frustrum[6];

@@ -24,11 +24,15 @@ void QRenderer::render () {
     projector = camera->getProjectionTransformer().get();
     screenData = camera->getScreen();
 
+
     auto mcr = MoveTransformer3DCreator(Vector3D(screenData[2]/2, screenData[3]/2,0,0));
     auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/screenData[2],
                                                   image->getHeight()/screenData[3], 1,0));
     imageTransformer = mcr.create().release();
     imageTransformer->accumulate(scr.create()->getMatrix());
+
+    cout << "screen: " << screenData << '\n';
+    cout << "image: " << imageTransformer->getMatrix() << '\n';
 
     // init zbuffer, fill in black
     zbuf.clearBuf();
@@ -85,8 +89,16 @@ void QRenderer::render () {
             RenderPolygon drawPoly = cutPolyRect(front[i], screenData);
             if (drawPoly.getSize() < 3) continue;
 
+            for (auto p: drawPoly)
+                cout << p << '\n';
+
+
             for (auto &x: drawPoly)      // polygon's points to image coords
                 x = imageTransformer->transform(x);
+            for (auto p: drawPoly)
+                cout << "***" << p << '\n';
+            cout << '\n';
+
             colorManager->setTexture(front[i]->getTexture());
             zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), front[i]->getNormal());
         }

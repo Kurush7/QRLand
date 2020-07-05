@@ -17,7 +17,7 @@ class PolySceneCreator: public QRPolySceneCreator {
 public:
     virtual uptr<QRPolyScene3D> create() {
         auto cr = CameraCreator();
-        auto cam = sptr<QRCamera3D>(cr.create(100, 100, Vector3D(0,0,-100)));
+        auto cam = sptr<QRCamera3D>(cr.create(100, 100, Vector3D(0,0,-20)));
         auto scene = uptr<QRPolyScene3D>(new PolyScene3D(cam));
         auto light = sptr<QRLight>(new BaseLight(Vector3D(0,0,-100)));
         scene->addLight(light);

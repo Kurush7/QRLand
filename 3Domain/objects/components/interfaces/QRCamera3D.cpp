@@ -3,10 +3,5 @@
 //
 
 #include "QRCamera3D.h"
-#include "mementos/QRCamera3DMemento.h"
 
 using namespace std;
-
-uptr<QRMemento> QRCamera3D::save() {
-    return uptr<QRMemento>(new Camera3DMemento(p));
-}

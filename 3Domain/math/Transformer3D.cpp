@@ -60,9 +60,9 @@ uptr<QRTransformer3D> RotateTransformer3DCreator::create() {
 
 
 ProjectionTransformer3DCreator::ProjectionTransformer3DCreator(const Vector3D &v) {
-    if (abs(v[0]) > QREPS) matrix[3][0] = -1/v[0] * PROJECTIVE_COEF;
-    if (abs(v[1]) > QREPS) matrix[3][1] = -1/v[1] * PROJECTIVE_COEF;
-    if (abs(v[2]) > QREPS) matrix[3][2] = -1/v[2] * PROJECTIVE_COEF;
+    if (fabs(v[0]) > QREPS) matrix[3][0] = 1/v[0] * PROJECTIVE_COEF;
+    if (fabs(v[1]) > QREPS) matrix[3][1] = 1/v[1] * PROJECTIVE_COEF;
+    if (fabs(v[2]) > QREPS) matrix[3][2] = 1/v[2] * PROJECTIVE_COEF;
 }
 ProjectionTransformer3DCreator::ProjectionTransformer3DCreator(float x, float y, float z)
 :ProjectionTransformer3DCreator(Vector3D(x,y,z)) {}
@@ -72,16 +72,14 @@ uptr<QRTransformer3D> ProjectionTransformer3DCreator::create() {
     return uptr<QRTransformer3D>(new Transformer3D(matrix));
 }
 
-AxisChangeTransformer::AxisChangeTransformer(const Vector3D &origin, const Vector3D &oX,
-                                                            const Vector3D &oY, const Vector3D &oZ) {
-    MoveTransformer3DCreator mc(-origin[0], -origin[1], -origin[2]);
-    auto trans = mc.create();
-    Matrix3D rot;   // combine axis to new ones
+AxisChangeTransformer::AxisChangeTransformer(const Vector3D &oX, const Vector3D &oY,
+        const Vector3D &oZ, const Vector3D &origin) {
     for (int i = 0; i < 3; ++i) {
-        rot[0][i] = oX[i];
-        rot[1][i] = oY[i];
-        rot[2][i] = oZ[i];
+        matrix[0][i] = oX[i];
+        matrix[1][i] = oY[i];
+        matrix[2][i] = oZ[i];
     }
-    trans->accumulate(rot);     // TODO LEFT OR RIGHT
-    matrix = trans->getMatrix();
+    matrix[0][3] = -origin[0];
+    matrix[1][3] = -origin[1];
+    matrix[2][3] = -origin[2];
 }

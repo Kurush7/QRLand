@@ -19,12 +19,11 @@
  */
 class QRCamera3D: public QRObject3D {
 public:
-    QRCamera3D(float w, float h): width(w), height(h) {
-        p = sptr<QRCamera3D>(this, [](void *ptr){});}
-    ~QRCamera3D() {p.reset();}
+    QRCamera3D(float w, float h): width(w), height(h) {}
+    ~QRCamera3D() = default;
 
-    virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitCamera3D(p);}
-    virtual uptr<QRMemento> save();
+    virtual void acceptVisitor(const sptr<QRVisitor>& visitor) = 0;
+    virtual uptr<QRMemento> save() = 0;
 
     virtual sptr<QRTransformer3D> getAxisTransformer() const = 0;
     virtual sptr<QRTransformer3D> getProjectionTransformer() const = 0;
@@ -43,8 +42,6 @@ public:
     virtual const Vector3D& getBind() const = 0;
     virtual void setBind(const Vector3D &b) = 0;
 
-    // todo isVisibleSphere
-    // todo to camera coords?
 
     // todo
     //virtual bool operator==(const QRCamera3D &b) const = 0;
@@ -61,10 +58,6 @@ public:
 
     // todo add binds
 
-    wptr<QRCamera3D> getPointer() {return p;}
-
-private:
-    sptr<QRCamera3D> p;
 protected:
     float width, height;
 };

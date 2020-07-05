@@ -12,6 +12,8 @@
 
 
 // todo creators return shared, not unique????? NO
+// todo get rid of interface, create just transformers
+
 
 class QRTransformer3D {
 public:
@@ -36,7 +38,7 @@ public:
 
     virtual Vector3D transform(const Vector3D &v) {return matrix * v;}
 
-    virtual void accumulateRight(const Matrix3D &m) {matrix = matrix * matrix;};
+    virtual void accumulateRight(const Matrix3D &m) {matrix = matrix * m;};
     virtual void accumulateLeft(const Matrix3D &m) {matrix = m * matrix;};
 
     virtual Matrix3D getMatrix() {return matrix;}
@@ -48,8 +50,9 @@ protected:
 // todo as creator
 class AxisChangeTransformer: public Transformer3D {
 public:
-    AxisChangeTransformer(const Vector3D &origin, const Vector3D &oX,
-                          const Vector3D &oY, const Vector3D &oZ);
+    AxisChangeTransformer(const Vector3D &oX,
+                          const Vector3D &oY, const Vector3D &oZ,
+                          const Vector3D &origin = ZeroVector);
 };
 
 
