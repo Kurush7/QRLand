@@ -7,8 +7,8 @@
 
 #include <memory>
 #include "QRMemento.h"
-#include "../../QRDefines.h"
-#include "../../containers/QRContainers.h"
+#include "QRDefines.h"
+#include "containers/QRContainers.h"
 
 class BaseCareTaker {
 public:

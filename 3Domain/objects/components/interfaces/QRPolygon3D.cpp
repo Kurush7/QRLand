@@ -3,7 +3,7 @@
 //
 
 #include "QRPolygon3D.h"
-#include "mementos/QRPolygon3DMemento.h"
+#include "objects/mementos/QRPolygon3DMemento.h"
 
 uptr<QRMemento> QRPolygon3D::save() {
     return uptr<QRMemento>(new QRPolygon3DMemento(p));

@@ -1,4 +1,4 @@
-set(path "objects/components")
+set(path "${path}/components")
 set(source_list ${source_list}
         ${path}/interfaces/QRPoint3D.cpp
         ${path}/interfaces/QREdge3D.cpp

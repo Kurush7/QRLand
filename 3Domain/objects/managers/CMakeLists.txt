@@ -1,4 +1,4 @@
-set(path "objects/managers")
+set(path ${path}/managers)
 set(source_list ${source_list}
         ${path}/FrameLoader.cpp
         ${path}/LoadSource.cpp

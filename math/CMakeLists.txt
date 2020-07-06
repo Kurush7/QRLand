@@ -1,4 +1,4 @@
-set(path math)
+set(path "math")
 
 set(source_list ${source_list}
         ${path}/Vector3D.cpp

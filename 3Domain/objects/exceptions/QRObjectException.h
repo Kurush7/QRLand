@@ -10,7 +10,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "../../exceptions/QRException.h"
+#include "exceptions/QRException.h"
 
 
 class QRBadPointException: public QRObjectException

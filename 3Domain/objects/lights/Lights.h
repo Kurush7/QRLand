@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+#include "math/QRMath.h"
 #include "QRLightInterface.h"
 
 const Vector3D defaultAmb = {0.2,0.2,0.2};

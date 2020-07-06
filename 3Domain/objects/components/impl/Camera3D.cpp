@@ -3,7 +3,7 @@
 //
 
 #include "Camera3D.h"
-#include "mementos/QRCamera3DMemento.h"
+#include "objects/mementos/QRCamera3DMemento.h"
 
 uptr<QRMemento> Camera3D::save() {
     return uptr<QRMemento>(new Camera3DMemento(p));

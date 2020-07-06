@@ -1,4 +1,4 @@
-set(path "textures")
+set(path ${path}/textures)
 
 set(source_list ${source_list}
         ${path}/QRColor.cpp

@@ -1,4 +1,4 @@
-set(path "objects/composites")
+set(path ${path}/composites)
 set(source_list ${source_list}
         ${path}/interfaces/QRFrame3D.cpp
         ${path}/interfaces/QRScene3D.cpp

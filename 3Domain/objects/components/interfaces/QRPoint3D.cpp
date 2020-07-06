@@ -3,7 +3,7 @@
 //
 
 #include "QRPoint3D.h"
-#include "mementos/QRPoint3DMemento.h"
+#include "objects/mementos/QRPoint3DMemento.h"
 
 using namespace std;
 

@@ -31,9 +31,6 @@ void QRenderer::render () {
     imageTransformer = mcr.create().release();
     imageTransformer->accumulate(scr.create()->getMatrix());
 
-    cout << "screen: " << screenData << '\n';
-    cout << "image: " << imageTransformer->getMatrix() << '\n';
-
     // init zbuffer, fill in black
     zbuf.clearBuf();
 
@@ -89,15 +86,8 @@ void QRenderer::render () {
             RenderPolygon drawPoly = cutPolyRect(front[i], screenData);
             if (drawPoly.getSize() < 3) continue;
 
-            for (auto p: drawPoly)
-                cout << p << '\n';
-
-
             for (auto &x: drawPoly)      // polygon's points to image coords
                 x = imageTransformer->transform(x);
-            for (auto p: drawPoly)
-                cout << "***" << p << '\n';
-            cout << '\n';
 
             colorManager->setTexture(front[i]->getTexture());
             zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), front[i]->getNormal());
@@ -115,6 +105,5 @@ void QRenderer::render () {
                 poly->switchNormal();
         }
     }
-    cout << '\n';
     image->repaint();
 }

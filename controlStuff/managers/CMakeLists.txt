@@ -1,4 +1,4 @@
-set(path "managers/")
+set(path ${path}/managers)
 set(source_list ${source_list}
         #${path}/drawManagers/SceneDrawMethod.cpp
         #${path}/drawManagers/DrawVisitors.cpp

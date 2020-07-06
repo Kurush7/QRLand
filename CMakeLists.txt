@@ -5,32 +5,48 @@ set(CMAKE_CXX_STANDARD 14)
 set(VERBOSE=1)
 set(CMAKE_AUTOGEN_VERBOSE on)
 set(CMAKE_VERBOSE_MAKEFILE on)
-set(DRAW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/2DomainOld)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 
 # QT includes
 find_package(Qt5 COMPONENTS Core Widgets OpenGL PrintSupport REQUIRED)
 find_package(OpenGL)
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
+set(OpenGL_GL_PREFERENCE "LEGACY")
 set(QT_INCLUDES
         Qt5::Core
         Qt5::Gui
         Qt5::Widgets
         )
 
+
+set(source_list "")
 include_directories(2Domain)
 include_directories(3Domain)
+include_directories(containers)
+include_directories(exceptions)
+include_directories(math)
 include_directories(controlStuff)
-include_directories(gui)
+include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(3Domain)
-#add_subdirectory(2DomainOld)
+set (path "")
+set(source_list "")
 add_subdirectory(2Domain)
+add_subdirectory(3Domain)
+add_subdirectory(containers)
+add_subdirectory(exceptions)
+add_subdirectory(math)
 add_subdirectory(controlStuff)
-add_subdirectory(tests)
+add_library(all_lib
+        ${source_list})
+target_link_libraries(all_lib
+        ${QT_INCLUDES}
+        )
+
+#add_subdirectory(tests)
 add_subdirectory(gui)
+
+
 
 
 add_library(wip1_lib
@@ -41,21 +57,15 @@ add_library(wip1_lib
 target_link_libraries(wip1_lib
         ${QT_INCLUDES}
         )
-#target_compile_definitions(gui_lib PUBLIC
-#        CURRENT_DIR="~/../models"
-#        )
 
 add_executable(main.exe
         main.cpp)
 target_link_libraries(main.exe
         wip1_lib
         widgets_lib
-        2domain_lib
-        3domain_lib
-        control_lib
+        all_lib
         )
 
-#target_compile_options(main.exe PUBLIC -lGL -lGLU -lglut)
 qt5_use_modules(main.exe Widgets OpenGL)
 target_link_libraries(main.exe ${QT_LIBRARIES} ${OPENGL_LIBRARIES})
 

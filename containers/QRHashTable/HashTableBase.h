@@ -8,7 +8,7 @@
 #include <iostream>
 #include <memory>
 
-#include "../../QRDefines.h"
+#include "QRDefines.h"
 
 class HashTableBase {
 public:

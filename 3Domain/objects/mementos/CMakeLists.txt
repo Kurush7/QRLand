@@ -1,4 +1,4 @@
-set(path "objects/mementos")
+set(path ${path}/mementos)
 set(source_list ${source_list}
         ${path}/QRPoint3DMemento.cpp
         ${path}/QREdge3DMemento.cpp

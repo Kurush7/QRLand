@@ -10,7 +10,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "../QRDefines.h"
+#include "QRDefines.h"
 
 class QRException: public std::exception {
 public:

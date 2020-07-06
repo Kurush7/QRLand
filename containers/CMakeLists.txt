@@ -1,4 +1,4 @@
-set(path "containers/")
+set(path "containers")
 add_subdirectory(exceptions)
 add_subdirectory(QRVector)
 add_subdirectory(QRSet)

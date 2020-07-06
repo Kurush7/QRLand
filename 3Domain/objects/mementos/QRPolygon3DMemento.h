@@ -6,7 +6,7 @@
 #define BIG3DFLUFFY_QRPOLYGON3DMEMENTO_H
 
 #include "QRMemento.h"
-#include "components/interfaces/QRPolygon3D.h"
+#include "objects/components/interfaces/QRPolygon3D.h"
 
 class QRPolygon3DMemento: public QRMemento {
 public:
