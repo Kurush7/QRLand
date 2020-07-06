@@ -5,7 +5,7 @@
 #ifndef BIG3DFLUFFY_QRPROJECTION_H
 #define BIG3DFLUFFY_QRPROJECTION_H
 
-#include "../../../math/QRMath.h"
+#include "math/QRMath.h"
 
 class ProjectionImp {
 public:

@@ -19,7 +19,6 @@ set(QT_INCLUDES
         )
 
 
-set(source_list "")
 include_directories(2Domain)
 include_directories(3Domain)
 include_directories(containers)
@@ -29,24 +28,25 @@ include_directories(controlStuff)
 include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+
+add_subdirectory(tests)
+
 set (path "")
 set(source_list "")
 add_subdirectory(2Domain)
 add_subdirectory(3Domain)
 add_subdirectory(containers)
-add_subdirectory(exceptions)
 add_subdirectory(math)
+add_subdirectory(exceptions)
 add_subdirectory(controlStuff)
+add_subdirectory(landscape)
 add_library(all_lib
         ${source_list})
 target_link_libraries(all_lib
         ${QT_INCLUDES}
         )
 
-#add_subdirectory(tests)
 add_subdirectory(gui)
-
-
 
 
 add_library(wip1_lib
