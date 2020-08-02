@@ -15,7 +15,15 @@ QRLandscapeSurface::QRLandscapeSurface(size_t w, size_t h, double step): points(
 
     for (size_t i = 0; i < h-1; ++i)
         for (size_t j = 0; j < w-1; ++j) {
-            QRVector<sptr<QRPoint3D>> pts(3);
+            polygons.push_back(sptr<QRPolygon3D>(new Triangle3D(points[i][j],
+                                                                points[i+1][j+1],
+                                                                points[i+1][j],
+                                                                QRTexturesMap[QRDEFAULT_MATERIAL])));
+            polygons.push_back(sptr<QRPolygon3D>(new Triangle3D(points[i][j],
+                                                                points[i][j+1],
+                                                                points[i+1][j+1],
+                                                                QRTexturesMap[QRDEFAULT_MATERIAL])));
+            /*QRVector<sptr<QRPoint3D>> pts(3);
             pts[0] = points[i][j];
             pts[1] = points[i+1][j+1];
             pts[2] = points[i+1][j];
@@ -25,7 +33,7 @@ QRLandscapeSurface::QRLandscapeSurface(size_t w, size_t h, double step): points(
             pts[1] = points[i][j+1];    // another rotate order. to keep normals on the same side
             pts[2] = points[i+1][j+1];
             p = sptr<QRPolygon3D>(new Polygon3D(pts, QRTexturesMap[QRDEFAULT_MATERIAL]));
-            polygons.push_back(p);
+            polygons.push_back(p);*/
         }
 }
 

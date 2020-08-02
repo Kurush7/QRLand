@@ -12,7 +12,6 @@ uptr<QRLandscapeSurface> RandomHMapLandscapeSurfaceCreator::create() {
         x = -(width+0.)/2.*step;
         for (size_t j = 0; j < width; ++j) {
             m[i][j] = exp(-(x * x + y * y) / 8) * (sin(x * x) + cos(y * y));
-            cout << x << ' ' << y << ' ' << m[i][j] << '\n';
             x += step;
         }
         y += step;

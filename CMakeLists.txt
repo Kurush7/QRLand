@@ -29,7 +29,7 @@ include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set (path "")
-set(source_list "" landscape/QRLandscapeSurface.cpp landscape/QRLandscapeSurface.h containers/QRMatrix/QRMatrix.cpp containers/QRMatrix/QRMatrix.h landscape/QRLandscape.h landscape/QRLandscapeSurfaceCreator.cpp landscape/QRLandscapeSurfaceCreator.h)
+set(source_list "" landscape/QRLandscapeSurface.cpp landscape/QRLandscapeSurface.h containers/QRMatrix/QRMatrix.cpp containers/QRMatrix/QRMatrix.h landscape/QRLandscape.h landscape/QRLandscapeSurfaceCreator.cpp landscape/QRLandscapeSurfaceCreator.h 3Domain/objects/components/impl/Triangle3D.cpp 3Domain/objects/components/impl/Triangle3D.h)
 add_subdirectory(2Domain)
 add_subdirectory(3Domain)
 add_subdirectory(containers)
