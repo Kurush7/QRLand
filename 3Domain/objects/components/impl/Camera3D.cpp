@@ -97,5 +97,5 @@ bool Camera3D::isVisibleSphere(const Vector3D &c, float rad) {
 
 bool Camera3D::isFrontFace(const Vector3D &normal) {
     // todo normal is already transformed into camera's coordinates!!!!!!
-    return normal[2] <= 0;
+    return normal[2] < QREPS;
 }

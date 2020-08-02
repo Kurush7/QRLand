@@ -13,7 +13,7 @@ Presenter::Presenter(MainWindow &w): window(w) {
     image = sptr<QRImage>(new ImageQT(window.canvas));
     facade = sptr<Facade>(new Facade(image));
 
-    facade->addCube(10,0,0,0, QRColor("red"));
+    //facade->addCube(10,0,0,0, QRColor("red"));
     draw();
 }
 
@@ -87,7 +87,7 @@ void Presenter::draw(bool reset) {
     system_clock::time_point end = system_clock::now();
     float time = (end - start).count();    // nanosecs
     time /= 1e6;  // milisecs
-    if (draw_cnt > 1000) draw_cnt = 0;
+    if (draw_cnt > 1000) draw_cnt = 0, draw_time_msec=0;
     draw_time_msec = (draw_time_msec * draw_cnt + time) / (draw_cnt+1);
     draw_cnt++;
     window.drawTimeLabel->setText("среднее ремя отрисовки: " + QString::number(draw_time_msec) +

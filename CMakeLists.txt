@@ -28,11 +28,8 @@ include_directories(controlStuff)
 include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-
-add_subdirectory(tests)
-
 set (path "")
-set(source_list "")
+set(source_list "" landscape/QRLandscapeSurface.cpp landscape/QRLandscapeSurface.h containers/QRMatrix/QRMatrix.cpp containers/QRMatrix/QRMatrix.h landscape/QRLandscape.h landscape/QRLandscapeSurfaceCreator.cpp landscape/QRLandscapeSurfaceCreator.h)
 add_subdirectory(2Domain)
 add_subdirectory(3Domain)
 add_subdirectory(containers)
@@ -47,7 +44,7 @@ target_link_libraries(all_lib
         )
 
 add_subdirectory(gui)
-
+#add_subdirectory(tests)
 
 add_library(wip1_lib
         gui/wip1/MainWindow.cpp

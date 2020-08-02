@@ -34,39 +34,3 @@ TEST(ObjectTests, polygon)
     mem->restore();
     EXPECT_EQ(a, c);
 }
-
-
-TEST(ObjectTests, model3D) {
-    auto factory = sptr<QRObject3DFactory>(new SimpleBasicObject3DFactory());
-    auto data = sptr<LoadData> (new FileLoadData("test.txt"));
-    auto source = sptr<LoadSource>(new FileSource(data));
-    auto loader = sptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
-    auto director = FrameLoadDirector();
-    auto model = director.load(loader);
-    EXPECT_NE(model, nullptr);
-
-    // hand-testing
-    auto mem = model->save();
-    QRVector<sptr<QRObject>> v;
-    model->setObjects(v);
-    mem->restore();
-}
-
-TEST(ObjectTests, scene3D) {
-    auto factory = sptr<QRObject3DFactory>(new SimpleBasicObject3DFactory());
-    auto data = sptr<LoadData> (new FileLoadData("test.txt"));
-    auto source = sptr<LoadSource>(new FileSource(data));
-    auto loader = sptr<BaseFrame3DLoader> (new Frame3DLoader(source, factory));
-    auto director = FrameLoadDirector();
-    auto model = director.load(loader);
-
-
-    auto sceneBuilder = sptr<BaseScene3DBuilder> (new Scene3DBuilder(factory));
-    auto sceneDirector = SceneBuildDirector();
-    auto scene = sceneDirector.build(sceneBuilder);
-
-    auto mem = scene->save();
-    QRVector<sptr<QRObject>> v;
-    scene->setObjects(v);
-    mem->restore();
-}

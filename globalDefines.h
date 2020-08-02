@@ -11,5 +11,6 @@
 #define sptr std::shared_ptr
 #define uptr std::unique_ptr
 
+#define qrfor(type, var, l, r) for(type var = l; var < r; ++var)
 
 #endif //BIG3DFLUFFY_GLOBALDEFINES_H

@@ -70,7 +70,7 @@ void QRenderer::render () {
             poly->updateNormal();   // good normal, in camera's coordinates
             if (poly->where(transZero) != vPlace)
                 poly->switchNormal();
-            if (camera->isFrontFace(poly->getNormal())) front.push_back(poly);
+            if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) front.push_back(poly);
         }
         front_size = front.getSize();
 

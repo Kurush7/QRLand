@@ -37,6 +37,7 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
     }
     if (poly[0][0] == poly[myI-1][0] && poly[0][1] == poly[myI-1][1]) myI--;
     n = myI;
+    if (n == 0) return;
 
     if (rr == -1) rr = ll;
     jumpL();
@@ -92,14 +93,22 @@ void QRasterizeZBuffer::clearBuf() {
 inline void QRasterizeZBuffer::jumpL() {
     left = ll;
     ll = (left-dir + n) % n;    // todo not accurate?
-    bl = (poly[ll][0] - poly[left][0]) / (poly[left][1] - poly[ll][1] + 0.);
-    zl = poly[left][2];
-    dzl = (poly[ll][2] - zl) / (poly[ll][1] - poly[left][1]+0.);
+    if (poly[left][1] - poly[ll][1] == 0)
+        bl = 0, dzl = 0;    // bug hiding)
+    else {
+        bl = (poly[ll][0] - poly[left][0]) / (poly[left][1] - poly[ll][1] + 0.);
+        zl = poly[left][2];
+        dzl = (poly[ll][2] - zl) / (poly[ll][1] - poly[left][1]+0.);
+    }
 }
 inline void QRasterizeZBuffer::jumpR() {
     right = rr;
     rr = (right+dir + n) % n;   // todo not accurate?
-    br = (poly[rr][0] - poly[right][0]) / (poly[right][1] - poly[rr][1] + 0.);
-    zr = poly[right][2];
-    dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1]+0.);
+    if (poly[right][1] - poly[rr][1] == 0)
+        br = 0, dzr = 0;    // bug hiding)
+    else {
+        br = (poly[rr][0] - poly[right][0]) / (poly[right][1] - poly[rr][1] + 0.);
+        zr = poly[right][2];
+        dzr = (poly[rr][2] - zr) / (poly[rr][1] - poly[right][1] + 0.);
+    }
 }

@@ -5,7 +5,6 @@
 #ifndef KG_GRAPHICFIELD_H
 #define KG_GRAPHICFIELD_H
 
-#include <QPainter>
 
 #include "QRCanvasViewer.h"
 #include "QRActionManager.h"

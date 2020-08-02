@@ -7,6 +7,7 @@
 
 #include "objects/objects.h"
 #include "managers/QRManagers.h"
+#include "landscape/QRLandscape.h"
 #include "renderStuff.h"
 
 class Facade {

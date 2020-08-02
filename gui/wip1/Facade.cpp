@@ -12,6 +12,11 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     scene = cr.create();
     scene->getActiveCamera()->setBind(Vector3D(0,0,0)); // todo
     renderer = sptr<QRenderer>(new QRenderer(image, scene));
+
+
+    //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(10,10)), Vector3D(0,0,0));
+    scene->addModel(RandomHMapLandscapeSurfaceCreator(50,50, 0.2).create(),
+            Vector3D(0,0,0));
 }
 
 void Facade::addCube(float a, float x, float y, float z, QRColor c) {

@@ -31,7 +31,7 @@ public:
     Vector3D& operator +=(const Vector3D&);
     Vector3D& operator -=(const Vector3D&);
     Vector3D& operator /=(float);
-    inline float& operator[](int);
+    float& operator[](int);
     const float& operator[](int) const;
 
     void normSelf();

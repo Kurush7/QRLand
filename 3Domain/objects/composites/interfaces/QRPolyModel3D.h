@@ -22,6 +22,8 @@ public:
     virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {}   // todo no fitting method in visitor
     sptr<QRPolyModel3D> getPointer() {return p_model;}
     virtual uptr<QRMemento> save();
+    virtual bool isConvex() {return convexity;}
+    virtual void setConvexity(bool x) {convexity = x;}
 
     virtual PolygonIterator getPolygons() const = 0;
     virtual PointIterator getPoints() const = 0;
@@ -31,6 +33,8 @@ public:
 
     virtual bool operator==(const QRPolyModel3D &b) const;
     //virtual QRModel3D& operator=(const QRModel3D &p) = delete;      // todo!!!
+protected:
+    bool convexity = false;
 private:
     sptr<QRPolyModel3D> p_model;
 };

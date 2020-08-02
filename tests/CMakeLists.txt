@@ -18,9 +18,10 @@ add_executable(tests.exe
         containers/vectorTest.cpp
         math/mathTest.cpp
         objects/objectsTest.cpp
+        landscape/landscapeTest.cpp
         )
 target_link_libraries(tests.exe
-        3domain_lib
+        all_lib
         gtest
         gtest_main
         )

@@ -21,9 +21,9 @@ public:
     virtual PointIterator getPoints() const {return points.begin();}
     virtual void setValues(PointIterator pt, PolygonIterator pg);
     virtual void setSelected(bool x) {
-        for (auto p: points)
+        for (auto &p: points)
             p->setSelected(x);
-        for (auto p: polygons)
+        for (auto &p: polygons)
             p->setSelected(x);
     }
 
