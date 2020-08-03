@@ -26,8 +26,8 @@ public:
     QRVector(QRVector<T>&&);
 
     void clear() {*size = 0;}
-    sptr<QRVector<T>> getPointer() {return p;}
-    T* getPureArray() {return arr.get();}
+    sptr<QRVector<T>> getPointer() const {return p;}
+    T* getPureArray() const {return arr.get();}
 
     QRVector<T>& operator =(const QRVector<T>&);
     QRVector<T>& operator =(const QRVector<T>&&);

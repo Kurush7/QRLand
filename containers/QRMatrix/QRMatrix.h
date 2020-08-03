@@ -38,6 +38,9 @@ public:
     size_t height() const {return h;}
     size_t rowCnt() const {return h;}
     size_t columnCnt() const {return w;}
+    size_t getSize() const {return w*h;}
+
+    T* getPureArray() const {return matrix.getPureArray();}
 
     QRVectorIterator<T> begin() const {return matrix.begin();}
     QRVectorIterator<T> end() const {return matrix.end();}

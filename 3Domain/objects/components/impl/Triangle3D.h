@@ -15,10 +15,12 @@ public:
               const sptr<QRTexture> t);
     Triangle3D(initializer_list<sptr<QRPoint3D>> lst,
               const sptr<QRTexture> t);
+    ~Triangle3D() {delete arr;}
 
     virtual sptr<QRObject3D> copy() {return sptr<Triangle3D>(new Triangle3D(p1,p2,p3,texture));}
 
     virtual PointIterator getPoints() const {return PointIterator ({p1, p2, p3});}
+    virtual sptr<QRPoint3D>* getPurePoints() const {return arr;}
 
     virtual void setPoints(const PointIterator &it0) {
         auto it = it0;
@@ -48,6 +50,9 @@ public:
 public:
     sptr<QRPoint3D> p1, p2, p3;
     sptr<QRTexture> texture;
+
+    // todo extra memory.... phew
+    sptr<QRPoint3D> *arr = new sptr<QRPoint3D>[3];
 
     Vector3D normal; // normal: len(a,b,c) = 1, d=1;
     float d;  // plane's d: ax+by+c+D=0

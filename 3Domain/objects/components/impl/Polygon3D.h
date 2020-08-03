@@ -20,6 +20,7 @@ public:
     virtual sptr<QRObject3D> copy() {return sptr<Polygon3D>(new Polygon3D(points,texture));}
 
     virtual PointIterator getPoints() const {return points.begin();}
+    virtual sptr<QRPoint3D>* getPurePoints() const {return points.getPureArray();}
     virtual void setPoints(const PointIterator &it) {points = it; definePlane();}
 
     virtual const Vector3D getPlane() const {auto p = normal; p[3] = d; return p;}

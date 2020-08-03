@@ -33,6 +33,7 @@ public:
     virtual uptr<QRMemento> save();
 
     virtual PointIterator getPoints() const = 0;
+    virtual sptr<QRPoint3D>* getPurePoints() const = 0;
     virtual void setPoints(const PointIterator &it) = 0;
 
     virtual const Vector3D getPlane() const = 0;
@@ -52,7 +53,6 @@ public:
     // todo virtual QREdge3D& operator=(){}
     // todo get triangles? pointset....
     // todo bare array getter?
-
 private:
     sptr<QRPolygon3D> p;
 };

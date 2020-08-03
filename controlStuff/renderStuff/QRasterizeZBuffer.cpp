@@ -18,10 +18,12 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
     ll = 0, rr = -1;
     int maxY = -1;
     int myI = 0;
+    correctFlag = false;
     for (int i = 0; i < n; ++i) {
         // some hardcode: digital len of(-50,50) is 101,
         // yet float's is 100. so translation after cutting becomes a bit dull....
         poly[myI][0] = min(w-1, QRound(poly[i][0]));
+        //if (max(min(poly[myI][0], w-1), 0) != poly[myI][0]) correctFlag=true;
         poly[myI][1] = min(h-1, QRound(poly[i][1]));
         // used for: 2 points after cutting and discreting being the same (to avoid nan as 0/0 in bl, br)
         if (i && poly[i][0] == poly[i-1][0] && poly[i][1] == poly[i-1][1]) continue;
@@ -67,11 +69,15 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
 
 void QRasterizeZBuffer::fillRow() {
     if (xli == xri) return;
-
+    /*if (correctFlag) {
+        xli = max(min(xli, w-1), 0);
+        xri = max(min(xri, w-1), 0);
+        y = max(min(y, h-1), 0);
+    }*/
     float z = zl;
     float dz = (zr - zl + 0.) / (xri - xli + 0.);
     for (int x = xli; x <= xri; ++x) {
-        if (z - zbuf[x][y] < QREPS) {
+        if (z - zbuf[x][y] < -QREPS) {
             img->setPixel(x, y, c);
             zbuf[x][y] = z;
         }
@@ -86,7 +92,8 @@ void QRasterizeZBuffer::clearBuf() {
             zbuf[i][j] = QRINF;
     }
     uchar* data = img->getData();
-    for (int i = 0; i < w*h*4; ++i)
+    auto x =  w*h*4;
+    for (int i = 0; i < x; ++i)
         data[i] = 0;
 }
 

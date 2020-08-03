@@ -23,10 +23,16 @@ public:
     sptr<QRPolyModel3D> getPointer() {return p_model;}
     virtual uptr<QRMemento> save();
     virtual bool isConvex() {return convexity;}
+    virtual bool isTriangulated() {return triangulated;}
     virtual void setConvexity(bool x) {convexity = x;}
+    virtual void setTriangulated(bool x) {triangulated = x;}
 
     virtual PolygonIterator getPolygons() const = 0;
     virtual PointIterator getPoints() const = 0;
+    virtual sptr<QRPolygon3D>* getPurePolygons() const = 0;
+    virtual sptr<QRPoint3D>* getPurePoints() const = 0;
+    virtual size_t getPolygonCnt() const = 0;
+    virtual size_t getPointCnt() const = 0;
     virtual void setValues(PointIterator pt, PolygonIterator pg) = 0;   // for memento only! ?todo friend?
 
     virtual float getRadius() const = 0;   // radius of circumscribed sphere
@@ -35,6 +41,7 @@ public:
     //virtual QRModel3D& operator=(const QRModel3D &p) = delete;      // todo!!!
 protected:
     bool convexity = false;
+    bool triangulated = false;
 private:
     sptr<QRPolyModel3D> p_model;
 };

@@ -19,6 +19,11 @@ public:
 
     virtual PolygonIterator getPolygons() const {return polygons.begin();}
     virtual PointIterator getPoints() const {return points.begin();}
+    virtual sptr<QRPolygon3D>* getPurePolygons() const {return polygons.getPureArray();}
+    virtual sptr<QRPoint3D>* getPurePoints() const {return points.getPureArray();}
+    virtual size_t getPolygonCnt() const {return polygons.getSize();}
+    virtual size_t getPointCnt() const {return points.getSize();}
+
     virtual void setValues(PointIterator pt, PolygonIterator pg);
     virtual void setSelected(bool x) {
         for (auto &p: points)

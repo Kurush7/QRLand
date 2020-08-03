@@ -9,12 +9,27 @@
 #include "objects/objects.h"
 
 //  convex polygon
-using RenderPolygon = QRVector<Vector3D>;
+using renderPolygon = QRVector<Vector3D>;
+struct renderTriangle {
+    Vector3D p1, p2, p3;
+};
 
-// cuts convex 2d-poly (ignores oZ) with rectangle, returns NEW cut convex polygon
 
-RenderPolygon cutPolyRect(const QRPolygon3D *poly, float l, float r, float u, float d);
-RenderPolygon cutPolyRect(const QRPolygon3D *poly, const Vector3D &screenData);
+class PolyRectCutter {
+public:
+    renderPolygon cutPolyRect(const QRPolygon3D *poly);
+    void setCutter(float l, float r, float u, float d);
+    void setCutter(const Vector3D &screenData);
+private:
+    inline char getCode(float x, float y);
+    inline Vector3D intersectionPoint(const Vector3D &p1, const Vector3D &p2, int cut_i);
 
+    renderPolygon cutter, Q;
+    int Np, Nw = 5;
+    Vector3D S, interP;
+    bool interFlag;
+
+    float cut_a[4], cut_b[4], cut_c[4];
+};
 
 #endif //BIG3DFLUFFY_QRPOLYRECTCUTTER_H

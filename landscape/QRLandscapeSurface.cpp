@@ -7,6 +7,7 @@
 using namespace std;
 
 QRLandscapeSurface::QRLandscapeSurface(size_t w, size_t h, double step): points(w ,h), step(step) {
+    setTriangulated(true);
     width = w;
     height = h;
     for(size_t i = 0; i < h; ++i)
@@ -23,17 +24,6 @@ QRLandscapeSurface::QRLandscapeSurface(size_t w, size_t h, double step): points(
                                                                 points[i][j+1],
                                                                 points[i+1][j+1],
                                                                 QRTexturesMap[QRDEFAULT_MATERIAL])));
-            /*QRVector<sptr<QRPoint3D>> pts(3);
-            pts[0] = points[i][j];
-            pts[1] = points[i+1][j+1];
-            pts[2] = points[i+1][j];
-            auto p = sptr<QRPolygon3D>(new Polygon3D(pts, QRTexturesMap[QRDEFAULT_MATERIAL]));
-            polygons.push_back(p);
-
-            pts[1] = points[i][j+1];    // another rotate order. to keep normals on the same side
-            pts[2] = points[i+1][j+1];
-            p = sptr<QRPolygon3D>(new Polygon3D(pts, QRTexturesMap[QRDEFAULT_MATERIAL]));
-            polygons.push_back(p);*/
         }
 }
 

@@ -7,6 +7,7 @@
 Triangle3D::Triangle3D(sptr<QRPoint3D> p1, sptr<QRPoint3D> p2, sptr<QRPoint3D> p3,
         const sptr<QRTexture> t)
 : p1(p1), p2(p2), p3(p3), texture(t) {
+    arr[0] = p1, arr[1] = p2, arr[2] = p3;
     definePlane();
 }
 Triangle3D::Triangle3D(initializer_list<sptr<QRPoint3D>> lst, const sptr<QRTexture> t ): texture(t) {
@@ -18,6 +19,7 @@ Triangle3D::Triangle3D(initializer_list<sptr<QRPoint3D>> lst, const sptr<QRTextu
         i++;
         if (i == 3) break;
     }
+    arr[0] = p1, arr[1] = p2, arr[2] = p3;
     definePlane();
 }
 
@@ -32,6 +34,7 @@ bool Triangle3D::operator==(const QRPolygon3D &b) const {
         i++;
         if (i == 3) break;
     }
+    arr[0] = p1, arr[1] = p2, arr[2] = p3;
     return !(bool)it;     // if it=True, then it's not ended -> more than 3 nodes
 }
 

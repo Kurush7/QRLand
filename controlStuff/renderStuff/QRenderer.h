@@ -18,22 +18,34 @@ public:
     void setScene(const sptr<QRPolyScene3D> &s) {scene = s.get();}    // todo
 
 private:
+    void initRender();
+    // returns true if smth of the model is still visible. model field holds it
+    bool modelCameraCut();
+    void copyTransformPoints();
+    void manageFrontFacePolygons();
+    void projectPoints();
+    void restorePoints();
+    void frameCutDraw();
+
     QRImage *image;
     QRPolyScene3D *scene;
     QRColorManager *colorManager;
     QRasterizeZBuffer zbuf;
 
     // render data
+    PolyRectCutter cutter;
     QRCamera3D *camera;
     QRPolygon3D *poly;
+    sptr<QRPolygon3D>* polys;
+    sptr<QRPoint3D>* model_pts;
     QRTransformer3D *cameraTransformer, *projector, *modelTransformer, *imageTransformer;
-    Vector3D screenData;
+    Vector3D screenData, transZero;
     QRPolyModel3D *model;
-    QRVector<QRPolygon3D*> front;
+    PolyPosition vPlace;
+    QRVector<QRPolygon3D*> activePolys;
     QRVector<QRPoint3D*> points;
-    size_t points_cnt, front_size;
-    QRVector<Vector3D> old_points;
-
+    size_t points_cnt, active_size;
+    QRVector<Vector3D> old_vectors;
 };
 
 class RenderCreator {
