@@ -11,6 +11,8 @@
 class QRImage {
 public:
     virtual void setPixel(int x, int y, const QRColor &color) = 0;
+    // make mean of current pixel color and given
+    virtual void mixPixel(int x, int y, const QRColor &color) = 0;
     virtual const QRColor getPixel(int x, int y) const = 0;
     virtual void repaint() = 0;
     virtual void refillBg() = 0;

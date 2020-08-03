@@ -37,6 +37,14 @@ public:
         return color;
     }
 
+    virtual void mixPixel(int x, int y, const QRColor &color) {
+        int ind = (y*w + x)*4;
+        data[ind] = (data[ind] + color.r)/2; ind++;
+        data[ind] = (data[ind] + color.g)/2; ind++;
+        data[ind] = (data[ind] + color.b)/2; ind++;
+        data[ind] = (data[ind] + color.alpha)/2;;
+    }
+
     virtual void repaint() {canvas->repaint();}
     virtual void refillBg() {}  // todo DELETE
 

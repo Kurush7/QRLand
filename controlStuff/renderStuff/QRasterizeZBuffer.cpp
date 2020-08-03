@@ -8,12 +8,11 @@
 void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
     poly = _poly;
     n = size;
+    if (n < 3) return;
     c = colorManager->getColor(norm);   // todo not acceptable for mapping, so....
 
-    // needed right, but y = -y, so...
+    // needed right, but y = -y in our image-axis, so...
     dir = isRightRotate(poly[0], poly[1], poly[2])? -1 : 1;
-
-    // todo load inted points before managing polys, which will be just integer indexes
 
     ll = 0, rr = -1;
     int maxY = -1;
@@ -22,10 +21,11 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
     for (int i = 0; i < n; ++i) {
         // some hardcode: digital len of(-50,50) is 101,
         // yet float's is 100. so translation after cutting becomes a bit dull....
-        poly[myI][0] = min(w-1, QRound(poly[i][0]));
+        poly[myI][0] = max(0, min(w-1, QRound(poly[i][0])));
         //if (max(min(poly[myI][0], w-1), 0) != poly[myI][0]) correctFlag=true;
-        poly[myI][1] = min(h-1, QRound(poly[i][1]));
+        poly[myI][1] = max(0, min(h-1, QRound(poly[i][1])));
         // used for: 2 points after cutting and discreting being the same (to avoid nan as 0/0 in bl, br)
+        // todo not accurate z-mapping possible.... and inevitable
         if (i && poly[i][0] == poly[i-1][0] && poly[i][1] == poly[i-1][1]) continue;
 
         maxY = max((int)poly[myI][1], maxY);
@@ -81,6 +81,9 @@ void QRasterizeZBuffer::fillRow() {
             img->setPixel(x, y, c);
             zbuf[x][y] = z;
         }
+        /*else if (fabs(z-zbuf[x][y]) < QREPS) {
+            img->mixPixel(x, y, c);
+        }*/
         z += dz;
     }
 }
