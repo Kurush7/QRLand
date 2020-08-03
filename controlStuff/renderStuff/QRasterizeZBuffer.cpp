@@ -17,7 +17,6 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
     ll = 0, rr = -1;
     int maxY = -1;
     int myI = 0;
-    correctFlag = false;
     for (int i = 0; i < n; ++i) {
         // some hardcode: digital len of(-50,50) is 101,
         // yet float's is 100. so translation after cutting becomes a bit dull....
@@ -52,13 +51,8 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
         xri = QRound(xr);
         fillRow();
         y++;
-        if (y > poly[ll][1]) {
-            if (y > poly[rr][1]) {
-                jumpR();
-            }
-            jumpL();
-        }
-        else if (y > poly[rr][1]) jumpR();
+        if (y > poly[ll][1]) jumpL();
+        if (y > poly[rr][1]) jumpR();
 
         xl -= bl;   // ax+by+c=0 -> x=-c/a +y*(-b/a)
         xr -= br;
@@ -68,28 +62,18 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm) {
 }
 
 void QRasterizeZBuffer::fillRow() {
-    if (xli == xri) return;
-    /*if (correctFlag) {
-        xli = max(min(xli, w-1), 0);
-        xri = max(min(xri, w-1), 0);
-        y = max(min(y, h-1), 0);
-    }*/
     float z = zl;
-    float dz = (zr - zl + 0.) / (xri - xli + 0.);
+    float dz = (zr - zl) / (xri - xli + 0.);
     for (int x = xli; x <= xri; ++x) {
         if (z - zbuf[x][y] < -QREPS) {
             img->setPixel(x, y, c);
             zbuf[x][y] = z;
         }
-        /*else if (fabs(z-zbuf[x][y]) < QREPS) {
-            img->mixPixel(x, y, c);
-        }*/
         z += dz;
     }
 }
 
 void QRasterizeZBuffer::clearBuf() {
-    c = QRColor("black");
     for (int i = 0; i < h; ++i) {
         for (int j = 0; j < w; ++j)
             zbuf[i][j] = QRINF;
@@ -113,9 +97,9 @@ inline void QRasterizeZBuffer::jumpL() {
 }
 inline void QRasterizeZBuffer::jumpR() {
     right = rr;
-    rr = (right+dir + n) % n;   // todo not accurate?
+    rr = (right+dir + n) % n;
     if (poly[right][1] - poly[rr][1] == 0)
-        br = 0, dzr = 0;    // bug hiding)
+        br = 0, dzr = 0;
     else {
         br = (poly[rr][0] - poly[right][0]) / (poly[right][1] - poly[rr][1] + 0.);
         zr = poly[right][2];

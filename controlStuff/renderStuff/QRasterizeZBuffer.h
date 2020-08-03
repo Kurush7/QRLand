@@ -13,17 +13,6 @@
 #include "2Domain.h"
 #include "QRColorManager.h"
 
-struct Vector3DInt {
-    int arr[3];
-
-    int& operator[](int ind) {
-        return arr[ind];
-    }
-    const int& operator[](int ind) const {
-        return arr[ind];
-    }
-};
-
 class QRasterizeZBuffer {
 public:
     explicit QRasterizeZBuffer(const sptr<QRImage> &_img, QRColorManager *man)
@@ -61,11 +50,9 @@ private:
     QRColor c;
     int n;
     int dir;
-
     int left, right, ll, rr;     // ll - after left, rr - after right
     float bl, br, dzl, dzr;
     int xli, xri, y;
-    bool correctFlag=false;
     float zl, zr, xl, xr;
 };
 
