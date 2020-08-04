@@ -5,6 +5,8 @@
 #ifndef BIG3DFLUFFY_QRENDERER_H
 #define BIG3DFLUFFY_QRENDERER_H
 
+#include <thread>
+
 #include "2Domain.h"
 #include "3Domain/objects/objects.h"
 #include "QRasterizeZBuffer.h"
@@ -25,11 +27,13 @@ private:
     void manageFrontFacePolygons();
     void projectPoints();
     void restorePoints();
+
     void frameCutDraw();
+    void threadManagePolygons(QRPolygon3D** polys, size_t size);
 
     QRImage *image;
     QRPolyScene3D *scene;
-    QRColorManager *colorManager;
+    QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
 
     // render data

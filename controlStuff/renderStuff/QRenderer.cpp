@@ -10,8 +10,8 @@
 #include <memory>
 
 QRenderer::QRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
-: colorManager(new QRColorManager), zbuf(image, colorManager),
-scene(scene.get()), image(image.get()){
+: colorManager(new QRLightManager), zbuf(image, colorManager),
+  scene(scene.get()), image(image.get()){
     for (auto li=scene->getLights(); li; ++li)
         colorManager->addLight(*li);
 }
@@ -96,38 +96,42 @@ void QRenderer::projectPoints() {
     }
 }
 
-double tmm1 = 0, tmm2=0, tmm3=0;
+
+void QRenderer::threadManagePolygons(QRPolygon3D** polys, size_t size) {
+    for (size_t i = 0; i < size; ++i) {
+        renderPolygon drawPoly = cutter.cutPolyRect(polys[i]);
+        if (drawPoly.getSize() < 3) continue;
+
+        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), polys[i]->getNormal(),
+                  activePolys[i]->getTexture().get());
+    }
+}
+
 void QRenderer::frameCutDraw() {
     // stage 4: render cut polys, then transform to image's coords and draw
     cutter.setCutter(screenData);
-    for (size_t i = 0; i < active_size; ++i) {
-        colorManager->setTexture(activePolys[i]->getTexture());
 
-        system_clock::time_point start = system_clock::now();
+    /*for (size_t i = 0; i < active_size; ++i) {
         renderPolygon drawPoly = cutter.cutPolyRect(activePolys[i]);
         if (drawPoly.getSize() < 3) continue;
-        system_clock::time_point end = system_clock::now();
-        double time = (end - start).count();    // nanosecs
-        tmm1 += time / 1e6;
+        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), activePolys[i]->getNormal(),
+                  activePolys[i]->getTexture().get());
+    }
+     return;*/
 
-        /*start = system_clock::now();
-        for (auto &x: drawPoly)      // polygon's points to image coords
-            x = imageTransformer->transform(x);
-        end = system_clock::now();
-        time = (end - start).count();    // nanosecs
-        tmm2 += time / 1e6;*/
-
-        start = system_clock::now();
-        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), activePolys[i]->getNormal());
-        end = system_clock::now();
-        time = (end - start).count();    // nanosecs
-        tmm3 += time / 1e6;
-
-        //renderPolygon drawPoly = cutter.cutPolyRect(activePolys[i]);
-        //if (drawPoly.getSize() < 3) continue;
-        //for (auto &x: drawPoly)      // polygon's points to image coords
-         //   x = imageTransformer->transform(x);
-        //zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), activePolys[i]->getNormal());
+    int thread_cnt = std::thread::hardware_concurrency();
+    size_t thread_size = active_size / thread_cnt;
+    auto ptr = activePolys.getPureArray();
+    thread threads[thread_cnt];
+    for (size_t i = 0; i < thread_cnt; ++i) {
+        if (i == thread_cnt-1)
+            threads[i] = thread(&QRenderer::threadManagePolygons, this, ptr+i*thread_size,
+                                thread_size + active_size % thread_cnt);
+        else
+            threads[i] = thread(&QRenderer::threadManagePolygons, this, ptr+i*thread_size, thread_size);
+    }
+    for (size_t i = 0; i < thread_cnt; ++i) {
+        threads[i].join();
     }
 }
 
@@ -157,7 +161,6 @@ void QRenderer::render () {
         model = models->fst.get();
 
         if (!modelCameraCut()) continue;
-        tmm1 = tmm2=tmm3=0;
         double t = measureTime(bind(&QRenderer::copyTransformPoints, this));
         cout << "copyTransformPoints: " << t << " msec\n";
         t = measureTime(bind(&QRenderer::manageFrontFacePolygons, this));
@@ -166,9 +169,6 @@ void QRenderer::render () {
         cout << "projectPoints: " << t << " msec\n";
         t = measureTime(bind(&QRenderer::frameCutDraw, this));
         cout << "frameCutDraw: " << t << " msec\n";
-            cout << "    cut: " << tmm1 << " msec\n";
-            cout << "    toImage: " << tmm2 << " msec\n";
-            cout << "    zbuf: " << tmm3 << " msec\n";
         t = measureTime(bind(&QRenderer::restorePoints, this));
         cout << "restorePoints: " << t << " msec\n";
 

@@ -40,9 +40,12 @@ inline char PolyRectCutter::getCode(float x, float y) {
 }
 
 renderPolygon PolyRectCutter::cutPolyRect(const QRPolygon3D *poly) {
-    renderPolygon P;
+    renderPolygon P, Q;
+    Vector3D S, interP;
+    bool interFlag;
+
     auto poly_pts = poly->getPurePoints();
-    Np = poly->getSize();
+    int Np = poly->getSize();
     int code = 0;
     for (int i = 0; i < Np; ++i) {
         P.push_back(poly_pts[i]->getVector());

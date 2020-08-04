@@ -24,11 +24,8 @@ private:
     inline char getCode(float x, float y);
     inline Vector3D intersectionPoint(const Vector3D &p1, const Vector3D &p2, int cut_i);
 
-    renderPolygon cutter, Q;
-    int Np, Nw = 5;
-    Vector3D S, interP;
-    bool interFlag;
-
+    int Nw = 5;
+    renderPolygon cutter;
     float cut_a[4], cut_b[4], cut_c[4];
 };
 
