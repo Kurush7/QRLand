@@ -11,6 +11,15 @@
 #include "3Domain/objects/objects.h"
 #include "QRasterizeZBuffer.h"
 
+
+#include "QRPolyRectCutter.h"
+#include "QRasterizeZBuffer.h"
+
+#include "tests/TimeTest.h"
+#include <memory>
+
+#include "thread_pull/ctpl_stl.h"
+
 class QRenderer {
 public:
     QRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
@@ -24,12 +33,12 @@ private:
     // returns true if smth of the model is still visible. model field holds it
     bool modelCameraCut();
     void copyTransformPoints();
-    void manageFrontFacePolygons();
+    void updateNormals();
     void projectPoints();
     void restorePoints();
 
     void frameCutDraw();
-    void threadManagePolygons(QRPolygon3D** polys, size_t size);
+    void threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int thread_num=0);
 
     QRImage *image;
     QRPolyScene3D *scene;
@@ -37,7 +46,6 @@ private:
     QRasterizeZBuffer zbuf;
 
     // render data
-    PolyRectCutter cutter;
     QRCamera3D *camera;
     QRPolygon3D *poly;
     sptr<QRPolygon3D>* polys;
@@ -46,9 +54,7 @@ private:
     Vector3D screenData, transZero;
     QRPolyModel3D *model;
     PolyPosition vPlace;
-    QRVector<QRPolygon3D*> activePolys;
-    QRVector<QRPoint3D*> points;
-    size_t points_cnt, active_size;
+    size_t points_cnt, polys_size;
     QRVector<Vector3D> old_vectors;
 };
 

@@ -27,6 +27,9 @@ private:
     int Nw = 5;
     renderPolygon cutter;
     float cut_a[4], cut_b[4], cut_c[4];
+    renderPolygon P, Q;
+    Vector3D S, interP;
+    bool interFlag;
 };
 
 #endif //BIG3DFLUFFY_QRPOLYRECTCUTTER_H

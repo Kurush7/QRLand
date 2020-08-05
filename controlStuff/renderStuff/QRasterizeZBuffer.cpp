@@ -6,7 +6,7 @@
 
 std::mutex pixel_lock;
 
-// todo kinda brezenham?
+// todo kinda brezenham... too bad?
 void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm, const QRTexture *texture) {
     renderData data;
     data.texture = texture;
@@ -15,6 +15,11 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm, co
     if (data.n < 3) return;
     data.c = texture->getColor();
     colorManager->lightenColor(norm, data.c);   // todo not acceptable for mapping, so....
+    if (data.n == 3)
+    {
+        drawTriangle(data);
+        return;
+    }
 
     // needed right, but y = -y in our image-axis, so...
     data.dir = isRightRotate(data.poly[0], data.poly[1], data.poly[2])? -1 : 1;
@@ -66,14 +71,114 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm, co
     }
 }
 
+void QRasterizeZBuffer::drawTriangle(renderData &data) {
+    // todo ints here already
+    int p0x=QRound(data.poly[0][0]), p0y=QRound(data.poly[0][1]),
+        p1x=QRound(data.poly[1][0]), p1y=QRound(data.poly[1][1]),
+        p2x=QRound(data.poly[2][0]), p2y=QRound(data.poly[2][1]);
+    data.xli = 0, data.xri = 0;
+    if (p1y < p0y) {
+        swap(p0y, p1y);
+        swap(p0x, p1x);
+    }
+    if (p2y < p0y) {
+        swap(p0y, p2y);
+        swap(p0x, p2x);
+    }
+    if (p2y > p1y) {
+        swap(p1y, p2y);
+        swap(p1x, p2x);
+    }
+
+    float bl,br,dzl,dzr;
+    data.y = p0y;
+    float xl, xr;
+    if (p0y != p2y) {
+        bool change_right;   // if 2 is to the right
+        data.zl= data.poly[0][2], data.zr = data.poly[0][2];
+        xl = p0x, xr = p0x;
+        bl = (p2x - p0x+0.) / (p2y-p0y+0.);
+        br = (p1x - p0x+0.) / (p1y-p0y+0.);
+        if (bl < br) {
+            change_right = false;
+            dzl = (data.poly[2][2] - data.zl) / (p2y-p0y+0.);
+            dzr = (data.poly[1][2] - data.zr) / (p1y-p0y+0.);
+        }
+        else {
+            change_right = true;
+            swap(bl, br);
+            dzl = (data.poly[1][2] - data.zl) / (p1y-p0y+0.);
+            dzr = (data.poly[2][2] - data.zr) / (p2y-p0y+0.);
+        }
+        while (data.y <= p2y) {
+            //data.xli = QRound(xl);
+            //data.xri = QRound(xr);
+
+            fillRow(data);
+
+            data.y++;
+            xl += bl;   // ax+by+c=0 -> x=-c/a +y*(-b/a)
+            xr += br;
+            data.zl += dzl;
+            data.zr += dzr;
+        }
+        if (change_right) {
+            xr -= br;
+            data.zr -= dzr;
+            br = (p1x - p2x+0.) / (p1y-p2y+0.);
+            xr += br;
+            dzr = (data.poly[1][2] - data.zr) / (p1y-p2y+0.);
+            data.zr += dzr;
+        }
+        else {
+            xl -= bl;
+            data.zl -= dzl;
+            bl = (p1x - p2x+0.) / (p1y-p2y+0.);
+            xl += bl;
+            dzl = (data.poly[1][2] - data.zl) / (p1y-p2y+0.);
+            data.zl += dzl;
+        }
+    }
+    else {
+        if (p2x < p0x) {
+            data.zl= data.poly[2][2], data.zr = data.poly[0][2];
+            xl = p2x, xr = p0x;
+            bl = (p1x - p2x+0.) / (p1y-p2y+0.);
+            br = (p1x - p0x+0.) / (p1y-p0y+0.);
+            dzl = (data.poly[1][2] - data.zl+0.) / (p1y-p2y+0.);
+            dzr = (data.poly[1][2] - data.zr+0.) / (p1y-p0y+0.);
+        }
+        else {
+            data.zl= data.poly[0][2], data.zr = data.poly[2][2];
+            xl = p0x, xr = p2x;
+            bl = (p1x - p0x+0.) / (p1y-p0y+0.);
+            br = (p1x - p2x+0.) / (p1y-p2y+0.);
+            dzl = (data.poly[1][2] - data.zl+0.) / (p1y-p0y+0.);
+            dzr = (data.poly[1][2] - data.zr+0.) / (p1y-p2y+0.);
+        }
+    }
+    if (data.y > p1y) return;
+    while (data.y <= p1y) {
+        //data.xli = QRound(xl);
+        //data.xri = QRound(xr);
+        fillRow(data);
+        data.y++;
+        xl += bl;   // ax+by+c=0 -> x=-c/a +y*(-b/a)
+        xr += br;
+        data.zl += dzl;
+        data.zr += dzr;
+    }
+}
+
 void QRasterizeZBuffer::fillRow(renderData &data) {
     float z = data.zl;
     float dz = (data.zr - data.zl) / (data.xri - data.xli + 0.);
+    int pos = data.y*w;
     for (int x = data.xli; x <= data.xri; ++x) {
-        if (z - zbuf[x][data.y] < -QREPS) {
+        if (z - zbuf[pos+x] > -QREPS) {
             pixel_lock.lock();
             img->setPixel(x, data.y, data.c);
-            zbuf[x][data.y] = z;
+            zbuf[pos+x] = z;
             pixel_lock.unlock();
         }
         z += dz;
@@ -81,14 +186,11 @@ void QRasterizeZBuffer::fillRow(renderData &data) {
 }
 
 void QRasterizeZBuffer::clearBuf() {
-    for (int i = 0; i < h; ++i) {
-        for (int j = 0; j < w; ++j)
-            zbuf[i][j] = QRINF;
-    }
-    uchar* data = img->getData();
-    auto x =  w*h*4;
-    for (int i = 0; i < x; ++i)
-        data[i] = 0;
+    int sz = w*h;
+    for (int i = 0; i < sz; i+= h)
+        memcpy(&zbuf[i], row_example, sizeof(float)*w);
+
+    memset(img->getData(), 0, w*h*4);
 }
 
 inline void QRasterizeZBuffer::jumpL(renderData &data) {

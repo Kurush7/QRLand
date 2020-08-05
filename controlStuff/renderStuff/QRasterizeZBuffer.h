@@ -32,15 +32,15 @@ public:
     : img(_img.get()), colorManager(man) {
         w = img->getWidth();
         h = img->getHeight();
-        zbuf = (float**) malloc (sizeof(float*) * h);
-        for (int i = 0; i < h; ++i)
-            zbuf[i] = (float *) malloc(sizeof(float) * w);
+        zbuf = (float*) malloc (sizeof(float*) * h*w);
+        row_example = (float*) malloc (sizeof(float*) * w);
+        for (int i = 0; i < w; ++i)
+            row_example[i] = -QRINF;
         clearBuf();
     }
     ~QRasterizeZBuffer() {
-        for (int i = 0; i < h; ++i)
-            free(zbuf[i]);
         free(zbuf);
+        free(row_example);
     }
 
     // data may be spoiled! (reversed and rounded, both guaranteed!)
@@ -49,9 +49,12 @@ public:
 
 private:
     int w, h;
-    float **zbuf;
+    float *zbuf;
+    float *row_example;
     QRImage *img;
     QRLightManager *colorManager;
+
+    void drawTriangle(renderData &data);
 
     void fillRow(renderData &data);
 
