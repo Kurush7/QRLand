@@ -36,7 +36,7 @@ private:
     void restorePoints();
 
     void frameCutDraw();
-    void threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int thread_num=0);
+    void threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int step, int thread_num=0);
 
     QRImage *image;
     QRPolyScene3D *scene;

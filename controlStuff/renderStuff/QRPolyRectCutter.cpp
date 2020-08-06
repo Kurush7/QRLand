@@ -39,7 +39,7 @@ inline char PolyRectCutter::getCode(float x, float y) {
     return code;
 }
 
-renderPolygon PolyRectCutter::cutPolyRect(const QRPolygon3D *poly) {
+bool PolyRectCutter::cutPolyRect(const QRPolygon3D *poly, renderPolygon& result) {
     auto poly_pts = poly->getPurePoints();
     int Np = poly->getSize();
     int code = 0, code_and=15;
@@ -51,8 +51,11 @@ renderPolygon PolyRectCutter::cutPolyRect(const QRPolygon3D *poly) {
         code += c;
         code_and &= c;
     }
-    if (code == 0) return P;
-    if (code_and != 0) return renderPolygon();
+    if (code == 0) {
+        result = P;
+        return true;
+    };
+    if (code_and != 0) return false;
 
     Q.clear();
     for (int i = 0; i < Nw - 1; ++i) {
@@ -82,8 +85,8 @@ renderPolygon PolyRectCutter::cutPolyRect(const QRPolygon3D *poly) {
         Q.clear();
         Np = P.getSize();
     }
-
-   return P;
+    result = P;
+    return true;
 }
 
 void PolyRectCutter::setCutter(const Vector3D &screenData) {

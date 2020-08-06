@@ -6,6 +6,7 @@
 #define BIG3DFLUFFY_QRCONSTANTS_H
 
 const float QREPS = 1e-5;
+const float QREPS_MINI = 1e-3;
 const float QRINF = 1e9;
 
 const float SELECTION_ERROR = 1.05;    // for selection of frame model on click

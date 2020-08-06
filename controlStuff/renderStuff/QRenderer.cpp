@@ -89,28 +89,27 @@ void QRenderer::projectPoints() {
 }
 
 mutex print_lock;
-void QRenderer::threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int thread_num) {
+void QRenderer::threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int step, int thread_num) {
     system_clock::time_point start = system_clock::now();
     size_t skipped=0;
     double cut_time=0, draw_time=0, create_time;
     PolyRectCutter cutter;
     cutter.setCutter(screenData);
-
-    for (size_t i = 0; i < size; ++i) {
+    renderPolygon drawPoly;
+    for (size_t i = 0, pos=0; i < size; ++i, pos+=step) {
         // todo insert 'i'm invisible from this side of the moon' here
         system_clock::time_point start = system_clock::now();
-        renderPolygon drawPoly = cutter.cutPolyRect(polys[i].get());
+        cutter.cutPolyRect(polys[pos].get(), drawPoly);
         system_clock::time_point end = system_clock::now();
         cut_time += (end - start).count() / 1e6;
-
         if (drawPoly.getSize() < 3) {
             skipped++;
             continue;
         }
 
         start = system_clock::now();
-        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), polys[i]->getNormal(),
-                  polys[i]->getTexture().get());
+        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), polys[pos]->getNormal(),
+                  polys[pos]->getTexture().get());
         end = system_clock::now();
         draw_time += (end - start).count() / 1e6;
     }
@@ -132,13 +131,10 @@ void QRenderer::frameCutDraw() {
     size_t thread_size = polys_size / thread_cnt;
     auto ptr = model->getPurePolygons();
     thread threads[thread_cnt];
-
+    int remain = polys_size % thread_cnt;
     for (size_t i = 0; i < thread_cnt; ++i) {
-        if (i == thread_cnt-1)
-            threads[i] = thread(&QRenderer::threadManagePolygons, this, ptr+i*thread_size,
-                                thread_size + polys_size % thread_cnt, i);
-        else
-            threads[i] = thread(&QRenderer::threadManagePolygons, this, ptr+i*thread_size, thread_size, i);
+        threads[i] = thread(&QRenderer::threadManagePolygons, this, ptr+i,
+                            thread_size + (i<remain), thread_cnt, i);
     }
 
     for (size_t i = 0; i < thread_cnt; ++i) {
@@ -183,6 +179,7 @@ void QRenderer::render () {
         cout << "updateNormals: " << t << " msec\n";
         t = measureTime(bind(&QRenderer::projectPoints, this));
         cout << "projectPoints: " << t << " msec\n";
+
         t = measureTime(bind(&QRenderer::frameCutDraw, this));
         cout << "frameCutDraw: " << t << " msec\n";
         t = measureTime(bind(&QRenderer::restorePoints, this));

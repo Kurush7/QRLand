@@ -17,7 +17,7 @@ struct renderTriangle {
 
 class PolyRectCutter {
 public:
-    renderPolygon cutPolyRect(const QRPolygon3D *poly);
+    bool cutPolyRect(const QRPolygon3D *poly, renderPolygon& result);
     void setCutter(float l, float r, float u, float d);
     void setCutter(const Vector3D &screenData);
 private:

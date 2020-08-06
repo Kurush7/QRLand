@@ -20,7 +20,6 @@ struct renderData {
     QRColor c;
     int n;
 };
-
 class QRasterizeZBuffer {
 public:
     explicit QRasterizeZBuffer(const sptr<QRImage> &_img, QRLightManager *man)
@@ -50,7 +49,7 @@ private:
     QRLightManager *colorManager;
 
     void drawTriangle(const Vector3D &p0, const Vector3D &p1, const Vector3D &p2, QRColor c);
-    void drawWedge(int xw, int yw, int y_floor, int xl, float xr, QRColor c,
+    void drawWedge(float xw, float yw, float xl, float yl, float xr, float yr, QRColor c,
                    float zw, float zl, float zr);
 
     void fillRow(renderData &data);
