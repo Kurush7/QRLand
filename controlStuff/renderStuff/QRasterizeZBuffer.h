@@ -55,6 +55,8 @@ private:
     QRLightManager *colorManager;
 
     void drawTriangle(renderData &data);
+    void drawWedge(int xw, int yw, int y_floor, int xl, float xr, QRColor c,
+                   float zw, float zl, float zr);
 
     void fillRow(renderData &data);
 

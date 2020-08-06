@@ -13,8 +13,8 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     renderer = sptr<QRenderer>(new QRenderer(image, scene));
 
 
-    //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));
-    scene->addModel(RandomHMapLandscapeSurfaceCreator(50,50, 0.2).create(),
+    //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(4,4, 5)), Vector3D(0,0,0));
+    scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
             Vector3D(0,0,0));
     //addCube(10, 0, 0, 0, QRColor(127,127,127));
 }

@@ -72,7 +72,7 @@ void QRenderer::updateNormals() {
         poly->updateNormal();   // good normal, in camera's coordinates
         if (poly->where(transZero) != vPlace)
             poly->switchNormal();
-        //if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) activePolys.push_back(poly);
+        //todo not here if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) activePolys.push_back(poly);
     }
     //active_size = activePolys.getSize();
 }
@@ -97,6 +97,7 @@ void QRenderer::threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int 
     cutter.setCutter(screenData);
 
     for (size_t i = 0; i < size; ++i) {
+        // todo insert 'i'm invisible from this side of the moon' here
         system_clock::time_point start = system_clock::now();
         renderPolygon drawPoly = cutter.cutPolyRect(polys[i].get());
         system_clock::time_point end = system_clock::now();

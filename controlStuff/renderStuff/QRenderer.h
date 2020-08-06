@@ -18,8 +18,6 @@
 #include "tests/TimeTest.h"
 #include <memory>
 
-#include "thread_pull/ctpl_stl.h"
-
 class QRenderer {
 public:
     QRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
