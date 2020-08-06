@@ -13,9 +13,6 @@ void QRasterizeZBuffer::draw(Vector3D *_poly, int size, const Vector3D &norm, co
     data.poly = _poly;
     data.n = size;
     data.c = texture->getColor();
-    cout << "raw_poly:\n";
-    for (int i = 0; i < size; ++i)
-        cout << '\t' << _poly[i] << '\n';
 
     colorManager->lightenColor(norm, data.c);   // todo not acceptable for mapping, so....
     Vector3D p0 = data.poly[0];
@@ -68,35 +65,62 @@ void QRasterizeZBuffer::drawWedge(int xw, int yw, int y_floor, int xl, float xrf
     if (ra*x_test+rb*y_floor+rc < -QREPS) ra = -ra, rb = -rb, rc = -rc;
 
     int xr = QRound(xrf);
-    float lval, rval;
     float z;
 
     float S0 = triangle_area(xw, yw, xl, y_floor, xr, y_floor);
     if (S0 == 0) return;
     float b1,b2;
 
-    int ymin = min(yw, y_floor), ymax = max(yw, y_floor);
-    int xmin = min(min(xl, xr), xw), xmax = max(max(xl, xr), xw);
-    int pos = ymin*w;
-    for (int y = ymin; y <= ymax; ++y) {
-        lval = la * xmin + lb * y + lc;
-        rval = ra * xmin + rb * y + rc;
-        for (int x = xmin; x <= xmax; ++x) {
+    int x, y, x0;
+    if (yw > y_floor) x = xl, y = y_floor;
+    else x = xw, y = yw;
+    int pos = y*w;
+    int ymax = max(yw, y_floor);
+    if (la < 0) {
+        swap(la, ra);
+        swap(lb, rb);
+        swap(lc, rc);
+    }
+    float lval = la * x + lb * y + lc, rval = ra * x + rb * y + rc;
+    float lval0, rval0;
+    for(; y !=ymax; ++y) {
+        x0 = x;
+        lval0=lval, rval0=rval;
+        while (rval > -QREPS) {
+            if ((lval > QREPS || (fabs(lval) < QREPS && (la > QREPS || (fabs(la) < QREPS && lb > QREPS)))) &&
+                (rval > QREPS || (fabs(rval) < QREPS && (ra > QREPS || (fabs(ra) < QREPS && rb > QREPS))))) {
+                b1 = triangle_area(xw, yw, xl, y_floor, x, y);
+                b2 = triangle_area(xw, yw, xr, y_floor, x, y);
+                z = (b1*zr + b2*zl + (S0 - b1 - b2)*zw) / S0;
+                if (z - zbuf[pos+x] > QREPS) {
+                    //pixel_lock.lock();
+                    img->setPixel(x, y, c);
+                    zbuf[pos+x] = z;
+                    //pixel_lock.unlock();
+                }
+            }
+            lval += la, rval += ra; x++;
+        }
+        x = x0;
+        lval = lval0, rval=rval0;
+        while (lval > -QREPS) {
             if ((lval > QREPS || (fabs(lval) < QREPS && (la > QREPS || (fabs(la) < QREPS && lb > QREPS)))) &&
                 (rval > QREPS || (fabs(rval) < QREPS && (ra > QREPS || (fabs(ra) < QREPS && rb > QREPS))))) {
                 b1 = triangle_area(xw, yw, xl, y_floor, x, y) / S0;
                 b2 = triangle_area(xw, yw, xr, y_floor, x, y) / S0;
                 z = b1*zr + b2*zl + (1 - b1 - b2)*zw;
                 if (z - zbuf[pos+x] > QREPS) {
-                    pixel_lock.lock();
+                    //pixel_lock.lock();
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
-                    pixel_lock.unlock();
+                    //pixel_lock.unlock();
                 }
             }
-            lval += la, rval += ra;
+            lval -= la, rval -= ra; x--;
         }
         pos += w;
+        lval += lb, rval += rb;
+        //cout << '\n';
     }
 }
 

@@ -128,7 +128,7 @@ void QRenderer::threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int 
 
 void QRenderer::frameCutDraw() {
     // stage 4: render cut polys, then transform to image's coords and draw
-    int thread_cnt = 1;//thread::hardware_concurrency();
+    int thread_cnt = thread::hardware_concurrency();
     size_t thread_size = polys_size / thread_cnt;
     auto ptr = model->getPurePolygons();
     thread threads[thread_cnt];
