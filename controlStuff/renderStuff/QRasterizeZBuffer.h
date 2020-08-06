@@ -19,11 +19,6 @@ struct renderData {
     const QRTexture *texture;
     QRColor c;
     int n;
-    int dir;
-    int left, right, ll, rr;     // ll - after left, rr - after right
-    float bl, br, dzl, dzr;
-    int xli, xri, y;
-    float zl, zr, xl, xr;
 };
 
 class QRasterizeZBuffer {
@@ -54,7 +49,7 @@ private:
     QRImage *img;
     QRLightManager *colorManager;
 
-    void drawTriangle(renderData &data);
+    void drawTriangle(const Vector3D &p0, const Vector3D &p1, const Vector3D &p2, QRColor c);
     void drawWedge(int xw, int yw, int y_floor, int xl, float xr, QRColor c,
                    float zw, float zl, float zr);
 
