@@ -4,6 +4,7 @@
 
 #include "QRPolyRectCutter.h"
 
+
 inline char checkVisibility(const Vector3D &a, const Vector3D &p1, const Vector3D &p2) {
     return -sign((a[0]-p1[0]) * (p2[1]-p1[1]) -
                  (a[1]-p1[1]) * (p2[0]-p1[0]));
@@ -39,6 +40,10 @@ inline char PolyRectCutter::getCode(float x, float y) {
     return code;
 }
 
+inline float PolyRectCutter::sideDist(float x, float y, int side) {
+    return sqrt((x-cutter[side][0])*(x-cutter[side][0]) + (y-cutter[side][1])*(y-cutter[side][1]));
+}
+
 bool PolyRectCutter::cutPolyRect(const QRPolygon3D *poly, renderPolygon& result) {
     auto poly_pts = poly->getPurePoints();
     int Np = poly->getSize();
@@ -51,39 +56,69 @@ bool PolyRectCutter::cutPolyRect(const QRPolygon3D *poly, renderPolygon& result)
         code += c;
         code_and &= c;
     }
-    if (code == 0) {
-        result = P;
-        return true;
-    };
-    if (code_and != 0) return false;
 
+    // fully visible and invisible
+    if (code == 0) {result = P; return true; }
+    else if (code_and != 0) return false;
+
+    char should_continue;
     Q.clear();
-    for (int i = 0; i < Nw - 1; ++i) {
+    int qsize=0;
+
+    // consider big frame and small polygons: one side most times is enough.
+    // so keep code running and move throug sides in nearest-to-random-poly-point order.
+    int order[4] = {0,1,2,3};
+    // todo full sort may be good
+    if (sideDist(P[0][0], P[0][1], order[0]) > sideDist(P[0][0], P[0][1], order[1]))
+        swap(order[0], order[1]);
+    if (sideDist(P[0][0], P[0][1], order[0]) > sideDist(P[0][0], P[0][1], order[2]))
+        swap(order[0], order[2]);
+    if (sideDist(P[0][0], P[0][1], order[0]) > sideDist(P[0][0], P[0][1], order[3]))
+        swap(order[0], order[3]);
+
+
+    int i;
+    for (int i0 = 0; i0 < Nw - 1; ++i0) {
+        i = order[i0];
+        should_continue = 0;
         for (int j = 0; j < Np; ++j) {
             if (j != 0) {
                 interFlag = checkIntersection(S, P[j], cutter[i], cutter[i + 1]);
                 if (interFlag) {
                     interP = intersectionPoint(S, P[j], i);
-                    Q.push_back(interP);
+                    //if (!qsize || (abs(QRound(interP[0]) - QRound(Q[qsize-1][0])) > 0 ||
+                    //               abs(QRound(interP[1]) - QRound(Q[qsize-1][1])) > 0))
+                    Q.push_back(interP), qsize++;
+                    should_continue |= getCode(interP[0], interP[1]);
                 }
             }
 
             S = P[j];
             char visible = checkVisibility(S, cutter[i], cutter[i + 1]);
-            if (visible >= 0)
-                Q.push_back(S);
+            if (visible >= 0) {
+                // todo preventing from over-many-points on polygons.... bad for rasterizing if equal points
+                //if (!qsize || (abs(QRound(S[0]) - QRound(Q[qsize-1][0])) > 0 ||
+                //               abs(QRound(S[1]) - QRound(Q[qsize-1][1])) > 0))
+                Q.push_back(S), qsize++;
+                should_continue |= getCode(S[0], S[1]);
+            }
         }
 
         if (!Q.isEmpty()) {
             interFlag = checkIntersection(S, P[0], cutter[i], cutter[i + 1]);
             if (interFlag) {
                 interP = intersectionPoint(S, P[0], i);
-                Q.push_back(interP);
+                //if (!qsize || (abs(QRound(interP[0]) - QRound(Q[qsize-1][0])) > 0 ||
+                //               abs(QRound(interP[1]) - QRound(Q[qsize-1][1])) > 0))
+                Q.push_back(interP), qsize++;
+                should_continue |= getCode(interP[0], interP[1]);
             }
         }
         P = Q;
         Q.clear();
+        qsize=0;
         Np = P.getSize();
+        if (!should_continue)  break;
     }
     result = P;
     return true;

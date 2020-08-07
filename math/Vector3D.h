@@ -48,6 +48,7 @@ const Vector3D ZVector(0,0,1,0);
 Vector3D norm(const Vector3D&); // manage 4th axis value, if 0 - does nothing
 Vector3D lenNorm(const Vector3D&);
 float vectorLen(const Vector3D&);
+float vectorLen3(const Vector3D&);
 bool operator ==(const Vector3D&, const Vector3D&);
 bool operator !=(const Vector3D&, const Vector3D&);
 Vector3D operator +(const Vector3D&, const Vector3D&);
@@ -58,7 +59,9 @@ Vector3D operator *(float, const Vector3D&);
 Vector3D operator /(const Vector3D&, float);
 
 float scalar(const Vector3D &a, const Vector3D &b);
+float scalar3(const Vector3D &a, const Vector3D &b);
 float cos(const Vector3D &a, const Vector3D &b);
+float cos3(const Vector3D &a, const Vector3D &b);
 
 // for 2dim-vectors. others ignored
 bool isRightRotate(const Vector3D &a, const Vector3D &b, const Vector3D &c);

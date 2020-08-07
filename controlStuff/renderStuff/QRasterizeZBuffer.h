@@ -40,7 +40,7 @@ public:
     // data may be spoiled! (reversed and rounded, both guaranteed!)
     void draw(Vector3D *_poly, int size, const Vector3D &norm, const QRTexture *texture);
     void clearBuf();
-
+    void fillMissing();
 private:
     int w, h;
     float *zbuf;
@@ -49,11 +49,8 @@ private:
     QRLightManager *colorManager;
 
     void drawTriangle(const Vector3D &p0, const Vector3D &p1, const Vector3D &p2, QRColor c);
-    void drawWedge(float xw, float yw, float xl, float yl, float xr, float yr, QRColor c,
-                   float zw, float zl, float zr);
 
     void fillRow(renderData &data);
-
     inline void jumpL(renderData &);
     inline void jumpR(renderData &);
 

@@ -29,11 +29,15 @@ PolyPosition Polygon3D::where(const Vector3D &v) const {
 void Polygon3D::definePlane() {
     if ( points.getSize() < 3)
         throw QRBadParamException(__FILE__, __LINE__, __TIME__,
-                                  "failed to init polygon with 2 or less points");
+                                  "failed to set polygon on 2 or less points");
 
-    const Vector3D v1 = points[1]->getVector() - points[0]->getVector(),
-                   v2 = points[2]->getVector() - points[1]->getVector();
-    normal = lenNorm(v1 * v2);
+    normal = defineNormal();
     d = -scalar(normal, points[0]->getVector());
     normal[3] = 1;
+}
+
+Vector3D Polygon3D::defineNormal() {
+    const Vector3D v1 = points[1]->getVector() - points[0]->getVector(),
+            v2 = points[2]->getVector() - points[1]->getVector();
+    return lenNorm(v1 * v2);
 }

@@ -26,6 +26,12 @@ public:
     QRVector(QRVector<T>&&);
 
     void clear() {*size = 0;}
+    void reserve(size_t n) {
+        size_t new_size = max_size, mult=0;
+        while (new_size < n) new_size *= 2, mult++;
+        if (mult) grow(mult);
+    }
+
     sptr<QRVector<T>> getPointer() const {return p;}
     T* getPureArray() const {return arr.get();}
 
@@ -80,7 +86,7 @@ public:
 private:
     sptr<T[]> arr;
     sptr<QRVector<T>> p;
-    void grow();
+    void grow(int times=1);
 };
 
 using namespace std;
@@ -89,9 +95,9 @@ template<typename T>
 std::ostream& operator <<(std::ostream &os, const QRVector<T> &vec);
 
 template<typename T>
-void QRVector<T>::grow() {
+void QRVector<T>::grow(int times) {
     try {
-        max_size *= 2;
+        max_size *= pow(2,times);
         auto new_arr = sptr<T[]>(new T[max_size]);
         for (size_t i = 0; i < *size; ++i)
             new_arr[i] = arr[i];

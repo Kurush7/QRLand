@@ -31,6 +31,11 @@ public:
         d = -scalar(normal, points[0]->getVector());
     }
     virtual void updateNormal() {definePlane();}
+    virtual Vector3D computeNewPlane() {
+        auto n = defineNormal();
+        n[3] = -scalar(normal, points[0]->getVector());
+        return n;
+    }
     virtual void switchNormal() {normal = -1 * normal; d *= -1;}
     virtual PolyPosition where(const Vector3D &v) const;
 
@@ -49,6 +54,7 @@ private:
     float d;  // plane's d: ax+by+c+D=0
 
     void definePlane();
+    Vector3D defineNormal();
 };
 
 #endif //BIG3DFLUFFY_POLYGON3D_H

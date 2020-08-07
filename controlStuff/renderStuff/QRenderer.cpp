@@ -43,38 +43,34 @@ bool QRenderer::modelCameraCut() {
 
 void QRenderer::copyTransformPoints() {
     // stage 1. copy points & set model's points to scene's coordinates
-    old_vectors.clear();
-
     model_pts = model->getPurePoints();
-    size_t size = model->getPointCnt();
-    for (size_t i = 0; i < size; ++i) {
-        old_vectors.push_back(model_pts[i]->getVector());
-        // change current vectors: to scene coords, then to camera's
-        model_pts[i]->setVector(cameraTransformer->transform(
-                modelTransformer->transform(model_pts[i]->getVector())));
-    }
     points_cnt = model->getPointCnt();
+
+    old_vectors.clear();
+    old_vectors.reserve(points_cnt);
+    for (size_t i = 0; i < points_cnt; ++i) {
+        old_vectors[i] = model_pts[i]->getVector();
+        // change current vectors: to scene coords, then to camera's
+        model_pts[i]->setVector(modelCameraTransformer.transform(old_vectors[i]));
+    }
 }
 
 void QRenderer::updateNormals() {
     // stage 2. delete not front-face polygons if model is convex
+    polys = model->getPurePolygons();
+    polys_cnt = model->getPolygonCnt();
+
+    normals.clear();
+    normals.reserve(polys_cnt);
 
     transZero = cameraTransformer->transform(modelTransformer->transform(ZeroVector));   // for normal testing
-
-    // todo another dynamic array..... phew!
-    //activePolys.clear();
-
-    polys = model->getPurePolygons();
-    polys_size = model->getPolygonCnt();
-    for (size_t i = 0; i < polys_size; ++i) {
-        poly = polys[i].get();
-        vPlace = poly->where(ZeroVector);
-        poly->updateNormal();   // good normal, in camera's coordinates
-        if (poly->where(transZero) != vPlace)
-            poly->switchNormal();
-        //todo not here if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) activePolys.push_back(poly);
+    transZero[3] = 0;
+    for (size_t i = 0; i < polys_cnt; ++i) {
+        normals[i] = polys[i]->computeNewPlane();
+        if (polys[i]->where(ZeroVector) != sign(scalar(normals[i], transZero) + normals[i][3]))
+            normals[i][0] = -normals[i][0], normals[i][1] = -normals[i][1], normals[i][2] = -normals[i][2];
+        // normals[i][3] = 1; todo not important since we need only it's xyz
     }
-    //active_size = activePolys.getSize();
 }
 
 void QRenderer::projectPoints() {
@@ -89,18 +85,20 @@ void QRenderer::projectPoints() {
 }
 
 mutex print_lock;
-void QRenderer::threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int step, int thread_num) {
+void QRenderer::threadManagePolygons(size_t size, int offset, int step, int thread_num) {
+    //todo somewhere here if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) activePolys.push_back(poly);
     system_clock::time_point start = system_clock::now();
     size_t skipped=0;
-    double cut_time=0, draw_time=0, create_time;
+    double cut_time=0, draw_time=0;
     PolyRectCutter cutter;
     cutter.setCutter(screenData);
     renderPolygon drawPoly;
-    for (size_t i = 0, pos=0; i < size; ++i, pos+=step) {
+    for (size_t i = 0, pos=offset; i < size; ++i, pos+=step) {
         // todo insert 'i'm invisible from this side of the moon' here
         system_clock::time_point start = system_clock::now();
         cutter.cutPolyRect(polys[pos].get(), drawPoly);
         system_clock::time_point end = system_clock::now();
+
         cut_time += (end - start).count() / 1e6;
         if (drawPoly.getSize() < 3) {
             skipped++;
@@ -108,54 +106,50 @@ void QRenderer::threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int 
         }
 
         start = system_clock::now();
-        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), polys[pos]->getNormal(),
+        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), normals[pos],
                   polys[pos]->getTexture().get());
         end = system_clock::now();
         draw_time += (end - start).count() / 1e6;
     }
-    print_lock.lock();
-    cout << "Tread" << thread_num << ":\n\tto draw: " << size;
-    cout << "\n\tskipped: " << skipped;
-    cout << "\n\ttime to cut: " << cut_time;
-    cout << "\n\ttime to draw: " << draw_time;
-    cout << "\n\tcreate time: " << create_time;
 
-    cout << "\n\ttotal thread_time:" << (system_clock::now() - start).count() / 1e6;
+    print_lock.lock();
+    cout << "Tread" << thread_num << ": \ttotal thread_time:" << (system_clock::now() - start).count() / 1e6;
+    cout << "\n\t        polys to draw: " << size << " (skipped: " << skipped << ')';
+    cout << "\n\t        time to cut: " << cut_time;
+    cout << "\n\t        time to draw: " << draw_time;
+    cout << "\n\t        total thread_time:" << (system_clock::now() - start).count() / 1e6;
     cout <<"\n\n";
     print_lock.unlock();
 }
 
 void QRenderer::frameCutDraw() {
     // stage 4: render cut polys, then transform to image's coords and draw
+    screenData[2]--; // todo decrease width&height elsewise after rounding of floats value may overwelm
+    screenData[3]--;
+
     int thread_cnt = thread::hardware_concurrency();
-    size_t thread_size = polys_size / thread_cnt;
-    auto ptr = model->getPurePolygons();
+    size_t thread_size = polys_cnt / thread_cnt;
     thread threads[thread_cnt];
-    int remain = polys_size % thread_cnt;
+    int remain = polys_cnt % thread_cnt;
     for (size_t i = 0; i < thread_cnt; ++i) {
-        threads[i] = thread(&QRenderer::threadManagePolygons, this, ptr+i,
-                            thread_size + (i<remain), thread_cnt, i);
+        // threads parse points equally through all matrix-places to avoid idleness when most of scene is cut
+        threads[i] = thread(&QRenderer::threadManagePolygons, this, thread_size + (i<remain), i, thread_cnt, i);
     }
 
     for (size_t i = 0; i < thread_cnt; ++i) {
         threads[i].join();
     }
+
+    system_clock::time_point start = system_clock::now();
+    zbuf.fillMissing();
+    system_clock::time_point end = system_clock::now();
+    cout << "rasterizer errors fixing: " << (end - start).count() / 1e6 << '\n';
 }
 
 void QRenderer::restorePoints() {
     // restore model's points
-    for (size_t i = 0; i < points_cnt; ++i) {
+    for (size_t i = 0; i < points_cnt; ++i)
         model_pts[i]->setVector(old_vectors[i]);
-    }
-    polys = model->getPurePolygons();
-    size_t size = model->getPolygonCnt();
-    for (size_t i = 0; i < size; ++i) {
-        poly = polys[i].get();
-        vPlace = poly->where(transZero);
-        poly->updateNormal();
-        if (poly->where(ZeroVector) != vPlace)
-            poly->switchNormal();
-    }
 }
 
 void QRenderer::render () {
@@ -170,6 +164,9 @@ void QRenderer::render () {
     // todo no iterators here
     for (; models; ++models) {
         modelTransformer = models->snd.get();
+        modelCameraTransformer = Transformer3D(modelTransformer->getMatrix());
+        modelCameraTransformer.accumulate(cameraTransformer->getMatrix());
+
         model = models->fst.get();
 
         if (!modelCameraCut()) continue;

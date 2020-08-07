@@ -44,9 +44,13 @@ PolyPosition Triangle3D::where(const Vector3D &v) const {
 }
 
 void Triangle3D::definePlane() {
-    const Vector3D v1 = p2->getVector() - p1->getVector(),
-            v2 = p3->getVector() - p2->getVector();
-    normal = lenNorm(v1 * v2);
+    normal = defineNormal();
     d = -scalar(normal, p1->getVector());
     normal[3] = 1;
+}
+
+Vector3D Triangle3D::defineNormal() {
+    const Vector3D v1 = p2->getVector() - p1->getVector(),
+            v2 = p3->getVector() - p2->getVector();
+    return lenNorm(v1 * v2);
 }

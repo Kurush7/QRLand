@@ -36,24 +36,26 @@ private:
     void restorePoints();
 
     void frameCutDraw();
-    void threadManagePolygons(sptr<QRPolygon3D>* polys, size_t size, int step, int thread_num=0);
+    void threadManagePolygons(size_t size, int offset, int step, int thread_num=0);
 
-    QRImage *image;
-    QRPolyScene3D *scene;
     QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
 
-    // render data
+    QRImage *image;
+    QRPolyScene3D *scene;
     QRCamera3D *camera;
+    QRPolyModel3D *model;
     QRPolygon3D *poly;
+
+    QRTransformer3D *cameraTransformer, *projector, *modelTransformer, *imageTransformer;
+    Transformer3D modelCameraTransformer;
+
+    Vector3D screenData, transZero;
+
+    size_t points_cnt, polys_cnt;
     sptr<QRPolygon3D>* polys;
     sptr<QRPoint3D>* model_pts;
-    QRTransformer3D *cameraTransformer, *projector, *modelTransformer, *imageTransformer;
-    Vector3D screenData, transZero;
-    QRPolyModel3D *model;
-    PolyPosition vPlace;
-    size_t points_cnt, polys_size;
-    QRVector<Vector3D> old_vectors;
+    QRVector<Vector3D> old_vectors, normals;
 };
 
 class RenderCreator {

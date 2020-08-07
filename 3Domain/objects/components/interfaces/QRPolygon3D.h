@@ -40,6 +40,8 @@ public:
     virtual const Vector3D getNormal() const = 0;
     virtual void setNormal(const Vector3D&) = 0;   // TODO VERY ACCURATE WITH THIS
     virtual void updateNormal() = 0;
+    // points changed, return new normal instead of applying it. 3rd value contains new d-val
+    virtual Vector3D computeNewPlane() = 0;
     virtual void switchNormal() = 0;
     virtual PolyPosition where(const Vector3D&) const = 0;
 

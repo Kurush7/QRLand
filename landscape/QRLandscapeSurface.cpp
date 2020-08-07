@@ -16,14 +16,18 @@ QRLandscapeSurface::QRLandscapeSurface(size_t w, size_t h, double step): points(
 
     for (size_t i = 0; i < h-1; ++i)
         for (size_t j = 0; j < w-1; ++j) {
-            polygons.push_back(sptr<QRPolygon3D>(new Triangle3D(points[i][j],
+            /*polygons.push_back(sptr<QRPolygon3D>(new Triangle3D(points[i][j],
                                                                 points[i+1][j+1],
                                                                 points[i+1][j],
                                                                 QRTexturesMap[QRDEFAULT_MATERIAL])));
             polygons.push_back(sptr<QRPolygon3D>(new Triangle3D(points[i][j],
                                                                 points[i][j+1],
                                                                 points[i+1][j+1],
-                                                                QRTexturesMap[QRDEFAULT_MATERIAL])));
+                                                                QRTexturesMap[QRDEFAULT_MATERIAL])));*/
+            polygons.push_back(sptr<QRPolygon3D>(new Polygon3D({points[i][j],
+                                                                points[i+1][j],
+                                                                points[i+1][j+1], points[i][j+1]},
+                                                                        QRTexturesMap[QRDEFAULT_MATERIAL])));
         }
 }
 

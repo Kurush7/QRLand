@@ -7,7 +7,7 @@
 Vector3D BaseLight::getIntensity(const Vector3D &pos, const Vector3D &normal) {
     Vector3D i(0,0,0,0);
     i += ambient;
-    i += diffuse * fabs(cos(-1*normal, lightDir));    // -1: angle between returning light, not falling...
+    i += diffuse * fabs(cos3(-1*normal, lightDir));    // -1: angle between returning light, not falling...
     return i;
     // todo!!!
 }

@@ -28,6 +28,6 @@ bool CubeModelCreator::createPolygons() {
 
 sptr<QRPolyModel3D> CubeModelCreator::getModel() {
     model = sptr<QRPolyModel3D>(new PolyModel(points.begin(), polygons.begin()));
-    model->setConvexity(true);
+    //model->setConvexity(true);
     return model;
 }
