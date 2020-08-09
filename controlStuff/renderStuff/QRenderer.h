@@ -21,6 +21,8 @@
 class QRenderer {
 public:
     QRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
+    ~QRenderer() {
+        delete[] cutters;}
     void render();
 
     void setImage(const sptr<QRImage> &img) {image = img.get();}  // todo
@@ -37,6 +39,9 @@ private:
 
     void frameCutDraw();
     void threadManagePolygons(size_t size, int offset, int step, int thread_num=0);
+
+    int thread_cnt = RENDER_THREAD_CNT;
+    PolyRectCutter *cutters;
 
     QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;

@@ -31,6 +31,8 @@ signals:
 
     // todo lkm, pkm, mapping to real coords (not here!)
     void QRMousePressed(float x, float y, QRModifiers);
+    void QRMouseMoved(float dx, float dy, QRModifiers);
+    void QRMouseWheelMoved(float val, float x, float y, QRModifiers);
 
 private slots:
     void slotBtnTimerAlarm() {isButtonBlocked = false;};
@@ -38,10 +40,15 @@ private:
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void keyReleaseEvent(QKeyEvent *) override;
     virtual void mousePressEvent(QMouseEvent *) override;
+    virtual void wheelEvent(QWheelEvent *event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
+
+
 
     QRModifiers mods;
     QTimer btnTimer;
     bool isButtonBlocked = true;
+    float cur_mouse_x = -QRINF, cur_mouse_y = -QRINF;
 };
 
 

@@ -48,8 +48,26 @@ void QRActionManager::keyReleaseEvent(QKeyEvent *event) {
 
 
 void QRActionManager::mousePressEvent(QMouseEvent *event) {
-    float x = event->pos().x();
-    float y = event->pos().y();
+    cur_mouse_x = event->pos().x();
+    cur_mouse_y = event->pos().y();
 
-    emit QRMousePressed(x, y, mods);
+    emit QRMousePressed(cur_mouse_x, cur_mouse_y, mods);
+}
+
+void QRActionManager::wheelEvent(QWheelEvent *event) {
+    cur_mouse_x = event->pos().x();
+    cur_mouse_y = event->pos().y();
+
+    int angle = event->angleDelta().y();
+    float dg = angle / 8.f / 360;
+    emit QRMouseWheelMoved(dg, cur_mouse_x, cur_mouse_y, mods);
+}
+
+void QRActionManager::mouseMoveEvent(QMouseEvent *event) {
+    float dx = event->pos().x() - cur_mouse_x;
+    float dy = event->pos().y() - cur_mouse_y;
+    cur_mouse_x += dx;
+    cur_mouse_y += dy;
+
+    emit QRMouseMoved(dx, dy, mods);
 }

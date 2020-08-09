@@ -27,7 +27,7 @@ public:
 
 
     virtual void setValues(PointIterator pt, PolygonIterator pg) {}       //todo
-    virtual float getRadius() const {return max(width, height);}
+    virtual float getRadius() const {return max(width, height)*step;}
     virtual void setSelected(bool x) {
         for (auto &p: points)
             p->setSelected(x);
@@ -39,7 +39,8 @@ public:
 private:
     QRMatrix<sptr<QRPoint3D>> points;
     QRVector<sptr<QRPolygon3D>> polygons;
-    size_t width, height, step;
+    size_t width, height;
+    double step;
 };
 
 

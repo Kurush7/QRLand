@@ -50,6 +50,7 @@ bool PolyRectCutter::cutPolyRect(const QRPolygon3D *poly, renderPolygon& result)
     int code = 0, code_and=15;
     char c;
     P.clear();
+    result.clear();
     for (int i = 0; i < Np; ++i) {
         P.push_back(poly_pts[i]->getVector());
         c = getCode(P[i][0], P[i][1]);

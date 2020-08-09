@@ -13,27 +13,18 @@ QRCanvas::QRCanvas(int w, int h, QWidget *parent, QColor fill)
 
 
     pixels = new uchar[width*height*4];
-    for (int i = 0; i < width*height*4; ++i)
-        pixels[i] = 127;
+    for (int i = 0; i < width*height; i+=4)
+        pixels[i] = fill.red(), pixels[i+1] = fill.green(),
+        pixels[i+2] = fill.blue(), pixels[i+3] = fill.alpha();
 
     repaint();
 }
 
-void QRCanvas::initializeGL() {
-    //glClearColor(0.0, 0.0, 0.0, 1.0);
+void QRCanvas::initializeGL() {/*todo*/}
 
-    //glEnable(GL_DEPTH_TEST);
-    //glShadeModel(GL_FLAT);
-    //glEnable(GL_CULL_FACE);
-    //glEnable(GL_TEXTURE_2D);
-}
-
-void QRCanvas::resizeGL(int width, int height) {
-    // todo
-}
+void QRCanvas::resizeGL(int width, int height) {/*todo*/}
 
 void QRCanvas::paintGL() {
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 }
 

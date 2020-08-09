@@ -74,7 +74,7 @@ void MainWindow::decorate() {
         (*lay)->getLayout()->setAlignment(Qt::AlignCenter);
     }
 
-    moveRad->setChecked(true);
+    rotateRad->setChecked(true);
 
     addBtn->setFixedWidth(140);
     xDropEdit->setFixedWidth(64);
@@ -91,7 +91,11 @@ void MainWindow::decorate() {
 }
 
 void MainWindow::addLogic() {
-    connect(canvas.get(), &QRCanvas::QRKeyPressed, [this](QRKey k, QRModifiers m){presenter->transform(k);});
+    connect(canvas.get(), &QRCanvas::QRKeyPressed,
+            [this](QRKey k, QRModifiers m) {presenter->transform(k);});
+    connect(canvas.get(), &QRCanvas::QRMouseWheelMoved,
+            [this](float val, float x, float y, QRModifiers m) {presenter->scale(-val);});
+
     connect(addBtn, &QPushButton::clicked, [this]() {presenter->addCube( 10);});
     connect(undoBtn, &QPushButton::clicked, [this]() {presenter->undo();});
 }

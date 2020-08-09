@@ -100,6 +100,11 @@ Vector3D lenNorm(const Vector3D &a) {
     if (fabs(x) < QREPS) return a;
     return a / x;
 }
+Vector3D len3Norm(const Vector3D &a) {
+    float x = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+    if (fabs(x) < QREPS) return a;
+    return a / x;
+}
 void Vector3D::lenNormSelf() {
     float x = sqrt(arr[0]*arr[0]+arr[1]*arr[1]+arr[2]*arr[2] + arr[3]*arr[3]);
     arr[0] /= x;

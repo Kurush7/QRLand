@@ -6,7 +6,8 @@
 
 QRenderer::QRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
 : colorManager(new QRLightManager), zbuf(image, colorManager),
-  scene(scene.get()), image(image.get()){
+  scene(scene.get()), image(image.get()) {
+    cutters = new PolyRectCutter[thread_cnt];
     for (auto li=scene->getLights(); li; ++li)
         colorManager->addLight(*li);
 }
@@ -20,6 +21,7 @@ void QRenderer::initRender() {
     auto mcr = MoveTransformer3DCreator(Vector3D(screenData[2]/2, screenData[3]/2,0,0));
     auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/screenData[2],
                                                   image->getHeight()/screenData[3], 1,0));
+
     // screenData is used in rasterizer, which works already in image coords
     screenData[0] = image->getWidth()/2;
     screenData[1] = image->getHeight()/2;
@@ -36,9 +38,9 @@ void QRenderer::initRender() {
 bool QRenderer::modelCameraCut() {
     // todo cut with camera pyramid instead of just this
     // stage 0. pass by out-from view models
-    auto center = modelTransformer->transform(ZeroVector);
-    if (!camera->isVisibleSphere(center, model->getRadius())) return false;
-    return true;
+    // todo transZero for later
+    return camera->isVisibleSphere(modelTransformer->transform(ZeroVector),
+            model->getRadius());;
 }
 
 void QRenderer::copyTransformPoints() {
@@ -78,25 +80,29 @@ void QRenderer::projectPoints() {
     for (size_t i = 0; i < points_cnt; ++i) {
         auto vec = model_pts[i]->getVector();
         vec[3] = 1;
-        vec = projector->transform(vec);
+        cout << "point: " << vec << " -> ";
+        vec = norm(projector->transform(vec));  // todo merge into one
         vec = imageTransformer->transform(vec);
+        cout << vec << '\n';
         model_pts[i]->setVector(norm(vec));
     }
 }
 
 mutex print_lock;
 void QRenderer::threadManagePolygons(size_t size, int offset, int step, int thread_num) {
-    //todo somewhere here if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) activePolys.push_back(poly);
+    //todo place it somewhere here
+    // if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) draw it
     system_clock::time_point start = system_clock::now();
     size_t skipped=0;
     double cut_time=0, draw_time=0;
-    PolyRectCutter cutter;
-    cutter.setCutter(screenData);
+
+    cutters[thread_num].setCutter(screenData);
     renderPolygon drawPoly;
+
     for (size_t i = 0, pos=offset; i < size; ++i, pos+=step) {
         // todo insert 'i'm invisible from this side of the moon' here
         system_clock::time_point start = system_clock::now();
-        cutter.cutPolyRect(polys[pos].get(), drawPoly);
+        cutters[thread_num].cutPolyRect(polys[pos].get(), drawPoly);
         system_clock::time_point end = system_clock::now();
 
         cut_time += (end - start).count() / 1e6;
@@ -124,10 +130,9 @@ void QRenderer::threadManagePolygons(size_t size, int offset, int step, int thre
 
 void QRenderer::frameCutDraw() {
     // stage 4: render cut polys, then transform to image's coords and draw
-    screenData[2]--; // todo decrease width&height elsewise after rounding of floats value may overwelm
+    screenData[2]--; //todo decrease width&height elsewise after rounding of floats value may overwhelm
     screenData[3]--;
 
-    int thread_cnt = thread::hardware_concurrency();
     size_t thread_size = polys_cnt / thread_cnt;
     thread threads[thread_cnt];
     int remain = polys_cnt % thread_cnt;

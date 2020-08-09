@@ -49,7 +49,7 @@ public:
 
     virtual sptr<QRTransformer3D> getAxisTransformer() const {return axisTransformer;}
     virtual sptr<QRTransformer3D> getProjectionTransformer() const {return projector;}
-    virtual bool isVisibleSphere(const Vector3D &center, float rad);
+    virtual int isVisibleSphere(const Vector3D &center, float rad);
 
     // todo normal must already be transformed!!!!!!
     virtual bool isFrontFace(const Vector3D &normal);
@@ -73,7 +73,7 @@ public:
                                                                height == b.getHeight();}
 private:
     sptr<Camera3D> p;
-    Vector3D origin, viewUpVector, deepVector, bind;
+    Vector3D origin, rotated_origin, viewUpVector, deepVector, bind;
     float nearCutter, farCutter, screen;
     Vector3D frustrum[6];
 

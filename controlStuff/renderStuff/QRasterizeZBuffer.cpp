@@ -6,20 +6,17 @@
 
 std::mutex pixel_lock;
 
-// todo: крутить куб у-ахис: диаг-незакрас на среднем размере, проступают пятна задних областей
+// todo: крутить куб у-ахис: диаг-незакрас на среднем размере
+//  !!! видны пятна задних областей - если выключен мьютекс !!!
+// segfault: dy = 0.000000...., но при округлении они разносятся в разные стороны... бесконечный прирост
 void QRasterizeZBuffer::draw(Vector3D *poly, int size, const Vector3D &norm, const QRTexture *texture) {
     auto c = texture->getColor();
     colorManager->lightenColor(norm, c);   // todo not acceptable for mapping, so....
 
-    /*for (int i = 0; i < size; ++i) {
-        poly[i][0] = QRound(poly[i][0]);
-        poly[i][1] = QRound(poly[i][1]);
-    }*/
     if (size == 3) drawTriangle(poly[0], poly[1], poly[2], c);
     else {
         Vector3D p0 = poly[0];
         for (int i = 0; i < size - 2; ++i) {
-            //if ((int) poly[1][0] != (int) poly[2][0] || (int) poly[1][1] != (int) poly[2][1])
             drawTriangle(p0, poly[1], poly[2], c);
             poly = &poly[1];
         }
@@ -55,10 +52,10 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
 
     int x=x_test, y=min(min(yl,yr), yw);
     int pos = y*w, ymax = max(max(yl,yr),yw);
-    if (la < 0) swap(la, ra), swap(lb, rb), swap(lc, rc);
-    if (la < 0) swap(la, l2a), swap(lb, l2b), swap(lc, l2c);
+    if (la < -0) swap(la, ra), swap(lb, rb), swap(lc, rc);
+    if (la < -0) swap(la, l2a), swap(lb, l2b), swap(lc, l2c);
     if (ra > 0) swap(ra, l2a), swap(rb, l2b), swap(rc, l2c);
-    if (la < 0 || ra > 0) return;
+    if (la < 0 || ra > -0) return;
 
     // 3line = 1: left; -1 - right
     char third_line = fabs(l2a) < QREPS_MINI ? 0 : 1;
@@ -82,12 +79,12 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
             //    (rval > QREPS || (fabs(rval) < QREPS && (ra > QREPS || (fabs(ra) < QREPS && rb > QREPS))))) {
             if (lval > -QREPS_MINI && l2val > -QREPS_MINI) {
                 z = (fabs(b1)*p1[2] + fabs(b2)*p0[2] + (S0 - fabs(b1) - fabs(b2))*p2[2]) / S0;
+                //pixel_lock.lock();
                 if (z - zbuf[pos+x] > QREPS) {
-                    //pixel_lock.lock();
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
-                    //pixel_lock.unlock();
                 }
+                //pixel_lock.unlock();
             }
             lval += la, rval += ra; l2val += l2a;
             x++;
@@ -102,12 +99,12 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
             //    (rval > QREPS || (fabs(rval) < QREPS && (ra > QREPS || (fabs(ra) < QREPS && rb > QREPS))))) {
             if (rval > -QREPS_MINI && l2val > -QREPS_MINI) {
                 z = (fabs(b1)*p1[2] + fabs(b2)*p0[2] + (S0 - fabs(b1) - fabs(b2))*p2[2]) / S0;
+                //pixel_lock.lock();
                 if (z - zbuf[pos+x] > QREPS) {
-                    //pixel_lock.lock();
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
-                    //pixel_lock.unlock();
                 }
+                //pixel_lock.unlock();
             }
             lval -= la, rval -= ra; l2val -= l2a;
             x--;

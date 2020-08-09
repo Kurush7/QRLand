@@ -31,6 +31,15 @@ void Presenter::transform(QRKey d) {
     draw(window.scaleRad->isChecked());
 }
 
+void Presenter::scale(float times) {
+    float x = 1 + SCALE_FULL_ROTATE_VAL * times;
+    float y = 1 + SCALE_FULL_ROTATE_VAL * times;
+    float z = 1 + SCALE_FULL_ROTATE_VAL * times;
+
+    facade->scaleCamera(x,y,z);
+    draw(window.scaleRad->isChecked());
+}
+
 
 void Presenter::defineTransformParams(float &x, float &y, float &z, QRKey d) {
     float val = 0;

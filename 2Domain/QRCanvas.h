@@ -27,8 +27,6 @@ protected:
     void resizeGL(int width, int height);
 
 protected:
-    sptr<QImage> img;
-
     int width, height;
     uchar *pixels;
 };
