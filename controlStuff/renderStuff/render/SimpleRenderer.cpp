@@ -2,17 +2,16 @@
 // Created by kurush on 30.06.2020.
 //
 
-#include "QRenderer.h"
+#include "SimpleRenderer.h"
 
-QRenderer::QRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
-: colorManager(new QRLightManager), zbuf(image, colorManager),
-  scene(scene.get()), image(image.get()) {
+SimpleRenderer::SimpleRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
+: QRenderer(image, scene), colorManager(new QRLightManager), zbuf(image, colorManager) {
     cutters = new PolyRectCutter[thread_cnt];
     for (auto li=scene->getLights(); li; ++li)
         colorManager->addLight(*li);
 }
 
-void QRenderer::initRender() {
+void SimpleRenderer::initRender() {
     camera = scene->getActiveCamera().get();
     cameraTransformer = camera->getAxisTransformer().get();
     projector = camera->getProjectionTransformer().get();
@@ -35,7 +34,7 @@ void QRenderer::initRender() {
     zbuf.clearBuf();
 }
 
-bool QRenderer::modelCameraCut() {
+bool SimpleRenderer::modelCameraCut() {
     // todo cut with camera pyramid instead of just this
     // stage 0. pass by out-from view models
     // todo transZero for later
@@ -43,7 +42,7 @@ bool QRenderer::modelCameraCut() {
             model->getRadius());;
 }
 
-void QRenderer::copyTransformPoints() {
+void SimpleRenderer::copyTransformPoints() {
     // stage 1. copy points & set model's points to scene's coordinates
     model_pts = model->getPurePoints();
     points_cnt = model->getPointCnt();
@@ -57,7 +56,7 @@ void QRenderer::copyTransformPoints() {
     }
 }
 
-void QRenderer::updateNormals() {
+void SimpleRenderer::updateNormals() {
     // stage 2. delete not front-face polygons if model is convex
     polys = model->getPurePolygons();
     polys_cnt = model->getPolygonCnt();
@@ -75,7 +74,7 @@ void QRenderer::updateNormals() {
     }
 }
 
-void QRenderer::projectPoints() {
+void SimpleRenderer::projectPoints() {
     // stage 3: project points into screen  todo z-coord: now not controlled. ?map z's to [-1;1]?
     for (size_t i = 0; i < points_cnt; ++i) {
         auto vec = model_pts[i]->getVector();
@@ -89,7 +88,7 @@ void QRenderer::projectPoints() {
 }
 
 mutex print_lock;
-void QRenderer::threadManagePolygons(size_t size, int offset, int step, int thread_num) {
+void SimpleRenderer::threadManagePolygons(size_t size, int offset, int step, int thread_num) {
     //todo place it somewhere here
     // if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) draw it
     system_clock::time_point start = system_clock::now();
@@ -128,7 +127,7 @@ void QRenderer::threadManagePolygons(size_t size, int offset, int step, int thre
     print_lock.unlock();
 }
 
-void QRenderer::frameCutDraw() {
+void SimpleRenderer::frameCutDraw() {
     // stage 4: render cut polys, then transform to image's coords and draw
     screenData[2]--; //todo decrease width&height elsewise after rounding of floats value may overwhelm
     screenData[3]--;
@@ -138,7 +137,7 @@ void QRenderer::frameCutDraw() {
     int remain = polys_cnt % thread_cnt;
     for (size_t i = 0; i < thread_cnt; ++i) {
         // threads parse points equally through all matrix-places to avoid idleness when most of scene is cut
-        threads[i] = thread(&QRenderer::threadManagePolygons, this, thread_size + (i<remain), i, thread_cnt, i);
+        threads[i] = thread(&SimpleRenderer::threadManagePolygons, this, thread_size + (i < remain), i, thread_cnt, i);
     }
 
     for (size_t i = 0; i < thread_cnt; ++i) {
@@ -151,13 +150,13 @@ void QRenderer::frameCutDraw() {
     cout << "rasterizer errors fixing: " << (end - start).count() / 1e6 << '\n';
 }
 
-void QRenderer::restorePoints() {
+void SimpleRenderer::restorePoints() {
     // restore model's points
     for (size_t i = 0; i < points_cnt; ++i)
         model_pts[i]->setVector(old_vectors[i]);
 }
 
-void QRenderer::render () {
+void SimpleRenderer::render () {
     system_clock::time_point start0 = system_clock::now();
     system_clock::time_point start = system_clock::now();
     initRender();
@@ -175,16 +174,16 @@ void QRenderer::render () {
         model = models->fst.get();
 
         if (!modelCameraCut()) continue;
-        double t = measureTime(bind(&QRenderer::copyTransformPoints, this));
+        double t = measureTime(bind(&SimpleRenderer::copyTransformPoints, this));
         cout << "copyTransformPoints: " << t << " msec\n";
-        t = measureTime(bind(&QRenderer::updateNormals, this));
+        t = measureTime(bind(&SimpleRenderer::updateNormals, this));
         cout << "updateNormals: " << t << " msec\n";
-        t = measureTime(bind(&QRenderer::projectPoints, this));
+        t = measureTime(bind(&SimpleRenderer::projectPoints, this));
         cout << "projectPoints: " << t << " msec\n";
 
-        t = measureTime(bind(&QRenderer::frameCutDraw, this));
+        t = measureTime(bind(&SimpleRenderer::frameCutDraw, this));
         cout << "frameCutDraw: " << t << " msec\n";
-        t = measureTime(bind(&QRenderer::restorePoints, this));
+        t = measureTime(bind(&SimpleRenderer::restorePoints, this));
         cout << "restorePoints: " << t << " msec\n";
 
         /*copyTransformPoints();

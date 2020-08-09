@@ -18,13 +18,17 @@ struct renderTriangle {
 class PolyRectCutter {
 public:
     bool cutPolyRect(const QRPolygon3D *poly, renderPolygon& result);
+    bool cutPolyRect(const sptr<QRPoint3D>* points, int size, renderPolygon& result);
+    bool cutPolyRect(const Vector3D* points, int size, renderPolygon& result);
     void setCutter(float l, float r, float u, float d);
     void setCutter(const Vector3D &screenData);
 private:
+    bool innerCutter(renderPolygon& result);
+
     inline char getCode(float x, float y);
     inline Vector3D intersectionPoint(const Vector3D &p1, const Vector3D &p2, int cut_i);
     inline float sideDist(float x, float y, int side);
-    int Nw = 5;
+    int Nw = 5, Np;
     renderPolygon cutter;
     float cut_a[4], cut_b[4], cut_c[4];
     renderPolygon P, Q;

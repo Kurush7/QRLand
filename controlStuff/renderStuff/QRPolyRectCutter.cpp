@@ -45,23 +45,55 @@ inline float PolyRectCutter::sideDist(float x, float y, int side) {
 }
 
 bool PolyRectCutter::cutPolyRect(const QRPolygon3D *poly, renderPolygon& result) {
-    auto poly_pts = poly->getPurePoints();
-    int Np = poly->getSize();
+    return cutPolyRect(poly->getPurePoints(), poly->getSize(), result);
+}
+
+bool PolyRectCutter::cutPolyRect(const sptr<QRPoint3D>* points, int size, renderPolygon& result) {
+    Np = size;
     int code = 0, code_and=15;
     char c;
     P.clear();
+    P.reserve(Np);
     result.clear();
     for (int i = 0; i < Np; ++i) {
-        P.push_back(poly_pts[i]->getVector());
+        P[i] = points[i]->getVector();     // todo accurate - P's size is still 0
         c = getCode(P[i][0], P[i][1]);
         code += c;
         code_and &= c;
     }
+    P.setSize(Np);
 
     // fully visible and invisible
     if (code == 0) {result = P; return true; }
     else if (code_and != 0) return false;
+    else return innerCutter(result);
+}
 
+bool PolyRectCutter::cutPolyRect(const Vector3D* points, int size, renderPolygon& result) {
+    Np = size;
+    int code = 0, code_and = 15;
+    char c;
+    P.clear();
+    P.reserve(Np);
+    result.clear();
+    for (int i = 0; i < Np; ++i) {
+        P[i] = points[i];     // todo accurate - P's size is still 0
+        c = getCode(P[i][0], P[i][1]);
+        code += c;
+        code_and &= c;
+    }
+    P.setSize(Np);
+
+    // fully visible and invisible
+    if (code == 0) {
+        result = P;
+        return true;
+    }
+    else if (code_and != 0) return false;
+    else return innerCutter(result);
+}
+
+bool PolyRectCutter::innerCutter(renderPolygon& result) {
     char should_continue;
     Q.clear();
     int qsize=0;

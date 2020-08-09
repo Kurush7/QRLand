@@ -10,13 +10,13 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     auto cr = PolySceneCreator();
     scene = cr.create();
     scene->getActiveCamera()->setBind(Vector3D(0,0,0)); // todo
-    renderer = sptr<QRenderer>(new QRenderer(image, scene));
+    renderer = sptr<QRenderer>(new FullThreadRenderer(image, scene));
 
 
     //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 2)), Vector3D(0,0,0));
-    //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
-    //       Vector3D(0,0,0));
-    addCube(10, 0, 0, 0, QRColor(127,127,127));
+    scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
+           Vector3D(0,0,0));
+    //addCube(10, 0, 0, 0, QRColor(127,127,127));
 }
 
 void Facade::addCube(float a, float x, float y, float z, QRColor c) {

@@ -26,7 +26,7 @@ public:
     QRVector(QRVector<T>&&);
 
     void clear() {*size = 0;}
-    void reserve(size_t n) {
+    void reserve(size_t n) {    // todo size not changing....
         size_t new_size = max_size, mult=0;
         while (new_size < n) new_size *= 2, mult++;
         if (mult) grow(mult);

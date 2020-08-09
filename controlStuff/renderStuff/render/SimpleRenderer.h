@@ -2,31 +2,27 @@
 // Created by kurush on 30.06.2020.
 //
 
-#ifndef BIG3DFLUFFY_QRENDERER_H
-#define BIG3DFLUFFY_QRENDERER_H
+#ifndef BIG3DFLUFFY_SIMPLERENDERER_H
+#define BIG3DFLUFFY_SIMPLERENDERER_H
 
 #include <thread>
 
 #include "2Domain.h"
 #include "3Domain/objects/objects.h"
-#include "QRasterizeZBuffer.h"
 
-
-#include "QRPolyRectCutter.h"
-#include "QRasterizeZBuffer.h"
+#include "QRenderer.h"
+#include "../QRasterizeZBuffer.h"
+#include "../QRPolyRectCutter.h"
 
 #include "tests/TimeTest.h"
 #include <memory>
 
-class QRenderer {
+class SimpleRenderer: public QRenderer {
 public:
-    QRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
-    ~QRenderer() {
+    SimpleRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
+    ~SimpleRenderer() {
         delete[] cutters;}
-    void render();
-
-    void setImage(const sptr<QRImage> &img) {image = img.get();}  // todo
-    void setScene(const sptr<QRPolyScene3D> &s) {scene = s.get();}    // todo
+    virtual void render();
 
 private:
     void initRender();
@@ -46,8 +42,6 @@ private:
     QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
 
-    QRImage *image;
-    QRPolyScene3D *scene;
     QRCamera3D *camera;
     QRPolyModel3D *model;
     QRPolygon3D *poly;
@@ -63,14 +57,4 @@ private:
     QRVector<Vector3D> old_vectors, normals;
 };
 
-class RenderCreator {
-public:
-    RenderCreator(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene) {
-        render = sptr<QRenderer>(new QRenderer(img, scene));
-    }
-    const sptr<QRenderer>& create() {return render;}
-private:
-    sptr<QRenderer> render;
-};
-
-#endif //BIG3DFLUFFY_QRENDERER_H
+#endif //BIG3DFLUFFY_SIMPLERENDERER_H

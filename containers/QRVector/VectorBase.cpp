@@ -17,6 +17,11 @@ size_t VectorBase::getSize() const {
     return *(this->size);
 }
 
+void VectorBase::setSize(size_t sz) const {
+    *size = sz;
+}
+
+
 bool VectorBase::isEmpty() const {
     return *(this->size) == 0;
 }

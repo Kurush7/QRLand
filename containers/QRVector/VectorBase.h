@@ -16,6 +16,7 @@ public:
     virtual ~VectorBase() = 0;
 
     virtual size_t getSize() const;
+    virtual void setSize(size_t sz) const;
 
     virtual bool isEmpty() const;
     operator bool() const;
