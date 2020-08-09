@@ -44,7 +44,7 @@ bool FullThreadRenderer::modelCameraCut() {
 
 mutex print_lock;
 void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step, int thread_num) {
-    // if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) draw it
+    // todo if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) draw it
 
     cutters[thread_num].setCutter(screenData);
     renderPolygon drawPoly;
@@ -52,24 +52,34 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
     QRPolygon3D *poly;
     QRVector<Vector3D> points;
     int point_cnt;
+    Vector3D normal;
+
+    Poly3DCutter cut3D;
+    auto fr = camera->getFrustrum();
+    cut3D.setCutter(fr.getPureArray(), fr.getSize());
 
     sptr<QRPoint3D>* poly_pts;
+    points.reserve(maxPolygonPointcnt);
 
     for (size_t i = 0, pos=offset; i < size; ++i, pos+=step) {
-        // todo insert 'i'm invisible from this side of the moon' here
         poly = polygons[pos].get();
         poly_pts = poly->getPurePoints();
         point_cnt = poly->getSize();
 
         // copy & camera-transform points
-        points.reserve(point_cnt);
         for (int i = 0; i < point_cnt; ++i)
             points[i] = modelCameraTransformer.transform(poly_pts[i]->getVector());
 
-        // todo pyramid cutting here
+        // camera pyramid's cutting
+        cutResult res = cut3D.cutPoly(points.getPureArray(), point_cnt, drawPoly);
+        if (res == CUT_EMPTY) continue;
+
+        point_cnt = drawPoly.getSize();
+        for (int i = 0; i < point_cnt; ++i)
+            points[i] = drawPoly[i];
 
         // normal update
-        Vector3D normal = lenNorm((points[1] - points[0]) * (points[2] - points[1]));
+        normal = lenNorm((points[1] - points[0]) * (points[2] - points[1]));
         normal[3] = -scalar(normal, points[0]);
         if (poly->where(ZeroVector) != sign(scalar(normal, transZero) + normal[3]))
             normal[0] = -normal[0], normal[1] = -normal[1], normal[2] = -normal[2];
@@ -115,6 +125,9 @@ void FullThreadRenderer::render () {
         size_t thread_size = polygon_cnt / thread_cnt;
         thread threads[thread_cnt];
         size_t remain = polygon_cnt % thread_cnt;
+
+        screenData[2]-=2;
+        screenData[3]-=2;
 
         for (size_t i = 0; i < thread_cnt; ++i)
             threads[i] = thread(&FullThreadRenderer::threadManagePolygons, this,

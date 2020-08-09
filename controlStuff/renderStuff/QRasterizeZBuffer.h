@@ -10,7 +10,7 @@
 
 #include "containers/QRContainers.h"
 #include "math/QRMath.h"
-#include "QRPolyRectCutter.h"
+#include "renderStuff/cutters/PolyRectCutter.h"
 #include "2Domain.h"
 #include "QRLightManager.h"
 

@@ -12,7 +12,7 @@
 
 #include "QRenderer.h"
 #include "../QRasterizeZBuffer.h"
-#include "../QRPolyRectCutter.h"
+#include "renderStuff/cutters/PolyRectCutter.h"
 
 #include "tests/TimeTest.h"
 #include <memory>

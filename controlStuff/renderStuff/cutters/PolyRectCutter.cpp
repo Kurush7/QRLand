@@ -2,7 +2,7 @@
 // Created by kurush on 30.06.2020.
 //
 
-#include "QRPolyRectCutter.h"
+#include "PolyRectCutter.h"
 
 
 inline char checkVisibility(const Vector3D &a, const Vector3D &p1, const Vector3D &p2) {
@@ -56,7 +56,7 @@ bool PolyRectCutter::cutPolyRect(const sptr<QRPoint3D>* points, int size, render
     P.reserve(Np);
     result.clear();
     for (int i = 0; i < Np; ++i) {
-        P[i] = points[i]->getVector();     // todo accurate - P's size is still 0
+        P[i] = points[i]->getVector();
         c = getCode(P[i][0], P[i][1]);
         code += c;
         code_and &= c;
@@ -77,7 +77,7 @@ bool PolyRectCutter::cutPolyRect(const Vector3D* points, int size, renderPolygon
     P.reserve(Np);
     result.clear();
     for (int i = 0; i < Np; ++i) {
-        P[i] = points[i];     // todo accurate - P's size is still 0
+        P[i] = points[i];
         c = getCode(P[i][0], P[i][1]);
         code += c;
         code_and &= c;
@@ -85,10 +85,7 @@ bool PolyRectCutter::cutPolyRect(const Vector3D* points, int size, renderPolygon
     P.setSize(Np);
 
     // fully visible and invisible
-    if (code == 0) {
-        result = P;
-        return true;
-    }
+    if (code == 0) {result = P; return true;}
     else if (code_and != 0) return false;
     else return innerCutter(result);
 }

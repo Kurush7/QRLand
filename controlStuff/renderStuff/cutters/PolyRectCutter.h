@@ -2,17 +2,11 @@
 // Created by kurush on 30.06.2020.
 //
 
-#ifndef BIG3DFLUFFY_QRPOLYRECTCUTTER_H
-#define BIG3DFLUFFY_QRPOLYRECTCUTTER_H
+#ifndef BIG3DFLUFFY_POLYRECTCUTTER_H
+#define BIG3DFLUFFY_POLYRECTCUTTER_H
 
-#include "QRDefines.h"
-#include "objects/objects.h"
-
-//  convex polygon
-using renderPolygon = QRVector<Vector3D>;
-struct renderTriangle {
-    Vector3D p1, p2, p3;
-};
+#include "QRCutter.h"
+// todo: copy points even if no need present! vectors are slow... use pure arrays
 
 
 class PolyRectCutter {
@@ -28,12 +22,13 @@ private:
     inline char getCode(float x, float y);
     inline Vector3D intersectionPoint(const Vector3D &p1, const Vector3D &p2, int cut_i);
     inline float sideDist(float x, float y, int side);
+
+    //
     int Nw = 5, Np;
-    renderPolygon cutter;
+    renderPolygon cutter, P, Q;
     float cut_a[4], cut_b[4], cut_c[4];
-    renderPolygon P, Q;
     Vector3D S, interP;
     bool interFlag;
 };
 
-#endif //BIG3DFLUFFY_QRPOLYRECTCUTTER_H
+#endif //BIG3DFLUFFY_POLYRECTCUTTER_H

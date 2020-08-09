@@ -11,7 +11,9 @@
 #include "3Domain/objects/objects.h"
 
 #include "../QRasterizeZBuffer.h"
-#include "../QRPolyRectCutter.h"
+#include "renderStuff/cutters/PolyRectCutter.h"
+#include "renderStuff/cutters/Poly3DCutter.h"
+#include "renderStuff/renderConfig.h"
 
 #include "tests/TimeTest.h"
 #include <memory>

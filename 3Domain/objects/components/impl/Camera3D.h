@@ -25,6 +25,8 @@
 
 // todo bridge: projection implementation
 
+// frustrum-inside values are  > 0!!!
+
 class Camera3DMemento;
 class Camera3D: public QRCamera3D {
 public:
@@ -55,6 +57,7 @@ public:
     virtual bool isFrontFace(const Vector3D &normal);
     // todo polygon already projected!!!!
     virtual Vector3D getScreen() const {return {0,0,width, height};}
+    virtual const QRVector<Vector3D>& getFrustrum() {return frustrum;}
 
     virtual const Vector3D& getOrigin() const {return origin;}
     virtual void setOrigin(const Vector3D &p) { origin = p; defineAxisTransformer();}
@@ -75,7 +78,7 @@ private:
     sptr<Camera3D> p;
     Vector3D origin, rotated_origin, viewUpVector, deepVector, bind;
     float nearCutter, farCutter, screen;
-    Vector3D frustrum[6];
+    QRVector<Vector3D> frustrum;
 
     sptr<QRTransformer3D> axisTransformer, projector;
 
