@@ -80,7 +80,7 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
             if (lval > -QREPS_MINI && l2val > -QREPS_MINI) {
                 z = (fabs(b1)*p1[2] + fabs(b2)*p0[2] + (S0 - fabs(b1) - fabs(b2))*p2[2]) / S0;
                 //pixel_lock.lock();
-                if (z - zbuf[pos+x] > QREPS) {
+                if (z - zbuf[pos+x] < -QREPS) {
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
                 }
@@ -100,7 +100,7 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
             if (rval > -QREPS_MINI && l2val > -QREPS_MINI) {
                 z = (fabs(b1)*p1[2] + fabs(b2)*p0[2] + (S0 - fabs(b1) - fabs(b2))*p2[2]) / S0;
                 //pixel_lock.lock();
-                if (z - zbuf[pos+x] > QREPS) {
+                if (z - zbuf[pos+x] <-QREPS) {
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
                 }

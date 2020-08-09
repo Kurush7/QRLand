@@ -28,6 +28,6 @@
 #include <QMouseEvent>
 #include <QtOpenGL/QGLWidget>
 #include <QOpenGLTexture>
-
+#include <QButtonGroup>
 
 #endif //BIG3DFLUFFY_QTINCLUDES_H

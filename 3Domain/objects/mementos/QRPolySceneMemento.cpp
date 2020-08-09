@@ -18,6 +18,6 @@ void QRPolySceneMemento::restore() {
         throw QRBadPointerException(__FILE__, __LINE__, __TIME__, "Failed to create memento!");
     auto s = scene.lock();
     s->setModels(models.begin());
-    s->setActiveCamera(camera);
+    //todo here a fuck s->setActiveCamera(camera);
     memes->restore();
 }

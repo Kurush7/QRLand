@@ -29,7 +29,7 @@ public:
         zbuf = (float*) malloc (sizeof(float*) * h*w);
         row_example = (float*) malloc (sizeof(float*) * w);
         for (int i = 0; i < w; ++i)
-            row_example[i] = -QRINF;
+            row_example[i] = QRINF;
         clearBuf();
     }
     ~QRasterizeZBuffer() {

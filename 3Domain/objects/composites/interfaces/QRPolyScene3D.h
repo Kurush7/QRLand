@@ -31,8 +31,11 @@ public:
     // todo maybe transform matrix as unnecessary parameter
     virtual bool addModel(const sptr<QRPolyModel3D> &m, const Vector3D &v) = 0;
 
-    virtual sptr<QRCamera3D> getActiveCamera() const = 0;
-    virtual void setActiveCamera(const sptr<QRCamera3D>&) = 0;
+
+    virtual sptr<QRCamera3D> getActiveCamera() = 0;
+    virtual std::string getActiveCameraName() = 0;
+    virtual bool addCamera(const sptr<QRCamera3D> &c, std::string name) = 0;
+    virtual bool setActiveCamera(std::string name) = 0;
 
     //virtual bool operator==(const QRPolyScene3D &b) const;
     //virtual QRPolyScene3D& operator=(const QRPolyScene3D &p);

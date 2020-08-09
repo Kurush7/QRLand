@@ -10,11 +10,33 @@
 
 class PolyScene3D: public QRPolyScene3D {
 public:
-    PolyScene3D(const sptr<QRCamera3D> &c): camera(c) {}
+    PolyScene3D() {activeCamera = "NO CAMERA IS SET!";}
+    PolyScene3D(const sptr<QRCamera3D> &c, std::string name="defaultCamera") {
+        cameras[name] = c;
+        activeCamera = name;
+    }
     virtual bool addModel(const sptr<QRPolyModel3D> &m, const Vector3D &v);
 
-    virtual sptr<QRCamera3D> getActiveCamera() const {return camera;}
-    virtual void setActiveCamera(const sptr<QRCamera3D> &c) {camera = c;}
+    virtual std::string getActiveCameraName() {return activeCamera;}
+    virtual sptr<QRCamera3D> getActiveCamera() {
+        if (cameras.find(activeCamera) == cameras.end())
+            throw QRBadParamException(__FILE__,__LINE__, __TIME__, "camera is not set or not found");
+        return cameras[activeCamera];}
+
+    virtual bool addCamera(const sptr<QRCamera3D> &c, std::string name) {
+        if (cameras.find(name) == cameras.end()) {
+            cameras[name] = c;
+            return true;
+        }
+        return false;
+    }
+    virtual bool setActiveCamera(std::string name) {
+        if (cameras.find(name) != cameras.end()) {
+            activeCamera = name;
+            return true;
+        }
+        return false;
+    }
 
     virtual RawModelIterator getModels() const {return models.begin();}
     virtual void setModels(RawModelIterator it) {models = it;}
@@ -29,8 +51,11 @@ public:
 
 private:
     QRVector<RawModel> models;
-    sptr<QRCamera3D> camera;
     QRVector<sptr<QRLight>> lights;
+
+    std::string activeCamera;
+    std::map<std::string, sptr<QRCamera3D>> cameras;
+
 };
 
 #endif //BIG3DFLUFFY_POLYSCENE3D_H

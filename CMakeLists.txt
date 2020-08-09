@@ -57,10 +57,20 @@ target_link_libraries(wip1_lib
         ${QT_INCLUDES}
         )
 
+add_library(wip2_lib
+        gui/wip2/MainWindow.cpp
+        gui/wip2/Presenter.cpp
+        gui/wip2/Facade.cpp
+        )
+target_link_libraries(wip2_lib
+        ${QT_INCLUDES}
+        )
+
+
 add_executable(main.exe
         main.cpp)
 target_link_libraries(main.exe
-        wip1_lib
+        wip2_lib
         widgets_lib
         all_lib
         )
