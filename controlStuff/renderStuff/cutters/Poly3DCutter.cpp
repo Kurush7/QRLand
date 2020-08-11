@@ -15,7 +15,6 @@ inline bool checkIntersection(const Vector3D &a, const Vector3D &b, const Vector
 inline Vector3D Poly3DCutter::intersectionPoint(const Vector3D &p1, const Vector3D &p2, int cut_i) {
     Vector3D p =  p1 - scalar(p1, cutter[cut_i]) / scalar3(p2-p1, cutter[cut_i]) * (p2-p1);
     p[3] = 1;
-    cout << p << '\n';
     return p;
 }
 
@@ -28,7 +27,6 @@ inline char Poly3DCutter::getCode(const Vector3D &v) {
         if (scalar(v, cutter[i]) < 0) code += power;
         power *= 2;
     }
-    cout << "code: " << (int)code << '\n';
     return code;
 }
 /*

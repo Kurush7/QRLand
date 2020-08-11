@@ -43,7 +43,6 @@ public:
 
 
     virtual bool isVisible(){return false;}
-
     virtual void move(const Vector3D &move);
     virtual void scale(float sx, float sy);
     virtual void scale(float scale);
@@ -61,6 +60,8 @@ public:
 
     virtual const Vector3D& getOrigin() const {return origin;}
     virtual void setOrigin(const Vector3D &p) { origin = p; defineAxisTransformer();}
+
+    virtual Vector3D getWorldOriginCoord() {return bind + origin;}
 
     virtual float getWidth() const {return width;}
     virtual void setWidth(float w) {width = w; defineFrustrum();}

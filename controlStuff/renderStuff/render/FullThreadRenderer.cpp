@@ -20,7 +20,9 @@ void FullThreadRenderer::initRender() {
     auto mcr = MoveTransformer3DCreator(Vector3D(screenData[2]/2, screenData[3]/2,0,0));
     auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/screenData[2],
                                                   image->getHeight()/screenData[3], 1,0));
+    //auto scr = ScaleTransformer3DCreator(Vector3D(pixelsPerUnit, pixelsPerUnit, 1,0));
 
+    cout << image->getWidth()/screenData[2] << ' ' << image->getWidth()/screenData[2] << '\n';
     // screenData is used in rasterizer, which works already in image coords
     screenData[0] = image->getWidth()/2;
     screenData[1] = image->getHeight()/2;
@@ -29,6 +31,8 @@ void FullThreadRenderer::initRender() {
 
     imageTransformer = mcr.create().release();
     imageTransformer->accumulate(scr.create()->getMatrix());
+
+    cout << "image transformer:\n" << imageTransformer->getMatrix() << '\n';
 
     // init zbuffer, fill in black
     zbuf.clearBuf();
@@ -106,6 +110,7 @@ void FullThreadRenderer::render () {
     initRender();
 
     RawModelIterator models = scene->getModels();
+    QRVector<sptr<QRPolygon3D>> local_polys;
 
     for (; models; ++models) {          // todo no iterators here
         modelTransformer = models->snd.get();
@@ -115,9 +120,18 @@ void FullThreadRenderer::render () {
         model = models->fst.get();
 
         //if (!modelCameraCut()) continue; // todo more here
-
-        polygons = model->getPurePolygons();
-        size_t polygon_cnt = model->getPolygonCnt();
+        size_t polygon_cnt;
+        model->updateCamera(scene->getActiveCamera());
+        if (!model->isAdditivePolygons()) {
+            polygons = model->getPurePolygons();
+            polygon_cnt = model->getPolygonCnt();
+        }
+        else {
+            local_polys.clear();
+            model->addPolygons(local_polys);
+            polygons = local_polys.getPureArray();
+            polygon_cnt = local_polys.getSize();
+        }
 
         transZero = cameraTransformer->transform(modelTransformer->transform(ZeroVector));
         transZero[3] = 0;

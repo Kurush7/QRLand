@@ -44,6 +44,7 @@ public:
     virtual const Vector3D& getBind() const = 0;
     virtual void setBind(const Vector3D &b) = 0;
 
+    virtual Vector3D getWorldOriginCoord() = 0;
 
     // todo
     //virtual bool operator==(const QRCamera3D &b) const = 0;

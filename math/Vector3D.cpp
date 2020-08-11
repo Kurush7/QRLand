@@ -4,6 +4,17 @@
 
 #include "Vector3D.h"
 
+
+bool operator <(const Vector3D &a, const Vector3D &b) {
+    if (a[0] - b[0] < -QREPS) return true;
+    else if (a[0] - b[0] > QREPS) return false;
+    if (a[1] - b[1] < -QREPS) return true;
+    else if (a[1] - b[1] > QREPS) return false;
+    return a[2] - b[2] < -QREPS;
+    // todo norm, a[3]
+}
+
+
 Vector3D::Vector3D() {}
 Vector3D::Vector3D(double x, double y, double z) {
     arr[0] = x, arr[1] = y, arr[2] = z;

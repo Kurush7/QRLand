@@ -20,7 +20,7 @@ private:
     bool modelCameraCut();
     void threadManagePolygons(size_t size, int offset, int step, int thread_num=0);
 
-    int thread_cnt = 1;//RENDER_THREAD_CNT;
+    int thread_cnt = RENDER_THREAD_CNT;
     PolyRectCutter *cutters;
 
     QRLightManager *colorManager;

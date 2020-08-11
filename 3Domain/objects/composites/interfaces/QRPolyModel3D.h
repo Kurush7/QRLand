@@ -27,6 +27,10 @@ public:
     virtual void setConvexity(bool x) {convexity = x;}
     virtual void setTriangulated(bool x) {triangulated = x;}
 
+    virtual void updateCamera(const sptr<QRCamera3D> &camera) {}
+    virtual bool isAdditivePolygons() {return false;}
+    virtual void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {}
+
     virtual PolygonIterator getPolygons() const = 0;
     virtual PointIterator getPoints() const = 0;
     virtual sptr<QRPolygon3D>* getPurePolygons() const = 0;

@@ -15,6 +15,8 @@
 #include "renderStuff/cutters/Poly3DCutter.h"
 #include "renderStuff/renderConfig.h"
 
+#include "landscape/QRLandscape.h"
+
 #include "tests/TimeTest.h"
 #include <memory>
 

@@ -10,11 +10,11 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     auto cr = PolySceneCreatorNoCamera();
     scene = cr.create();
 
-    auto cam = sptr<QRCamera3D>(new Camera3D(10, 10, Vector3D(0,0,-20),
-            5, 5));
+    auto cam = sptr<QRCamera3D>(new Camera3D(3, 3, Vector3D(0,0,-5),
+            2, 0.01));
     scene->addCamera(cam, "observeCamera");
 
-    cam = sptr<QRCamera3D>(new Camera3D(10, 10, Vector3D(0,-5,0),
+    cam = sptr<QRCamera3D>(new Camera3D(10, 10, Vector3D(0,0,-10),
                                              1, 1));
     scene->addCamera(cam, "walkCamera");
 
@@ -25,7 +25,10 @@ Facade::Facade(sptr<QRImage> img): image(img) {
 
     //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));
 
-    scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
+    //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
+    //       Vector3D(0,0,0));
+
+    scene->addModel(RoamLandscapeCreator(65, 65, 0.2).create(),
            Vector3D(0,0,0));
 
     //scene->addModel(CubeModelCreator(10,

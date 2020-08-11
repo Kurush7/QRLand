@@ -15,7 +15,7 @@ public:
               const sptr<QRTexture> t);
     Triangle3D(initializer_list<sptr<QRPoint3D>> lst,
               const sptr<QRTexture> t);
-    ~Triangle3D() {delete arr;}
+    ~Triangle3D() {delete[] arr;}
 
     virtual sptr<QRObject3D> copy() {return sptr<Triangle3D>(new Triangle3D(p1,p2,p3,texture));}
 

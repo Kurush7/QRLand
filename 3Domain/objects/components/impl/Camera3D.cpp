@@ -116,15 +116,11 @@ int Camera3D::isVisibleSphere(const Vector3D &c, float rad) {
     center = axisTransformer->transform(center);
     float x;
     int good_cnt=0;
-    cout << "model sphere: " << c << ' ' << center << ' ' << rad << '\n';
-    cout << "camera cutting: ";
     for (int i = 0; i < 6; ++i) {
         x = scalar(center, frustrum[i]);
-        cout << x << " ";
         if (x < -rad - QREPS) return 0;
         if (x > rad + QREPS) good_cnt++;
     }
-    cout << '\n';
     if (good_cnt == 6) return 1;
     return 2;
 }

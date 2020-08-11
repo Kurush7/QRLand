@@ -9,4 +9,8 @@
 #include "QRLandscapeSurface.h"
 #include "QRLandscapeSurfaceCreator.h"
 
+#include "ROAM/RoamLandscape.h"
+#include "ROAM/RoamLandscapeCreator.h"
+#include "ROAM/RoamConfig.h"
+
 #endif //BIG3DFLUFFY_QRLANDSCAPE_H

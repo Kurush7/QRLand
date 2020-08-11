@@ -19,7 +19,6 @@
 so projective functions using this class are bound to manage it themselves
 todo: make special structure
  */
-
 class Vector3D {
 public:
     Vector3D();
@@ -39,6 +38,8 @@ public:
 
     float arr[4] = {0.f,0.f,0.f,0.f};
 };
+
+bool operator <(const Vector3D &a, const Vector3D&b);
 
 const Vector3D XVector(1,0,0,0);
 const Vector3D ZeroVector(0,0,0,0);
