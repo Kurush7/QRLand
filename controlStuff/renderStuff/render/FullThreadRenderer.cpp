@@ -40,7 +40,7 @@ bool FullThreadRenderer::modelCameraCut() {
                                    model->getRadius());;
 }
 
-mutex print_lock;
+mutex print_lock, statistic_lock;
 void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step, int thread_num) {
     // todo if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) draw it
     startMeasureTimeStamp(10*thread_num + 0);
@@ -74,7 +74,12 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
         // camera pyramid's cutting
         startMeasureTimeStamp(10*thread_num + 2);
         cutResult res = cut3D.cutPoly(points.getPureArray(), point_cnt, drawPoly);
-        if (res == CUT_EMPTY) continue;
+        if (res == CUT_EMPTY) {
+            statistic_lock.lock();
+            polysCameraCut++;
+            statistic_lock.unlock();
+            continue;
+        }
         endMeasureTimeIncrement(10*thread_num+2);
 
         point_cnt = drawPoly.getSize();
@@ -101,7 +106,12 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
         // 2d-frame cutting
         startMeasureTimeStamp(10*thread_num + 5);
         cutters[thread_num].cutPolyRect(points.getPureArray(), point_cnt, drawPoly);
-        if (drawPoly.getSize() < 3) continue;
+        if (drawPoly.getSize() < 3) {
+            statistic_lock.lock();
+            polysFrameCut++;
+            statistic_lock.unlock();
+            continue;
+        }
         endMeasureTimeIncrement(10*thread_num+5);
 
         // rasterization
@@ -131,6 +141,8 @@ void FullThreadRenderer::render () {
     initRender();
 
     RawModelIterator models = scene->getModels();
+    string polygonData;
+    polysCameraCut=0, polysFrameCut=0;
 
     for (; models; ++models) {          // todo no iterators here
         model = models->fst.get();
@@ -142,7 +154,7 @@ void FullThreadRenderer::render () {
 
         startMeasureTime;
         size_t polygon_cnt;
-        model->updateCamera(scene->getActiveCamera());
+        model->updateCamera(scene->getActiveCamera(), &polygonData);
         cout << "\n\tcamera update: " << endMeasureTime;
         startMeasureTime;
         if (!model->isAdditivePolygons()) {
@@ -151,7 +163,7 @@ void FullThreadRenderer::render () {
         }
         else {
             local_polys.clear();
-            model->addPolygons(local_polys);
+            model->addPolygons(local_polys, &polygonData);
             polygons = local_polys.getPureArray();
             polygon_cnt = local_polys.getSize();
         }
@@ -183,5 +195,9 @@ void FullThreadRenderer::render () {
     image->repaint();
     cout << "\n\timage repaint: " << endMeasureTime;
     cout << "\ntotal render time: " << endMeasureTimeValue(63);
+
+    cout << '\n' << polygonData;
+    cout << "\n\tpolys camera cut: " << polysCameraCut;
+    cout << "\n\tpolys 2d-frame cut: " << polysFrameCut;
     cout << "\nRENDER FINISHED\n\n\n";
 }

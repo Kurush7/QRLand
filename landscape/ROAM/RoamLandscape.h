@@ -16,9 +16,9 @@ public:
         delete[] frames;
     }
 
-    virtual void updateCamera(const sptr<QRCamera3D> &camera);
     virtual bool isAdditivePolygons() {return true;}
-    void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
+    virtual void updateCamera(const sptr<QRCamera3D> &camera, std::string *info=nullptr);
+    void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr);
 
     virtual PolygonIterator getPolygons() const { return PolygonIterator();}
     virtual PointIterator getPoints() const {return points.begin();} // todo not working
@@ -36,6 +36,7 @@ private:
     LinkMap links;
     size_t dimFrameCnt;
     size_t lastPolyCount = 0;
+    size_t lowestPolygonCnt = 0;
     QRMatrix<sptr<QRPoint3D>> points;
     Frame *frames;
 };

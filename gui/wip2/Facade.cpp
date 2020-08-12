@@ -28,7 +28,7 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
     //       Vector3D(0,0,0));
 
-    scene->addModel(RoamLandscapeCreator(129, 129, 0.05).create(),
+    scene->addModel(RoamLandscapeCreator(519, 519, 0.04).create(),
            Vector3D(0,0,0));
 
     //scene->addModel(CubeModelCreator(10,

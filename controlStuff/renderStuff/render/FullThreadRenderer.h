@@ -36,6 +36,8 @@ private:
 
     sptr<QRPolygon3D>* polygons;
     QRVector<sptr<QRPolygon3D>> local_polys;
+
+    size_t polysCameraCut=0, polysFrameCut=0;
 };
 
 

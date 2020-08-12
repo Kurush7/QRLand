@@ -77,18 +77,14 @@ void RoamNode::update() {
     }
 }
 
-int level = 0;
 void RoamNode::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     if (mustDraw == 2) mustDraw = 0;
     if (mustDraw == 1)
         polygons.push_back(triangle);
     else if (left) {
-        level++;
         left->addPolygons(polygons);
-        level++;
         right->addPolygons(polygons);
     }
-    level--;
     mustDraw = 1;
 }
 
@@ -134,7 +130,6 @@ bool Frame::updateCamera(const sptr<QRCamera3D> &camera) {
 }
 
 void Frame::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
-    level = 0;
     if (!isVisible) return;
     left->addPolygons(polygons);
     right->addPolygons(polygons);
