@@ -20,9 +20,7 @@ void FullThreadRenderer::initRender() {
     auto mcr = MoveTransformer3DCreator(Vector3D(screenData[2]/2, screenData[3]/2,0,0));
     auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/screenData[2],
                                                   image->getHeight()/screenData[3], 1,0));
-    //auto scr = ScaleTransformer3DCreator(Vector3D(pixelsPerUnit, pixelsPerUnit, 1,0));
 
-    cout << image->getWidth()/screenData[2] << ' ' << image->getWidth()/screenData[2] << '\n';
     // screenData is used in rasterizer, which works already in image coords
     screenData[0] = image->getWidth()/2;
     screenData[1] = image->getHeight()/2;
@@ -32,16 +30,12 @@ void FullThreadRenderer::initRender() {
     imageTransformer = mcr.create().release();
     imageTransformer->accumulate(scr.create()->getMatrix());
 
-    cout << "image transformer:\n" << imageTransformer->getMatrix() << '\n';
-
     // init zbuffer, fill in black
     zbuf.clearBuf();
 }
 
 bool FullThreadRenderer::modelCameraCut() {
-    // todo cut with camera pyramid instead of just this
     // stage 0. pass by out-from view models
-    // todo transZero for later
     return camera->isVisibleSphere(modelTransformer->transform(ZeroVector),
                                    model->getRadius());;
 }
@@ -49,6 +43,7 @@ bool FullThreadRenderer::modelCameraCut() {
 mutex print_lock;
 void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step, int thread_num) {
     // todo if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) draw it
+    startMeasureTimeStamp(10*thread_num + 0);
 
     cutters[thread_num].setCutter(screenData);
     renderPolygon drawPoly;
@@ -58,11 +53,11 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
     int point_cnt;
     Vector3D normal;
 
-    Poly3DCutter cut3D;
+    Poly3DCutter cut3D;     // todo dynamics... away from here
     auto fr = camera->getFrustrum();
     cut3D.setCutter(fr.getPureArray(), fr.getSize());
 
-    sptr<QRPoint3D>* poly_pts;
+    sptr<QRPoint3D>* poly_pts;      // todo same as above
     points.reserve(maxPolygonPointcnt);
 
     for (size_t i = 0, pos=offset; i < size; ++i, pos+=step) {
@@ -71,57 +66,85 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
         point_cnt = poly->getSize();
 
         // copy & camera-transform points
+        startMeasureTimeStamp(10*thread_num + 1);
         for (int i = 0; i < point_cnt; ++i)
             points[i] = modelCameraTransformer.transform(poly_pts[i]->getVector());
+        endMeasureTimeIncrement(10*thread_num+1);
 
         // camera pyramid's cutting
+        startMeasureTimeStamp(10*thread_num + 2);
         cutResult res = cut3D.cutPoly(points.getPureArray(), point_cnt, drawPoly);
         if (res == CUT_EMPTY) continue;
+        endMeasureTimeIncrement(10*thread_num+2);
 
         point_cnt = drawPoly.getSize();
         for (int i = 0; i < point_cnt; ++i)
             points[i] = drawPoly[i];
 
         // normal update
+        startMeasureTimeStamp(10*thread_num + 3);
         normal = lenNorm((points[1] - points[0]) * (points[2] - points[1]));
         normal[3] = -scalar(normal, points[0]);
         if (poly->where(ZeroVector) != sign(scalar(normal, transZero) + normal[3]))
             normal[0] = -normal[0], normal[1] = -normal[1], normal[2] = -normal[2];
+        endMeasureTimeIncrement(10*thread_num+3);
 
         // point projection
+        startMeasureTimeStamp(10*thread_num + 4);
         for (int i = 0; i < point_cnt; ++i) {
             points[i][3] = 1;
             points[i] = norm(projector->transform(points[i]));  // todo merge into one
             points[i] = imageTransformer->transform(points[i]);
         }
+        endMeasureTimeIncrement(10*thread_num+4);
 
         // 2d-frame cutting
+        startMeasureTimeStamp(10*thread_num + 5);
         cutters[thread_num].cutPolyRect(points.getPureArray(), point_cnt, drawPoly);
         if (drawPoly.getSize() < 3) continue;
+        endMeasureTimeIncrement(10*thread_num+5);
 
         // rasterization
+        startMeasureTimeStamp(10*thread_num + 6);
         zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), normal,
                   poly->getTexture().get());
+        endMeasureTimeIncrement(10*thread_num+6);
     }
+
+    print_lock.lock();
+    cout << "\n\tTHREAD #" << thread_num;
+    cout << "\n\t\tmodel-camera transform: " << measureTimeAccumulator(10*thread_num + 1);
+    cout << "\n\t\tcamera cutting: " << measureTimeAccumulator(10*thread_num + 2);
+    cout << "\n\t\tnormal update: " << measureTimeAccumulator(10*thread_num + 3);
+    cout << "\n\t\tpoint projection: " << measureTimeAccumulator(10*thread_num + 4);
+    cout << "\n\t\t2d-frame cutting: " << measureTimeAccumulator(10*thread_num + 5);
+    cout << "\n\t\trasterization: " << measureTimeAccumulator(10*thread_num + 6);
+    cout << "\n\ttotal thread work: " << endMeasureTimeValue(10*thread_num+0);
+    print_lock.unlock();
 
 }
 
 void FullThreadRenderer::render () {
+    resetAccumulators;
+    cout << "RENDERING...";
+    startMeasureTimeStamp(63);
     initRender();
 
     RawModelIterator models = scene->getModels();
-    QRVector<sptr<QRPolygon3D>> local_polys;
 
     for (; models; ++models) {          // todo no iterators here
+        model = models->fst.get();
         modelTransformer = models->snd.get();
+        if (!modelCameraCut()) continue;
+
         modelCameraTransformer = Transformer3D(modelTransformer->getMatrix());
         modelCameraTransformer.accumulate(cameraTransformer->getMatrix());
 
-        model = models->fst.get();
-
-        //if (!modelCameraCut()) continue; // todo more here
+        startMeasureTime;
         size_t polygon_cnt;
         model->updateCamera(scene->getActiveCamera());
+        cout << "\n\tcamera update: " << endMeasureTime;
+        startMeasureTime;
         if (!model->isAdditivePolygons()) {
             polygons = model->getPurePolygons();
             polygon_cnt = model->getPolygonCnt();
@@ -132,6 +155,7 @@ void FullThreadRenderer::render () {
             polygons = local_polys.getPureArray();
             polygon_cnt = local_polys.getSize();
         }
+        cout << "\n\tpolygon getting: " << endMeasureTime << '\n';
 
         transZero = cameraTransformer->transform(modelTransformer->transform(ZeroVector));
         transZero[3] = 0;
@@ -143,13 +167,21 @@ void FullThreadRenderer::render () {
         screenData[2]-=2;
         screenData[3]-=2;
 
+        startMeasureTime;
         for (size_t i = 0; i < thread_cnt; ++i)
             threads[i] = thread(&FullThreadRenderer::threadManagePolygons, this,
                     thread_size + (i < remain), i, thread_cnt, i);
 
         for (size_t i = 0; i < thread_cnt; ++i) threads[i].join();
+        cout << "\n\tthreads joined in: " << endMeasureTime << '\n';
 
     }
+    startMeasureTime;
     zbuf.fillMissing();
+    cout << "\n\trasterizer errors polishing: " << endMeasureTime;
+    startMeasureTime;
     image->repaint();
+    cout << "\n\timage repaint: " << endMeasureTime;
+    cout << "\ntotal render time: " << endMeasureTimeValue(63);
+    cout << "\nRENDER FINISHED\n\n\n";
 }

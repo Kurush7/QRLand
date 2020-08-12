@@ -5,11 +5,7 @@
 #ifndef BIG3DFLUFFY_TIMETEST_H
 #define BIG3DFLUFFY_TIMETEST_H
 
-#include <chrono>
-#include <functional>
-
-using namespace std;
-using namespace chrono;
+#include "globalDefines.h"
 
 double measureTime(std::function<void()> f);
 

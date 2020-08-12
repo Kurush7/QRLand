@@ -35,6 +35,7 @@ private:
     Vector3D screenData, transZero;
 
     sptr<QRPolygon3D>* polygons;
+    QRVector<sptr<QRPolygon3D>> local_polys;
 };
 
 

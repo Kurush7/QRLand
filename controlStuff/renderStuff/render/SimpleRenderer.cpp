@@ -4,6 +4,9 @@
 
 #include "SimpleRenderer.h"
 
+using namespace std;
+using namespace chrono;
+
 SimpleRenderer::SimpleRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
 : QRenderer(image, scene), colorManager(new QRLightManager), zbuf(image, colorManager) {
     cutters = new PolyRectCutter[thread_cnt];
@@ -79,10 +82,8 @@ void SimpleRenderer::projectPoints() {
     for (size_t i = 0; i < points_cnt; ++i) {
         auto vec = model_pts[i]->getVector();
         vec[3] = 1;
-        cout << "point: " << vec << " -> ";
         vec = norm(projector->transform(vec));  // todo merge into one
         vec = imageTransformer->transform(vec);
-        cout << vec << '\n';
         model_pts[i]->setVector(norm(vec));
     }
 }

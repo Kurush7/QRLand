@@ -13,23 +13,18 @@
 
 #include "RoamConfig.h"
 
-//  TODO when rotating - no change
-// TODO low detail in center, heigh on edges
-
-
 struct RoamNode;
 using LinkMap = std::map<Vector3D, RoamNode*>;
-
 
 struct RoamNode {
     sptr<Triangle3D> triangle;
     Vector3D workPoint;
     RoamNode *link = nullptr, *left=nullptr, *right=nullptr, *parent=nullptr;
-    char mustDraw = 0;     // 0 - no, 1 - yes, 2 - no, came from link
+    char mustDraw = 1;     // 0 - no, 1 - yes, 2 - no, came from link
     float delta;
 
-    // workpoint is one between p2 and p3
     RoamNode() = default;
+    // workpoint is one between p2 and p3
     RoamNode(size_t i1, size_t j1, size_t i2, size_t j2, size_t i3, size_t j3,
              const sptr<QRTexture> &texture, LinkMap &links,
              const QRMatrix<sptr<QRPoint3D>> &points, RoamNode *parent=nullptr);
@@ -41,9 +36,9 @@ struct RoamNode {
         }
     }
 
-    void update(const Vector3D &cam, float d);  // d -- distance from camera to projection screen
+    void update();  // d -- distance from camera to projection screen
     void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
-    void drawCommandNeigbour(const Vector3D &cam, float d);
+    void drawCommandNeigbour();
 
 };
 
@@ -66,7 +61,7 @@ struct Frame {
     }
 
     void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
-    void updateCamera(const sptr<QRCamera3D> &camera);
+    bool updateCamera(const sptr<QRCamera3D> &camera);  // returns wether it's visible
 };
 
 

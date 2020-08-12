@@ -4,6 +4,9 @@
 
 #include "TimeTest.h"
 
+using namespace std;
+using namespace chrono;
+
 double measureTime(std::function<void()> f) {
     system_clock::time_point start = system_clock::now();
     f();

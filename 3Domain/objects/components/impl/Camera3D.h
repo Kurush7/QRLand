@@ -57,11 +57,12 @@ public:
     // todo polygon already projected!!!!
     virtual Vector3D getScreen() const {return {0,0,width, height};}
     virtual const QRVector<Vector3D>& getFrustrum() {return frustrum;}
+    virtual double getScreenDistance() {return -origin[2];}
 
     virtual const Vector3D& getOrigin() const {return origin;}
     virtual void setOrigin(const Vector3D &p) { origin = p; defineAxisTransformer();}
 
-    virtual Vector3D getWorldOriginCoord() {return bind + origin;}
+    virtual Vector3D getWorldOriginCoord() {return bind + rotated_origin;}
 
     virtual float getWidth() const {return width;}
     virtual void setWidth(float w) {width = w; defineFrustrum();}

@@ -5,7 +5,7 @@
 #ifndef BIG3DFLUFFY_ROAMCONFIG_H
 #define BIG3DFLUFFY_ROAMCONFIG_H
 
-const float maxPixelError = 0.5;
+const float maxPixelError = 0.3;
 const size_t FrameSize = 17;
 const float pixelsPerUnit = 200;
 

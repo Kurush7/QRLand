@@ -35,6 +35,7 @@ public:
     // v[0], v[1] - x,y of center, v[2] - width, v[3] = height
     virtual Vector3D getScreen() const = 0;
     virtual const QRVector<Vector3D>& getFrustrum() = 0;
+    virtual double getScreenDistance() = 0;
 
     virtual void move(const Vector3D &move) = 0;
     virtual void scale(float sx, float sy) = 0;

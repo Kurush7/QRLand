@@ -66,7 +66,6 @@ void Camera3D::rotate(const Vector3D &rotate) {
     viewUpVector = lenNorm(t->transform(viewUpVector) - localZero);*/
 
     defineAxisTransformer();
-    cout << axisTransformer->getMatrix() << '\n';
 }
 
 void Camera3D::defineFrustrum() {
@@ -84,20 +83,20 @@ void Camera3D::defineFrustrum() {
 
     frustrum.setSize(6);
 
-    cout << "camera settings:\n";
+    /*cout << "camera settings:\n";
     cout << "\tnear: " << nearCutter << '\n';
     cout << "\tfar: " << farCutter << '\n';
     cout << "\tscreen: " << screen << '\n';
     cout << "\twidth: " << width << '\n';
     cout << "\theight: " << height << '\n';
     cout << "\torigin: " << origin << '\n';
-    cout << "\tbind: " << bind << '\n';
+    cout << "\tbind: " << bind << '\n';*/
     Vector3D in_test({0,0,(nearCutter+farCutter)/2+origin[2],1});
     for (int i = 0; i < 6; ++i) {    // 0 & 1 not needed, for func will destroy 1
         frustrum[i] = len3Norm(frustrum[i]);
         if (scalar(frustrum[i], in_test) < 0) // inside values are  > 0
             frustrum[i] = -1 * frustrum[i];
-        cout << "frustrum: " << frustrum[i] << '\n';
+        //cout << "frustrum: " << frustrum[i] << '\n';
     }
 }
 
