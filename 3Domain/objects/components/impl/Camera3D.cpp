@@ -9,25 +9,39 @@ uptr<QRMemento> Camera3D::save() {
     return uptr<QRMemento>(new Camera3DMemento(p));
 }
 
-Camera3D::Camera3D(float w, float h, const Vector3D &o, float s,
-                   float n, float f): QRCamera3D(w,h), origin(o), screen(s), nearCutter(n), farCutter(f) {
+Camera3D::Camera3D(float w, float h, float zDist, float s,
+                   float n, float f, const Vector3D &pos, const Vector3D &rot, bool _selfRotate)
+                   : QRCamera3D(w,h), screen(s), nearCutter(n), farCutter(f) {
     p = sptr<Camera3D>(this, [](void *ptr){});
-    viewUpVector = {0,1,0,0};
-    deepVector = {0,0,1,0};
-    rotated_origin = origin;
-    bind = Vector3D();
+    viewUpVector = YVector;
+    deepVector = ZVector;
+    origin = Vector3D(0, 0, zDist, 0);
+    worldCoordsOrigin = origin;
+    bind = ZeroVector;
+
+    /*
+    auto t =  AxisChangeTransformer(lenNorm(viewUp*view), lenNorm(viewUp), lenNorm(view), orig);
+    bind = t.transform(bind);
+    viewUpVector = lenNorm(t.transform(viewUpVector) - bind);
+    deepVector = lenNorm(t.transform(deepVector) - bind);*/
 
     defineFrustrum();
     defineAxisTransformer();
     defineProjectionTransformer();
+
+    rotate(rot);
+    move(pos);
+    selfRotate = _selfRotate;
 }
 
 void Camera3D::move(const Vector3D &move) {
+    // todo here when self-rotate
     auto cr = MoveTransformer3DCreator (move);
     auto t = cr.create();
     bind = t->transform(bind);
 
     defineAxisTransformer();
+
 }
 
 void Camera3D::scale(float sx, float sy) {
@@ -51,19 +65,42 @@ void Camera3D::scale(float scale) {
 void Camera3D::rotate(const Vector3D &rotate) {
     auto cr = RotateTransformer3DCreator (rotate);
     auto t = cr.create();
-
     // rotate around zeroPoint
-    rotated_origin = t->transform(rotated_origin);
-    auto localZero = t->transform(ZeroVector);
-    auto yPoint = t->transform(viewUpVector);
-    deepVector = lenNorm(localZero - rotated_origin);
-    viewUpVector = lenNorm(yPoint - localZero);
+    if (!selfRotate) {
+        worldCoordsOrigin = t->transform(worldCoordsOrigin);
+        auto localZero = t->transform(ZeroVector);
+        auto yPoint = t->transform(viewUpVector);
+        deepVector = lenNorm(localZero - worldCoordsOrigin);
+        viewUpVector = lenNorm(yPoint - localZero);
+    }
 
-    // rotate around self
-    /*bind = t->transform(bind);
-    deepVector = lenNorm(bind - origin);
-    auto localZero = t->transform(ZeroVector);
-    viewUpVector = lenNorm(t->transform(viewUpVector) - localZero);*/
+    else {
+        // rotate around self
+
+        cout << "rotate by: " << rotate <<  ", origin: " << origin << '\n';
+        cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
+        //bind = t->transform(bind-origin) + origin;
+        //bind[3] = 0;
+
+        auto world_origin = bind + deepVector*origin[2];
+        world_origin[3] = 0;
+
+        deepVector = t->transform(deepVector);
+        deepVector[3] = 0;
+        deepVector = lenNorm(deepVector);
+
+        viewUpVector = t->transform(viewUpVector);
+        viewUpVector[3] = 0;
+        viewUpVector = lenNorm(viewUpVector);
+
+        cout << origin[2] << ' ' << deepVector << ' ' << world_origin << '\n';
+        bind = world_origin - origin[2]*deepVector;
+        bind[3] = 0;
+
+    }
+
+    cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
+    cout << "world origin: " << bind + deepVector*origin[2] << '\n';
 
     defineAxisTransformer();
 }
@@ -101,9 +138,12 @@ void Camera3D::defineFrustrum() {
 }
 
 void Camera3D::defineAxisTransformer() {
-    // todo no origin given to transformer
+    cout << "origins:\nox= " << lenNorm(viewUpVector*deepVector) << "\noy= " << viewUpVector << '\n';
+    cout << "oz= " << deepVector << "\norigin= " << bind+origin << '\n';
     axisTransformer = sptr<QRTransformer3D>(new AxisChangeTransformer(
-            lenNorm(viewUpVector*deepVector), viewUpVector, deepVector, bind+origin));
+            lenNorm(viewUpVector*deepVector), viewUpVector,
+            deepVector, bind+origin));
+    cout << "new transformer:\n" << axisTransformer->getMatrix() << '\n';
 }
 
 void Camera3D::defineProjectionTransformer() {

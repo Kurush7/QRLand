@@ -36,13 +36,15 @@ private:
 
 class CameraCreator: public QRCamera3DCreator {
 public:
-    CameraCreator(float screen = SCENE_DIST, float near_cutter=0) : screen(screen), near_cutter(near_cutter) {}
+    CameraCreator(float screen = SCENE_DIST, float near_cutter=0, float zDist=-5)
+    : screen(screen), near_cutter(near_cutter), zDist(zDist) {}
     virtual uptr<QRCamera3D> create(float w, float h,
                                     const Vector3D &origin) {
-        return uptr<QRCamera3D>(new Camera3D(w, h, origin, screen, near_cutter));
+        // todo origin
+        return uptr<QRCamera3D>(new Camera3D(w, h,  zDist, screen, near_cutter));
     }
 private:
-    float screen, near_cutter;
+    float screen, near_cutter, zDist;
 };
 
 

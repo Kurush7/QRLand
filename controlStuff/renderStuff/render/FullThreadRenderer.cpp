@@ -59,7 +59,6 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
 
     sptr<QRPoint3D>* poly_pts;      // todo same as above
     points.reserve(maxPolygonPointcnt);
-
     for (size_t i = 0, pos=offset; i < size; ++i, pos+=step) {
         poly = polygons[pos].get();
         poly_pts = poly->getPurePoints();

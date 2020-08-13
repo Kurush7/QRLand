@@ -107,6 +107,8 @@ Matrix3D operator *(const Matrix3D &a, const Matrix3D &b) {
                 c[i][j] += a[i][k] * b[k][j];
     return c;
 }
+
+// TODO FUUUUUUUUCK!!! THIS ONLY WORKS BECAUSE OF LUCK... NO *V[3]!!!!!
 Vector3D operator *(const Matrix3D &m, const Vector3D &v) {
     return Vector3D({
         m[0][0]*v[0]+m[0][1]*v[1] + m[0][2]*v[2] + m[0][3],

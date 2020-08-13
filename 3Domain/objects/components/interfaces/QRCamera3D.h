@@ -28,6 +28,9 @@ public:
     virtual sptr<QRTransformer3D> getAxisTransformer() const = 0;
     virtual sptr<QRTransformer3D> getProjectionTransformer() const = 0;
 
+    virtual void setSelfRotate(bool x) = 0;
+    virtual bool isSelfRotate() = 0;
+
     // 1 - fully visible, 0 - fully invisible, -1 - partly
     virtual int isVisibleSphere(const Vector3D &center, float rad) = 0;
     virtual bool isFrontFace(const Vector3D &normal) = 0;

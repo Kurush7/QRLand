@@ -5,17 +5,19 @@
 #include "Facade.h"
 using namespace std;
 
+// TODO MORE DETAILS ON THE EDGES..... WTF?!!!!!!
+
 Facade::Facade(sptr<QRImage> img): image(img) {
     manager = sptr<BaseCommandManager> (new CommandManager());
     auto cr = PolySceneCreatorNoCamera();
     scene = cr.create();
 
-    auto cam = sptr<QRCamera3D>(new Camera3D(3, 3, Vector3D(0,0,-5),
-            2, 0.01));
+    auto cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5,2, 0.01,
+                                             QRINF, Vector3D(0,0,-5), Vector3D(M_PI/2,0,0)));
     scene->addCamera(cam, "observeCamera");
 
-    cam = sptr<QRCamera3D>(new Camera3D(10, 10, Vector3D(0,0,-10),
-                                             1, 1));
+    cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5, 2, 0.01, QRINF,
+            Vector3D(0,0,0), Vector3D(M_PI/2,0,0), true));
     scene->addCamera(cam, "walkCamera");
 
     scene->setActiveCamera("observeCamera");
@@ -28,7 +30,7 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
     //       Vector3D(0,0,0));
 
-    scene->addModel(RoamLandscapeCreator(519, 519, 0.04).create(),
+    scene->addModel(RoamLandscapeCreator(129, 129, 0.1).create(),
            Vector3D(0,0,0));
 
     //scene->addModel(CubeModelCreator(10,

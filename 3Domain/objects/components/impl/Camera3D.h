@@ -32,11 +32,12 @@ class Camera3D: public QRCamera3D {
 public:
     friend class Camera3DMemento;
 
-    Camera3D(float w, float h, const Vector3D &origin, float screen,
-             float nearCutter, float farCutter = QRINF);
+    Camera3D(float w, float h, float zDist, float screen,
+             float nearCutter, float farCutter = QRINF, const Vector3D &pos=ZVector, const Vector3D &rot=ZVector,
+             bool selfRotate = false);
     ~Camera3D() {p.reset();}
     virtual sptr<QRObject3D> copy() {return sptr<QRCamera3D>(new Camera3D(width, height,
-            origin, screen, nearCutter, farCutter));}
+            origin[2], screen, nearCutter, farCutter));}
     virtual uptr<QRMemento> save();
     virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitCamera3D(p);}
     wptr<QRCamera3D> getPointer() {return p;}
@@ -60,9 +61,9 @@ public:
     virtual double getScreenDistance() {return -origin[2];}
 
     virtual const Vector3D& getOrigin() const {return origin;}
-    virtual void setOrigin(const Vector3D &p) { origin = p; defineAxisTransformer();}
+    virtual void setOrigin(const Vector3D &p) { origin = p; defineAxisTransformer();}       // todo careful! not right
 
-    virtual Vector3D getWorldOriginCoord() {return bind + rotated_origin;}
+    virtual Vector3D getWorldOriginCoord() {return bind + deepVector*origin[2];}
 
     virtual float getWidth() const {return width;}
     virtual void setWidth(float w) {width = w; defineFrustrum();}
@@ -72,17 +73,22 @@ public:
     virtual const Vector3D& getBind() const {return bind;}
     virtual void setBind(const Vector3D &b) {bind = b;}
 
+    virtual void setSelfRotate(bool x) {selfRotate = x;}
+    virtual bool isSelfRotate() {return selfRotate;}
+
     // todo not all params considered
     virtual bool operator==(const QRCamera3D &b) const {return origin == b.getOrigin() &&
                                                                width == b.getWidth() &&
                                                                height == b.getHeight();}
 private:
     sptr<Camera3D> p;
-    Vector3D origin, rotated_origin, viewUpVector, deepVector, bind;
+    Vector3D origin, worldCoordsOrigin, viewUpVector, deepVector, bind;
     float nearCutter, farCutter, screen;
     QRVector<Vector3D> frustrum;
 
     sptr<QRTransformer3D> axisTransformer, projector;
+
+    bool selfRotate = false;
 
     void defineAxisTransformer();
     void defineProjectionTransformer();
