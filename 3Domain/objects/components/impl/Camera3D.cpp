@@ -38,9 +38,15 @@ void Camera3D::move(const Vector3D &move) {
     // todo here when self-rotate
     auto cr = MoveTransformer3DCreator (move);
     auto t = cr.create();
+    auto old_bind = bind;
     bind = t->transform(bind);
 
-    defineAxisTransformer();
+    if (!selfRotate) defineAxisTransformer();
+    else {
+        auto t = sptr<QRTransformer3D>(MoveTransformer3DCreator(bind-old_bind).create());
+        t->accumulate(axisTransformer->getMatrix());
+        axisTransformer = t;
+    }
 
 }
 
@@ -63,46 +69,46 @@ void Camera3D::scale(float scale) {
 }
 
 void Camera3D::rotate(const Vector3D &rotate) {
-    auto cr = RotateTransformer3DCreator (rotate);
-    auto t = cr.create();
-    // rotate around zeroPoint
     if (!selfRotate) {
+        // rotate around zeroPoint
+        auto cr = RotateTransformer3DCreator (rotate);
+        auto t = cr.create();
         worldCoordsOrigin = t->transform(worldCoordsOrigin);
         auto localZero = t->transform(ZeroVector);
         auto yPoint = t->transform(viewUpVector);
         deepVector = lenNorm(localZero - worldCoordsOrigin);
         viewUpVector = lenNorm(yPoint - localZero);
+        defineAxisTransformer();
     }
-
     else {
-        // rotate around self
+        // rotate around origin point. rotation is in camera's coords, then accumulation
+        auto cr = RotateTransformer3DCreator (rotate);
+        auto t = cr.create();
+        auto new_deepVector = t->transform(ZVector);
+        new_deepVector[3] = 0;
+        new_deepVector = lenNorm(new_deepVector);
 
-        cout << "rotate by: " << rotate <<  ", origin: " << origin << '\n';
-        cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
-        //bind = t->transform(bind-origin) + origin;
-        //bind[3] = 0;
+        auto new_viewUpVector = t->transform(YVector);
+        new_viewUpVector[3] = 0;
+        new_viewUpVector = lenNorm(new_viewUpVector);
 
-        auto world_origin = bind + deepVector*origin[2];
-        world_origin[3] = 0;
+        auto new_axisTransformer  = sptr<QRTransformer3D>(new AxisChangeTransformer(
+                lenNorm(new_viewUpVector*new_deepVector), new_viewUpVector,
+                new_deepVector, ZeroVector));
 
-        deepVector = t->transform(deepVector);
+        deepVector = new_axisTransformer->transform(deepVector);
         deepVector[3] = 0;
         deepVector = lenNorm(deepVector);
 
-        viewUpVector = t->transform(viewUpVector);
+        viewUpVector = new_axisTransformer->transform(viewUpVector);
         viewUpVector[3] = 0;
         viewUpVector = lenNorm(viewUpVector);
 
-        cout << origin[2] << ' ' << deepVector << ' ' << world_origin << '\n';
-        bind = world_origin - origin[2]*deepVector;
-        bind[3] = 0;
-
+        axisTransformer->accumulate(new_axisTransformer->getMatrix());
     }
 
     cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
     cout << "world origin: " << bind + deepVector*origin[2] << '\n';
-
-    defineAxisTransformer();
 }
 
 void Camera3D::defineFrustrum() {
@@ -139,10 +145,19 @@ void Camera3D::defineFrustrum() {
 
 void Camera3D::defineAxisTransformer() {
     cout << "origins:\nox= " << lenNorm(viewUpVector*deepVector) << "\noy= " << viewUpVector << '\n';
-    cout << "oz= " << deepVector << "\norigin= " << bind+origin << '\n';
+    cout << "oz= " << deepVector <<
+    "\norigin= " << bind+origin << "  (origin: " << origin << " bind: " << bind << " )\n";
+
+    /*axisTransformer = sptr<QRTransformer3D>(MoveTransformer3DCreator(bind).create());
+    axisTransformer->accumulate(AxisChangeTransformer(
+            lenNorm(viewUpVector*deepVector), viewUpVector,
+            deepVector, origin).getMatrix());*/
+
+
     axisTransformer = sptr<QRTransformer3D>(new AxisChangeTransformer(
             lenNorm(viewUpVector*deepVector), viewUpVector,
             deepVector, bind+origin));
+
     cout << "new transformer:\n" << axisTransformer->getMatrix() << '\n';
 }
 
