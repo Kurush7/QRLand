@@ -6,20 +6,12 @@
 #include <QLocale>
 #include <QLibraryInfo>
 
-
-#include "gui/MainWindow.h"
+#include "gui/wip2/MainWindow.h"
 
 using namespace std;
 
-#include "3Domain/containers/QRVector/QRVector.h"
-#include "3Domain/containers/QRMap/QRMap.h"
 
 int main(int argc, char *argv[]) {
-
-    // test code
-    QRVector<int> vec;
-    for (int i = 0; i < 5; ++i)
-        vec.push_back(i);
     QApplication app(argc, argv);
 
     QFile styleF;
@@ -28,7 +20,6 @@ int main(int argc, char *argv[]) {
     QString qssStr = styleF.readAll();
     app.setStyleSheet(qssStr);
 
-
     QString translatorFileName = QLatin1String("qt_");
     translatorFileName += QLocale::system().name();
     QTranslator *translator = new QTranslator(&app);
@@ -36,7 +27,6 @@ int main(int argc, char *argv[]) {
         app.installTranslator(translator);
 
     MainWindow window;
-
     window.setWindowIcon(QIcon("i.ico"));
     window.show();
 

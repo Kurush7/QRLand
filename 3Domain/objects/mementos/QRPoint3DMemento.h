@@ -8,7 +8,7 @@
 #include <memory>
 
 #include "QRMemento.h"
-#include "components/interfaces/QRPoint3D.h"
+#include "objects/components/interfaces/QRPoint3D.h"
 
 class QRPoint3DMemento: public QRMemento {
 public:

@@ -10,7 +10,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "../../exceptions/QRException.h"
+#include "exceptions/QRException.h"
 
 
 class QRBadPointException: public QRObjectException
@@ -30,6 +30,16 @@ public:
 
     virtual const char* what() const noexcept override;
 };
+
+class QRBadParamException: public QRObjectException
+{
+public:
+    QRBadParamException(const char *file, int line, const char *time, const char *msg);
+    virtual ~QRBadParamException() = default;
+
+    virtual const char* what() const noexcept override;
+};
+
 
 
 

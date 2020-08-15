@@ -24,18 +24,17 @@ protected:
     int stage = 0, built_stage = 2;
     bool isBuilt = false;
     sptr<QRFrame3D> frame;
-
 };
 
 class Frame3DLoader: public BaseFrame3DLoader {
 public:
-    Frame3DLoader (sptr<LoadSource> src,  sptr<AbstractObject3DFactory>f);
+    Frame3DLoader (sptr<LoadSource> src,  sptr<QRObject3DFactory>f);
     virtual bool loadPoints();
     virtual bool loadEdges();
     virtual sptr<QRFrame3D> getFrame();
 protected:
     sptr<LoadSource> source;
-    sptr<AbstractObject3DFactory> factory;
+    sptr<QRObject3DFactory> factory;
     QRVector<sptr<QRPoint3D>> points;
     QRVector<sptr<QRObject>> objects;
 };

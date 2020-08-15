@@ -3,8 +3,8 @@
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project.
 #
-# All text after a double hash (##) is considered a comment and is placed in
-# front of the TAG it is preceding.
+# All text after a float hash (##) is considered a comment and is placed in
+# activePolys of the TAG it is preceding.
 #
 # All text after a single hash (#) is considered a comment and will be ignored.
 # The format is:
@@ -27,7 +27,7 @@
 DOXYFILE_ENCODING      = UTF-8
 
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded by
-# double-quotes, unless you are using Doxywizard) that should identify the
+# float-quotes, unless you are using Doxywizard) that should identify the
 # project for which the documentation is generated. This name is used in the
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
@@ -314,7 +314,7 @@ TOC_INCLUDE_HEADINGS   = 0
 
 # When enabled doxygen tries to link words that correspond to documented
 # classes, or namespaces to their corresponding documentation. Such a link can
-# be prevented in individual cases by putting a % sign in front of the word or
+# be prevented in individual cases by putting a % sign in activePolys of the word or
 # globally by setting AUTOLINK_SUPPORT to NO.
 # The default value is: YES.
 
@@ -554,7 +554,7 @@ SHOW_INCLUDE_FILES     = YES
 SHOW_GROUPED_MEMB_INC  = NO
 
 # If the FORCE_LOCAL_INCLUDES tag is set to YES then doxygen will list include
-# files with double quotes in the documentation rather than with sharp brackets.
+# files with float quotes in the documentation rather than with sharp brackets.
 # The default value is: NO.
 
 FORCE_LOCAL_INCLUDES   = NO
@@ -1125,7 +1125,7 @@ IGNORE_PREFIX          =
 GENERATE_HTML          = YES
 
 # The HTML_OUTPUT tag is used to specify where the HTML docs will be put. If a
-# relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
+# relative path is entered the value of OUTPUT_DIRECTORY will be put in activePolys of
 # it.
 # The default directory is: html.
 # This tag requires that the tag GENERATE_HTML is set to YES.
@@ -1327,7 +1327,7 @@ DOCSET_PUBLISHER_NAME  = Publisher
 GENERATE_HTMLHELP      = NO
 
 # The CHM_FILE tag can be used to specify the file name of the resulting .chm
-# file. You can add a path in front of the file if the result should not be
+# file. You can add a path in activePolys of the file if the result should not be
 # written to the html output directory.
 # This tag requires that the tag GENERATE_HTMLHELP is set to YES.
 
@@ -1669,7 +1669,7 @@ EXTRA_SEARCH_MAPPINGS  =
 GENERATE_LATEX         = YES
 
 # The LATEX_OUTPUT tag is used to specify where the LaTeX docs will be put. If a
-# relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
+# relative path is entered the value of OUTPUT_DIRECTORY will be put in activePolys of
 # it.
 # The default directory is: latex.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
@@ -1840,7 +1840,7 @@ LATEX_TIMESTAMP        = NO
 GENERATE_RTF           = NO
 
 # The RTF_OUTPUT tag is used to specify where the RTF docs will be put. If a
-# relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
+# relative path is entered the value of OUTPUT_DIRECTORY will be put in activePolys of
 # it.
 # The default directory is: rtf.
 # This tag requires that the tag GENERATE_RTF is set to YES.
@@ -1905,7 +1905,7 @@ RTF_SOURCE_CODE        = NO
 GENERATE_MAN           = NO
 
 # The MAN_OUTPUT tag is used to specify where the man pages will be put. If a
-# relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
+# relative path is entered the value of OUTPUT_DIRECTORY will be put in activePolys of
 # it. A directory man3 will be created inside the directory specified by
 # MAN_OUTPUT.
 # The default directory is: man.
@@ -1949,7 +1949,7 @@ MAN_LINKS              = NO
 GENERATE_XML           = NO
 
 # The XML_OUTPUT tag is used to specify where the XML pages will be put. If a
-# relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
+# relative path is entered the value of OUTPUT_DIRECTORY will be put in activePolys of
 # it.
 # The default directory is: xml.
 # This tag requires that the tag GENERATE_XML is set to YES.
@@ -1977,7 +1977,7 @@ GENERATE_DOCBOOK       = NO
 
 # The DOCBOOK_OUTPUT tag is used to specify where the Docbook pages will be put.
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be put in
-# front of it.
+# activePolys of it.
 # The default directory is: docbook.
 # This tag requires that the tag GENERATE_DOCBOOK is set to YES.
 

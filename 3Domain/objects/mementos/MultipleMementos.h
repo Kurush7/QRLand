@@ -6,22 +6,7 @@
 #define BIG3DFLUFFY_MULTIPLEMEMENTOS_H
 
 #include "QRMemento.h"
-#include "../composites/interfaces/QRComposite.h"
-
-class GroupMemento: public QRMemento {
-public:
-    GroupMemento(sptr<QRComposite> obj): object(obj) {
-        memes = obj->getObjects();
-    }
-    virtual void restore() {
-        if (object.expired())
-            throw QRBadPointerException(__FILE__, __LINE__, __TIME__, "Failed to create memento!");
-        object.lock()->setObjects(memes);
-    }
-private:
-    wptr<QRComposite> object;
-    QRVector<sptr<QRObject>> memes;
-};
+#include "containers/QRContainers.h"
 
 class MementoAccumulator: public QRMemento {
 public:

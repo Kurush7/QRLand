@@ -9,9 +9,10 @@
 #include <vector>
 
 #include "../QRDefines.h"
-
 #include "../math/QRMath.h"
 #include "../containers/QRContainers.h"
+
+#include "textures/QRTexture.h"
 #include "exceptions/QRObjectException.h"
 #include "mementos/QRMemento.h"
 #include "visitors/QRVisitorInterface.h"
@@ -28,7 +29,7 @@ using ObjectIterator = QRVectorIterator<sptr<QRObject>>;
 class QRObject {
 public:
     virtual uptr<QRMemento> save() = 0;
-    virtual void acceptVisitor(sptr<QRVisitor> visitor) = 0;
+    virtual void acceptVisitor(const sptr<QRVisitor>& visitor) = 0;
 
     virtual bool isVisible() {return visible;}
     virtual bool isComposite() = 0;
@@ -36,9 +37,6 @@ public:
     // todo is_editable
 
     virtual void setSelected(bool x) {selected = x;}
-
-    virtual ObjectIterator begin() = 0;
-    virtual ObjectIterator end() = 0;
 
 protected:
     bool visible = true;
@@ -49,51 +47,17 @@ protected:
 class QRObject3D: public QRObject {
 public:
     virtual bool isComposite() {return false;}
-    virtual ObjectIterator begin() {return ObjectIterator();}
-    virtual ObjectIterator end()  {return ObjectIterator();}
+    virtual sptr<QRObject3D> copy() = 0;
 };
 
-// todo move to textures directory/file
-class QRColor {
+class QRComposite: public QRObject {
 public:
-    // todo accurate color string mapping
-    QRColor() {}
-    QRColor (std::string name) {
-        if (name == "white") r = b = g = 255;
-        if (name == "black") r=b=g=0;
-        if (name == "green") g = 255;
-        if (name == "blue") b = 255;
-        if (name == "red") r = 255;
-    }
-    QRColor(int r, int g, int b): r(r), g(g), b(b) {}
-    bool operator==(const QRColor &c) const{return r==c.r && b==c.b && g==c.g;}
-    int r=0, g=0, b=0;
-};
-class Style {
-public:
-    Style() {}
-    Style(QRColor c): color(c) {}
-    QRColor color = QRColor("white");
+    explicit QRComposite() { p = sptr<QRComposite>(this, [](void *ptr){}); }
+    virtual bool isComposite() {return true;}
+    virtual void setSelected(bool x) = 0;
 
-    virtual bool operator==(const Style &s) const{return color == s.color;}
-};
-class QRPointStyle: public Style {
-public:
-    QRPointStyle(){}
-    QRPointStyle(QRColor c): Style(c) {}
-
-};
-class QREdgeStyle: public Style {
-public:
-    QREdgeStyle(){}
-    QREdgeStyle(QRColor c): Style(c) {}
-};
-
-class ColorKeeper {
-public:
-    ColorKeeper(QRPointStyle p, QREdgeStyle e): pointStyle(p), edgeStyle(e) {}
-    QRPointStyle pointStyle;
-    QREdgeStyle edgeStyle;
+private:
+    sptr<QRComposite> p;
 };
 
 #endif //KG_BASEOBJECT_H

@@ -42,7 +42,7 @@ public:
     virtual void accept(sptr<SourceVisitor> visitor) = 0;
 
     virtual int readInt() = 0;
-    virtual double readDouble() = 0;
+    virtual float readDouble() = 0;
 };
 
 class FileSource: public LoadSource {
@@ -52,7 +52,7 @@ public:
     virtual void accept(sptr<SourceVisitor> visitor) {visitor->visitFileSource(*this);}
 
     virtual int readInt() {return read<int>();}
-    virtual double readDouble() {return read<double>();}
+    virtual float readDouble() {return read<float>();}
 
     template <typename T>
     T read();

@@ -7,8 +7,9 @@
 
 #include "exceptions/QRException.h"
 #include "containers/QRContainers.h"
-#include "objects/objects.h"
+#include "managers/QRManagers.h"
 #include "math/QRMath.h"
-#include "Painter.h"
+#include "objects/objects.h"
+#include "textures/textures.h"
 
 #endif //KG_3DOMAIN_H

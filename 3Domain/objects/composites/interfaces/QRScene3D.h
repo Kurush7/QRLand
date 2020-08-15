@@ -5,13 +5,11 @@
 #ifndef BIG3DFLUFFY_QRSCENE3D_H
 #define BIG3DFLUFFY_QRSCENE3D_H
 
-#include "QRComposite.h"
 #include "../../components/interfaces/QRCamera3D.h"
 #include "../../managers/SelectionManager.h"
 
 // SCENE IS NOT COMPOSITE! IT'S JUST HERE FOR COMFORTABLE ACCESS
 
-class SceneMemento;
 class QRScene3D {
 public:
     QRScene3D() {

@@ -3,7 +3,7 @@
 //
 
 #include "QREdge3D.h"
-#include "mementos/QREdge3DMemento.h"
+#include "objects/mementos/QREdge3DMemento.h"
 
 using namespace std;
 

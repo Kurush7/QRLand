@@ -1,14 +1,8 @@
-set(source_list "Lab3Facade.cpp")
-
-add_subdirectory(exceptions)
-add_subdirectory(containers)
-add_subdirectory(math)
-add_subdirectory(objects)
-add_subdirectory(managers)
-
+set(path "3Domain")
 include_directories(objects)
-message( STATUS "Variable BAR in ./bar/ = ${source_list}" )
 
-add_library(3domain_lib
-        ${source_list}
-        )
+add_subdirectory(objects)
+add_subdirectory(textures)
+
+set(source_list ${source_list}
+        PARENT_SCOPE)
