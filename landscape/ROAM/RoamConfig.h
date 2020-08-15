@@ -5,6 +5,8 @@
 #ifndef BIG3DFLUFFY_ROAMCONFIG_H
 #define BIG3DFLUFFY_ROAMCONFIG_H
 
+
+// todo manage parameters for best perfomance
 const float maxPixelError = 0.3;
 const size_t FrameSize = 17;
 const float pixelsPerUnit = 200;

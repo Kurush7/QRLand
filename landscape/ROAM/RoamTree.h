@@ -9,7 +9,7 @@
 #include "objects/QRObject.h"
 #include "objects/composites/impl.h"
 #include "objects/components/impl.h"
-#include "QRLandscapeTexture.h"
+#include "../basic/QRLandscapeTexture.h"
 
 #include "RoamConfig.h"
 

@@ -30,9 +30,15 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
     //       Vector3D(0,0,0));
 
-    scene->addModel(RoamLandscapeCreator(129, 129, 0.1).create(),
-           Vector3D(0,0,0));
+    //scene->addModel(RoamLandscapeCreator(129, 129, 0.1).create(),
+    //       Vector3D(0,0,0));
 
+    auto builder = LandscapeBuilder(129, 129, 1, 0.1);
+    builder.process(1);
+    auto land = builder.createLandscape();
+    for (auto p = land->getPoints(); p; ++p)
+        cout << p->get()->getVector() << '\n';
+    scene->addModel(land, Vector3D(0,0,0));
     //scene->addModel(CubeModelCreator(10,
     //        sptr<QRTexture>(new ColorTexture(127,127,127))).create(),Vector3D(0,0,0));
 }

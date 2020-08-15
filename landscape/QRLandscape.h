@@ -5,12 +5,14 @@
 #ifndef BIG3DFLUFFY_QRLANDSCAPE_H
 #define BIG3DFLUFFY_QRLANDSCAPE_H
 
-#include "QRLandscapeTexture.h"
-#include "QRLandscapeSurface.h"
-#include "QRLandscapeSurfaceCreator.h"
+#include "basic/QRLandscapeTexture.h"
+#include "basic/QRLandscapeSurface.h"
+#include "basic/QRLandscapeSurfaceCreator.h"
 
 #include "ROAM/RoamLandscape.h"
 #include "ROAM/RoamLandscapeCreator.h"
 #include "ROAM/RoamConfig.h"
+
+#include "managers/LandscapeBuilder.h"
 
 #endif //BIG3DFLUFFY_QRLANDSCAPE_H

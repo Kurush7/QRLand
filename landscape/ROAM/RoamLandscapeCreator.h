@@ -9,7 +9,7 @@
 
 class RoamLandscapeCreator {
 public:
-    RoamLandscapeCreator(size_t width, size_t height, double step = 1) {
+    RoamLandscapeCreator(size_t width, size_t height, double step = 1): m(width, height) {
         setParams(width, height, step);
     }
 
@@ -18,9 +18,11 @@ public:
         step = _step;
     }
 
-    virtual uptr<QRPolyModel3D> create();
+    virtual sptr<QRPolyModel3D> create();
+    virtual void updateHeightMap(const QRMatrix<double> &hMap);
 
 private:
+    QRMatrix<sptr<QRPoint3D>> m;
     size_t width, height;
     double step;
 };

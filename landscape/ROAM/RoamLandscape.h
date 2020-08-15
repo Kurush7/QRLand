@@ -5,13 +5,13 @@
 #ifndef BIG3DFLUFFY_ROAMLANDSCAPE_H
 #define BIG3DFLUFFY_ROAMLANDSCAPE_H
 
-#include "../QRLandscapeSurface.h"
+#include "../basic/QRLandscapeSurface.h"
 #include "RoamTree.h"
 
 class RoamLandscape: public QRPolyModel3D {
 public:
     // points must be square matrix with size 2^n+1
-    RoamLandscape(const QRMatrix<sptr<QRPoint3D>> &points);
+    explicit RoamLandscape(const QRMatrix<sptr<QRPoint3D>> &points);
     ~RoamLandscape() {
         delete[] frames;
     }
@@ -37,7 +37,7 @@ private:
     size_t dimFrameCnt;
     size_t lastPolyCount = 0;
     size_t lowestPolygonCnt = 0;
-    QRMatrix<sptr<QRPoint3D>> points;
+    const QRMatrix<sptr<QRPoint3D>> points;
     Frame *frames;
 };
 
