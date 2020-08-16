@@ -25,8 +25,8 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     renderer = sptr<QRenderer>(new FullThreadRenderer(image, scene));
 
     auto builder = LandscapeBuilder(129, 129, 1, 0.1);
-    builder.setTools({{FunctionTool, freqAVERAGE}});
-    builder.process(1);
+    builder.setTools({{LayerTool, freqAVERAGE}});
+    builder.process(100);
     auto land = builder.createLandscape();
     scene->addModel(land, Vector3D(0,0,0));
 

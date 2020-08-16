@@ -18,17 +18,16 @@ enum ToolFrequency {
 class QRToolManager {
 public:
     void addTool(const sptr<QRTool> &tool, ToolFrequency freq) {
-        tools.push_back({tool, freq});
+        tools.push_back(tool);
+        frequences.push_back(freq);
+        freq_sum += freq;
     }
-    const sptr<QRTool> & getTool() {
-        if (tools.getSize() == 0)
-            throw QRBadParamException(__FILE__, __LINE__, __TIME__,
-                    "toolSet empty!");
-        return tools[0].fst;    //todo
-    }
+    const sptr<QRTool> & getTool();
 
 private:
-    QRVector<QRPair<sptr<QRTool>, ToolFrequency>> tools;
+    QRVector<sptr<QRTool>> tools;
+    QRVector<ToolFrequency> frequences;
+    int freq_sum = 0;
 };
 
 

@@ -9,7 +9,10 @@
 
 class LayerTool: public QRTool {
 public:
-    virtual void process() {} // todo
+    virtual void process();
+
+private:
+    std::default_random_engine generator = std::default_random_engine();
 };
 
 class LayerToolCreator: public QRToolCreator {

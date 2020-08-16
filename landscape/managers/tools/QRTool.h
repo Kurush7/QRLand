@@ -5,6 +5,8 @@
 #ifndef BIG3DFLUFFY_QRTOOL_H
 #define BIG3DFLUFFY_QRTOOL_H
 
+#include <random>
+
 #include "containers/QRContainers.h"
 
 struct ToolData {
