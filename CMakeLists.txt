@@ -31,7 +31,7 @@ include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set (path "")
-set(source_list "tests/TimeTest.cpp" landscape/ROAM/RoamTree.cpp landscape/ROAM/RoamTree.h landscape/ROAM/RoamConfig.h landscape/ROAM/RoamLandscapeCreator.cpp landscape/ROAM/RoamLandscapeCreator.h landscape/managers/LandscapeBuilder.cpp landscape/managers/LandscapeBuilder.h landscape/landscapeConfig.h)
+set(source_list "tests/TimeTest.cpp" landscape/ROAM/RoamTree.cpp landscape/ROAM/RoamTree.h landscape/ROAM/RoamConfig.h landscape/ROAM/RoamLandscapeCreator.cpp landscape/ROAM/RoamLandscapeCreator.h landscape/managers/LandscapeBuilder.cpp landscape/managers/LandscapeBuilder.h landscape/landscapeConfig.h landscape/managers/tools/QRTool.h landscape/managers/tools/LayerTool.cpp landscape/managers/tools/LayerTool.h landscape/managers/tools/QRToolFabric.cpp landscape/managers/tools/QRToolFabric.h landscape/managers/tools/QRToolManager.cpp landscape/managers/tools/QRToolManager.h landscape/managers/tools/FunctionTool.cpp landscape/managers/tools/FunctionTool.h)
 add_subdirectory(2Domain)
 add_subdirectory(3Domain)
 add_subdirectory(containers)

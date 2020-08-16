@@ -15,15 +15,15 @@ size_t squaredInc(size_t x) {
 }
 
 LandscapeBuilder::LandscapeBuilder(size_t _width, size_t _height,
-        size_t polworldStep, double world_step)
-: heightMap(squared(_width)/squared(polworldStep)+1,
-         squared(_width)/squared(polworldStep)+1),
-points(squared(_width)/squared(polworldStep)+1,
-squared(_width)/squared(polworldStep)+1)
+        size_t polyStep, double world_step)
+: heightMap(squared(_width)/squared(polyStep)+1,
+         squared(_width)/squared(polyStep)+1),
+points(squared(_width)/squared(polyStep)+1,
+squared(_width)/squared(polyStep)+1)
 {
 
     maxWidth = squaredInc(_width), maxHeight = squaredInc(_height);
-    step = squared(polworldStep);
+    step = squared(polyStep);
     width = squared(_width) / step + 1,
     height = squared(_width) / step + 1;
 
@@ -31,6 +31,19 @@ squared(_width)/squared(polworldStep)+1)
 
     clearHeightMap();
     buildPoints();
+}
+
+void LandscapeBuilder::setTools(QRVector<QRPair<ToolName, ToolFrequency>> toolSet) {
+    ToolData data(&heightMap, width, height, worldStep);
+
+    auto toolFabric = initToolFabric();
+    sptr<QRTool> tool;
+    for (auto &item: toolSet) {
+        tool = toolFabric.create(item.fst);
+        tool->setToolData(data);
+        toolManager.addTool(tool, item.snd);
+    }
+    // todo setHMap and others for new tool
 }
 
 void LandscapeBuilder::clearHeightMap() {
@@ -53,17 +66,8 @@ void LandscapeBuilder::buildPoints() {
 }
 
 void LandscapeBuilder::process(int step_cnt) {
-    double x, y = -(height+0.)/2.*worldStep;
-    for(size_t i = 0; i < height; ++i) {
-        x = -(width+0.)/2.*worldStep;
-        for (size_t j = 0; j < width; ++j) {
-            double z = exp(-(x * x + y * y) / 8) * (sin(x * x) + cos(y * y));
-            cout << x << ' ' << y << ' ' << z << '\n';
-            heightMap[i][j] = z;
-            x += worldStep;
-        }
-        y += worldStep;
-    }
+    for (int i = 0; i < step_cnt; ++i)
+        toolManager.getTool()->process();
 
     updateHeightMap();
 }

@@ -7,16 +7,19 @@
 
 #include "../ROAM/RoamLandscape.h"
 #include "../landscapeConfig.h"
+#include "managers/tools/QRToolFabric.h"
+#include "managers/tools/QRToolManager.h"
 
 // todo avoid point matrix copies when building landscape
-// todo landscape creators with common base & interface for hmap updates
 
 // here points are in range [-width/2, width/2][-height/2, height/2],
 // but all calculations with height are made in [0, width][0, height]
 class LandscapeBuilder {
 public:
-    // todo init
-    LandscapeBuilder(size_t width, size_t height, size_t polyStep=1, double world_step=1);
+    LandscapeBuilder(size_t width, size_t height,
+            size_t polyStep=1, double world_step=1);
+
+    void setTools(QRVector<QRPair<ToolName, ToolFrequency>>);
 
     void process(int step_cnt);
     sptr<QRPolyModel3D> createLandscape();
@@ -25,6 +28,8 @@ private:
     sptr<QRPolyModel3D> landscape = nullptr;
     QRMatrix<double> heightMap;
     QRMatrix<sptr<QRPoint3D>> points;
+
+    QRToolManager toolManager;
 
     size_t width, height;     // point width&height (points count, not polygons)
     size_t maxWidth, maxHeight;
