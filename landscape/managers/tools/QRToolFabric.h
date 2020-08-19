@@ -10,6 +10,7 @@
 #include "QRTool.h"
 #include "LayerTool.h"
 #include "FunctionTool.h"
+#include "HillTool.h"
 
 enum ToolName {
     FunctionTool, LayerTool, HillTool

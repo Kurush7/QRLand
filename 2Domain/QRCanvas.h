@@ -12,9 +12,10 @@
 class QRCanvas : public QRActionManager {
 Q_OBJECT
 public:
-    explicit QRCanvas(int w, int h, QWidget *parent = nullptr,
-                    QColor fill = Qt::white);
-    virtual ~QRCanvas() {delete pixels;}
+    explicit QRCanvas(int w, int h, QWidget *parent = nullptr);
+    virtual ~QRCanvas() {
+        delete[] pixels;
+    }
 
     uchar* getData() {return pixels;}
 
@@ -24,7 +25,7 @@ public:
 protected:
     void initializeGL();
     void paintGL();
-    void resizeGL(int width, int height);
+    //void resizeGL(int width, int height);
 
 protected:
     int width, height;

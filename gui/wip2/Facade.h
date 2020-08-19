@@ -12,7 +12,7 @@
 
 class Facade {
 public:
-    Facade(sptr<QRImage> img);
+    Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img);
     void draw();
 
     void moveCamera(float dx, float dy, float dz);
@@ -24,10 +24,12 @@ public:
     void undo();
 
 private:
-    sptr<QRImage> image;
+    sptr<QRImage> main_image, hmap_image;
     sptr<BaseCommandManager> manager;
     sptr<QRPolyScene3D> scene;
     sptr<QRenderer> renderer;
+    sptr<TopDownVisualizer> topDown;
+    sptr<LandscapeBuilder> builder;
 };
 
 

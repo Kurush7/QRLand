@@ -8,6 +8,7 @@
 #include <random>
 
 #include "containers/QRContainers.h"
+#include "toolConfig.h"
 
 struct ToolData {
     ToolData() = default;

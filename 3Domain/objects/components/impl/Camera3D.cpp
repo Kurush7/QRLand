@@ -107,8 +107,8 @@ void Camera3D::rotate(const Vector3D &rotate) {
         axisTransformer->accumulate(new_axisTransformer->getMatrix());
     }
 
-    cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
-    cout << "world origin: " << bind + deepVector*origin[2] << '\n';
+    //cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
+    //cout << "world origin: " << bind + deepVector*origin[2] << '\n';
 }
 
 void Camera3D::defineFrustrum() {

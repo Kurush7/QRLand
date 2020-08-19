@@ -19,7 +19,9 @@ LandscapeBuilder::LandscapeBuilder(size_t _width, size_t _height,
 : heightMap(squared(_width)/squared(polyStep)+1,
          squared(_width)/squared(polyStep)+1),
 points(squared(_width)/squared(polyStep)+1,
-squared(_width)/squared(polyStep)+1)
+squared(_width)/squared(polyStep)+1),
+  plateManager(squaredInc(_width)*world_step-world_step,
+               squaredInc(_height)*world_step-world_step)
 {
 
     maxWidth = squaredInc(_width), maxHeight = squaredInc(_height);
@@ -69,6 +71,16 @@ void LandscapeBuilder::process(int step_cnt) {
     for (int i = 0; i < step_cnt; ++i)
         toolManager.getTool()->process();
 
+    updateHeightMap();
+}
+
+void LandscapeBuilder::useTool(ToolName name) {
+    // todo ineffective
+    ToolData data(&heightMap, width, height, worldStep);
+    auto toolFabric = initToolFabric();
+    sptr<QRTool> tool = toolFabric.create(name);
+    tool->setToolData(data);
+    tool->process();
     updateHeightMap();
 }
 

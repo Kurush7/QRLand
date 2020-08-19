@@ -25,7 +25,7 @@ private:
 
     QWidget *mainWidget;
     QRLayoutManager *ui;
-    sptr<QRCanvas> canvas;
+    sptr<QRCanvas> canvas, hmap;
 
     QRadioButton *moveRad, *rotateRad, *scaleRad;
     QRadioButton *view1Rad, *view2Rad;

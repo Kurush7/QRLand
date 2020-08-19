@@ -7,28 +7,40 @@ using namespace std;
 
 // TODO MORE DETAILS ON THE EDGES..... WTF?!!!!!!
 
-Facade::Facade(sptr<QRImage> img): image(img) {
+Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
+: main_image(main_img), hmap_image(hmap_img) {
     manager = sptr<BaseCommandManager> (new CommandManager());
+
+    // scene creation
     auto cr = PolySceneCreatorNoCamera();
     scene = cr.create();
-
     auto cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5,2, 0.01,
                                              QRINF, Vector3D(0,0,-5), Vector3D(M_PI/2,0,0)));
     scene->addCamera(cam, "observeCamera");
-
     cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5, 2, 0.01, QRINF,
             Vector3D(0,0,0), Vector3D(M_PI/2,0,0), true));
     scene->addCamera(cam, "walkCamera");
-
     scene->setActiveCamera("observeCamera");
 
-    renderer = sptr<QRenderer>(new FullThreadRenderer(image, scene));
+    // renderer creation
+    renderer = sptr<QRenderer>(new FullThreadRenderer(main_image, scene));
 
-    auto builder = LandscapeBuilder(129, 129, 1, 0.1);
-    builder.setTools({{LayerTool, freqAVERAGE}});
-    builder.process(100);
-    auto land = builder.createLandscape();
+    // builder creation
+    builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
+            129, 129, 1, 0.1));
+    topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
+
+    builder->setTools({{LayerTool, freqAVERAGE}, {HillTool, freqRARE}});
+    builder->process(100);
+    //builder->useTool(FunctionTool);
+    auto land = builder->createLandscape();
     scene->addModel(land, Vector3D(0,0,0));
+
+    for (auto f = builder->plateManager.getPlates(); f; ++f)
+        topDown->addFigure(*f);
+
+    topDown->drawHeightMap();
+
 
     //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));
     //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
@@ -37,14 +49,13 @@ Facade::Facade(sptr<QRImage> img): image(img) {
     //       Vector3D(0,0,0));
     //scene->addModel(CubeModelCreator(10,
     //        sptr<QRTexture>(new ColorTexture(127,127,127))).create(),Vector3D(0,0,0));
-
-
 }
 
 void Facade::draw() {
     auto command = sptr<QRCommand>(new RenderCmd(renderer));
     manager->push(command);
     manager->execAll();
+    topDown->drawHeightMap();
 }
 
 void Facade::moveCamera(float dx, float dy, float dz) {

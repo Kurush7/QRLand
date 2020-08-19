@@ -6,14 +6,18 @@ void MainWindow::setDarkTheme() {
     qApp->setPalette(getDarkTheme());
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() {
+    presenter.reset();
+}
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent) {
     setDarkTheme();
 
-    canvas = sptr<QRCanvas> (new QRCanvas(512, 512, this,
-                        QColor(40, 40, 40)));
+    canvas = sptr<QRCanvas> (new QRCanvas(512, 512, this));
+
+    hmap = sptr<QRCanvas> (new QRCanvas(128, 128, this));
+
 
     moveRad = new QRadioButton("move", this);
     rotateRad = new QRadioButton("rotate", this);
@@ -36,9 +40,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->addWidgets({{"canvas", canvas.get()}, {"label", drawTimeLabel}}, "left");
 
     ui->goToPath("right");
-    ui->addLayers("settings  camera", QRVert);
-
+    ui->addLayers("hmap settings  camera", QRVert);
     ui->addLayers("label move scale rotate undo", QRHor, "settings");
+
+    ui->addWidgets({{"canvas", hmap.get()}}, "hmap");
+
     ui->addWidgets({{"radio", moveRad}}, "settings/move");
     ui->addWidgets({{"radio", scaleRad}}, "settings/scale");
     ui->addWidgets({{"radio", rotateRad}}, "settings/rotate");

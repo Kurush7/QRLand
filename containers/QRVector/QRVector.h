@@ -36,7 +36,7 @@ public:
     T* getPureArray() const {return arr.get();}
 
     QRVector<T>& operator =(const QRVector<T>&);
-    QRVector<T>& operator =(const QRVector<T>&&);
+    QRVector<T>& operator =(QRVector<T>&&);
     QRVector<T>& operator =(std::initializer_list<T>);
     QRVector<T>& operator =(const QRVectorIterator<T> &it);
 
@@ -234,7 +234,7 @@ QRVector<T>& QRVector<T>::operator =(const QRVector<T> &newVec) {
 }
 
 template<typename T>
-QRVector<T>& QRVector<T>::operator =(const QRVector<T> &&newVec) {
+QRVector<T>& QRVector<T>::operator =(QRVector<T> &&newVec) {
     // todo
     size = newVec.size;
     max_size = newVec.max_size;

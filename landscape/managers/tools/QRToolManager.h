@@ -9,10 +9,10 @@
 #include "containers/QRContainers.h"
 
 enum ToolFrequency {
-    freqAVERAGE = 1,
-    freqRARE=10,
-    freqUNIQUE = 100,
-    freqLEGENDARY = 1000,
+    freqAVERAGE = 1000,
+    freqRARE=100,
+    freqUNIQUE = 10,
+    freqLEGENDARY = 1,
 };
 
 class QRToolManager {

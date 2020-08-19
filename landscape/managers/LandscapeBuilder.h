@@ -10,6 +10,8 @@
 #include "managers/tools/QRToolFabric.h"
 #include "managers/tools/QRToolManager.h"
 
+#include "PlateManager.h"
+
 // todo avoid point matrix copies when building landscape
 
 // here points are in range [-width/2, width/2][-height/2, height/2],
@@ -22,8 +24,14 @@ public:
     void setTools(QRVector<QRPair<ToolName, ToolFrequency>>);
 
     void process(int step_cnt);
+    void useTool(ToolName);
+
     sptr<QRPolyModel3D> createLandscape();
 
+    const QRMatrix<double>& getHeightMap() {return heightMap;}
+    double getWorldStep() {return worldStep;}
+
+    PlateManager plateManager;
 private:
     sptr<QRPolyModel3D> landscape = nullptr;
     QRMatrix<double> heightMap;

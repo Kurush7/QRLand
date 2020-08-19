@@ -14,13 +14,18 @@ QRColor defineColor(QColor c);
 
 class ImageQT: public QRImage {
 public:
-    ImageQT(const sptr<QRCanvas> &canvas): canvas(canvas) {
+    ~ImageQT() {
+
+    }
+
+    ImageQT(const sptr<QRCanvas> &canvas, const QRColor &bg = QRColor("black"))
+    : canvas(canvas), bg(bg) {
         data = canvas->getData();
         w = canvas->getWidth();
         h = canvas->getHeight();
     }
     virtual void setPixel(int x, int y, const QRColor &color) {
-        // todo too long
+        // todo too long, checks for out-of-range?
         int ind = (y*w + x)*4;
         data[ind++] = color.r;
         data[ind++] = color.g;
@@ -46,7 +51,9 @@ public:
     }
 
     virtual void repaint() {canvas->repaint();}
-    virtual void refillBg() {}  // todo DELETE
+
+    virtual void setBg(const QRColor &color) {bg = color;}
+    virtual void refillBg();
 
     virtual int getWidth() {return canvas->getWidth();}
     virtual int getHeight() {return canvas->getHeight();}
@@ -56,6 +63,8 @@ private:
     sptr<QRCanvas> canvas;
     uchar *data;
     int w, h;
+
+    QRColor bg;
 };
 
 

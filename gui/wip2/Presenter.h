@@ -22,6 +22,9 @@ class Presenter: public QObject {
 Q_OBJECT
 public:
     explicit Presenter(MainWindow &w);
+    ~Presenter() {
+        facade.reset();
+    }
     void undo();
     void transform(QRKey);
     void scale(float times);
@@ -36,7 +39,7 @@ private:
 
     MainWindow &window;
 
-    sptr<QRImage> image;
+    //sptr<QRImage> image, hmap_image;
     sptr<Facade> facade;
 
     bool is1Active=true;

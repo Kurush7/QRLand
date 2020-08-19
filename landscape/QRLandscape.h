@@ -15,4 +15,6 @@
 
 #include "managers/LandscapeBuilder.h"
 
+#include "decoration/TopDownVisualizer.h"
+
 #endif //BIG3DFLUFFY_QRLANDSCAPE_H
