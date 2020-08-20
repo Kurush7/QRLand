@@ -32,8 +32,8 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     builder->setTools({{LayerTool, freqAVERAGE}, {HillTool, freqRARE}});
     builder->process(100);
-    //builder->useTool(FunctionTool);
-    auto land = builder->createLandscape();
+    //builder->useTool(HillTool);
+    sptr<QRPolyModel3D> land = builder->createLandscape();
     scene->addModel(land, Vector3D(0,0,0));
 
     for (auto f = builder->plateManager.getPlates(); f; ++f)

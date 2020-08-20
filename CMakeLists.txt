@@ -31,7 +31,7 @@ include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set (path "")
-set(source_list "tests/TimeTest.cpp" 2Domain/transformers/ScaleTransformer.cpp 2Domain/transformers/ScaleTransformer.h landscape/managers/PlateManager.cpp landscape/managers/PlateManager.h 2Domain/algos/VoronoiDiagram.cpp 2Domain/algos/VoronoiDiagram.h 2Domain/algos/LineIntersection.cpp 2Domain/algos/LineIntersection.h 2Domain/algos/GrahamConvex.cpp 2Domain/algos/GrahamConvex.h 2Domain/figures/QRPoint2D.h)
+set(source_list "tests/TimeTest.cpp" 2Domain/transformers/ScaleTransformer.cpp 2Domain/transformers/ScaleTransformer.h landscape/managers/PlateManager.cpp landscape/managers/PlateManager.h 2Domain/algos/VoronoiDiagram.cpp 2Domain/algos/VoronoiDiagram.h 2Domain/algos/LineIntersection.cpp 2Domain/algos/LineIntersection.h 2Domain/algos/GrahamConvex.cpp 2Domain/algos/GrahamConvex.h 2Domain/figures/QRPoint2D.h landscape/managers/tools/BFSWalk.cpp landscape/managers/tools/BFSWalk.h)
 add_subdirectory(2Domain)
 add_subdirectory(3Domain)
 add_subdirectory(containers)

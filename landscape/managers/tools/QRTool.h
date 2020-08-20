@@ -6,6 +6,7 @@
 #define BIG3DFLUFFY_QRTOOL_H
 
 #include <random>
+#include <functional>
 
 #include "containers/QRContainers.h"
 #include "toolConfig.h"

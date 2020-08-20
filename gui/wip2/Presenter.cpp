@@ -10,8 +10,8 @@ using namespace std;
 using namespace chrono;
 
 Presenter::Presenter(MainWindow &w): window(w) {
-    auto image = sptr<QRImage>(new ImageQT(window.canvas));
-    auto hmap_image = sptr<QRImage>(new ImageQT(window.hmap));
+    image = sptr<QRImage>(new ImageQT(window.canvas));
+    hmap_image = sptr<QRImage>(new ImageQT(window.hmap));
     facade = sptr<Facade>(new Facade(image, hmap_image));
 
     //facade->addCube(10,0,0,0, QRColor("red"));

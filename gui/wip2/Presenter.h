@@ -39,7 +39,7 @@ private:
 
     MainWindow &window;
 
-    //sptr<QRImage> image, hmap_image;
+    sptr<QRImage> image, hmap_image;
     sptr<Facade> facade;
 
     bool is1Active=true;

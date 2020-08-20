@@ -9,6 +9,8 @@ const float layerLevelMult = 0.3;
 
 const float minHillHeightParam = 1;
 const float maxHillHeightParam = 5;
+const float minHillSteepCoef = 0.01;
+const float maxHillSteepCoef = 0.05;
 const size_t maxHillRadius = 10;
 
 #endif //BIG3DFLUFFY_TOOLCONFIG_H

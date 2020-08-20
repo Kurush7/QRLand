@@ -40,18 +40,11 @@ QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
 
             vec[2] = -vec[0]*midP[0] - vec[1]*midP[1];
             vec[3] = 0;
-            cout << vec << '\n';
             lines.push_back(vec);
         }
         for (int j = 0; j < lines.getSize(); ++j)
             if (scalar(p, lines[j]) < 0) lines[j] = -1*lines[j];
 
-        /*QRVector<Vector3D> ptss;
-        for (int j = 0; j < lines.getSize(); ++j) {
-            ptss.push_back(lines[j]*10 + p);
-            ptss.push_back(p);
-        }
-        polygons.push_back(sptr<QRFrame2D>(new QRFrame2D(ptss)));*/
 
         // get intersection points
         QRVector<Vector3D> points;
@@ -62,18 +55,8 @@ QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
                 pt = intersectLines(lines[j], lines[k], &status);
                 pt[2] = 1;
                 if (status == 1)
-                    points.push_back(pt);// cout << lines[j] << ' ' << lines[k] << " => " << pt << '\n';;
+                    points.push_back(pt);
             }
-
-        cout << "lines:\n";
-        for (auto x: lines)
-            cout << x << '\n';
-        cout << "\n";
-
-        /*cout << "points:\n";
-        for (auto x: points)
-            cout << x << '\n';
-        cout << "\n";*/
 
         QRVector<Vector3D> goodPoints;
         for (int j = 0; j < points.getSize(); ++j) {
@@ -88,15 +71,7 @@ QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
                 goodPoints.push_back(points[j]);
         }
 
-        cout << "before:\n";
-        for (auto x: goodPoints)
-            cout << x << '\n';
-        cout << "\n";
         goodPoints = makeConvex(goodPoints);    // graham
-        cout << "after:\n";
-        for (auto x: goodPoints)
-            cout << x << '\n';
-        cout << "\n\n";
 
         polygons.push_back(sptr<QRFrame2D>(new QRFrame2D(goodPoints)));
     }
