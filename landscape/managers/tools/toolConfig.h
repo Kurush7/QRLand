@@ -14,6 +14,6 @@ const float maxHillSteepCoef = 0.05;
 const size_t maxHillRadius = 10;
 
 const double plateMountainHeightCoef = 20;
-const double plateMountainSteepCoef = 1;
+const double plateMountainSteepCoef = 0.9;
 
 #endif //BIG3DFLUFFY_TOOLCONFIG_H

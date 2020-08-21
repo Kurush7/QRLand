@@ -31,5 +31,6 @@ public:
     }
 };
 
+bool operator < (const QRLine2D &p, const QRLine2D& q);
 
 #endif //BIG3DFLUFFY_QRLINE2D_H

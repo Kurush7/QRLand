@@ -8,8 +8,9 @@
 // todo 4 frame-points add to check-points
 QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
         double left, double right, double down, double up,
-        const QRVector<Vector3D> &points) {
+        const QRVector<Vector3D> &pts) {
     QRVector<sptr<QRFrame2D>> polygons;
+    QRVector<Vector3D> points = pts;
 
     QRVector<Vector3D> base_lines;
     base_lines.push_back(QRLine2D(Vector3D(left, down, 0), Vector3D(left, up, 0)).getEq());
@@ -19,7 +20,6 @@ QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
     QRLine2D ln;
 
     QRVector<Vector3D> lines;
-    //for (int i = 0; i < 1; ++i) {
     for (int i = 0; i < points.getSize(); ++i) {
         // get median perpendicular bisectors. side with p_i is > 0
         lines.clear();
@@ -62,7 +62,7 @@ QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
         for (int j = 0; j < points.getSize(); ++j) {
             bool flag = 1;
             for (int k = 0; k < lines.getSize(); ++k) {
-                if (scalar(points[j], lines[k]) < -QREPS) {
+                if (scalar(points[j], lines[k]) < -QREPS_MINI) {    // why mini: encountered 1e-5 value as zero
                     flag = 0;
                     break;
                 }
@@ -72,7 +72,6 @@ QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
         }
 
         goodPoints = makeConvex(goodPoints);    // graham
-
         polygons.push_back(sptr<QRFrame2D>(new QRFrame2D(goodPoints)));
     }
     return polygons;

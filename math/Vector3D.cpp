@@ -14,6 +14,9 @@ bool operator <(const Vector3D &a, const Vector3D &b) {
     // todo norm, a[3]
 }
 
+bool operator ==(const Vector3D &a, const Vector3D&b) {
+    return !(a<b) && !(b<a);
+}
 
 Vector3D::Vector3D() {}
 Vector3D::Vector3D(double x, double y, double z) {
@@ -59,10 +62,7 @@ Vector3D& Vector3D::operator /=(float x) {
     return *this;
 }
 
-bool operator ==(const Vector3D &a, const Vector3D &b) {
-    return a.arr[0] == b.arr[0] && a.arr[1] == b.arr[1] &&
-           a.arr[2] == b.arr[2] && a.arr[3] == b.arr[3];
-}
+
 bool operator !=(const Vector3D &a, const Vector3D &b) {
     return a.arr[0] != b.arr[0] || a.arr[1] != b.arr[1] ||
            a.arr[2] != b.arr[2] || a.arr[3] != b.arr[3];

@@ -6,6 +6,7 @@
 using namespace std;
 
 // TODO MORE DETAILS ON THE EDGES..... WTF?!!!!!!
+// todo top-down inverts x and y... wtf?!
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -27,13 +28,16 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     // builder creation
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
-            129, 129, 1, 0.1));
+            257, 257, 1, 0.2));
     topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
 
-    builder->setTools({{LayerTool, freqAVERAGE},
-                       {HillTool, freqRARE},
-                       {PlateMountainsTool, freqUNIQUE}});
-    builder->process(100);
+    builder->setTools({
+        {LayerTool, freqAVERAGE},
+        {HillTool, freqRARE},
+        //{PlateMountainsTool, freqUNIQUE}
+    });
+    builder->process(300);
+    builder->useTool(PlateMountainsTool);
     //builder->useTool(PlateMountainsTool);
     sptr<QRPolyModel3D> land = builder->createLandscape();
     scene->addModel(land, Vector3D(0,0,0));

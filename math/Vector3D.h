@@ -40,6 +40,7 @@ public:
 };
 
 bool operator <(const Vector3D &a, const Vector3D&b);
+bool operator ==(const Vector3D &a, const Vector3D&b);
 
 const Vector3D XVector(1,0,0,0);
 const Vector3D ZeroVector(0,0,0,0);

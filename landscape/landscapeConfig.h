@@ -8,7 +8,7 @@
 #include <iostream>
 
 const size_t maxNoLODPolygonCnt = 10000;
-const size_t defaultPlateCnt = 3;
+const size_t defaultPlateCnt = 16;
 
 const QRColor plateBorderColor = QRColor("green");
 const double minPlateMoveForce = 0.6;
