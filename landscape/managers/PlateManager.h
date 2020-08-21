@@ -25,6 +25,7 @@ public:
     }
 
     QRVectorIterator<sptr<QRFrame2D>> getPlates() {return plates.begin();}
+    QRVectorIterator<Vector3D> getMove() {return moveVectors.begin();}
 
 private:
     QRVector<Vector3D> definePoints(int cnt);
@@ -32,6 +33,7 @@ private:
 
     double w, h;
     QRVector<sptr<QRFrame2D>> plates;
+    QRVector<Vector3D> moveVectors;
 
     std::default_random_engine generator = std::default_random_engine();
 };

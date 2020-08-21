@@ -12,10 +12,10 @@ QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
     QRVector<sptr<QRFrame2D>> polygons;
 
     QRVector<Vector3D> base_lines;
-    base_lines.push_back(QRLine2D(Vector3D(left, down,0), Vector3D(left, up,0)).getVector());
-    base_lines.push_back(QRLine2D(Vector3D(left, down,0), Vector3D(right, down,0)).getVector());
-    base_lines.push_back(QRLine2D(Vector3D(left, up,0), Vector3D(right, up,0)).getVector());
-    base_lines.push_back(QRLine2D(Vector3D(right, down,0), Vector3D(right, up,0)).getVector());
+    base_lines.push_back(QRLine2D(Vector3D(left, down, 0), Vector3D(left, up, 0)).getEq());
+    base_lines.push_back(QRLine2D(Vector3D(left, down, 0), Vector3D(right, down, 0)).getEq());
+    base_lines.push_back(QRLine2D(Vector3D(left, up, 0), Vector3D(right, up, 0)).getEq());
+    base_lines.push_back(QRLine2D(Vector3D(right, down, 0), Vector3D(right, up, 0)).getEq());
     QRLine2D ln;
 
     QRVector<Vector3D> lines;
@@ -32,7 +32,7 @@ QRVector<sptr<QRFrame2D>> buildVoronoiDiagramOnRect(
         for (int j = 0; j < points.getSize(); ++j) {
             if (i == j) continue;
             ln = QRLine2D(p, points[j]);
-            Vector3D vec = ln.getVector(); vec[2] = 0; vec[3] = 0;
+            Vector3D vec = ln.getEq(); vec[2] = 0; vec[3] = 0;
             Vector3D midP = (p + points[j]) / 2.;
             double tmp = vec[0];
             vec[0] = -vec[1];

@@ -24,6 +24,7 @@ public:
     QRVector(std::initializer_list<T>);
     QRVector(const QRVector<T> &);
     QRVector(QRVector<T>&&);
+    QRVector(const QRVectorIterator<T> &it);
 
     void clear() {*size = 0;}
     void reserve(size_t n) {    // todo size not changing....
@@ -166,6 +167,15 @@ QRVector<T>::QRVector(QRVector<T> &&vec) {
     max_size = vec.max_size;
     vec.arr.reset();
     vec.size.reset();
+}
+
+template<typename T>
+QRVector<T>::QRVector(const QRVectorIterator<T> &it): QRVector() {
+    // todo not tested
+    p = sptr<QRVector>(this, [](void *ptr){});
+    *size = 0;
+    for (auto i = it; i; i++)
+        push_back(*i);
 }
 
 

@@ -13,5 +13,6 @@ set(source_list ${source_list}
         ${path}/algos/DrawLine.cpp
         ${path}/algos/VoronoiDiagram.cpp
         ${path}/algos/GrahamConvex.cpp
+        ${path}/algos/LineIntersection.cpp
 
         PARENT_SCOPE)

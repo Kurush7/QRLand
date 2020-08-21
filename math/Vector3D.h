@@ -49,6 +49,7 @@ const Vector3D ZVector(0,0,1,0);
 Vector3D norm(const Vector3D&); // manage 4th axis value, if 0 - does nothing
 Vector3D lenNorm(const Vector3D&);
 Vector3D len3Norm(const Vector3D&);
+Vector3D len2Norm(const Vector3D&);
 float vectorLen(const Vector3D&);
 float vectorLen3(const Vector3D&);
 bool operator ==(const Vector3D&, const Vector3D&);

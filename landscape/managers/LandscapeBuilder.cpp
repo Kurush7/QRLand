@@ -36,7 +36,8 @@ squared(_width)/squared(polyStep)+1),
 }
 
 void LandscapeBuilder::setTools(QRVector<QRPair<ToolName, ToolFrequency>> toolSet) {
-    ToolData data(&heightMap, width, height, worldStep);
+    ToolData data(&heightMap, width, height, worldStep,
+                  plateManager.getPlates(), plateManager.getMove());
 
     auto toolFabric = initToolFabric();
     sptr<QRTool> tool;
@@ -75,8 +76,10 @@ void LandscapeBuilder::process(int step_cnt) {
 }
 
 void LandscapeBuilder::useTool(ToolName name) {
-    // todo ineffective
-    ToolData data(&heightMap, width, height, worldStep);
+    // todo ineffective with data
+    ToolData data(&heightMap, width, height, worldStep,
+            plateManager.getPlates(), plateManager.getMove());
+
     auto toolFabric = initToolFabric();
     sptr<QRTool> tool = toolFabric.create(name);
     tool->setToolData(data);

@@ -28,5 +28,7 @@ QRToolFabric initToolFabric() {
             sptr<QRToolCreator>(new FunctionToolCreator));
     manager.registerTool(HillTool,
                          sptr<QRToolCreator>(new HillToolCreator));
+    manager.registerTool(PlateMountainsTool,
+                         sptr<QRToolCreator>(new PlateMountainsToolCreator));
     return manager;
 }

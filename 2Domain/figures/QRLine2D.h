@@ -21,7 +21,9 @@ public:
 
     Vector3D a, b;
     double ka, kb, kc;
-    Vector3D getVector() {return Vector3D(ka,kb,kc);}
+    Vector3D getEq() {return Vector3D(ka, kb, kc);}
+    Vector3D getVector() {return b - a;}
+    Vector3D getNormal() {return Vector3D(-kb, ka, 0,0);}
 
     virtual void draw(const sptr<QRImage> &img) {
         drawLine(img, transformer->transform(a),

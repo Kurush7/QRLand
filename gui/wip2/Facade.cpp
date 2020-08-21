@@ -30,9 +30,11 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
             129, 129, 1, 0.1));
     topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
 
-    builder->setTools({{LayerTool, freqAVERAGE}, {HillTool, freqRARE}});
+    builder->setTools({{LayerTool, freqAVERAGE},
+                       {HillTool, freqRARE},
+                       {PlateMountainsTool, freqUNIQUE}});
     builder->process(100);
-    //builder->useTool(HillTool);
+    //builder->useTool(PlateMountainsTool);
     sptr<QRPolyModel3D> land = builder->createLandscape();
     scene->addModel(land, Vector3D(0,0,0));
 

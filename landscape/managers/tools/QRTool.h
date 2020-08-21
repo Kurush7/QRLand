@@ -9,14 +9,21 @@
 #include <functional>
 
 #include "containers/QRContainers.h"
+#include "math/QRMath.h"
+#include "2Domain.h"
 #include "toolConfig.h"
 
 struct ToolData {
     ToolData() = default;
     ToolData(QRMatrix<double> *hmap, size_t w, size_t h,
-            double wS): hmap(hmap), width(w), height(h), worldStep(wS) {
+            double wS, const QRVectorIterator<sptr<QRFrame2D>> &plates,
+            const QRVectorIterator<Vector3D> &move): hmap(hmap), width(w), height(h), worldStep(wS),
+            plates(plates), moveVectors(move) {
 
     }
+
+    QRVector<sptr<QRFrame2D>> plates;
+    QRVector<Vector3D> moveVectors;
 
     QRMatrix<double> *hmap = nullptr;
     size_t width, height;     // point width&height (points count, not polygons)

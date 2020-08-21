@@ -11,9 +11,11 @@
 #include "LayerTool.h"
 #include "FunctionTool.h"
 #include "HillTool.h"
+#include "PlateMountainsTool.h"
 
 enum ToolName {
-    FunctionTool, LayerTool, HillTool
+    FunctionTool, LayerTool, HillTool,
+    PlateMountainsTool
 };
 
 class QRToolFabric {
