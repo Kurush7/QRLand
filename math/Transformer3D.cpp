@@ -60,9 +60,9 @@ uptr<QRTransformer3D> RotateTransformer3DCreator::create() {
 
 
 ProjectionTransformer3DCreator::ProjectionTransformer3DCreator(const Vector3D &v) {
-    if (fabs(v[0]) > QREPS) matrix[3][0] = 1/v[0] * PROJECTIVE_COEF;
-    if (fabs(v[1]) > QREPS) matrix[3][1] = 1/v[1] * PROJECTIVE_COEF;
-    if (fabs(v[2]) > QREPS) matrix[3][2] = 1/v[2] * PROJECTIVE_COEF;
+    if (fabs(v[0]) > QREPS) matrix[3][0] = 1/v[0];// * PROJECTIVE_COEF;
+    if (fabs(v[1]) > QREPS) matrix[3][1] = 1/v[1];// * PROJECTIVE_COEF;
+    if (fabs(v[2]) > QREPS) matrix[3][2] = 1/v[2];// * PROJECTIVE_COEF;
 }
 ProjectionTransformer3DCreator::ProjectionTransformer3DCreator(float x, float y, float z)
 :ProjectionTransformer3DCreator(Vector3D(x,y,z)) {}

@@ -116,7 +116,7 @@ Frame::Frame(const QRMatrix<sptr<QRPoint3D>> &points,
     Vector3D v2 = points[u][r]->getVector();
     v1[2] = zmin, v2[2] = zmax;
     center = (v1 + v2) / 2;
-    radius = max(max(fabs(v1[0]-v2[0])/2, fabs(v1[1]-v2[1])/2), fabs(v1[2]-v2[2])/2);
+    radius = vectorLen(v1-v2) / 2;
 }
 
 bool Frame::updateCamera(const sptr<QRCamera3D> &camera) {

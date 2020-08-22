@@ -21,6 +21,8 @@ void FullThreadRenderer::initRender() {
     auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/screenData[2],
                                                   image->getHeight()/screenData[3], 1,0));
 
+    cout << "screen: " << screenData << "\n";
+
     // screenData is used in rasterizer, which works already in image coords
     screenData[0] = image->getWidth()/2;
     screenData[1] = image->getHeight()/2;
@@ -29,6 +31,10 @@ void FullThreadRenderer::initRender() {
 
     imageTransformer = mcr.create().release();
     imageTransformer->accumulate(scr.create()->getMatrix());
+
+    cout << "camera transformer:\n" << cameraTransformer->getMatrix() << '\n';
+    cout << "image transformer:" << imageTransformer->getMatrix() << '\n';
+    cout << "projective transformer:" << camera->getProjectionTransformer()->getMatrix() << '\n';
 
     // init zbuffer, fill in black
     zbuf.clearBuf();
@@ -43,6 +49,7 @@ bool FullThreadRenderer::modelCameraCut() {
 mutex print_lock, statistic_lock;
 void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step, int thread_num) {
     // todo if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) draw it
+    // todo inits are too slow
     startMeasureTimeStamp(10*thread_num + 0);
 
     cutters[thread_num].setCutter(screenData);
@@ -59,7 +66,7 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
 
     sptr<QRPoint3D>* poly_pts;      // todo same as above
     points.reserve(maxPolygonPointcnt);
-    for (size_t i = 0, pos=offset; i < size; ++i, pos+=step) {
+    for (size_t k = 0, pos=offset; k < size; ++k, pos+=step) {
         poly = polygons[pos].get();
         poly_pts = poly->getPurePoints();
         point_cnt = poly->getSize();
@@ -79,11 +86,12 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
             statistic_lock.unlock();
             continue;
         }
-        endMeasureTimeIncrement(10*thread_num+2);
-
+        // todo not elegant... maybe capture raw array here
         point_cnt = drawPoly.getSize();
         for (int i = 0; i < point_cnt; ++i)
             points[i] = drawPoly[i];
+
+        endMeasureTimeIncrement(10*thread_num+2);
 
         // normal update
         startMeasureTimeStamp(10*thread_num + 3);
@@ -104,19 +112,21 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
 
         // 2d-frame cutting
         startMeasureTimeStamp(10*thread_num + 5);
-        cutters[thread_num].cutPolyRect(points.getPureArray(), point_cnt, drawPoly);
+        /*cutters[thread_num].cutPolyRect(points.getPureArray(), point_cnt, drawPoly);
         if (drawPoly.getSize() < 3) {
             statistic_lock.lock();
             polysFrameCut++;
             statistic_lock.unlock();
             continue;
-        }
+        }*/
         endMeasureTimeIncrement(10*thread_num+5);
 
         // rasterization
         startMeasureTimeStamp(10*thread_num + 6);
-        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), normal,
+        zbuf.draw(points.getPureArray(), point_cnt, normal,
                   poly->getTexture().get());
+        //zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), normal,
+        //          poly->getTexture().get());
         endMeasureTimeIncrement(10*thread_num+6);
     }
 

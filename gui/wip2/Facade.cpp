@@ -7,6 +7,7 @@ using namespace std;
 
 // TODO MORE DETAILS ON THE EDGES..... WTF?!!!!!!
 // todo top-down inverts x and y... wtf?!
+// todo camera: in self-rotate mode moves by X and Y are in camera's coords, but not aligned to camera's rotation
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -15,11 +16,14 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     // scene creation
     auto cr = PolySceneCreatorNoCamera();
     scene = cr.create();
-    auto cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5,2, 0.01,
-                                             QRINF, Vector3D(0,0,-5), Vector3D(M_PI/2,0,0)));
+    //auto cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5,2, 0.01,
+    //                                         QRINF, Vector3D(0,0,-5), Vector3D(M_PI/2,0,0)));
+    auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 50,
+                                             QRINF, Vector3D(0,50,-80), Vector3D(M_PI/2,0,0)));
     scene->addCamera(cam, "observeCamera");
-    cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5, 2, 0.01, QRINF,
-            Vector3D(0,0,0), Vector3D(M_PI/2,0,0), true));
+
+    cam = sptr<QRCamera3D>(new Camera3D(0.5, 0.5, -5, 0.2, 0.2, QRINF,
+            Vector3D(0,50,30), Vector3D(M_PI/2,0,0), true));
     scene->addCamera(cam, "walkCamera");
     scene->setActiveCamera("observeCamera");
 
@@ -28,7 +32,7 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     // builder creation
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
-            257, 257, 1, 0.2));
+            129, 129, 1, 1));
     topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
 
     builder->setTools({
@@ -36,7 +40,7 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
         {HillTool, freqRARE},
         //{PlateMountainsTool, freqUNIQUE}
     });
-    builder->process(300);
+    builder->process(100);
     builder->useTool(PlateMountainsTool);
     //builder->useTool(PlateMountainsTool);
     sptr<QRPolyModel3D> land = builder->createLandscape();
