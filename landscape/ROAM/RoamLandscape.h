@@ -20,8 +20,8 @@ public:
     virtual void updateCamera(const sptr<QRCamera3D> &camera, std::string *info=nullptr);
     void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr);
 
-    virtual PolygonIterator getPolygons() const { return PolygonIterator();}
-    virtual PointIterator getPoints() const {return points.begin();} // todo not working
+    virtual PolygonIterator getPolygons() const;
+    virtual PointIterator getPoints() const {return points.begin();}
     virtual sptr<QRPolygon3D>* getPurePolygons() const {return nullptr;} // todo not working
     virtual sptr<QRPoint3D>* getPurePoints() const {return points.getPureArray();}
     virtual size_t getPolygonCnt() const {return lastPolyCount;}

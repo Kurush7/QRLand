@@ -6,6 +6,8 @@
 #define BIG3DFLUFFY_LANDSCAPEBUILDER_H
 
 #include "../ROAM/RoamLandscape.h"
+#include "../water/WaterManager.h"
+
 #include "../landscapeConfig.h"
 #include "managers/tools/QRToolFabric.h"
 #include "managers/tools/QRToolManager.h"
@@ -13,6 +15,9 @@
 #include "PlateManager.h"
 
 // todo avoid point matrix copies when building landscape
+
+// todo when updating worldStep and others (polygons, points)...
+//  inform waterManager!!!
 
 // here points are in range [-width/2, width/2][-height/2, height/2],
 // but all calculations with height are made in [0, width][0, height]
@@ -28,13 +33,20 @@ public:
 
     sptr<QRPolyModel3D> createLandscape();
 
-    const QRMatrix<double>& getHeightMap() {return heightMap;}
+    const QRMatrix<float>& getHeightMap() {return heightMap;}
     double getWorldStep() {return worldStep;}
 
+    bool activateWaterManager() {
+        if (landscape)
+            waterManager->setPolygons(landscape->getPolygons());
+        return bool(landscape);
+    }
+
     PlateManager plateManager;
+    sptr<WaterManager> waterManager;
 private:
     sptr<QRPolyModel3D> landscape = nullptr;
-    QRMatrix<double> heightMap;
+    QRMatrix<float> heightMap;
     QRMatrix<sptr<QRPoint3D>> points;
 
     QRToolManager toolManager;

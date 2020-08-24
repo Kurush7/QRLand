@@ -34,6 +34,7 @@ public:
     }
 
     sptr<QRVector<T>> getPointer() const {return p;}
+    sptr<T[]> getArray() const {return arr;}
     T* getPureArray() const {return arr.get();}
 
     QRVector<T>& operator =(const QRVector<T>&);

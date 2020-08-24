@@ -32,7 +32,7 @@ public:
 
 
 private:
-    const QRMatrix<sptr<QRPoint3D>> points;
+    QRMatrix<sptr<QRPoint3D>> points;
     QRVector<sptr<QRPolygon3D>> polygons;
     size_t width, height;
 };

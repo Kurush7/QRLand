@@ -14,7 +14,7 @@
 class PlateMountainsTool: public QRTool {
 public:
     virtual void process() {
-        QRMatrix<double> *local = data.hmap;
+        QRMatrix<float> *local = data.hmap;
         std::map<QRLine2D, double> edges;    // tense, edge
         for (int i = 0; i < data.plates.getSize(); ++i) {
             auto plate = data.plates[i];

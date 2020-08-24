@@ -21,7 +21,7 @@ public:
         size_t centerY = dist_h(generator);
         float height = dist_hill(generator);
 
-        QRMatrix<double> *local = data.hmap;
+        QRMatrix<float> *local = data.hmap;
         float coef = -1 * coef_d(generator);
         auto f = [centerX, centerY, height, coef, local](size_t x, size_t y){
             float dist = sqrt((x-centerX)*(x-centerX) + (y-centerY)*(y-centerY));

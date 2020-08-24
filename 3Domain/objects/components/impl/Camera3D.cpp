@@ -123,8 +123,10 @@ void Camera3D::defineFrustrum() {
     frustrum[2] = Vector3D{-2*(nearCutter)/width,0,1,0};  // right
     frustrum[3] = Vector3D{2*(nearCutter)/width,0,1,0};   // left
     // up-down
-    frustrum[4] = Vector3D{0,-2*(nearCutter)/height,1,0};
-    frustrum[5] = Vector3D{0,2*(nearCutter)/height,1,0};
+    //frustrum[4] = Vector3D{0,-2*(nearCutter)/height,1,0};
+    //frustrum[5] = Vector3D{0,2*(nearCutter)/height,1,0};
+    frustrum[4] = Vector3D{0,1,0,0};
+    frustrum[5] = Vector3D{0,nearCutter/height,1,0};
 
     frustrum.setSize(6);
 
@@ -136,7 +138,7 @@ void Camera3D::defineFrustrum() {
     cout << "\theight: " << height << '\n';
     cout << "\torigin: " << origin << '\n';
     cout << "\tbind: " << bind << '\n';
-    Vector3D in_test({0,0,(nearCutter+farCutter)/2+origin[2],1});
+    Vector3D in_test({0,height/2,(nearCutter+farCutter)/2+origin[2],1});
     for (int i = 0; i < frustrum.getSize(); ++i) {    // 0 & 1 not needed, for func will destroy 1
         frustrum[i] = len3Norm(frustrum[i]);
         if (scalar(frustrum[i], in_test) < 0) // inside values are  > 0
@@ -164,7 +166,7 @@ void Camera3D::defineAxisTransformer() {
 }
 
 void Camera3D::defineProjectionTransformer() {
-    projector = ProjectionTransformer3DCreator(0,0,screen).create();
+    projector = ProjectionTransformer3DCreator(screen).create();
 }
 
 int Camera3D::isVisibleSphere(const Vector3D &c, float rad) {

@@ -15,15 +15,14 @@ size_t squaredInc(size_t x) {
 }
 
 LandscapeBuilder::LandscapeBuilder(size_t _width, size_t _height,
-        size_t polyStep, double world_step)
-: heightMap(squared(_width)/squared(polyStep)+1,
+        size_t polyStep, double world_step):
+heightMap(squared(_width)/squared(polyStep)+1,
          squared(_width)/squared(polyStep)+1),
 points(squared(_width)/squared(polyStep)+1,
-squared(_width)/squared(polyStep)+1),
-  plateManager(squaredInc(_width)*world_step-world_step,
+        squared(_width)/squared(polyStep)+1),
+plateManager(squaredInc(_width)*world_step-world_step,
                squaredInc(_height)*world_step-world_step)
 {
-
     maxWidth = squaredInc(_width), maxHeight = squaredInc(_height);
     step = squared(polyStep);
     width = squared(_width) / step + 1,
@@ -33,6 +32,9 @@ squared(_width)/squared(polyStep)+1),
 
     clearHeightMap();
     buildPoints();
+
+    // this must go when map and points are ready!
+    waterManager = sptr<WaterManager>(new WaterManager(heightMap, points));
 }
 
 void LandscapeBuilder::setTools(QRVector<QRPair<ToolName, ToolFrequency>> toolSet) {

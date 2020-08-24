@@ -17,7 +17,8 @@ void FullThreadRenderer::initRender() {
     projector = camera->getProjectionTransformer().get();
     screenData = camera->getScreen();
 
-    auto mcr = MoveTransformer3DCreator(Vector3D(screenData[2]/2, screenData[3]/2,0,0));
+    //auto mcr = MoveTransformer3DCreator(Vector3D(screenData[2]/2, screenData[3]/2,0,0));
+    auto mcr = MoveTransformer3DCreator(Vector3D(screenData[2]/2, 0,0,0));
     auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/screenData[2],
                                                   image->getHeight()/screenData[3], 1,0));
 
@@ -87,9 +88,9 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
             continue;
         }
         // todo not elegant... maybe capture raw array here
-        point_cnt = drawPoly.getSize();
+        /*point_cnt = drawPoly.getSize();
         for (int i = 0; i < point_cnt; ++i)
-            points[i] = drawPoly[i];
+            points[i] = drawPoly[i];*/
 
         endMeasureTimeIncrement(10*thread_num+2);
 
@@ -112,21 +113,21 @@ void FullThreadRenderer::threadManagePolygons(size_t size, int offset, int step,
 
         // 2d-frame cutting
         startMeasureTimeStamp(10*thread_num + 5);
-        /*cutters[thread_num].cutPolyRect(points.getPureArray(), point_cnt, drawPoly);
+        cutters[thread_num].cutPolyRect(points.getPureArray(), point_cnt, drawPoly);
         if (drawPoly.getSize() < 3) {
             statistic_lock.lock();
             polysFrameCut++;
             statistic_lock.unlock();
             continue;
-        }*/
+        }
         endMeasureTimeIncrement(10*thread_num+5);
 
         // rasterization
         startMeasureTimeStamp(10*thread_num + 6);
-        zbuf.draw(points.getPureArray(), point_cnt, normal,
-                  poly->getTexture().get());
-        //zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), normal,
+        //zbuf.draw(points.getPureArray(), point_cnt, normal,
         //          poly->getTexture().get());
+        zbuf.draw(drawPoly.getPureArray(), drawPoly.getSize(), normal,
+                  poly->getTexture().get());
         endMeasureTimeIncrement(10*thread_num+6);
     }
 

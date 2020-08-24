@@ -88,6 +88,14 @@ void RoamNode::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     mustDraw = 1;
 }
 
+void RoamNode::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
+    polygons.push_back(triangle);
+    if (left) {
+        left->getAllPolygons(polygons);
+        right->getAllPolygons(polygons);
+    }
+}
+
 
 Frame::Frame(Frame&& f): left(f.left), right(f.right),
 center(f.center), radius(f.radius), isVisible(f.isVisible) {
@@ -133,4 +141,9 @@ void Frame::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     if (!isVisible) return;
     left->addPolygons(polygons);
     right->addPolygons(polygons);
+}
+
+void Frame::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
+    left->getAllPolygons(polygons);
+    right->getAllPolygons(polygons);
 }

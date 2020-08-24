@@ -18,6 +18,7 @@ public:
     QRVectorIterator() {}
     QRVectorIterator(const sptr<T[]> vect, const sptr<size_t> sz, size_t ind = 0);
     QRVectorIterator(std::initializer_list<T>);
+    QRVectorIterator(const QRVector<T> &vector);    // todo not tested
     QRVectorIterator(const QRVectorIterator<T>& iter);
     QRVectorIterator<T>& operator=(const QRVectorIterator<T>& iter);
 
@@ -71,7 +72,13 @@ QRVectorIterator<T>::QRVectorIterator(std::initializer_list<T> lst) {
     size_t i = 0;
     for (auto &elem: lst)
         local_arr[i++] = elem;
+}
 
+template<typename T>
+QRVectorIterator<T>::QRVectorIterator(const QRVector<T> &vector) {
+    local_size = vector.getSize();
+    local_arr = vector.getArray();
+    is_local = true;
 }
 
 template<typename T>

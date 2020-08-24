@@ -9,14 +9,14 @@ void TopDownVisualizer::drawHeightMap() {
     auto hmap = builder->getHeightMap();
     size_t w_old = hmap.width(), h_old = hmap.height();
 
-    double step = builder->getWorldStep();
-    double max_h = -QRINF, min_h = QRINF;
+    float step = builder->getWorldStep();
+    float max_h = -QRINF, min_h = QRINF;
     for (auto x: hmap)
         max_h = max(max_h, x),
         min_h = min(min_h, x);
 
-    double kw = w / (w_old+0.), kh = h / (h_old + 0.);
-    double kc = 255. / (max_h - min_h + 0.);
+    float kw = w / (w_old+0.), kh = h / (h_old + 0.);
+    float kc = 255.f / (max_h - min_h + 0.);
     transformer = sptr<QRTransformer2D>(new ScaleTransformer2D(kw/step, kh/step));
 
     img->refillBg();

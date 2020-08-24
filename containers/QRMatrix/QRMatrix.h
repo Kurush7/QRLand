@@ -14,12 +14,15 @@
 #include "../exceptions/VectorError/Errors.h"
 #include "globalDefines.h"
 
+const size_t DEFAULT_MATRIX_SIZE = 4;
+
 template <typename T>
 class QRMatrix {
 public:
+    QRMatrix(): QRMatrix(DEFAULT_MATRIX_SIZE, DEFAULT_MATRIX_SIZE) {}
     QRMatrix(size_t _w, size_t _h): matrix(_w*_h), w(_w), h(_h) {}
     QRMatrix(std::initializer_list<std::initializer_list<T>> initList)
-    : QRMatrix(initList.size(), initList.begin()->size()) {
+    : QRMatrix(initList.begin()->size(), initList.size()) {
         std::initializer_list<T> row;
         w = initList.begin()->size();
         h = initList.size();
@@ -31,6 +34,15 @@ public:
             i++;
         }
     }
+    void deepCopy(const QRMatrix& m) {
+        w = m.width(), h = m.height();
+        matrix.reserve(w*h);
+        matrix.setSize(w*h);
+        for (int i = 0; i < h; ++i)
+            for (int j = 0; j < w; ++j)
+                matrix[i*w+j] = m[i][j];
+    }
+
     T* operator[](size_t index);
     const T* operator[](size_t index) const;
 
@@ -41,6 +53,11 @@ public:
     size_t getSize() const {return w*h;}
 
     T* getPureArray() const {return matrix.getPureArray();}
+
+    void fill(const T &x) {
+        for (size_t i = 0; i < w*h; ++i)
+            matrix[i] = x;
+    }
 
     QRVectorIterator<T> begin() const {return matrix.begin();}
     QRVectorIterator<T> end() const {return matrix.end();}
