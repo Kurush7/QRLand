@@ -53,6 +53,8 @@ Vector3D len3Norm(const Vector3D&);
 Vector3D len2Norm(const Vector3D&);
 float vectorLen(const Vector3D&);
 float vectorLen3(const Vector3D&);
+float vectorLen2(const Vector3D&);
+float sum(const Vector3D&);
 bool operator ==(const Vector3D&, const Vector3D&);
 bool operator !=(const Vector3D&, const Vector3D&);
 Vector3D operator +(const Vector3D&, const Vector3D&);

@@ -59,6 +59,12 @@ public:
             matrix[i] = x;
     }
 
+    void resize(size_t _w, size_t _h) {
+        w = _w, h = _h;
+        matrix.reserve(w*h);
+        matrix.setSize(w*h);
+    }
+
     QRVectorIterator<T> begin() const {return matrix.begin();}
     QRVectorIterator<T> end() const {return matrix.end();}
 

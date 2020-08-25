@@ -29,6 +29,8 @@ public:
     void transform(QRKey);
     void scale(float times);
     void changeCamera();
+    void setWaterVisible();
+    void erosionIteration();
 
 private:
     void defineTransformParams(float&, float&, float&, QRKey);

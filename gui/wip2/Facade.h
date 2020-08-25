@@ -20,6 +20,8 @@ public:
     void rotateCamera(float dx, float dy, float dz);
 
     void changeCamera();
+    void setWaterVisible(bool x);
+    void erosionIteration();
 
     void undo();
 

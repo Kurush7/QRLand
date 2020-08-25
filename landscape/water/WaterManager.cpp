@@ -11,6 +11,21 @@ WaterManager::WaterManager(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts
     height = worldStep * points.height();
 
     waterLevel.fill(0);
+
+    waterSources.push_back(sptr<WaterSource>(new RainWaterSource(waterLevel,
+            worldStep*rainDropIntencityCoef)));
+}
+
+void WaterManager::initErosionData() {
+    sediment.resize(hmap.width(), hmap.height());
+    velocity.resize(hmap.width(), hmap.height());
+    flux.resize(hmap.width(), hmap.height());
+
+    sediment.fill(0);
+    velocity.fill(ZeroVector);
+    flux.fill(ZeroVector);  // todo it's supposed that water initially doesn't move
+
+    erosionReady = true;
 }
 
 void WaterManager::resetWater() {
@@ -23,49 +38,47 @@ void WaterManager::resetWater() {
             points[i][j]->setVector(v);
         }
 
-    for (size_t i = 0; i < changedTextures.getSize(); ++i)
-        *(changedTextures[i]) = bottomTextureValues[i];
+    for (auto &p: changedPolygons)
+        p.first->setTexture(p.second);
 
-    changedTextures.clear();    // no need....
-    bottomTextureValues.clear();
+    changedPolygons.clear();
 }
 
 void WaterManager::updateWater() {
-    QRPolygon3D* poly;
+    sptr<QRPolygon3D> poly;
     bool waterFlag;
     Vector3D v;
     size_t w, h;
 
-    changedTextures.clear();
-    bottomTextureValues.clear();
     // todo one water-point will increase level, but no water polygons will be made. check neigbours
     for (size_t k = 0; k < polygons.getSize(); ++k) {
-        poly = polygons[k].get();
+        poly = polygons[k];
         waterFlag = true;
         for (auto p = poly->getPoints(); p; ++p) {
             v = p->get()->getVector();
             w = getXIndex(v[0]), h = getYIndex(v[1]);
-            cout << w << ' ' << h << " -> " << v[2] << ' ' << hmap[h][w] << ' ';
-            if (waterLevel[h][w] < QREPS) {
+            if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) {
                 waterFlag = false;
-                cout << '\n';
                 continue;
             }
-            if (fabs(v[2] - hmap[h][w]) < QREPS) {
-                cout << '#';
-                v[2] += waterLevel[h][w];
-                p->get()->setVector(v);
-            }
-            cout << '\n';
+
+            v[2] = hmap[h][w] + waterLevel[h][w];
+            p->get()->setVector(v);
         }
 
+        auto it = changedPolygons.find(poly);
         if (waterFlag) {
-            changedTextures.push_back(&(poly->getTextureUnsafe()));
-            bottomTextureValues.push_back(poly->getTexture());
-            poly->setTexture(waterTexture);
-            cout << "***";
+            if (it == changedPolygons.end()) {
+                changedPolygons[poly] = poly->getTexture();
+                poly->setTexture(waterTexture);
+            }
+        } else {
+            if (it != changedPolygons.end()) {
+                it->first->setTexture(it->second);
+                changedPolygons.erase(it);
+            }
         }
-        cout << '\n';
+
     }
 }
 
@@ -75,7 +88,6 @@ void WaterManager::setWaterLevel(float wl) {
         for (size_t j = 0; j < points.width(); ++j) {
             v = points[i][j]->getVector();
             waterLevel[i][j] = max(0.f, wl - v[2]);
-            cout << waterLevel[i][j] <<  ' ' << v[2] << '\n';
         }
 
     if(waterEnabled) updateWater();

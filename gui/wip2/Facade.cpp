@@ -17,10 +17,10 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     // scene creation
     auto cr = PolySceneCreatorNoCamera();
     scene = cr.create();
-    //auto cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5,2, 0.01,
-    //                                         QRINF, Vector3D(0,0,-5), Vector3D(M_PI/2,0,0)));
+    //auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 1,
+    //                                         QRINF, Vector3D(0,0,-110), Vector3D(3*M_PI/5,0,0)));
     auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 1,
-                                             QRINF, Vector3D(0,0,-110), Vector3D(3*M_PI/5,0,0)));
+                                             QRINF, Vector3D(0,0,-100), Vector3D(M_PI,0,0)));
     scene->addCamera(cam, "observeCamera");
 
     cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 1, 0.2, QRINF,
@@ -50,7 +50,8 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     scene->addModel(land, Vector3D(0,0,0));
 
     builder->activateWaterManager();
-    builder->waterManager->setWaterLevel(40);
+    //builder->waterManager->setWaterLevel(35);
+    builder->waterManager->setWaterLevel(30);
 
     for (auto f = builder->plateManager.getPlates(); f; ++f)
         topDown->addFigure(*f);
@@ -95,6 +96,16 @@ void Facade::changeCamera() {
         scene->setActiveCamera("observeCamera");
     else scene->setActiveCamera("walkCamera");
 
+    renderer->render();
+}
+
+void Facade::setWaterVisible(bool x) {
+    builder->waterManager->setWaterStatus(x);
+    renderer->render();
+}
+
+void Facade::erosionIteration() {
+    builder->waterManager->erosionIteration();
     renderer->render();
 }
 

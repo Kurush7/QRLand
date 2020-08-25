@@ -78,6 +78,14 @@ void Presenter::undo() {
     draw();
 }
 
+void Presenter::setWaterVisible() {
+    facade->setWaterVisible(window.waterCheckBox->isChecked());
+}
+
+void Presenter::erosionIteration() {
+    facade->erosionIteration();
+}
+
 void Presenter::changeCamera() {
     if (is1Active && window.view1Rad->isChecked()) return;
     else if (!is1Active && window.view2Rad->isChecked()) return;

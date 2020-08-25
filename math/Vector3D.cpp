@@ -137,6 +137,14 @@ float vectorLen3(const Vector3D &v) {
     return sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 }
 
+float vectorLen2(const Vector3D &v) {
+    return sqrt(v[0]*v[0] + v[1]*v[1]);
+}
+
+float sum(const Vector3D &v) {
+    return v[0]+v[1]+v[2]+v[3];
+}
+
 float scalar(const Vector3D &a, const Vector3D &b) {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3];
 }

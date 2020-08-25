@@ -13,5 +13,6 @@ set(source_list ${source_list}
         ${path}/ROAM/RoamTree.cpp
 
         ${path}/water/WaterManager.cpp
+        ${path}/water/WaterErosion.cpp
 
         PARENT_SCOPE)
