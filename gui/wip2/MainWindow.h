@@ -10,7 +10,7 @@
 #include "../../globalDefines.h"
 #include "2Domain.h"
 
-const int erosionFPS = 10;
+const int erosionFPS = 30;
 
 class MainWindow: public QMainWindow {
 Q_OBJECT

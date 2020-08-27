@@ -6,52 +6,37 @@
 
 void WaterManager::erosionIteration(float dt) {
     if (!erosionReady) initErosionData();
-
-    // step1: water increment
     for (auto s: waterSources)
         s->use(dt);
-
-    // step2: flux, velocity & sediment updates
     updateFlux(dt);
     updateFlux2(dt);
-
-    // step3: erosion and deposition
     erosionDeposition();
-
-    // step4: sediment transport
     transportSediment(dt);
-
-    // step5: evaporation
     evaporation(dt);
 
-    updateWater();
+    if (waterEnabled) updateWater();
 }
 
 void WaterManager::updateFlux(float dt) {
     // flux: 0-left, 1-right, 2-up, 3-down
     size_t w = hmap.width(), h = hmap.height();
-    float k;
+    dt = dt*fluxPipeCapacity*gravity;
+    float val, k;
     for (size_t i = 0; i < h; ++i)
         for (size_t j = 0; j < w; ++j) {
             // left
+            val = hmap[i][j]+waterLevel[i][j];
             if (j == 0) flux[i][j][0] = 0;
-            else flux[i][j][0] = max(0.f, flux[i][j][0] + dt*fluxPipeCapacity*gravity*
-            (hmap[i][j]+waterLevel[i][j]-hmap[i][j-1]-waterLevel[i][j-1]));
-
+            else flux[i][j][0] = max(0.f, flux[i][j][0] + dt*(val-hmap[i][j-1]-waterLevel[i][j-1]));
             // right
             if (j == w-1) flux[i][j][1] = 0;
-            else flux[i][j][1] = max(0.f, flux[i][j][1] + dt*fluxPipeCapacity*gravity*
-            (hmap[i][j]+waterLevel[i][j]-hmap[i][j+1]-waterLevel[i][j+1]));
-
+            else flux[i][j][1] = max(0.f, flux[i][j][1] + dt*(val-hmap[i][j+1]-waterLevel[i][j+1]));
             // up
             if (i == 0) flux[i][j][2] = 0;
-            else flux[i][j][2] = max(0.f, flux[i][j][2] + dt*fluxPipeCapacity*gravity*
-            (hmap[i][j]+waterLevel[i][j]-hmap[i-1][j]-waterLevel[i-1][j]));
-
+            else flux[i][j][2] = max(0.f, flux[i][j][2] + dt*(val-hmap[i-1][j]-waterLevel[i-1][j]));
             // down
-            if (i == 0) flux[i][j][3] = 0;
-            else flux[i][j][3] = max(0.f, flux[i][j][3] + dt*fluxPipeCapacity*gravity*
-            (hmap[i][j]+waterLevel[i][j]-hmap[i+1][j]-waterLevel[i+1][j]));
+            if (i == h-1) flux[i][j][3] = 0;
+            else flux[i][j][3] = max(0.f, flux[i][j][3] + dt*(val-hmap[i+1][j]-waterLevel[i+1][j]));
 
             // scale
             if (sum(flux[i][j]) > QREPS) {
@@ -71,32 +56,37 @@ void WaterManager::updateFlux2(float dt) {
         for (size_t j = 0; j < w; ++j) {
             dwx = -(flux[i][j][0] + flux[i][j][1]);
             dwy = -(flux[i][j][2] + flux[i][j][3]);
-            cout << dwx << ' ' << dwy << " => ";
             if (j != 0) dwx += flux[i][j-1][1];
             if (j != w-1) dwx += flux[i][j+1][0];
             if (i != 0) dwy += flux[i-1][j][3];
             if (i != h-1) dwy += flux[i+1][j][2];
             dv = (dwx+dwy)*dt;
-            cout << dwx << ' ' << dwy << " => " << dv << '\n';
             dwx /= 2, dwy /= 2;
 
-            avgWater = waterLevel[i][j];
-            //cout << waterLevel[i][j] << ' ' << dv << ' ' << area << ' ' << dv/area << '\n';
+            avgWater = (2*waterLevel[i][j] + dv/area)/2;
             waterLevel[i][j] += dv / area;
-            avgWater = (avgWater + waterLevel[i][j])/2;
 
             velocity[i][j][0] = avgWater > QREPS? dwx / worldStep / avgWater : 0;
             velocity[i][j][1] = avgWater > QREPS? dwy / worldStep / avgWater : 0;
-
         }
 }
 
 void WaterManager::erosionDeposition() {
     size_t w = hmap.width(), h = hmap.height();
-    float c;
+    float c, slope;
     for (size_t i = 0; i < h; ++i)
         for (size_t j = 0; j < w; ++j) {
-            c = sedimentCapacity * vectorLen2(velocity[i][j]);  // todo * tilt angle
+            slope = 0;
+            if (j != 0) slope = max(slope, fabs(hmap[i][j]-hmap[i][j-1]) /
+                sqrt((hmap[i][j]-hmap[i][j-1])*(hmap[i][j]-hmap[i][j-1])+ worldStep*worldStep));
+            if (j != w-1) slope = max(slope, fabs(hmap[i][j]-hmap[i][j+1]) /
+                                           sqrt((hmap[i][j]-hmap[i][j+1])*(hmap[i][j]-hmap[i][j+1])+ worldStep*worldStep));
+            if (i != 0) slope = max(slope, fabs(hmap[i][j]-hmap[i-1][j]) /
+                                           sqrt((hmap[i][j]-hmap[i-1][j])*(hmap[i][j]-hmap[i-1][j])+ worldStep*worldStep));
+            if (i != h-1) slope = max(slope, fabs(hmap[i][j]-hmap[i+1][j]) /
+                                           sqrt((hmap[i][j]-hmap[i+1][j])*(hmap[i][j]-hmap[i+1][j])+ worldStep*worldStep));
+
+            c = sedimentCapacity * vectorLen2(velocity[i][j]) * slope;
             if (c > sediment[i][j]) {
                 hmap[i][j] -= dissolveConstant * (c-sediment[i][j]) * worldStep;
                 sediment[i][j] += dissolveConstant * (c-sediment[i][j]) * worldStep;
@@ -138,8 +128,8 @@ void WaterManager::transportSediment(float dt) {
 
 void WaterManager::evaporation(float dt) {
     size_t w = hmap.width(), h = hmap.height();
+    dt = 1 - dt * evaporationCoef;
     for (size_t i = 0; i < h; ++i)
-        for (size_t j = 0; j < w; ++j) {
-            waterLevel[i][j] *= (1 - evaporationCoef * dt);
-        }
+        for (size_t j = 0; j < w; ++j)
+            waterLevel[i][j] *= dt;
 }

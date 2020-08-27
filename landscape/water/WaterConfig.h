@@ -5,20 +5,19 @@
 #ifndef BIG3DFLUFFY_WATERCONFIG_H
 #define BIG3DFLUFFY_WATERCONFIG_H
 
-// in seconds... if only this meant smth)
+const float minimalDrawWaterLevelCoef = QREPS;
+
 const float defaultErosionDT = 0.1;
 
-const float minimalDrawWaterLevelCoef = 2;
-
-const float sedimentCapacity = 0.1;
-const float dissolveConstant = 0.01;
-const float depositionConstant = 0.01;
-
-const float evaporationCoef = 0.001;
-
 const float rainDropIntencityCoef = 1;
-const int rainDropCnt = 100; // todo change to per-area drop-cnt
+const int rainDropCnt = 5; // todo change to per-area drop-cnt
 const int rainDropRadius = 1;
+
+const float sedimentCapacity = 0.05;
+const float dissolveConstant = 0.05;
+const float depositionConstant = 0.05;
+
+const float evaporationCoef = 0.01;
 
 const float fluxPipeCapacity = 1;
 const float gravity = 1;
