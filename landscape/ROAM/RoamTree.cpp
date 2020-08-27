@@ -88,6 +88,14 @@ void RoamNode::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     mustDraw = 1;
 }
 
+void RoamNode::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
+    polygons.push_back(triangle);
+    if (left) {
+        left->getAllPolygons(polygons);
+        right->getAllPolygons(polygons);
+    }
+}
+
 
 Frame::Frame(Frame&& f): left(f.left), right(f.right),
 center(f.center), radius(f.radius), isVisible(f.isVisible) {
@@ -116,7 +124,7 @@ Frame::Frame(const QRMatrix<sptr<QRPoint3D>> &points,
     Vector3D v2 = points[u][r]->getVector();
     v1[2] = zmin, v2[2] = zmax;
     center = (v1 + v2) / 2;
-    radius = max(max(fabs(v1[0]-v2[0])/2, fabs(v1[1]-v2[1])/2), fabs(v1[2]-v2[2])/2);
+    radius = vectorLen(v1-v2) / 2;
 }
 
 bool Frame::updateCamera(const sptr<QRCamera3D> &camera) {
@@ -133,4 +141,9 @@ void Frame::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     if (!isVisible) return;
     left->addPolygons(polygons);
     right->addPolygons(polygons);
+}
+
+void Frame::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
+    left->getAllPolygons(polygons);
+    right->getAllPolygons(polygons);
 }

@@ -24,6 +24,7 @@ public:
     QRVector(std::initializer_list<T>);
     QRVector(const QRVector<T> &);
     QRVector(QRVector<T>&&);
+    QRVector(const QRVectorIterator<T> &it);
 
     void clear() {*size = 0;}
     void reserve(size_t n) {    // todo size not changing....
@@ -33,10 +34,11 @@ public:
     }
 
     sptr<QRVector<T>> getPointer() const {return p;}
+    sptr<T[]> getArray() const {return arr;}
     T* getPureArray() const {return arr.get();}
 
     QRVector<T>& operator =(const QRVector<T>&);
-    QRVector<T>& operator =(const QRVector<T>&&);
+    QRVector<T>& operator =(QRVector<T>&&);
     QRVector<T>& operator =(std::initializer_list<T>);
     QRVector<T>& operator =(const QRVectorIterator<T> &it);
 
@@ -168,6 +170,15 @@ QRVector<T>::QRVector(QRVector<T> &&vec) {
     vec.size.reset();
 }
 
+template<typename T>
+QRVector<T>::QRVector(const QRVectorIterator<T> &it): QRVector() {
+    // todo not tested
+    p = sptr<QRVector>(this, [](void *ptr){});
+    *size = 0;
+    for (auto i = it; i; i++)
+        push_back(*i);
+}
+
 
 template<typename T>
 QRVectorIterator<T> QRVector<T>::begin() const {
@@ -234,7 +245,7 @@ QRVector<T>& QRVector<T>::operator =(const QRVector<T> &newVec) {
 }
 
 template<typename T>
-QRVector<T>& QRVector<T>::operator =(const QRVector<T> &&newVec) {
+QRVector<T>& QRVector<T>::operator =(QRVector<T> &&newVec) {
     // todo
     size = newVec.size;
     max_size = newVec.max_size;

@@ -11,7 +11,8 @@ using namespace chrono;
 
 Presenter::Presenter(MainWindow &w): window(w) {
     image = sptr<QRImage>(new ImageQT(window.canvas));
-    facade = sptr<Facade>(new Facade(image));
+    hmap_image = sptr<QRImage>(new ImageQT(window.hmap));
+    facade = sptr<Facade>(new Facade(image, hmap_image));
 
     //facade->addCube(10,0,0,0, QRColor("red"));
     draw();
@@ -75,6 +76,14 @@ void Presenter::defineTransformParams(float &x, float &y, float &z, QRKey d) {
 void Presenter::undo() {
     facade->undo();
     draw();
+}
+
+void Presenter::setWaterVisible() {
+    facade->setWaterVisible(window.waterCheckBox->isChecked());
+}
+
+void Presenter::erosionIteration() {
+    facade->erosionIteration();
 }
 
 void Presenter::changeCamera() {

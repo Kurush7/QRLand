@@ -18,3 +18,10 @@ QRColor defineColor(QColor c) {
     st.b = d;
     return st;
 }
+
+void ImageQT::refillBg() {
+    for (size_t i = 0; i < h; ++i)
+        for (size_t j = 0; j < w; ++j)
+            setPixel(i, j, bg);
+    //todo need here? repaint();
+}

@@ -15,6 +15,8 @@ public:
     virtual void mixPixel(int x, int y, const QRColor &color) = 0;
     virtual const QRColor getPixel(int x, int y) const = 0;
     virtual void repaint() = 0;
+
+    virtual void setBg(const QRColor &color) = 0;
     virtual void refillBg() = 0;
 
     virtual int getWidth() = 0;

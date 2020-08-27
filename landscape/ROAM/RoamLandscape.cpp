@@ -67,3 +67,11 @@ void RoamLandscape::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons, string *i
         *info = *info + s.str();
     }
 }
+
+PolygonIterator RoamLandscape::getPolygons() const {
+    QRVector<sptr<QRPolygon3D>> polygons;
+    size_t allSize = dimFrameCnt*dimFrameCnt;
+    for (size_t i = 0; i < allSize; ++i)
+        frames[i].getAllPolygons(polygons);
+    return PolygonIterator(polygons);
+}

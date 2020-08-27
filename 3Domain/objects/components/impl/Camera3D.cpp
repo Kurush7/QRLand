@@ -107,39 +107,43 @@ void Camera3D::rotate(const Vector3D &rotate) {
         axisTransformer->accumulate(new_axisTransformer->getMatrix());
     }
 
-    cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
-    cout << "world origin: " << bind + deepVector*origin[2] << '\n';
+    //cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
+    //cout << "world origin: " << bind + deepVector*origin[2] << '\n';
 }
 
 void Camera3D::defineFrustrum() {
     // todo scalar > 0: outside the pyramid
     // front-back
     frustrum.reserve(6);
-    frustrum[0] = Vector3D{0,0,-1, origin[2] + nearCutter};
-    frustrum[1] = Vector3D{0,0,-1, origin[2] + farCutter};
+    //frustrum[0] = Vector3D{0,0,-1, origin[2] + nearCutter};
+    //frustrum[1] = Vector3D{0,0,-1, origin[2] + farCutter};
+    frustrum[0] = Vector3D{0,0,-1, nearCutter};
+    frustrum[1] = Vector3D{0,0,-1, farCutter};
     // side-left-right
-    frustrum[2] = Vector3D{-2*(origin[2]+screen)/width,0,1,0};  // right
-    frustrum[3] = Vector3D{2*(origin[2]+screen)/width,0,1,0};   // left
+    frustrum[2] = Vector3D{-2*(nearCutter)/width,0,1,0};  // right
+    frustrum[3] = Vector3D{2*(nearCutter)/width,0,1,0};   // left
     // up-down
-    frustrum[4] = Vector3D{0,-2*(origin[2]+screen)/height,1,0};
-    frustrum[5] = Vector3D{0,2*(origin[2]+screen)/height,1,0};
+    //frustrum[4] = Vector3D{0,-2*(nearCutter)/height,1,0};
+    //frustrum[5] = Vector3D{0,2*(nearCutter)/height,1,0};
+    frustrum[4] = Vector3D{0,1,0,0};
+    frustrum[5] = Vector3D{0,nearCutter/height,1,0};
 
     frustrum.setSize(6);
 
-    /*cout << "camera settings:\n";
+    cout << "camera settings:\n";
     cout << "\tnear: " << nearCutter << '\n';
     cout << "\tfar: " << farCutter << '\n';
     cout << "\tscreen: " << screen << '\n';
     cout << "\twidth: " << width << '\n';
     cout << "\theight: " << height << '\n';
     cout << "\torigin: " << origin << '\n';
-    cout << "\tbind: " << bind << '\n';*/
-    Vector3D in_test({0,0,(nearCutter+farCutter)/2+origin[2],1});
-    for (int i = 0; i < 6; ++i) {    // 0 & 1 not needed, for func will destroy 1
+    cout << "\tbind: " << bind << '\n';
+    Vector3D in_test({0,height/2,(nearCutter+farCutter)/2+origin[2],1});
+    for (int i = 0; i < frustrum.getSize(); ++i) {    // 0 & 1 not needed, for func will destroy 1
         frustrum[i] = len3Norm(frustrum[i]);
         if (scalar(frustrum[i], in_test) < 0) // inside values are  > 0
             frustrum[i] = -1 * frustrum[i];
-        //cout << "frustrum: " << frustrum[i] << '\n';
+        cout << "frustrum: " << frustrum[i] << '\n';
     }
 }
 
@@ -162,7 +166,7 @@ void Camera3D::defineAxisTransformer() {
 }
 
 void Camera3D::defineProjectionTransformer() {
-    projector = ProjectionTransformer3DCreator(0,0,screen).create();
+    projector = ProjectionTransformer3DCreator(screen).create();
 }
 
 int Camera3D::isVisibleSphere(const Vector3D &c, float rad) {

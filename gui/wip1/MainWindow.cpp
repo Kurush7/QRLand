@@ -12,8 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent) {
     setDarkTheme();
 
-    canvas = sptr<QRCanvas> (new QRCanvas(512, 512, this,
-                        QColor(40, 40, 40)));
+    canvas = sptr<QRCanvas> (new QRCanvas(512, 512, this));
 
     moveRad = new QRadioButton("move", this);
     rotateRad = new QRadioButton("rotate", this);

@@ -22,10 +22,15 @@ class Presenter: public QObject {
 Q_OBJECT
 public:
     explicit Presenter(MainWindow &w);
+    ~Presenter() {
+        facade.reset();
+    }
     void undo();
     void transform(QRKey);
     void scale(float times);
     void changeCamera();
+    void setWaterVisible();
+    void erosionIteration();
 
 private:
     void defineTransformParams(float&, float&, float&, QRKey);
@@ -36,7 +41,7 @@ private:
 
     MainWindow &window;
 
-    sptr<QRImage> image;
+    sptr<QRImage> image, hmap_image;
     sptr<Facade> facade;
 
     bool is1Active=true;

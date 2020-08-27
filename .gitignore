@@ -560,3 +560,4 @@ diagrams/oop3.vpp.bak_017d
 diagrams/oop3.vpp.bak_018d
 diagrams/oop3.vpp.bak_019d
 !/3Domain/objects/
+!/controlStuff/renderStuff/render/FullThreadRenderer.cpp

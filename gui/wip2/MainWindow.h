@@ -10,6 +10,8 @@
 #include "../../globalDefines.h"
 #include "2Domain.h"
 
+const int erosionFPS = 30;
+
 class MainWindow: public QMainWindow {
 Q_OBJECT
 public:
@@ -25,16 +27,19 @@ private:
 
     QWidget *mainWidget;
     QRLayoutManager *ui;
-    sptr<QRCanvas> canvas;
+    sptr<QRCanvas> canvas, hmap;
 
     QRadioButton *moveRad, *rotateRad, *scaleRad;
     QRadioButton *view1Rad, *view2Rad;
     QButtonGroup *g1, *g2;
 
-    QRLabel *settingsLabel, *drawTimeLabel, *cameraLabel;
+    QRLabel *settingsLabel, *drawTimeLabel, *cameraLabel, *erosionLabel;
 
+    QCheckBox *waterCheckBox;
 
-    QPushButton *undoBtn;
+    QPushButton *undoBtn, *erosionStart, *erosionEnd;
+
+    QTimer erosionTimer;
 };
 
 #endif //MAIN_WINDOW

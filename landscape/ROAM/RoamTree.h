@@ -9,7 +9,7 @@
 #include "objects/QRObject.h"
 #include "objects/composites/impl.h"
 #include "objects/components/impl.h"
-#include "QRLandscapeTexture.h"
+#include "../basic/QRLandscapeTexture.h"
 
 #include "RoamConfig.h"
 
@@ -38,6 +38,7 @@ struct RoamNode {
 
     void update();  // d -- distance from camera to projection screen
     void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
+    void getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     void drawCommandNeigbour();
 
 };
@@ -61,6 +62,7 @@ struct Frame {
     }
 
     void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
+    void getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     bool updateCamera(const sptr<QRCamera3D> &camera);  // returns wether it's visible
 };
 

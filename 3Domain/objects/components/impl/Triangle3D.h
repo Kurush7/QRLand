@@ -48,6 +48,7 @@ public:
     virtual int getSize() const {return 3;}
 
     virtual const sptr<QRTexture>& getTexture() const {return texture;}
+    virtual sptr<QRTexture>& getTextureUnsafe() {return texture;}
     virtual void setTexture(const sptr<QRTexture> &t) {texture = t;}
 
     virtual bool operator==(const QRPolygon3D &b) const;

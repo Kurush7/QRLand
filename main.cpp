@@ -12,6 +12,7 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
+    //no use QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
     QApplication app(argc, argv);
 
     QFile styleF;

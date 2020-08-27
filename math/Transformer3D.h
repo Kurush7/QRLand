@@ -90,8 +90,7 @@ private:
 };
 class ProjectionTransformer3DCreator: public BaseTransformer3DCreator {
 public:
-    ProjectionTransformer3DCreator(float x, float y, float z);
-    ProjectionTransformer3DCreator(const Vector3D &v);
+    ProjectionTransformer3DCreator(float z);
     virtual uptr<QRTransformer3D> create();
 private:
     Matrix3D matrix;

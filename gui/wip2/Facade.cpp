@@ -6,33 +6,64 @@
 using namespace std;
 
 // TODO MORE DETAILS ON THE EDGES..... WTF?!!!!!!
+// todo top-down inverts x and y... wtf?!
+// todo camera: in self-rotate mode moves by X and Y are in camera's coords, but not aligned to camera's rotation
+// todo camera fucked up when rotating and moving in self-rotate mod
 
-Facade::Facade(sptr<QRImage> img): image(img) {
+Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
+: main_image(main_img), hmap_image(hmap_img) {
     manager = sptr<BaseCommandManager> (new CommandManager());
+
+    // scene creation
     auto cr = PolySceneCreatorNoCamera();
     scene = cr.create();
-
-    auto cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5,2, 0.01,
-                                             QRINF, Vector3D(0,0,-5), Vector3D(M_PI/2,0,0)));
+    //auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 1,
+    //                                         QRINF, Vector3D(0,0,-110), Vector3D(3*M_PI/5,0,0)));
+    auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 1,
+                                             QRINF, Vector3D(0,0,-100), Vector3D(M_PI,0,0)));
     scene->addCamera(cam, "observeCamera");
 
-    cam = sptr<QRCamera3D>(new Camera3D(3, 3, -5, 2, 0.01, QRINF,
-            Vector3D(0,0,0), Vector3D(M_PI/2,0,0), true));
+    cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 1, 0.2, QRINF,
+            Vector3D(0,40, 0), Vector3D(M_PI/2,0,0), true));
     scene->addCamera(cam, "walkCamera");
-
     scene->setActiveCamera("observeCamera");
 
-    renderer = sptr<QRenderer>(new FullThreadRenderer(image, scene));
+    // renderer creation
+    renderer = sptr<QRenderer>(new FullThreadRenderer(main_image, scene));
+
+    // builder creation
+    builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
+            129, 129, 1, 1)); // another world step ruins all
+    topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
+
+    builder->setTools({
+        {LayerTool, freqAVERAGE},
+        {HillTool, freqRARE},
+        //{PlateMountainsTool, freqUNIQUE}
+    });
+    builder->process(100);
+    builder->useTool(PlateMountainsTool);
+
+
+
+    sptr<QRPolyModel3D> land = builder->createLandscape();
+    scene->addModel(land, Vector3D(0,0,0));
+
+    builder->activateWaterManager();
+    //builder->waterManager->setWaterLevel(35);
+    //builder->waterManager->setWaterLevel(30);
+
+    for (auto f = builder->plateManager.getPlates(); f; ++f)
+        topDown->addFigure(*f);
+
+    topDown->drawHeightMap();
 
 
     //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));
-
     //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
     //       Vector3D(0,0,0));
-
-    scene->addModel(RoamLandscapeCreator(129, 129, 0.1).create(),
-           Vector3D(0,0,0));
-
+    //scene->addModel(RoamLandscapeCreator(129, 129, 0.1).create(),
+    //       Vector3D(0,0,0));
     //scene->addModel(CubeModelCreator(10,
     //        sptr<QRTexture>(new ColorTexture(127,127,127))).create(),Vector3D(0,0,0));
 }
@@ -41,6 +72,7 @@ void Facade::draw() {
     auto command = sptr<QRCommand>(new RenderCmd(renderer));
     manager->push(command);
     manager->execAll();
+    topDown->drawHeightMap();
 }
 
 void Facade::moveCamera(float dx, float dy, float dz) {
@@ -65,6 +97,21 @@ void Facade::changeCamera() {
     else scene->setActiveCamera("walkCamera");
 
     renderer->render();
+}
+
+void Facade::setWaterVisible(bool x) {
+    builder->waterManager->setWaterStatus(x);
+    renderer->render();
+}
+
+void Facade::erosionIteration() {
+    static int cnt = 0;
+    cnt++;
+    startMeasureTime;
+    builder->waterManager->erosionIteration();
+    cout << "erosion finished in " << endMeasureTime << '\n';
+    if (cnt == 10)
+        cnt = 0, draw();
 }
 
 void Facade::undo() {

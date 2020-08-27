@@ -1,9 +1,18 @@
 set(path "landscape")
 
+add_subdirectory(managers)
+
 set(source_list ${source_list}
-        ${path}/QRLandscapeTexture.cpp
-        ${path}/QRLandscapeSurface.cpp
-        ${path}/QRLandscapeSurfaceCreator.cpp
+        ${path}/basic/QRLandscapeTexture.cpp
+        ${path}/basic/QRLandscapeSurface.cpp
+        ${path}/basic/QRLandscapeSurfaceCreator.cpp
+
+        ${path}/decoration/TopDownVisualizer.cpp
+
         ${path}/ROAM/RoamLandscape.cpp
         ${path}/ROAM/RoamTree.cpp
+
+        ${path}/water/WaterManager.cpp
+        ${path}/water/WaterErosion.cpp
+
         PARENT_SCOPE)

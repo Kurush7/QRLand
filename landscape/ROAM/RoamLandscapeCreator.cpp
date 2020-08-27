@@ -4,8 +4,7 @@
 
 #include "RoamLandscapeCreator.h"
 
-uptr<QRPolyModel3D> RoamLandscapeCreator::create() {
-    QRMatrix<sptr<QRPoint3D>> m(width, height);
+sptr<QRPolyModel3D> RoamLandscapeCreator::create() {
     double x, y = -(height+0.)/2.*step;
     for(size_t i = 0; i < height; ++i) {
         x = -(width+0.)/2.*step;
@@ -18,5 +17,19 @@ uptr<QRPolyModel3D> RoamLandscapeCreator::create() {
         y += step;
     }
 
-    return uptr<QRPolyModel3D>(new RoamLandscape(m));
+    return sptr<QRPolyModel3D>(new RoamLandscape(m));
+}
+
+void RoamLandscapeCreator::updateHeightMap(const QRMatrix<double> &hMap) {
+    if (hMap.width() != m.width() || hMap.height() != m.height())
+        throw QRBadParamException(__FILE__, __LINE__, __TIME__,
+                "heightmap size not equal to point-matrix size");
+    Vector3D v;
+    for(size_t i = 0; i < height; ++i) {
+        for (size_t j = 0; j < width; ++j) {
+            v = m[i][j]->getVector();
+            v[3] = hMap[i][j];
+            m[i][j]->setVector(v);
+        }
+    }
 }

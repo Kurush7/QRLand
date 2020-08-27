@@ -14,6 +14,9 @@ bool operator <(const Vector3D &a, const Vector3D &b) {
     // todo norm, a[3]
 }
 
+bool operator ==(const Vector3D &a, const Vector3D&b) {
+    return !(a<b) && !(b<a);
+}
 
 Vector3D::Vector3D() {}
 Vector3D::Vector3D(double x, double y, double z) {
@@ -59,10 +62,7 @@ Vector3D& Vector3D::operator /=(float x) {
     return *this;
 }
 
-bool operator ==(const Vector3D &a, const Vector3D &b) {
-    return a.arr[0] == b.arr[0] && a.arr[1] == b.arr[1] &&
-           a.arr[2] == b.arr[2] && a.arr[3] == b.arr[3];
-}
+
 bool operator !=(const Vector3D &a, const Vector3D &b) {
     return a.arr[0] != b.arr[0] || a.arr[1] != b.arr[1] ||
            a.arr[2] != b.arr[2] || a.arr[3] != b.arr[3];
@@ -116,6 +116,11 @@ Vector3D len3Norm(const Vector3D &a) {
     if (fabs(x) < QREPS) return a;
     return a / x;
 }
+Vector3D len2Norm(const Vector3D &a) {
+    float x = sqrt(a[0]*a[0]+a[1]*a[1]);
+    if (fabs(x) < QREPS) return a;
+    return a / x;
+}
 void Vector3D::lenNormSelf() {
     float x = sqrt(arr[0]*arr[0]+arr[1]*arr[1]+arr[2]*arr[2] + arr[3]*arr[3]);
     arr[0] /= x;
@@ -130,6 +135,14 @@ float vectorLen(const Vector3D &v) {
 
 float vectorLen3(const Vector3D &v) {
     return sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+}
+
+float vectorLen2(const Vector3D &v) {
+    return sqrt(v[0]*v[0] + v[1]*v[1]);
+}
+
+float sum(const Vector3D &v) {
+    return v[0]+v[1]+v[2]+v[3];
 }
 
 float scalar(const Vector3D &a, const Vector3D &b) {
