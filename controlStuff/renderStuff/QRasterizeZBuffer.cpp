@@ -23,6 +23,25 @@ void QRasterizeZBuffer::draw(Vector3D *poly, int size, const Vector3D &norm, con
     }
 }
 
+void QRasterizeZBuffer::draw(QRVector<float*> &points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture) {
+    auto c = texture->getColor();
+    colorManager->lightenColor(norm, c);   // todo not acceptable for mapping, so....
+
+    // todo optimize
+    if (size == 3) drawTriangle(Vector3D(points[poly[0]][0], points[poly[0]][1], points[poly[0]][2]),
+                                Vector3D(points[poly[1]][0], points[poly[1]][1], points[poly[1]][2]),
+                                Vector3D(points[poly[2]][0], points[poly[2]][1], points[poly[2]][2]), c);
+    else {
+        Vector3D p0 = Vector3D(points[poly[0]][0], points[poly[0]][1], points[poly[0]][2]);
+        for (int i = 0; i < size - 2; ++i) {
+            drawTriangle(p0, Vector3D(points[poly[1]][0], points[poly[1]][1], points[poly[1]][2]),
+                         Vector3D(points[poly[2]][0], points[poly[2]][1], points[poly[2]][2]), c);
+            poly = &poly[1];
+        }
+    }
+}
+
+
 inline bool belongs(int val, int a, int b) {
     return val > 0 || (val == 0 && (a > 0 || (a == 0 && b > 0)));
 }

@@ -8,7 +8,10 @@
 #include "../../interfaces/QRPolyModel3D.h"
 #include "PolyModel.h"
 #include "../../../components/impl/Polygon3D.h"
+#include "../../../components/impl/IndexPolygon3D.h"
 #include "../../../components/impl/Point3D.h"
+
+#include "globalConfig.h"
 
 class QRPolyModelCreator {
 public:

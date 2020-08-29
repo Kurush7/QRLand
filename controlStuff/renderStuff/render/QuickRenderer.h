@@ -2,15 +2,17 @@
 // Created by kurush on 09.08.2020.
 //
 
-#ifndef BIG3DFLUFFY_FULLTHREADRENDERER_H
-#define BIG3DFLUFFY_FULLTHREADRENDERER_H
+#ifndef BIG3DFLUFFY_QUICK_RENDERER_H
+#define BIG3DFLUFFY_QUICK_RENDERER_H
 
 #include "../QRenderer.h"
+#include "QuickRenderData.h"
+#include "../cutters/Quick3DCutter.h"
 
-class FullThreadRenderer: public QRenderer {
+class QuickRenderer: public QRenderer {
 public:
-    FullThreadRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
-    ~FullThreadRenderer() {
+    QuickRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
+    ~QuickRenderer() {
         delete[] cutters;}
     virtual void render();
 
@@ -26,20 +28,24 @@ private:
     QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
 
+    QuickRenderData quickData;
+
     QRCamera3D *camera;
     QRPolyModel3D *model;
 
-    QRTransformer3D *cameraTransformer, *projector, *modelTransformer, *imageTransformer;
-    Transformer3D modelCameraTransformer;
+    QRTransformer3D *cameraTransformer, *modelTransformer, *imageTransformer;
+    Transformer3D modelCameraTransformer, projector;
 
     Vector3D screenData, transZero;
 
     sptr<QRPolygon3D>* polygons;
+    sptr<QRPoint3D>* points;
     QRVector<sptr<QRPolygon3D>> local_polys;
+    size_t polygon_cnt, point_cnt;
 
     size_t polysCameraCut=0, polysFrameCut=0;
 };
 
 
 
-#endif //BIG3DFLUFFY_FULLTHREADRENDERER_H
+#endif //BIG3DFLUFFY_QUICK_RENDERER_H

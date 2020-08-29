@@ -10,7 +10,7 @@
 #include "2Domain.h"
 #include "3Domain/objects/objects.h"
 
-#include "../QRasterizeZBuffer.h"
+#include "QRasterizeZBuffer.h"
 #include "renderStuff/cutters/PolyRectCutter.h"
 #include "renderStuff/cutters/Poly3DCutter.h"
 #include "renderStuff/renderConfig.h"

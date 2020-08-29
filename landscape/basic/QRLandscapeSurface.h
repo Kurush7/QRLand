@@ -12,6 +12,8 @@
 #include "objects/components/impl.h"
 #include "QRLandscapeTexture.h"
 
+#include "globalConfig.h"
+
 class QRLandscapeSurface: public QRPolyModel3D {
 public:
     QRLandscapeSurface(const QRMatrix<sptr<QRPoint3D>> &points);

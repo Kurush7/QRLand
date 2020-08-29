@@ -13,7 +13,13 @@ float CameraCoordsX, CameraCoordsY, CameraCoordsZ;
 RoamNode::RoamNode(size_t i1, size_t j1, size_t i2, size_t j2, size_t i3, size_t j3,
          const sptr<QRTexture> &texture, LinkMap &links, const QRMatrix<sptr<QRPoint3D>> &points,
          RoamNode *parent): parent(parent) {
-    triangle = sptr<Triangle3D>(new Triangle3D(points[i1][j1],points[i2][j2],points[i3][j3], texture));
+    if (!useIndexedPolygons)
+        triangle = sptr<QRPolygon3D>(new Triangle3D(points[i1][j1],points[i2][j2],points[i3][j3], texture));
+    else {
+        size_t w = points.width();
+        triangle = sptr<QRPolygon3D>(new IndexPolygon3D({i1*w+j1, i2*w+j2, i3*w+j3}, texture, points.getArray()));
+    }
+
     workPoint = (points[i2][j2]->getVector() + points[i3][j3]->getVector()) / 2;
     size_t iw = (i2+i3)/2, jw = (j2+j3)/2;
     delta = fabs((points[i2][j2]->getVector()[2] + points[i3][j3]->getVector()[2]) / 2 -

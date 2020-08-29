@@ -11,13 +11,14 @@
 #include "objects/components/impl.h"
 #include "../basic/QRLandscapeTexture.h"
 
+#include "globalConfig.h"
 #include "RoamConfig.h"
 
 struct RoamNode;
 using LinkMap = std::map<Vector3D, RoamNode*>;
 
 struct RoamNode {
-    sptr<Triangle3D> triangle;
+    sptr<QRPolygon3D> triangle;
     Vector3D workPoint;
     RoamNode *link = nullptr, *left=nullptr, *right=nullptr, *parent=nullptr;
     char mustDraw = 1;     // 0 - no, 1 - yes, 2 - no, came from link

@@ -10,9 +10,9 @@
 #include "2Domain.h"
 #include "3Domain/objects/objects.h"
 
-#include "QRenderer.h"
-#include "../QRasterizeZBuffer.h"
+#include "../QRenderer.h"
 #include "renderStuff/cutters/PolyRectCutter.h"
+
 
 #include "tests/TimeTest.h"
 #include <memory>
