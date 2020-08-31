@@ -242,6 +242,8 @@ QRVector<T>& QRVector<T>::operator =(const QRVector<T> &newVec) {
     *size = newVec.len();
     for (size_t i = 0; i < *size; ++i)
         arr[i] = newVec[i];
+
+    return *this;
 }
 
 template<typename T>

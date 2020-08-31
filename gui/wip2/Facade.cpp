@@ -19,8 +19,8 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     scene = cr.create();
     //auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 1,
     //                                         QRINF, Vector3D(0,0,-110), Vector3D(3*M_PI/5,0,0)));
-    auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 50,
-                                             QRINF, Vector3D(0,-70,-100), Vector3D(M_PI,0,0)));
+    auto cam = sptr<QRCamera3D>(new Camera3D(100, 100, -5,50, 50,
+                                             QRINF, Vector3D(0,-100,-150), Vector3D(M_PI,0,0)));
     scene->addCamera(cam, "observeCamera");
 
     cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 0.5, 0.5, QRINF,

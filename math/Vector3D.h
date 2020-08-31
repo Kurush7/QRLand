@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include <initializer_list>
+#include <QRVector/QRVector.h>
 
 #include "exceptions/MathException.h"
 #include "../QRConstants.h"

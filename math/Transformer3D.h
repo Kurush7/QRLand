@@ -28,6 +28,8 @@ public:
     virtual void accumulateRight(const Matrix3D &m) = 0;
     virtual void accumulateLeft(const Matrix3D &m) = 0;
     virtual void accumulate(const Matrix3D &m) {accumulateLeft(m);};
+
+    virtual QRTransformer3D& operator=(const Matrix3D&) = 0;
 };
 
 class Transformer3D: public QRTransformer3D {
@@ -40,6 +42,8 @@ public:
 
     virtual void accumulateRight(const Matrix3D &m) {matrix = matrix * m;};
     virtual void accumulateLeft(const Matrix3D &m) {matrix = m * matrix;};
+
+    virtual QRTransformer3D& operator=(const Matrix3D &m) {matrix = m; return *this;}
 
     virtual Matrix3D getMatrix() {return matrix;}
 

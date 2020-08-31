@@ -49,7 +49,9 @@ private:
     QRImage *img;
     QRLightManager *colorManager;
 
-    void drawTriangle(const Vector3D &p0, const Vector3D &p1, const Vector3D &p2, QRColor c);
+    void drawTriangle(float p1x, float p1y, float zl,
+            float p2x, float p2y, float zr,
+            float p3x, float p3y, float zw, QRColor c);
 
     void fillRow(renderData &data);
     inline void jumpL(renderData &);

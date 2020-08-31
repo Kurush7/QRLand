@@ -13,11 +13,15 @@ void QRasterizeZBuffer::draw(Vector3D *poly, int size, const Vector3D &norm, con
     auto c = texture->getColor();
     colorManager->lightenColor(norm, c);   // todo not acceptable for mapping, so....
 
-    if (size == 3) drawTriangle(poly[0], poly[1], poly[2], c);
+    if (size == 3) drawTriangle(poly[0][0], poly[0][1], poly[0][2],
+                                poly[1][0], poly[1][1], poly[1][2],
+                                poly[2][0], poly[2][1], poly[2][2], c);
     else {
         Vector3D p0 = poly[0];
         for (int i = 0; i < size - 2; ++i) {
-            drawTriangle(p0, poly[1], poly[2], c);
+            drawTriangle(p0[0], p0[1], p0[2],
+                    poly[1][0], poly[1][1], poly[1][2],
+                    poly[2][0], poly[2][1], poly[2][2], c);
             poly = &poly[1];
         }
     }
@@ -28,14 +32,15 @@ void QRasterizeZBuffer::draw(QRVector<float*> &points, int32_t* poly, int size, 
     colorManager->lightenColor(norm, c);   // todo not acceptable for mapping, so....
 
     // todo optimize
-    if (size == 3) drawTriangle(Vector3D(points[poly[0]][0], points[poly[0]][1], points[poly[0]][2]),
-                                Vector3D(points[poly[1]][0], points[poly[1]][1], points[poly[1]][2]),
-                                Vector3D(points[poly[2]][0], points[poly[2]][1], points[poly[2]][2]), c);
+    if (size == 3) drawTriangle(points[poly[0]][0], points[poly[0]][1], points[poly[0]][2],
+                                points[poly[1]][0], points[poly[1]][1], points[poly[1]][2],
+                                points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c);
     else {
-        Vector3D p0 = Vector3D(points[poly[0]][0], points[poly[0]][1], points[poly[0]][2]);
+        float x0=points[poly[0]][0], y0=points[poly[0]][1], z0=points[poly[0]][2];
         for (int i = 0; i < size - 2; ++i) {
-            drawTriangle(p0, Vector3D(points[poly[1]][0], points[poly[1]][1], points[poly[1]][2]),
-                         Vector3D(points[poly[2]][0], points[poly[2]][1], points[poly[2]][2]), c);
+            drawTriangle(x0,y0,z0,
+                    points[poly[1]][0], points[poly[1]][1], points[poly[1]][2],
+                    points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c);
             poly = &poly[1];
         }
     }
@@ -51,16 +56,19 @@ inline float triangle_area (float x1, float y1, float x2, float y2, float x3, fl
 }
 
 
-void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, const Vector3D &p2, QRColor c) {
-    int xl = QRound(p0[0]), xr = QRound(p1[0]);
-    int xw = QRound(p2[0]), yw = QRound(p2[1]);
-    int yl = QRound(p0[1]), yr = QRound(p1[1]);
+//void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, const Vector3D &p2, QRColor c) {
+void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
+        float p2x, float p2y, float p2z,
+        float p3x, float p3y, float p3z, QRColor c) {
+    int xl = QRound(p1x), yl = QRound(p1y);
+    int xr = QRound(p2x), yr = QRound(p2y);
+    int xw = QRound(p3x), yw = QRound(p3y);
 
-    float S0 = fabs(triangle_area(p2[0], p2[1], p0[0], p0[1], p1[0], p1[1]));
+    float zl = p1z, zr = p2z, zw = p3z;
+    float S0 = fabs(triangle_area(p3x, p3y, p1x, p1y, p2x, p2y));
 
     // line and dot drawing
     if (triangle_area(xw, yw, xl, yl, xr, yr) == 0) {
-        float zl = p0[2], zr = p1[2], zw = p2[2];
         if (xl > xr) swap(xl,xr), swap(yl,yr), swap(zl,zr);
         else if (xr < xl) swap(xl,xr), swap(yl,yr), swap(zl,zr);
         if (xw < xl) swap(xl,xw), swap(yl,yw), swap(zl,zw);
@@ -108,12 +116,12 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
         return;
     }
 
-    float la = p2[1] - p0[1], ra = p2[1] - p1[1], l2a = p1[1]-p0[1];
-    float lb = p0[0] - p2[0], rb = p1[0] - p2[0], l2b= p0[0]-p1[0];
-    float lc = -la*p2[0] - lb*p2[1], rc = -ra*p2[0] - rb*p2[1], l2c= -l2a*p0[0] - l2b*p0[1];
+    float la = p3y - p1y, ra = p3y - p2y, l2a = p2y-p1y;
+    float lb = p1x - p3x, rb = p2x - p3x, l2b= p1x-p2x;
+    float lc = -la*p3x - lb*p3y, rc = -ra*p3x - rb*p3y, l2c= -l2a*p1x - l2b*p1y;
 
-    float x_test = (p0[0] + p1[0] )/2, y_test = (p0[1]+p1[1])/2;
-    x_test = (x_test+p2[0])/2, y_test= (y_test+p2[1])/2;
+    float x_test = (p1x + p2x )/2, y_test = (p1y+p2y)/2;
+    x_test = (x_test+p3x)/2, y_test= (y_test+p3y)/2;
     if (la*x_test+lb*y_test+lc < -QREPS) la = -la, lb = -lb, lc = -lc;
     if (ra*x_test+rb*y_test+rc < -QREPS) ra = -ra, rb = -rb, rc = -rc;
     if (l2a*x_test+l2b*y_test+l2c < -QREPS) l2a = -l2a, l2b = -l2b, l2c = -l2c;
@@ -135,9 +143,9 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
     float z;
 
     float lval = la*x + lb*y + lc, rval = ra*x + rb*y + rc, l2val = l2a*x + l2b*y + l2c;
-    b1 = triangle_area(p2[0], p2[1], p0[0], p0[1], x, y);
-    b2 = triangle_area(p2[0], p2[1], p1[0], p1[1], x, y);
-    float dyl = p2[1]-p0[1], dyr=p2[1]-p1[1], dxl=p0[0]-p2[0], dxr=p1[0]-p2[0];
+    b1 = triangle_area(p3x, p3y, p1x, p1y, x, y);
+    b2 = triangle_area(p3x, p3y, p2x, p2y, x, y);
+    float dyl = p3y-p1y, dyr=p3y-p2y, dxl=p1x-p3x, dxr=p2x-p3x;
 
     for(; y <= ymax; ++y) {
         x0 = x, b10 = b1, b20 = b2;
@@ -145,7 +153,7 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
         while (rval > -QREPS_MINI && (third_line!=-1 || l2val > -QREPS_MINI)) {
             // todo here may be full-check for borders (left-up rule)
             if (lval > -QREPS_MINI && l2val > -QREPS_MINI) {
-                z = (fabs(b1)*p1[2] + fabs(b2)*p0[2] + (S0 - fabs(b1) - fabs(b2))*p2[2]) / S0;
+                z = (fabs(b1)*zr + fabs(b2)*zl + (S0 - fabs(b1) - fabs(b2))*zw) / S0;
                 //pixel_lock.lock();   //todo fine without it on small polys, awful on big ones!
                 if (z - zbuf[pos+x] < -QREPS) {
                     img->setPixel(x, y, c);
@@ -163,7 +171,7 @@ void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, con
         lval = lval0, rval=rval0, l2val=l2val0;
         while (lval > -QREPS_MINI && (third_line!=1 || l2val > -QREPS_MINI)) {
             if (rval > -QREPS_MINI && l2val > -QREPS_MINI) {
-                z = (fabs(b1)*p1[2] + fabs(b2)*p0[2] + (S0 - fabs(b1) - fabs(b2))*p2[2]) / S0;
+                z = (fabs(b1)*zr + fabs(b2)*zl + (S0 - fabs(b1) - fabs(b2))*zw) / S0;
                 //pixel_lock.lock();
                 if (z - zbuf[pos+x] <-QREPS) {
                     img->setPixel(x, y, c);

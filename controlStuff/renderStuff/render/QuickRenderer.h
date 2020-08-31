@@ -12,38 +12,43 @@
 class QuickRenderer: public QRenderer {
 public:
     QuickRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
-    ~QuickRenderer() {
-        delete[] cutters;}
+    ~QuickRenderer() = default;
     virtual void render();
 
 private:
     void initRender();
-    // returns true if smth of the model is still visible. model field holds it
-    bool modelCameraCut();
-    void threadManagePolygons(size_t size, int offset, int step, int thread_num=0);
+    bool modelCameraCut();    // returns true if smth of the model is still visible. model field holds it
+    void getPolygons();
+    void prepareData();
+    void cameraCut();
+    void project();
+    void rasterize();
+    void repaint();
+    void printRenderTimes();
 
+    void threadDrawPolygons(size_t size, int offset, int step, int thread_num=0);
     int thread_cnt = RENDER_THREAD_CNT;
-    PolyRectCutter *cutters;
 
     QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
 
-    QuickRenderData quickData;
-
     QRCamera3D *camera;
     QRPolyModel3D *model;
-
     QRTransformer3D *cameraTransformer, *modelTransformer, *imageTransformer;
     Transformer3D modelCameraTransformer, projector;
+    Quick3DCutter *cutter;
 
-    Vector3D screenData, transZero;
+    QuickRenderData data;
 
+    // model data
     sptr<QRPolygon3D>* polygons;
     sptr<QRPoint3D>* points;
     QRVector<sptr<QRPolygon3D>> local_polys;
     size_t polygon_cnt, point_cnt;
+    Vector3D screenData, transZero;
 
-    size_t polysCameraCut=0, polysFrameCut=0;
+    // metrics & logging
+    std::string polygonData;
 };
 
 

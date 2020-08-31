@@ -79,9 +79,16 @@ public:
     int32_t pointsSize = 0;
 
 
-    void init(size_t polyCnt, size_t pointCnt, const Matrix3D &m) {
+    void init(size_t polyCnt, size_t pointCnt, const Matrix3D &m,
+              sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
+              size_t raw_pnt_cnt, size_t raw_poly_cnt) {
         matrix = m;
         transZero = m * ZeroVector;
+
+        raw_points = raw_pts;
+        raw_point_cnt = raw_pnt_cnt;
+        raw_polygons = raw_polys;
+        raw_polygon_cnt = raw_poly_cnt;
 
         poly_arr.clear();
         polygons.clear();
