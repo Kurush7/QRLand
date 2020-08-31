@@ -82,7 +82,7 @@ void QuickRenderer::prepareData() {
     startMeasureTimeStamp(2);
     points = model->getPurePoints();
     point_cnt = model->getPointCnt();
-    data.init(polygon_cnt, point_cnt, modelCameraTransformer.getMatrix(),
+    data.init(modelCameraTransformer.getMatrix(),
               points, polygons, point_cnt, polygon_cnt);
 
     auto fr = camera->getFrustrum();

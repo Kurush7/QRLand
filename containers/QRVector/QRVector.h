@@ -79,6 +79,9 @@ public:
     }
     size_t len() const;
 
+
+    void swap(QRVector<T> &v);
+
     void reverse();
 
     bool operator ==(const QRVector<T>& vec) const;
@@ -309,6 +312,21 @@ bool QRVector<T>::isEqual(const QRVector<T> &vec) const {
 template<typename T>
 bool QRVector<T>::isNotEqual(const QRVector<T> &vec) const {
     return *this != vec;
+}
+
+template<typename T>
+void QRVector<T>::swap(QRVector<T> &v) {
+    auto x = arr;
+    arr = v.arr;
+    v.arr = x;
+
+    auto y = size;
+    size = v.size;
+    v.size = y;
+
+    auto s = max_size;
+    max_size = v.max_size;
+    v.max_size = s;
 }
 
 #endif //QRVECTOR_H
