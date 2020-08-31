@@ -54,16 +54,33 @@ void WaterManager::updateWater() {
     for (size_t k = 0; k < polygons.getSize(); ++k) {
         poly = polygons[k];
         waterFlag = true;
-        for (auto p = poly->getPoints(); p; ++p) {
-            v = p->get()->getVector();
-            w = getXIndex(v[0]), h = getYIndex(v[1]);
-            if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) {
-                waterFlag = false;
-                continue;
-            }
+        if (poly->isPointData()) {
+            for (auto p = poly->getPoints(); p; ++p) {
+                v = p->get()->getVector();
+                w = getXIndex(v[0]), h = getYIndex(v[1]);
+                if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) {
+                    waterFlag = false;
+                    continue;
+                }
 
-            v[2] = hmap[h][w] + waterLevel[h][w];
-            p->get()->setVector(v);
+                v[2] = hmap[h][w] + waterLevel[h][w];
+                p->get()->setVector(v);
+            }
+        }
+        else {
+            size_t a, b, wdth = points.getSize();
+            for (auto p = poly->getPointIndexes(); p; ++p) {
+                a = *p / wdth, b = *p % wdth;
+                v = points[a][b]->getVector();
+                w = getXIndex(v[0]), h = getYIndex(v[1]);
+                if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) {
+                    waterFlag = false;
+                    continue;
+                }
+
+                v[2] = hmap[h][w] + waterLevel[h][w];
+                points[a][b]->setVector(v);
+            }
         }
 
         auto it = changedPolygons.find(poly);

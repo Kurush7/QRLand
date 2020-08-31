@@ -34,7 +34,7 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     // builder creation
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
-            129, 129, 1, 1)); // another world step ruins all
+            129, 129, 1, 1)); // another world step ruins all???
     topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
 
     builder->setTools({
@@ -50,7 +50,7 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     builder->activateWaterManager();
     //builder->waterManager->setWaterLevel(35);
-    //builder->waterManager->setWaterLevel(30);
+    builder->waterManager->setWaterLevel(30);
 
     for (auto f = builder->plateManager.getPlates(); f; ++f)
         topDown->addFigure(*f);
