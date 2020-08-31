@@ -29,10 +29,7 @@ void QuickRenderer::initRender() {
 
     imageTransformer = mcr.create().release();
     imageTransformer->accumulate(scr.create()->getMatrix());
-
     cout << projector.getMatrix() << '\n' << imageTransformer->getMatrix() << "\n***\n";
-
-    projector.accumulate(imageTransformer->getMatrix());
 
     // init zbuffer, fill in black
     zbuf.clearBuf();
@@ -175,8 +172,9 @@ void QuickRenderer::render () {
             polygons = local_polys.getPureArray();
             polygon_cnt = local_polys.getSize();
         }
-        cout << "\n\tpolygon getting: " << endMeasureTime << '\n';
+        cout << "\n\tpolygon getting: " << endMeasureTime;
 
+        startMeasureTime;
         points = model->getPurePoints();
         point_cnt = model->getPointCnt();
 
@@ -193,20 +191,30 @@ void QuickRenderer::render () {
         Quick3DCutter cutter(quickData);
         auto fr = camera->getFrustrum();
         cutter.setCutter(fr.getPureArray(), fr.getSize());
+        cout << "\n\tiniting data: " << endMeasureTime;
+
+        startMeasureTime;
         for (size_t i = 0; i < polygon_cnt; ++i)
             cutter.cutPoly(i);
+        cout << "\n\tcutting: " << endMeasureTime;
 
         polygon_cnt = quickData.polygons.getSize();
 
 
-        quickData.matrix = projector.getMatrix();
-        for (size_t i = 0; i < quickData.pointsSize; ++i)
-            quickData.matrix.mult(quickData.points[i]);
+        startMeasureTime;
+        quickData.matrix = imageTransformer->getMatrix();
+        quickData.matrix.addPerspective(projector.getMatrix());
+        for (size_t i = 0; i < quickData.pointsSize; ++i) {
+            quickData.matrix.projMult(quickData.points[i]);
+        }
+        cout << "\n\tprojecting: " << endMeasureTime;
 
+        startMeasureTime;
         for (size_t i = 0; i < quickData.polygons.getSize(); ++i) {
             zbuf.draw(quickData.points, quickData.polygons[i], quickData.polygonSize[i], quickData.normals[i],
                       polygons[quickData.rawPolyMap[i]]->getTexture().get());
         }
+        cout << "\n\tdrawing: " << endMeasureTime;
 
 
         /*size_t thread_size = polygon_cnt / thread_cnt;

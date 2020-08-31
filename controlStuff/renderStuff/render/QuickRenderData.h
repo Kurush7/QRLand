@@ -21,6 +21,7 @@ struct QuickMatrix {
     }
 
     QuickMatrix& operator=(const Matrix3D &m) {
+        // scale-rotates
         matrix[0][0] = m[0][0];
         matrix[0][1] = m[0][1];
         matrix[0][2] = m[0][2];
@@ -30,10 +31,11 @@ struct QuickMatrix {
         matrix[2][0] = m[2][0];
         matrix[2][1] = m[2][1];
         matrix[2][2] = m[2][2];
+        // moves
         add[0] = m[0][3];
         add[1] = m[1][3];
         add[2] = m[2][3];
-        // todo projectives
+        // perspectives
         dot[0] = m[3][0];
         dot[1] = m[3][1];
         dot[2] = m[3][2];
@@ -49,6 +51,12 @@ struct QuickMatrix {
     }
 
     void mult(float*);
+    void projMult(float*);
+    void addPerspective(const Matrix3D &m) {
+        dot[0] = m[3][0];
+        dot[1] = m[3][1];
+        dot[2] = m[3][2];
+    }
 
     float **matrix = nullptr;
     float *tmp = new float[3];
@@ -59,6 +67,7 @@ struct QuickMatrix {
 class QuickRenderData {
 public:
     QRVector<int32_t> poly_arr;
+    int32_t polySize = 0;
     QRVector<int32_t*> polygons;
     QRVector<Vector3D> normals;
     QRVector<char> polygonSize;
@@ -79,6 +88,7 @@ public:
         polygonSize.clear();
         rawPolyMap.clear();
         normals.clear();
+        polySize = 0;
 
         point_arr.clear();
         points.clear();
@@ -96,30 +106,30 @@ public:
 
     int32_t addRawPoint(size_t raw_ind) {
         Vector3D v = raw_points[raw_ind]->getVector();
-        point_arr.push_back(v[0]);
-        point_arr.push_back(v[1]);
-        point_arr.push_back(v[2]);
-        points.push_back(&point_arr[3*pointsSize]);
+        int32_t x = 3*pointsSize;
+        point_arr[x] = v[0];
+        point_arr[x+1] = v[1];
+        point_arr[x+2] = v[2];
+        points.push_back(&point_arr[x]);
         pointCodes[raw_ind] = pointsSize * 100;
         return pointsSize++;
     }
 
     int32_t addPoint(float x, float y, float z) {
-        point_arr.push_back(x);
-        point_arr.push_back(y);
-        point_arr.push_back(z);
-        points.push_back(&point_arr[3*pointsSize]);
-        pointCodes.push_back(pointsSize * 100); // todo not here!!! return code, not keep it
+        int32_t a = 3*pointsSize;
+        point_arr[a] = x;
+        point_arr[a+1] = y;
+        point_arr[a+2] = z;
+        points.push_back(&point_arr[a]);
         return pointsSize++;
     }
 
     void addPoly(int32_t* arr, int size, size_t from_ind) {
-        size_t sz = poly_arr.getSize();
+        size_t sz = polySize;
         polygonSize.push_back(size);
         for (int i = 0; i < size; ++i)
-            poly_arr.push_back(arr[i]);
+            poly_arr[polySize++] = (arr[i]);
         polygons.push_back(&poly_arr[sz]);
-        cout << "poly: " << size << ' ' << sz << '\n';
         rawPolyMap.push_back(from_ind);
 
         // todo optimize

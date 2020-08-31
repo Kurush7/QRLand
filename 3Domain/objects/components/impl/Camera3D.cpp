@@ -126,7 +126,7 @@ void Camera3D::defineFrustrum() {
     //frustrum[4] = Vector3D{0,-2*(nearCutter)/height,1,0};
     //frustrum[5] = Vector3D{0,2*(nearCutter)/height,1,0};
     frustrum[4] = Vector3D{0,1,0,0};
-    frustrum[5] = Vector3D{0,nearCutter/height,1,0};
+    frustrum[5] = Vector3D{0,nearCutter/height,-1,0};
 
     frustrum.setSize(6);
 

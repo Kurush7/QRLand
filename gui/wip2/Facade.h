@@ -30,7 +30,7 @@ private:
     sptr<BaseCommandManager> manager;
     sptr<QRPolyScene3D> scene;
     sptr<QRenderer> renderer;
-    sptr<TopDownVisualizer> topDown;
+    sptr<TopDownVisualizer> topDown = nullptr;
     sptr<LandscapeBuilder> builder;
 };
 

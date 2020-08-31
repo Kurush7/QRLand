@@ -32,7 +32,6 @@ public:
         for (auto &x: edges) {
             auto edge = x.first;
             double tense = x.second;
-            cout << edge.getVector() << ' ' << tense << '\n';
             auto normal = len2Norm(edge.getNormal());
             Vector3D a = edge.a, b = edge.b, eq = len2Norm(edge.getEq());
             a[2] = 1, b[2] = 1;

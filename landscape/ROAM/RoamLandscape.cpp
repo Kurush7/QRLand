@@ -11,7 +11,7 @@ RoamLandscape::RoamLandscape(const QRMatrix<sptr<QRPoint3D>> &points): points(po
     startMeasureTime;
     size_t size = points.rowCnt();
     dimFrameCnt = (size-1) / (FrameSize - 1);
-    lowestPolygonCnt = (size-1)*(size-1);
+    lowestPolygonCnt = (size-1)*(size-1)*2;
 
     frames = new Frame[dimFrameCnt*dimFrameCnt];
 
@@ -49,7 +49,7 @@ void RoamLandscape::updateCamera(const sptr<QRCamera3D> &camera, string *info) {
         s << "POLYGON INFO:\n\tmodel's initial polygon count: " << lowestPolygonCnt;
         s << "\n\tframes cnt: " << allSize;
         s << "\n\tskipped frames: " << skippedFrames;
-        s << " (polygons gone: " << skippedFrames*(FrameSize-1)*(FrameSize-1) << ")\n";
+        s << " (polygons gone: " << skippedFrames*(FrameSize-1)*(FrameSize-1)*2 << ")\n";
         *info = *info + s.str();
     }
 }
@@ -63,7 +63,7 @@ void RoamLandscape::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons, string *i
 
     if (info) {
         ostringstream s;
-        s << "\tpolygons to draw: " << lastPolyCount << '\n';
+        s << "\tpolygons to draw: " << lastPolyCount << ' ' << '\n';
         *info = *info + s.str();
     }
 }

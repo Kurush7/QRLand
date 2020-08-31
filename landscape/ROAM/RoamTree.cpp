@@ -74,7 +74,6 @@ void RoamNode::update() {
                   (x + (CameraCoordsZ - workPoint[2]) * (CameraCoordsZ - workPoint[2])) *
                   (x + (CameraCoordsZ - workPoint[2]) * (CameraCoordsZ - workPoint[2]));
         mustDraw = (l <= r);
-        //if (mustDraw == 0) cout << sqrt(delta) << ": " << l << ' ' << r << '\n';
     }
 
     if (mustDraw == 0) {

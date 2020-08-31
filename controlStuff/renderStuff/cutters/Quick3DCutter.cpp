@@ -19,6 +19,7 @@ inline void Quick3DCutter::intersectionPoint(float *p1, float *p2, int cut_i) {
     interP[0] = p[0];
     interP[1] = p[1];
     interP[2] = p[2];
+    //cout << v1 << ' ' << v2 << ' ' << cut << " => " << p << '\n';
     return;
 
     float x = (p1[0]*cutter[cut_i][0] + p1[1]*cutter[cut_i][1] + p1[2]*cutter[cut_i][2] + cutter[cut_i][3]) /
@@ -66,12 +67,8 @@ void Quick3DCutter::cutPoly(size_t ind) {
     }
 
     // fully visible and invisible
-    if (code == 0) {
-        data.addPoly(P.getPureArray(), P.getSize(), ind);
-    }
-    else if (code_and != 0) {
-        return;
-    }
+    if (code == 0) data.addPoly(P.getPureArray(), P.getSize(), ind);
+    else if (code_and != 0) return;
     else innerCutter(ind);
 }
 
@@ -85,7 +82,6 @@ void Quick3DCutter::innerCutter(size_t ind) {
                 // todo  use &and instead (above)
                 if (interFlag) {
                     intersectionPoint(data.points[S], data.points[P[j]], i);
-                    cout << "interp: " << interP[0] << ' ' << interP[1] << ' ' << interP[2] << '\n';
                     x = data.addPoint(interP[0], interP[1], interP[2]);
                     data.pointCodes[x] += getCode(interP);
                     Q.push_back(x);
@@ -103,7 +99,6 @@ void Quick3DCutter::innerCutter(size_t ind) {
             // todo  use & instead (above)
             if (interFlag) {
                 intersectionPoint(data.points[S], data.points[P[0]], i);
-                cout << "interp: " << interP[0] << ' ' << interP[1] << ' ' << interP[2] << '\n';
                 x = data.addPoint(interP[0], interP[1], interP[2]);
                 data.pointCodes[x] += getCode(interP);
                 Q.push_back(x);
@@ -112,7 +107,15 @@ void Quick3DCutter::innerCutter(size_t ind) {
         P = Q;  // todo avoid copying
         Q.clear();
         Np = P.getSize();
+
+        /*cout << "after " << i << ": " << cutter[i][0] << ' ' << cutter[i][1] << ' ' << cutter[i][2] << ' ' << cutter[i][3] << '\n';
+        for (int j = 0; j < Np; ++j)
+            cout << data.points[P[j]][0] << ' ' << data.points[P[j]][1]
+                 << ' ' << data.points[P[j]][2] << '\n';
+        cout << '\n';*/
+
     }
+    //cout << "\n===========\n";
     if (!P.isEmpty())
         data.addPoly(P.getPureArray(), Np, ind);
 }

@@ -19,11 +19,11 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     scene = cr.create();
     //auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 1,
     //                                         QRINF, Vector3D(0,0,-110), Vector3D(3*M_PI/5,0,0)));
-    auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,20, 20,
+    auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 50,
                                              QRINF, Vector3D(0,-70,-100), Vector3D(M_PI,0,0)));
     scene->addCamera(cam, "observeCamera");
 
-    cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 1, 0.2, QRINF,
+    cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 0.5, 0.5, QRINF,
             Vector3D(0,40, 0), Vector3D(M_PI/2,0,0), true));
     scene->addCamera(cam, "walkCamera");
     scene->setActiveCamera("observeCamera");
@@ -45,8 +45,6 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     builder->process(100);
     builder->useTool(PlateMountainsTool);
 
-
-
     sptr<QRPolyModel3D> land = builder->createLandscape();
     scene->addModel(land, Vector3D(0,0,0));
 
@@ -59,21 +57,19 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     topDown->drawHeightMap();
 
-
     //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));
     //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
     //       Vector3D(0,0,0));
     //scene->addModel(RoamLandscapeCreator(129, 129, 0.1).create(),
     //       Vector3D(0,0,0));
-    //scene->addModel(CubeModelCreator(10,
-    //        sptr<QRTexture>(new ColorTexture(127,127,127))).create(),Vector3D(0,0,0));
+    //scene->addModel(CubeModelCreator(10, sptr<QRTexture>(new ColorTexture(127,127,127))).create(),Vector3D(0,0,0));
 }
 
 void Facade::draw() {
     auto command = sptr<QRCommand>(new RenderCmd(renderer));
     manager->push(command);
     manager->execAll();
-    topDown->drawHeightMap();
+    //topDown->drawHeightMap();
 }
 
 void Facade::moveCamera(float dx, float dy, float dz) {
