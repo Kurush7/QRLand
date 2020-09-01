@@ -9,7 +9,8 @@ QuickRenderer::QuickRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3
     for (auto li=scene->getLights(); li; ++li)
         colorManager->addLight(*li);
 
-    cutter = new Quick3DCutter(data);
+    for (int i = 0; i < thread_cnt; ++i)
+        cutters.push_back(sptr<Quick3DCutter>(new Quick3DCutter(data)));
 }
 
 void QuickRenderer::initRender() {
@@ -52,6 +53,12 @@ void QuickRenderer::threadDrawPolygons(size_t size, int offset, int step, int th
     }
 }
 
+void QuickRenderer::threadCutPolygons(size_t size, int offset, int step, int thread_num) {
+    for (size_t k = 0, pos=offset; k < size; ++k, pos+=step) {
+        cutters[thread_num]->cutPoly(pos);
+    }
+}
+
 void QuickRenderer::getPolygons() {
     // get polygons: ROAM update or just pointer copy
     startMeasureTimeStamp(0);
@@ -85,17 +92,31 @@ void QuickRenderer::prepareData() {
     data.init(modelCameraTransformer.getMatrix(),
               points, polygons, point_cnt, polygon_cnt);
 
-    auto fr = camera->getFrustrum();
-    cutter->setCutter(fr.getPureArray(), fr.getSize());
     endMeasureTimeIncrement(2);
 }
 
 void QuickRenderer::cameraCut() {
     // camera cut & normal updates ... todo separate?
     startMeasureTimeStamp(3);
-    for (size_t i = 0; i < polygon_cnt; ++i)
-        cutter->cutPoly(i);
+
+    auto fr = camera->getFrustrum();
+    for (int i = 0; i < thread_cnt; ++i)
+        cutters[i]->setCutter(fr.getPureArray(), fr.getSize());
+
+    size_t thread_size = polygon_cnt / thread_cnt;
+    thread threads[thread_cnt];
+    size_t remain = polygon_cnt % thread_cnt;
+    for (size_t i = 0; i < thread_cnt; ++i)
+        threads[i] = thread(&QuickRenderer::threadCutPolygons, this,
+                            thread_size + (i < remain), i, thread_cnt, i);
+
+    for (size_t i = 0; i < thread_cnt; ++i) threads[i].join();
+
+
+    //for (size_t i = 0; i < polygon_cnt; ++i)
+    //    cutter->cutPoly(i);
     endMeasureTimeIncrement(3);
+
 
     polygon_cnt = data.polygons.getSize();
 }

@@ -5,6 +5,9 @@
 #ifndef BIG3DFLUFFY_QUICKRENDERDATA_H
 #define BIG3DFLUFFY_QUICKRENDERDATA_H
 
+#include <thread>
+#include <mutex>
+
 #include "containers/QRContainers.h"
 #include "math/QRMath.h"
 #include "objects/objects.h"
@@ -39,7 +42,6 @@ struct QuickMatrix {
     float *tmp = new float[3];
     float *add = new float[3], *dot = new float[3];
 };
-
 
 class QuickRenderData {
 public:

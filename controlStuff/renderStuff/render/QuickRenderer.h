@@ -12,7 +12,7 @@
 class QuickRenderer: public QRenderer {
 public:
     QuickRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
-    ~QuickRenderer() = default;
+    ~QuickRenderer() {}
     virtual void render();
 
 private:
@@ -27,7 +27,10 @@ private:
     void printRenderTimes();
 
     void threadDrawPolygons(size_t size, int offset, int step, int thread_num=0);
+    void threadCutPolygons(size_t size, int offset, int step, int thread_num=0);
     int thread_cnt = RENDER_THREAD_CNT;
+
+    QRVector<sptr<Quick3DCutter>> cutters;
 
     QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
@@ -36,7 +39,6 @@ private:
     QRPolyModel3D *model;
     QRTransformer3D *cameraTransformer, *modelTransformer, *imageTransformer;
     Transformer3D modelCameraTransformer, projector;
-    Quick3DCutter *cutter;
 
     QuickRenderData data;
 

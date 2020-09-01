@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent) {
     setDarkTheme();
 
-    canvas = sptr<QRCanvas> (new QRCanvas(512, 512, this));
+    canvas = sptr<QRCanvas> (new QRCanvas(600, 600, this));
 
     hmap = sptr<QRCanvas> (new QRCanvas(128, 128, this));
 

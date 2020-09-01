@@ -22,7 +22,7 @@ QRCanvas::QRCanvas(int w, int h, QWidget *parent)
 
 void QRCanvas::initializeGL() {/*todo*/}
 
-//void QRCanvas::resizeGL(int width, int height) {/*todo*/}
+void QRCanvas::resizeGL(int width, int height) {/*todo*/}
 
 void QRCanvas::paintGL() {
     glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);

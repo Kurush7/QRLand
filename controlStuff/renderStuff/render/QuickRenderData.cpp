@@ -39,7 +39,9 @@ QuickMatrix& QuickMatrix::operator=(const Matrix3D &m) {
     dot[2] = m[3][2];
 }
 
+std::mutex pointMutex, polyMutex;
 int32_t QuickRenderData::addRawPoint(size_t raw_ind) {
+    pointMutex.lock();
     Vector3D v = raw_points[raw_ind]->getVector();
     int32_t x = 3*pointsSize;
     point_arr[x] = v[0];
@@ -47,19 +49,27 @@ int32_t QuickRenderData::addRawPoint(size_t raw_ind) {
     point_arr[x+2] = v[2];
     points.push_back(&point_arr[x]);
     pointCodes[raw_ind] = pointsSize * 100;
-    return pointsSize++;
+    pointsSize++;
+    x = pointsSize-1;
+    pointMutex.unlock();
+    return x;
 }
 
 int32_t QuickRenderData::addPoint(float x, float y, float z) {
+    pointMutex.lock();
     int32_t a = 3*pointsSize;
     point_arr[a] = x;
     point_arr[a+1] = y;
     point_arr[a+2] = z;
     points.push_back(&point_arr[a]);
-    return pointsSize++;
+    pointsSize++;
+    x = pointsSize-1;
+    pointMutex.unlock();
+    return x;
 }
 
 void QuickRenderData::addPoly(int32_t* arr, int size, size_t from_ind) {
+    polyMutex.lock();
     size_t sz = polySize;
     polygonSize.push_back(size);
     for (int i = 0; i < size; ++i)
@@ -76,6 +86,7 @@ void QuickRenderData::addPoly(int32_t* arr, int size, size_t from_ind) {
     normal[3] = -scalar(normal, p0);
     if (poly->where(ZeroVector) != sign(scalar(normal, transZero) + normal[3]))
         normal[0] = -normal[0], normal[1] = -normal[1], normal[2] = -normal[2];
-    normals.push_back(normal);
 
+    normals.push_back(normal);
+    polyMutex.unlock();
 }
