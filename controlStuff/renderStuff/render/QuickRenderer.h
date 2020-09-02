@@ -26,7 +26,7 @@ private:
     void repaint();
     void printRenderTimes();
 
-    void threadDrawPolygons(size_t size, int offset, int step, int thread_num=0);
+    void threadDrawPolygons(int thread_num=0);
     void threadCutPolygons(size_t size, int offset, int step, int thread_num=0);
     int thread_cnt = RENDER_THREAD_CNT;
 
@@ -40,7 +40,7 @@ private:
     QRTransformer3D *cameraTransformer, *modelTransformer, *imageTransformer;
     Transformer3D modelCameraTransformer, projector;
 
-    QuickRenderData data;
+    QuickRenderMetaData data;
 
     // model data
     sptr<QRPolygon3D>* polygons;

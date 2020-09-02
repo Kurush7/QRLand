@@ -27,7 +27,7 @@ void QRasterizeZBuffer::draw(Vector3D *poly, int size, const Vector3D &norm, con
     }
 }
 
-void QRasterizeZBuffer::draw(QRVector<float*> &points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture) {
+void QRasterizeZBuffer::draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture) {
     auto c = texture->getColor();
     colorManager->lightenColor(norm, c);   // todo not acceptable for mapping, so....
 

@@ -5,12 +5,13 @@
 #include "QuickRenderer.h"
 
 QuickRenderer::QuickRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
-        : QRenderer(image, scene), colorManager(new QRLightManager), zbuf(image, colorManager) {
+        : QRenderer(image, scene), colorManager(new QRLightManager), zbuf(image, colorManager),
+          data(thread_cnt) {
     for (auto li=scene->getLights(); li; ++li)
         colorManager->addLight(*li);
 
     for (int i = 0; i < thread_cnt; ++i)
-        cutters.push_back(sptr<Quick3DCutter>(new Quick3DCutter(data)));
+        cutters.push_back(sptr<Quick3DCutter>(new Quick3DCutter(*data.data[i])));
 }
 
 void QuickRenderer::initRender() {
@@ -45,11 +46,13 @@ bool QuickRenderer::modelCameraCut() {
 }
 
 mutex print_lock, statistic_lock;
-void QuickRenderer::threadDrawPolygons(size_t size, int offset, int step, int thread_num) {
+void QuickRenderer::threadDrawPolygons(int thread_num) {
     // todo if (!model->isConvex() || camera->isFrontFace(poly->getNormal())) draw it
-    for (size_t k = 0, pos=offset; k < size; ++k, pos+=step) {
-        zbuf.draw(data.points, data.polygons[pos], data.polygonSize[pos],
-                  data.normals[pos], polygons[data.rawPolyMap[pos]]->getTexture().get());
+    auto dt = data.data[thread_num];
+    size_t sz = dt->polygons.getSize();
+    for (size_t k = 0; k < sz; ++k) {
+        zbuf.draw(dt->points, dt->polygons[k], dt->polygonSize[k],
+                  dt->normals[k], polygons[dt->rawPolyMap[k]]->getTexture().get());
     }
 }
 
@@ -118,7 +121,7 @@ void QuickRenderer::cameraCut() {
     endMeasureTimeIncrement(3);
 
 
-    polygon_cnt = data.polygons.getSize();
+    //polygon_cnt = data.polygons.getSize();
 }
 
 void QuickRenderer::project() {
@@ -126,27 +129,29 @@ void QuickRenderer::project() {
     startMeasureTimeStamp(4);
     data.matrix = imageTransformer->getMatrix();
     data.matrix.addPerspective(projector.getMatrix());
-    for (size_t i = 0; i < data.pointsSize; ++i)   // todo make one big-matrix multiply
-        data.matrix.projMult(data.points[i]);
+    for (int i = 0; i < thread_cnt; ++i) {
+        auto dt = data.data[i];
+        for (size_t i = 0; i < dt->pointsSize; ++i)   // todo make one big-matrix multiply
+            data.matrix.projMult(dt->myPoints[i]);
+    }
     endMeasureTimeIncrement(4);
 }
 
 void QuickRenderer::rasterize() {
     // rasterization
     startMeasureTimeStamp(5);
-    size_t thread_size = polygon_cnt / thread_cnt;
+    //size_t thread_size = polygon_cnt / thread_cnt;
     thread threads[thread_cnt];
-    size_t remain = polygon_cnt % thread_cnt;
+    //size_t remain = polygon_cnt % thread_cnt;
     for (size_t i = 0; i < thread_cnt; ++i)
-        threads[i] = thread(&QuickRenderer::threadDrawPolygons, this,
-                            thread_size + (i < remain), i, thread_cnt, i);
+        threads[i] = thread(&QuickRenderer::threadDrawPolygons, this, i);
 
     for (size_t i = 0; i < thread_cnt; ++i) threads[i].join();
     endMeasureTimeIncrement(5);
 }
 
 void QuickRenderer::repaint() {
-    endMeasureTimeIncrement(6);
+    startMeasureTimeStamp(6);
     zbuf.fillMissing();
     endMeasureTimeIncrement(6);
     startMeasureTimeStamp(7);

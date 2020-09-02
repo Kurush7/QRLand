@@ -28,7 +28,7 @@ inline char Quick3DCutter::getCode(float *v) {
     return code;
 }
 
-mutex matrixMutex;
+mutex matrixMutex, dataMutex;
 void Quick3DCutter::cutPoly(size_t ind) {
     Np = data.raw_polygons[ind]->getSize();
     int code = 0, code_and = (1<<Nw)-1;
@@ -42,21 +42,22 @@ void Quick3DCutter::cutPoly(size_t ind) {
     for (int i = 0; i < Np; ++i) {
         if (pointCodes[indexes[i]] == 0) {
             x = data.addRawPoint(indexes[i]);
-            matrixMutex.lock();
             data.matrix.mult(data.points[x]);
-            matrixMutex.unlock();
             pointCodes[indexes[i]] += getCode(data.points[x]);
             P[i] = x;
         }
-        else
+        else {
             P[i] = data.pointCodes[indexes[i]] / 100;
+        }
         c = pointCodes[indexes[i]] % 100;
         code += c;
         code_and &= c;
     }
 
     // fully visible and invisible
-    if (code == 0) data.addPoly(P.getPureArray(), P.getSize(), ind);
+    if (code == 0) {
+        data.addPoly(P.getPureArray(), P.getSize(), ind);
+    }
     else if (code_and != 0) return;
     else innerCutter(ind);
 }
@@ -94,8 +95,9 @@ void Quick3DCutter::innerCutter(size_t ind) {
         Q.clear();
         Np = P.getSize();
     }
-    if (!P.isEmpty())
+    if (!P.isEmpty()) {
         data.addPoly(P.getPureArray(), Np, ind);
+    }
 }
 
 void Quick3DCutter::setCutter(const Vector3D *planes, int cnt) {

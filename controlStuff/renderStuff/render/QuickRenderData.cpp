@@ -4,14 +4,14 @@
 
 #include "QuickRenderData.h"
 
-void QuickMatrix::mult(float *v) {
+void QuickMatrix::mult(float *v) const {
     tmp[0] = matrix[0][0]*v[0]+matrix[0][1]*v[1] + matrix[0][2]*v[2] + add[0];
     tmp[1] = matrix[1][0]*v[0]+matrix[1][1]*v[1] + matrix[1][2]*v[2] + add[1];
     tmp[2] = matrix[2][0]*v[0]+matrix[2][1]*v[1] + matrix[2][2]*v[2] + add[2];
     v[0] = tmp[0], v[1] = tmp[1], v[2] = tmp[2];
 }
 
-void QuickMatrix::projMult(float *v) {
+void QuickMatrix::projMult(float *v) const {
     float x = dot[0]*v[0] + dot[1]*v[1] + dot[2]*v[2];
     tmp[0] = matrix[0][0]*v[0]+matrix[0][1]*v[1] + matrix[0][2]*v[2];
     tmp[1] = matrix[1][0]*v[0]+matrix[1][1]*v[1] + matrix[1][2]*v[2];
@@ -41,35 +41,34 @@ QuickMatrix& QuickMatrix::operator=(const Matrix3D &m) {
 
 std::mutex pointMutex, polyMutex;
 int32_t QuickRenderData::addRawPoint(size_t raw_ind) {
-    pointMutex.lock();
+    //pointMutex.lock();
     Vector3D v = raw_points[raw_ind]->getVector();
     int32_t x = 3*pointsSize;
     point_arr[x] = v[0];
     point_arr[x+1] = v[1];
     point_arr[x+2] = v[2];
-    points.push_back(&point_arr[x]);
-    pointCodes[raw_ind] = pointsSize * 100;
+    myPoints[pointsSize] = &point_arr[x];
+    pointCodes[raw_ind] = (pointsSize + points_offset) * 100;
     pointsSize++;
     x = pointsSize-1;
-    pointMutex.unlock();
-    return x;
+    //pointMutex.unlock();
+    return x + points_offset;
 }
 
 int32_t QuickRenderData::addPoint(float x, float y, float z) {
-    pointMutex.lock();
+    //pointMutex.lock();
     int32_t a = 3*pointsSize;
     point_arr[a] = x;
     point_arr[a+1] = y;
     point_arr[a+2] = z;
-    points.push_back(&point_arr[a]);
-    pointsSize++;
+    myPoints[pointsSize++] = &point_arr[a];
     x = pointsSize-1;
-    pointMutex.unlock();
-    return x;
+    //pointMutex.unlock();
+    return x + points_offset;
 }
 
 void QuickRenderData::addPoly(int32_t* arr, int size, size_t from_ind) {
-    polyMutex.lock();
+    //polyMutex.lock();
     size_t sz = polySize;
     polygonSize.push_back(size);
     for (int i = 0; i < size; ++i)
@@ -88,5 +87,5 @@ void QuickRenderData::addPoly(int32_t* arr, int size, size_t from_ind) {
         normal[0] = -normal[0], normal[1] = -normal[1], normal[2] = -normal[2];
 
     normals.push_back(normal);
-    polyMutex.unlock();
+    //polyMutex.unlock();
 }

@@ -39,7 +39,7 @@ public:
 
     // data may be spoiled! (reversed and rounded, both guaranteed!)
     void draw(Vector3D *_poly, int size, const Vector3D &norm, const QRTexture *texture);
-    void draw(QRVector<float*> &points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture);
+    void draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture);
     void clearBuf();
     void fillMissing();
 private:
