@@ -115,9 +115,6 @@ void QuickRenderer::cameraCut() {
 
     for (size_t i = 0; i < thread_cnt; ++i) threads[i].join();
 
-
-    //for (size_t i = 0; i < polygon_cnt; ++i)
-    //    cutter->cutPoly(i);
     endMeasureTimeIncrement(3);
 
 

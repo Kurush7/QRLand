@@ -28,32 +28,38 @@ inline char Quick3DCutter::getCode(float *v) {
     return code;
 }
 
-mutex matrixMutex, dataMutex;
+mutex dataMutex;
 void Quick3DCutter::cutPoly(size_t ind) {
     Np = data.raw_polygons[ind]->getSize();
     int code = 0, code_and = (1<<Nw)-1;
-    char c;
+    int c;
     size_t x;
     P.reserve(Np);
     P.setSize(Np);
 
     auto indexes = data.raw_polygons[ind]->getPurePointIndexes();
     QRVector<int32_t> &pointCodes = data.pointCodes;
+    //dataMutex.lock();
     for (int i = 0; i < Np; ++i) {
-        if (pointCodes[indexes[i]] == 0) {
+        c = pointCodes[indexes[i]];
+        if (c == 0) {
+            //dataMutex.lock();
             x = data.addRawPoint(indexes[i]);
             data.matrix.mult(data.points[x]);
-            pointCodes[indexes[i]] += getCode(data.points[x]);
+            c = getCode(data.points[x]);
+            dataMutex.lock();
+            pointCodes[indexes[i]] = x*100 + c;
+            dataMutex.unlock();
             P[i] = x;
         }
         else {
-            P[i] = data.pointCodes[indexes[i]] / 100;
+            P[i] = c / 100;
+            c = c % 100;
         }
-        c = pointCodes[indexes[i]] % 100;
         code += c;
         code_and &= c;
     }
-
+    //dataMutex.unlock();
     // fully visible and invisible
     if (code == 0) {
         data.addPoly(P.getPureArray(), P.getSize(), ind);

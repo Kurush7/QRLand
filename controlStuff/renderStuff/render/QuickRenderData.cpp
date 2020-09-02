@@ -11,6 +11,21 @@ void QuickMatrix::mult(float *v) const {
     v[0] = tmp[0], v[1] = tmp[1], v[2] = tmp[2];
 }
 
+void QuickMatrix::bareMult(float *v) const {
+    tmp[0] = matrix[0][0]*v[0]+matrix[0][1]*v[1] + matrix[0][2]*v[2];
+    tmp[1] = matrix[1][0]*v[0]+matrix[1][1]*v[1] + matrix[1][2]*v[2];
+    tmp[2] = matrix[2][0]*v[0]+matrix[2][1]*v[1] + matrix[2][2]*v[2];
+    v[0] = tmp[0], v[1] = tmp[1], v[2] = tmp[2];
+}
+
+Vector3D QuickMatrix::bareMult(const Vector3D &v) const {
+    Vector3D tmp;
+    tmp[0] = matrix[0][0]*v[0]+matrix[0][1]*v[1] + matrix[0][2]*v[2];
+    tmp[1] = matrix[1][0]*v[0]+matrix[1][1]*v[1] + matrix[1][2]*v[2];
+    tmp[2] = matrix[2][0]*v[0]+matrix[2][1]*v[1] + matrix[2][2]*v[2];
+    return tmp;
+}
+
 void QuickMatrix::projMult(float *v) const {
     float x = dot[0]*v[0] + dot[1]*v[1] + dot[2]*v[2];
     tmp[0] = matrix[0][0]*v[0]+matrix[0][1]*v[1] + matrix[0][2]*v[2];
@@ -39,53 +54,81 @@ QuickMatrix& QuickMatrix::operator=(const Matrix3D &m) {
     dot[2] = m[3][2];
 }
 
-std::mutex pointMutex, polyMutex;
+mutex pointCodesMutex;
 int32_t QuickRenderData::addRawPoint(size_t raw_ind) {
-    //pointMutex.lock();
     Vector3D v = raw_points[raw_ind]->getVector();
     int32_t x = 3*pointsSize;
     point_arr[x] = v[0];
     point_arr[x+1] = v[1];
     point_arr[x+2] = v[2];
     myPoints[pointsSize] = &point_arr[x];
-    pointCodes[raw_ind] = (pointsSize + points_offset) * 100;
-    pointsSize++;
-    x = pointsSize-1;
-    //pointMutex.unlock();
-    return x + points_offset;
+    //pointCodesMutex.lock();
+    //pointCodes[raw_ind] = (pointsSize + points_offset) * 100;
+    //pointCodesMutex.unlock();
+    return points_offset + pointsSize++;
 }
 
 int32_t QuickRenderData::addPoint(float x, float y, float z) {
-    //pointMutex.lock();
     int32_t a = 3*pointsSize;
     point_arr[a] = x;
     point_arr[a+1] = y;
     point_arr[a+2] = z;
-    myPoints[pointsSize++] = &point_arr[a];
-    x = pointsSize-1;
-    //pointMutex.unlock();
-    return x + points_offset;
+    myPoints[pointsSize] = &point_arr[a];
+    return points_offset + pointsSize++;
 }
 
 void QuickRenderData::addPoly(int32_t* arr, int size, size_t from_ind) {
-    //polyMutex.lock();
-    size_t sz = polySize;
     polygonSize.push_back(size);
     for (int i = 0; i < size; ++i)
         poly_arr[polySize++] = (arr[i]);
-    polygons.push_back(&poly_arr[sz]);
+    polygons.push_back(&poly_arr[polySize-size]);
     rawPolyMap.push_back(from_ind);
 
-    // todo optimize
-    auto poly = raw_polygons[from_ind];
-    Vector3D p0(points[arr[0]][0], points[arr[0]][1], points[arr[0]][2]);
-    Vector3D p1(points[arr[1]][0], points[arr[1]][1], points[arr[1]][2]);
-    Vector3D p2(points[arr[2]][0], points[arr[2]][1], points[arr[2]][2]);
-    auto normal = lenNorm((p1-p0) * (p2-p1));
-    normal[3] = -scalar(normal, p0);
-    if (poly->where(ZeroVector) != sign(scalar(normal, transZero) + normal[3]))
-        normal[0] = -normal[0], normal[1] = -normal[1], normal[2] = -normal[2];
+    normals.push_back(matrix.bareMult(raw_polygons[from_ind]->getNormal()));
+}
 
-    normals.push_back(normal);
-    //polyMutex.unlock();
+void QuickRenderMetaData::init(const Matrix3D &m, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
+          size_t raw_pnt_cnt, size_t raw_poly_cnt) {
+    matrix = m;
+
+    int secure_coef = 8;         // todo control!!! arrays must not expand!!!!!!!!
+    if (poly_arr_size < raw_poly_cnt*secure_coef)
+        poly_arr = new int32_t[raw_poly_cnt*secure_coef], poly_arr_size = raw_poly_cnt*secure_coef;
+    if (point_arr_size < raw_pnt_cnt*secure_coef)
+        point_arr = new float[raw_pnt_cnt*secure_coef], point_arr_size = raw_pnt_cnt*secure_coef;
+    if (points_size < point_arr_size/3)
+        points = new float*[raw_pnt_cnt*secure_coef], points_size = point_arr_size/3;
+
+    pointCodes.reserve(raw_pnt_cnt);
+    pointCodes.setSize(raw_pnt_cnt);
+    memset(pointCodes.getPureArray(), 0, sizeof(int32_t)*raw_pnt_cnt);
+
+    size_t pointStep = point_arr_size / thread_cnt;
+    size_t polyStep = poly_arr_size / thread_cnt;
+    size_t ptStep = points_size / thread_cnt;
+    for (int i = 0; i < thread_cnt; ++i)
+        data[i]->init(m, raw_pts, raw_polys, raw_pnt_cnt, raw_poly_cnt, &poly_arr[i*polyStep],
+                      &point_arr[i*pointStep], points, &points[i*ptStep], i*ptStep);
+}
+
+void QuickRenderData::init(const Matrix3D &m, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
+          size_t raw_pnt_cnt, size_t raw_poly_cnt,
+          int32_t *polyArr, float*pointArr, float** pts, float** myPts, int32_t offset) {
+    matrix = m;
+
+    poly_arr = polyArr;
+    point_arr = pointArr;
+    points = pts;
+    myPoints = myPts;
+    points_offset = offset;
+
+    raw_points = raw_pts;
+    raw_polygons = raw_polys;
+
+    polygons.clear();
+    polygonSize.clear();
+    rawPolyMap.clear();
+    normals.clear();
+    polySize = 0;
+    pointsSize = 0;
 }
