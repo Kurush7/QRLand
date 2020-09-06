@@ -6,5 +6,6 @@
 #define BIG3DFLUFFY_RENDERCONFIG_H
 
 const int maxPolygonPointcnt = 16;
+const int minQuickRenderDataBufferSize = 1000;
 
 #endif //BIG3DFLUFFY_RENDERCONFIG_H

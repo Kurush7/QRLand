@@ -11,6 +11,7 @@
 #include "containers/QRContainers.h"
 #include "math/QRMath.h"
 #include "objects/objects.h"
+#include "../renderConfig.h"
 
 struct QuickMatrix {
     QuickMatrix() {
@@ -69,9 +70,9 @@ public:
 
     sptr<QRPoint3D>* raw_points = nullptr;
     sptr<QRPolygon3D>* raw_polygons = nullptr;
-    QuickMatrix matrix;
+    QuickMatrix matrix, modelMatrix;
 
-    void init(const Matrix3D &m, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
+    void init(const Matrix3D &m, const Matrix3D &modelMatrix, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
               size_t raw_pnt_cnt, size_t raw_poly_cnt,
               int32_t *polyArr, float*pointArr, float** pts, float** myPts, int32_t offset);
 };
@@ -81,6 +82,11 @@ public:
     QuickRenderMetaData(int thread_cnt = RENDER_THREAD_CNT): thread_cnt(thread_cnt) {
         for (int i = 0; i < thread_cnt; ++i)
             data.push_back(new QuickRenderData(pointCodes));
+
+            poly_arr = new int32_t[minQuickRenderDataBufferSize], poly_arr_size = minQuickRenderDataBufferSize;
+
+            point_arr = new float[minQuickRenderDataBufferSize], point_arr_size = minQuickRenderDataBufferSize;
+            points = new float*[minQuickRenderDataBufferSize], points_size = point_arr_size/3;
     }
     ~QuickRenderMetaData() {
         delete[] point_arr;
@@ -103,7 +109,7 @@ public:
     int thread_cnt;
     QuickMatrix matrix;
 
-    void init(const Matrix3D &m, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
+    void init(const Matrix3D &m, const Matrix3D &modelMatrix, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
               size_t raw_pnt_cnt, size_t raw_poly_cnt);
 };
 

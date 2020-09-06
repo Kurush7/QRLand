@@ -9,6 +9,8 @@
 
 class QRLight {
 public:
+    virtual void transform(const QRTransformer3D *trans) = 0;
+    virtual void resetPosition() = 0;
     virtual Vector3D getPosition() = 0;
     virtual Vector3D getIntensity(const Vector3D &pos, const Vector3D &normal) = 0;
 };

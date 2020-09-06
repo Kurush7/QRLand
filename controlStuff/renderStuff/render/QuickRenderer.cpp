@@ -4,6 +4,8 @@
 
 #include "QuickRenderer.h"
 
+// TODO НАФИГ В QRENDERDATA СОХРАНЯТЬ XYZ?!
+
 QuickRenderer::QuickRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
         : QRenderer(image, scene), colorManager(new QRLightManager), zbuf(image, colorManager),
           data(thread_cnt) {
@@ -33,6 +35,8 @@ void QuickRenderer::initRender() {
     imageTransformer = mcr.create().release();
     imageTransformer->accumulate(scr.create()->getMatrix());
     cout << projector.getMatrix() << '\n' << imageTransformer->getMatrix() << "\n***\n";
+
+    //colorManager->transformLightsPosition(cameraTransformer);
 
     // init zbuffer, fill in black
     zbuf.clearBuf();
@@ -92,7 +96,7 @@ void QuickRenderer::prepareData() {
     startMeasureTimeStamp(2);
     points = model->getPurePoints();
     point_cnt = model->getPointCnt();
-    data.init(modelCameraTransformer.getMatrix(),
+    data.init(modelCameraTransformer.getMatrix(), modelTransformer->getMatrix(),
               points, polygons, point_cnt, polygon_cnt);
 
     endMeasureTimeIncrement(2);
@@ -117,7 +121,6 @@ void QuickRenderer::cameraCut() {
 
     endMeasureTimeIncrement(3);
 
-
     //polygon_cnt = data.polygons.getSize();
 }
 
@@ -128,9 +131,10 @@ void QuickRenderer::project() {
     data.matrix.addPerspective(projector.getMatrix());
     for (int i = 0; i < thread_cnt; ++i) {
         auto dt = data.data[i];
-        for (size_t i = 0; i < dt->pointsSize; ++i)   // todo make one big-matrix multiply
-            data.matrix.projMult(dt->myPoints[i]);
+        for (size_t j = 0; j < dt->pointsSize; ++j)  // todo make one big-matrix multiply
+            data.matrix.projMult(dt->myPoints[j]);
     }
+
     endMeasureTimeIncrement(4);
 }
 
@@ -177,12 +181,15 @@ void QuickRenderer::render () {
         rasterize();
     }
 
+    //colorManager->resetLightsPosition();
+
     repaint();
     printRenderTimes();
 }
 
 void QuickRenderer::printRenderTimes() {
     cout << "RENDERING...";
+    cout << "\nimage size: w" << image->getWidth() << " * h" << image->getHeight();
     cout << "\n\tmodel: updating camera: " << measureTimeAccumulator(0);
     cout << "\n\tmodel: getting polygons: " << measureTimeAccumulator(1);
     cout << "\n\tdata init: " << measureTimeAccumulator(2);

@@ -62,9 +62,8 @@ int32_t QuickRenderData::addRawPoint(size_t raw_ind) {
     point_arr[x+1] = v[1];
     point_arr[x+2] = v[2];
     myPoints[pointsSize] = &point_arr[x];
-    //pointCodesMutex.lock();
-    //pointCodes[raw_ind] = (pointsSize + points_offset) * 100;
-    //pointCodesMutex.unlock();
+    // pointCodes should update here by (points_offset + pointsSize)*100
+    // but to avoid many mutexes it's done in Quick3DCutter after code computing
     return points_offset + pointsSize++;
 }
 
@@ -84,14 +83,16 @@ void QuickRenderData::addPoly(int32_t* arr, int size, size_t from_ind) {
     polygons.push_back(&poly_arr[polySize-size]);
     rawPolyMap.push_back(from_ind);
 
-    normals.push_back(matrix.bareMult(raw_polygons[from_ind]->getNormal()));
+    //normals.push_back(matrix.bareMult(raw_polygons[from_ind]->getNormal()));
+    normals.push_back(modelMatrix.bareMult(raw_polygons[from_ind]->getNormal()));   // todo only move in modelmatrix - useless
+    //normals.push_back(raw_polygons[from_ind]->getNormal());
 }
 
-void QuickRenderMetaData::init(const Matrix3D &m, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
+void QuickRenderMetaData::init(const Matrix3D &m, const Matrix3D &modelMatrix, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
           size_t raw_pnt_cnt, size_t raw_poly_cnt) {
     matrix = m;
 
-    int secure_coef = 8;         // todo control!!! arrays must not expand!!!!!!!!
+    int secure_coef = 8;         // todo control!!! arrays must not expand!!!!!!!!... smth wrong on a cube with no preset sizes
     if (poly_arr_size < raw_poly_cnt*secure_coef)
         poly_arr = new int32_t[raw_poly_cnt*secure_coef], poly_arr_size = raw_poly_cnt*secure_coef;
     if (point_arr_size < raw_pnt_cnt*secure_coef)
@@ -107,14 +108,15 @@ void QuickRenderMetaData::init(const Matrix3D &m, sptr<QRPoint3D>* raw_pts, sptr
     size_t polyStep = poly_arr_size / thread_cnt;
     size_t ptStep = points_size / thread_cnt;
     for (int i = 0; i < thread_cnt; ++i)
-        data[i]->init(m, raw_pts, raw_polys, raw_pnt_cnt, raw_poly_cnt, &poly_arr[i*polyStep],
+        data[i]->init(m, modelMatrix, raw_pts, raw_polys, raw_pnt_cnt, raw_poly_cnt, &poly_arr[i*polyStep],
                       &point_arr[i*pointStep], points, &points[i*ptStep], i*ptStep);
 }
 
-void QuickRenderData::init(const Matrix3D &m, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
+void QuickRenderData::init(const Matrix3D &m, const Matrix3D &mM, sptr<QRPoint3D>* raw_pts, sptr<QRPolygon3D>* raw_polys,
           size_t raw_pnt_cnt, size_t raw_poly_cnt,
           int32_t *polyArr, float*pointArr, float** pts, float** myPts, int32_t offset) {
     matrix = m;
+    modelMatrix = mM;
 
     poly_arr = polyArr;
     point_arr = pointArr;

@@ -39,7 +39,7 @@ void Quick3DCutter::cutPoly(size_t ind) {
 
     auto indexes = data.raw_polygons[ind]->getPurePointIndexes();
     QRVector<int32_t> &pointCodes = data.pointCodes;
-    //dataMutex.lock();
+
     for (int i = 0; i < Np; ++i) {
         c = pointCodes[indexes[i]];
         if (c == 0) {
@@ -59,7 +59,7 @@ void Quick3DCutter::cutPoly(size_t ind) {
         code += c;
         code_and &= c;
     }
-    //dataMutex.unlock();
+
     // fully visible and invisible
     if (code == 0) {
         data.addPoly(P.getPureArray(), P.getSize(), ind);
@@ -97,11 +97,14 @@ void Quick3DCutter::innerCutter(size_t ind) {
                 Q.push_back(x);
             }
         }
-        P.swap(Q);  // todo avoid copying
+        P.swap(Q);
         Q.clear();
         Np = P.getSize();
     }
     if (!P.isEmpty()) {
+        for (auto p: P)
+            cout << p << '\n';
+        cout << '\n';
         data.addPoly(P.getPureArray(), Np, ind);
     }
 }

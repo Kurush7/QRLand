@@ -17,6 +17,8 @@ public:
             lights[i] = nullptr;
     }
 
+    ~QRLightManager() {delete[] lights;}
+
     void addLight(const sptr<QRLight> &light) {lights[size++] = light.get();} // todo check for max_size
     // todo delete light
 
@@ -28,6 +30,15 @@ public:
         c.r = intens[0] * c.r;
         c.g = intens[1] * c.g;
         c.b = intens[2] * c.b;
+    }
+
+    void transformLightsPosition(const QRTransformer3D *trans) {
+        for (int i = 0; i < size; ++i)
+            lights[i]->transform(trans);
+    }
+    void resetLightsPosition() {
+        for (int i = 0; i < size; ++i)
+            lights[i]->resetPosition();
     }
 
 private:

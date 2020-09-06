@@ -27,12 +27,16 @@ public:
 
 class PolySceneCreatorNoCamera: public QRPolySceneCreator {
 public:
+    PolySceneCreatorNoCamera(const Vector3D &lightPos, const Vector3D &lightDir): lightPos(lightPos), lightDir(lightDir) {}
     virtual uptr<QRPolyScene3D> create() {
         auto scene = uptr<QRPolyScene3D>(new PolyScene3D());
-        auto light = sptr<QRLight>(new BaseLight(Vector3D(0,0,-100)));
+        auto light = sptr<QRLight>(new BaseLight(lightPos, lightDir));
         scene->addLight(light);
         return scene;
     }
+
+private:
+    Vector3D lightPos, lightDir;
 };
 
 

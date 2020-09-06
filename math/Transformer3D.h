@@ -17,11 +17,11 @@
 
 class QRTransformer3D {
 public:
-    virtual Matrix3D transformRight(const Matrix3D &m) = 0;
-    virtual Matrix3D transformLeft(const Matrix3D &m) = 0;
-    virtual Matrix3D transform(const Matrix3D &m) {return transformLeft(m);}
+    virtual Matrix3D transformRight(const Matrix3D &m) const = 0;
+    virtual Matrix3D transformLeft(const Matrix3D &m) const = 0;
+    virtual Matrix3D transform(const Matrix3D &m) const {return transformLeft(m);}
 
-    virtual Vector3D transform(const Vector3D &v) = 0;
+    virtual Vector3D transform(const Vector3D &v) const = 0;
 
     virtual Matrix3D getMatrix() = 0;
 
@@ -35,10 +35,10 @@ public:
 class Transformer3D: public QRTransformer3D {
 public:
     explicit Transformer3D(const Matrix3D &m = makeID()): matrix(m) {}
-    virtual Matrix3D transformRight(const Matrix3D &m) {return m * matrix;}
-    virtual Matrix3D transformLeft(const Matrix3D &m) {return matrix * m;}
+    virtual Matrix3D transformRight(const Matrix3D &m) const {return m * matrix;}
+    virtual Matrix3D transformLeft(const Matrix3D &m) const {return matrix * m;}
 
-    virtual Vector3D transform(const Vector3D &v) {return matrix * v;}
+    virtual Vector3D transform(const Vector3D &v) const {return matrix * v;}
 
     virtual void accumulateRight(const Matrix3D &m) {matrix = matrix * m;};
     virtual void accumulateLeft(const Matrix3D &m) {matrix = m * matrix;};
