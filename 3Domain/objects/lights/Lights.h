@@ -21,6 +21,9 @@ public:
             const Vector3D &spec = defaultSpec)
               : pos(pos), ambient(amb), diffuse(diff), specular(spec), lightDir(dir) {}
 
+
+    virtual Vector3D getLightVector() {return lightDir;}
+
     virtual Vector3D getPosition() {return pos;}
     virtual Vector3D getIntensity(const Vector3D &pos, const Vector3D &normal) {
         Vector3D i = ZeroVector + ambient;

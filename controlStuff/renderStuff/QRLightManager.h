@@ -19,6 +19,8 @@ public:
 
     ~QRLightManager() {delete[] lights;}
 
+    QRLight* getLight(int pos) {return lights[pos];}
+
     void addLight(const sptr<QRLight> &light) {lights[size++] = light.get();} // todo check for max_size
     // todo delete light
 
@@ -44,6 +46,8 @@ public:
 private:
     QRLight** lights;
     int size = 0;
+
+    // todo here transform matrix & shadow-zbuffer
 };
 
 

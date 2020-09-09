@@ -15,16 +15,16 @@ public:
     ~QuickRenderer() {}
     virtual void render();
 
-private:
-    void initRender();
-    bool modelCameraCut();    // returns true if smth of the model is still visible. model field holds it
-    void getPolygons();
-    void prepareData();
-    void cameraCut();
-    void project();
-    void rasterize();
-    void repaint();
-    void printRenderTimes();
+protected:
+    virtual void initRender();
+    virtual bool modelCameraCut();    // returns true if smth of the model is still visible. model field holds it
+    virtual void getPolygons();
+    virtual void prepareData();
+    virtual void cameraCut();
+    virtual void project();
+    virtual void rasterize();
+    virtual void repaint();
+    virtual void printRenderTimes();
 
     void threadDrawPolygons(int thread_num=0);
     void threadCutPolygons(size_t size, int offset, int step, int thread_num=0);
@@ -48,7 +48,6 @@ private:
     QRVector<sptr<QRPolygon3D>> local_polys;
     size_t polygon_cnt, point_cnt;
     Vector3D screenData, transZero;
-
     // metrics & logging
     std::string polygonData;
 };

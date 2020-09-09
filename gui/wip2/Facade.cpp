@@ -8,14 +8,13 @@ using namespace std;
 // TODO MORE DETAILS ON THE EDGES..... WTF?!!!!!!
 // todo top-down inverts x and y... wtf?!
 // todo camera: in self-rotate mode moves by X and Y are in camera's coords, but not aligned to camera's rotation
-// todo camera fucked up when rotating and moving in self-rotate mod
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
     manager = sptr<BaseCommandManager> (new CommandManager());
 
     // scene creation
-    auto lightPos = lenNorm(Vector3D(-100,-100,10,0));
+    auto lightPos = lenNorm(Vector3D(1,1,-3,0));
     auto cr = PolySceneCreatorNoCamera(lightPos, -1*lightPos);
     scene = cr.create();
     //auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 1,
@@ -32,6 +31,8 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     // renderer creation
     //renderer = sptr<QRenderer>(new FullThreadRenderer(main_image, scene));
     renderer = sptr<QRenderer>(new QuickRenderer(main_image, scene));
+    auto shadowRenderer = QuickShadowRenderer(main_image, scene);
+    shadowRenderer.generateShades();
 
     // builder creation
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(

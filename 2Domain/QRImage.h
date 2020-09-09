@@ -24,6 +24,26 @@ public:
     virtual unsigned char* getData() = 0;
 };
 
+class FakeImage: public QRImage {
+public:
+    FakeImage(int width, int height): width(width), height(height) {}
+    virtual void setPixel(int x, int y, const QRColor &color) {}
+    // make mean of current pixel color and given
+    virtual void mixPixel(int x, int y, const QRColor &color) {}
+    virtual const QRColor getPixel(int x, int y) const {return QRColor();}
+    virtual void repaint() {}
+
+    virtual void setBg(const QRColor &color) {}
+    virtual void refillBg() {}
+
+    virtual int getWidth() {return width;}
+    virtual int getHeight() {return height;}
+    virtual unsigned char* getData() {return nullptr;}  // TODO VEEEEEEEEEERY ACCURATE
+
+private:
+    int width, height;
+};
+
 class QRImageCreator {
 public:
     virtual sptr<QRImageCreator> getImage() {

@@ -198,6 +198,12 @@ void QRasterizeZBuffer::clearBuf() {
     memset(img->getData(), 0, w*h*4);
 }
 
+void QRasterizeZBuffer::clearZBufOnly() {
+    int sz = w*h;
+    for (int i = 0; i < sz; i+= h)
+        memcpy(&zbuf[i], row_example, sizeof(float)*w);
+}
+
 bool is_black(uchar *a) {
     return !a[0] && !a[1] && !a[2] && !a[3];
 }

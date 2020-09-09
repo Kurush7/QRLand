@@ -9,5 +9,6 @@
 #include "renderStuff/render/SimpleRenderer.h"
 #include "renderStuff/render/FullThreadRenderer.h"
 #include "renderStuff/render/QuickRenderer.h"
+#include "renderStuff/render/QuickShadowRenderer.h"
 
 #endif //BIG3DFLUFFY_RENDERSTUFF_H

@@ -30,7 +30,7 @@ public:
         row_example = (float*) malloc (sizeof(float*) * w);
         for (int i = 0; i < w; ++i)
             row_example[i] = QRINF;
-        clearBuf();
+        clearZBufOnly();
     }
     ~QRasterizeZBuffer() {
         free(zbuf);
@@ -41,6 +41,7 @@ public:
     void draw(Vector3D *_poly, int size, const Vector3D &norm, const QRTexture *texture);
     void draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture);
     void clearBuf();
+    void clearZBufOnly();
     void fillMissing();
 private:
     int w, h;
