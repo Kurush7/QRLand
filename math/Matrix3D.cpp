@@ -117,6 +117,22 @@ Vector3D operator *(const Matrix3D &m, const Vector3D &v) {
     m[3][0]*v[0]+m[3][1]*v[1] + m[3][2]*v[2] + m[3][3]});
 }
 
+Matrix3D transpose(const Matrix3D &m) {
+    return Matrix3D ({{m[0][0],m[1][0],m[2][0], m[3][0]},
+                      {m[0][1],m[1][1],m[2][1], m[3][1]},
+                      {m[0][2],m[1][2],m[2][2], m[3][2]},
+                      {m[0][3],m[1][3],m[2][3], m[3][3]},});
+}
+
+Matrix3D inverse(const Matrix3D &m) {
+    Matrix3D move({{0,0,0, -m[0][3]}, {0,0,0, -m[1][3]},
+                   {0,0,0, -m[2][3]}, {0,0,0, -m[3][3]}});
+    Matrix3D rotate(m);
+    rotate[0][3] = rotate[1][3] = rotate[2][3] = rotate[3][3] = 0;
+    return transpose(rotate) * move;
+}
+
+
 std::ostream& operator<<(std::ostream &os, const Matrix3D &m) {
     os << "<Matrix3D>:\n";
     for (int i = 0; i < 4; ++i) {

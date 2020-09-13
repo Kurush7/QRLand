@@ -80,5 +80,10 @@ void RoamLandscape::addAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::s
     // todo too long
     for (auto it = getPolygons(); it; ++it)
         polygons.push_back(*it);
+}
 
+void RoamLandscape::addMaxDetailPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info) {
+    size_t allSize = dimFrameCnt*dimFrameCnt;
+    for (size_t i = 0; i < allSize; ++i)
+        frames[i].addMaxDetailedPolygons(polygons);
 }

@@ -39,6 +39,7 @@ struct RoamNode {
 
     void update();  // d -- distance from camera to projection screen
     void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
+    void addMaxDetailedPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     void getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     void drawCommandNeigbour();
 
@@ -63,6 +64,7 @@ struct Frame {
     }
 
     void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
+    void addMaxDetailedPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     void getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     bool updateCamera(const sptr<QRCamera3D> &camera);  // returns wether it's visible
 };

@@ -14,6 +14,9 @@ void QuickShadowRenderer::initRender() {
     if (fabs(lightDir[2]) < QREPS) ox = ZVector;
     else ox = Vector3D(1, 1, (-lightDir[0]-lightDir[1]) / lightDir[2]);
     oy = lenNorm(ox*lightDir);  // todo left, right......
+
+    cout << "ox: " << ox << "\noy: " << oy << "\noz: " << lightDir << '\n';
+
     renderer->cameraTransformer = new AxisChangeTransformer(ox, oy, lightDir, ZeroVector);    // todo delete it!
 
     // todo MUST NOT CLEAR IMAGE: NO DATA THERE!!!
@@ -32,10 +35,12 @@ void QuickShadowRenderer::prepareData() {
     }
     else {
         renderer->local_polys.clear();
-        renderer->model->addAllPolygons(renderer->local_polys, &renderer->polygonData);
+        renderer->model->addMaxDetailPolygons(renderer->local_polys, &renderer->polygonData);
         renderer->polygons = renderer->local_polys.getPureArray();
         renderer->polygon_cnt = renderer->local_polys.getSize();
     }
+
+    cout << "all polygons count: " << renderer->polygon_cnt << '\n';
 
     startMeasureTimeStamp(2);
     renderer->points = renderer->model->getPurePoints();
@@ -102,9 +107,10 @@ void QuickShadowRenderer::transformPoints() {
     for (size_t i = 0; i < renderer->thread_cnt; ++i) threads[i].join();*/
     threadTransformPoints(renderer->polygon_cnt, 0, 1, 0);
 
-    float l=1e9,r=-1e9,u=1e9,d=-1e9;
+    float l=1e9,r=-1e9,u=-1e9,d=1e9;
     for (int i = 0; i < renderer->thread_cnt; ++i) {
         auto dt = renderer->data.data[i];
+        cout << dt->pointsSize << '\n';
         for (size_t j = 0; j < dt->pointsSize; ++j) {
             l = min(l, dt->myPoints[j][0]);
             r = max(r, dt->myPoints[j][0]);
@@ -117,9 +123,13 @@ void QuickShadowRenderer::transformPoints() {
 
     renderer->screenData[0] = (l+r)/2;
     renderer->screenData[1] = (u+d)/2;
+    // todo if render it: some data extends over limits!!!
     renderer->screenData[2] = r-l;
     renderer->screenData[3] = u-d;
-    auto mcr = MoveTransformer3DCreator(Vector3D(renderer->screenData[2]/2, 0,0,0));
+    //renderer->screenData[2] = 2*max(fabs(r),fabs(l));
+    //renderer->screenData[3] = 2*max(fabs(u), fabs(d));
+    cout << l << ' ' << r << " <=> " << u << ' ' <<  d<< '\n';
+    auto mcr = MoveTransformer3DCreator(Vector3D(-l, -d,0));
     auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/renderer->screenData[2],
                                                   image->getHeight()/renderer->screenData[3], 1,0));
 
@@ -149,7 +159,12 @@ void QuickShadowRenderer::render() {
         renderer->modelTransformer = models->snd.get();
 
         prepareData();
+
         transformPoints();
+
+        cout << renderer->imageTransformer->getMatrix() << '\n';
+        cout << renderer->cameraTransformer->getMatrix();
+
         rasterize();
     }
 
@@ -157,6 +172,8 @@ void QuickShadowRenderer::render() {
     man->useShades(true);
     int w = renderer->zbuf.getW(), h = renderer->zbuf.getH();
     man->setShadesZBuf(renderer->zbuf.getZBuf(), w, h, light_source_pos);
-    Matrix3D from, to;  //todo
-    man->setTransformPath(from, to);
+    Matrix3D to = renderer->imageTransformer->getMatrix() * renderer->cameraTransformer->getMatrix();
+    man->setTransformTo(to);
+
+    renderer->repaint();
 }

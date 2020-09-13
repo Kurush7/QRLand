@@ -24,7 +24,7 @@ public:
     Vector3D getPosition() {return pos;}
     Vector3D getIntensity(const Vector3D &pos, const Vector3D &normal) {
         Vector3D i = ZeroVector + ambient;
-        float x = cos3(normal, lightDir);
+        float x = cos3(-1*normal, lightDir);
         if (x >= 0)
             i += diffuse * x;    // -1: angle between returning light, not falling...
         return i;

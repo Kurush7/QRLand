@@ -31,6 +31,8 @@ Vector3D operator *(const Matrix3D&, const Vector3D&);  // todo v[3] considered 
 Matrix3D makeID();
 Matrix3D makeNull();
 
+Matrix3D transpose(const Matrix3D&);
+Matrix3D inverse(const Matrix3D&);  // works only for move & rotate stuff, no projections
 
 std::ostream& operator<<(std::ostream &os, const Matrix3D &m);
 

@@ -33,6 +33,7 @@ public:
     virtual void setImage(const sptr<QRImage> &img) {image = img.get();}
     virtual void setScene(const sptr<QRPolyScene3D> &s) {scene = s.get();}
 
+
     virtual QRPolyScene3D *getScene() {return scene;}
     virtual QRImage *getImage() {return image;}
     virtual QRLightManager *getColorManager() {return colorManager;}

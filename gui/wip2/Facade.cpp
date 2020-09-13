@@ -14,7 +14,8 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     manager = sptr<BaseCommandManager> (new CommandManager());
 
     // scene creation
-    auto lightPos = lenNorm(Vector3D(1,1,-3,0));
+    //auto lightPos = lenNorm(Vector3D(1,1,-3,0));
+    auto lightPos = lenNorm(Vector3D(1,1,0.5,0));
     auto cr = PolySceneCreatorNoCamera(lightPos, -1*lightPos);
     scene = cr.create();
     //auto cam = sptr<QRCamera3D>(new Camera3D(50, 50, -5,50, 1,
@@ -31,7 +32,6 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     // renderer creation
     //renderer = sptr<QRenderer>(new FullThreadRenderer(main_image, scene));
     auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
-    QuickShadowRenderer shadowRenderer(r, 0);
     renderer = r;
 
     // builder creation
@@ -58,6 +58,8 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
         topDown->addFigure(*f);
 
     topDown->drawHeightMap();
+
+    QuickShadowRenderer shadowRenderer(r, 0);
     shadowRenderer.generateShades();
 
     //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));

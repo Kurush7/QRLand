@@ -27,28 +27,54 @@ public:
     void addLight(const sptr<QRLight> &light) {lights[size++] = light.get();} // todo check for max_size
     // todo delete light
 
+    void ambientLight(QRColor &c) {
+        Vector3D intens = ZeroVector;
+        // todo optimize: precompute all ambiences
+
+        for (int i = 0; i < size; ++i)
+            intens += lights[i]->getAmbient();
+        c.r = c.r * intens[0];
+        c.g = c.g * intens[1];
+        c.b = c.b * intens[2];
+    }
+
     void lightenColor(const Vector3D &pos, const Vector3D &normal, const QRColor &c, QRColor &res) {
         Vector3D intens = ZeroVector;
         // todo optimize: precompute all ambiences
 
-        if (shading) {
+        /*if (shading) {
             Vector3D v = reProjectMatrix * pos;
             int x = round(v[0]), y = round(v[1]);
-            //cout << shadeZBuf[y*shadeW + x] << '\n';
+            //cout << x << ' ' << y << ' ' << v[2] << " => " << shadeZBuf[y*shadeW + x] << '\n';
             if (shadeZBuf[y*shadeW + x] < v[2])
                 intens = lights[lightShaded]->getAmbient();
             else
                 for (int i = 0; i < size; ++i)
                     intens += lights[i]->getIntensity(pos, normal);
         }
-        else
-            for (int i = 0; i < size; ++i)
-                intens += lights[i]->getIntensity(pos, normal);
+        else*/
+        for (int i = 0; i < size; ++i)
+            intens += lights[i]->getIntensity(pos, normal);
 
         res.r = intens[0] * c.r;
         res.g = intens[1] * c.g;
         res.b = intens[2] * c.b;
         // todo alpha here....)))
+    }
+
+    virtual bool isShaded(const float *p) {
+        return true;
+        Vector3D v(p[0], p[1], p[2]);
+        v = reProjectMatrix * v;
+        int x = round(v[0]), y = round(v[1]);
+        return shadeZBuf[y*shadeW + x] < v[2] - QREPS;
+    }
+
+    virtual bool isShaded(const Vector3D &p) {
+        Vector3D v = p;
+        v = reProjectMatrix * v;
+        int x = round(v[0]), y = round(v[1]);
+        return shadeZBuf[y*shadeW + x] < v[2] - QREPS;
     }
 
     void transformLightsPosition(const QRTransformer3D *trans) {
@@ -75,15 +101,20 @@ public:
         }
     }
 
-    void setTransformPath(const Matrix3D &camProjToGlobal, const Matrix3D &globalToLightProj) {
-        //Matrix3D tmp = globalToLightProj * camProjToGlobal;
-        //reProjectMatrix = QuickMatrix(tmp);
-        reProjectMatrix = globalToLightProj * camProjToGlobal;
+    void setTransformTo(const Matrix3D &globalToLightProj) {
+        to = globalToLightProj;
+        reProjectMatrix = to * from;
+        cout << "to " << reProjectMatrix << '\n';
+    }
+    void setTransformFrom(const Matrix3D &camProjToGlobal) {
+        from = camProjToGlobal;
+        reProjectMatrix = to * from;
+        cout << "from " << reProjectMatrix << '\n';
     }
 
     void useShades(bool x=true) {shading = x;}
 
-
+    Matrix3D reProjectMatrix;   // todo for debug
 private:
     QRLight** lights;
     int size = 0;
@@ -92,7 +123,7 @@ private:
     int shadeW=0, shadeH=0, maxShadeSize=0;
     int lightShaded = -1;
     bool shading = false;
-    Matrix3D reProjectMatrix;
+    Matrix3D from = makeID(), to = makeID();
 
     // todo here transform matrix & shadow-zbuffer
 };

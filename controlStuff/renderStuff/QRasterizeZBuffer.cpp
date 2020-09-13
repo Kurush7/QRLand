@@ -11,16 +11,18 @@ std::mutex pixel_lock;
 // segfault: dy = 0.000000...., но при округлении они разносятся в разные стороны... бесконечный прирост
 void QRasterizeZBuffer::draw(Vector3D *poly, int size, const Vector3D &norm, const QRTexture *texture) {
     auto c0 = texture->getColor();
+    QRColor c;
+    colorManager->lightenColor(ZeroVector, norm, c0, c);
 
     if (size == 3) drawTriangle(poly[0][0], poly[0][1], poly[0][2],
                                 poly[1][0], poly[1][1], poly[1][2],
-                                poly[2][0], poly[2][1], poly[2][2], c0, norm);
+                                poly[2][0], poly[2][1], poly[2][2], c);
     else {
         Vector3D p0 = poly[0];
         for (int i = 0; i < size - 2; ++i) {
             drawTriangle(p0[0], p0[1], p0[2],
                          poly[1][0], poly[1][1], poly[1][2],
-                         poly[2][0], poly[2][1], poly[2][2], c0, norm);
+                         poly[2][0], poly[2][1], poly[2][2], c);
             poly = &poly[1];
         }
     }
@@ -28,17 +30,24 @@ void QRasterizeZBuffer::draw(Vector3D *poly, int size, const Vector3D &norm, con
 
 void QRasterizeZBuffer::draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture) {
     auto c0 = texture->getColor();
+    draw(points, poly, size, norm, c0);
+
+}
+
+void QRasterizeZBuffer::draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRColor &c0) {
+    QRColor c;
+    colorManager->lightenColor(ZeroVector, norm, c0, c);
 
     // todo optimize
     if (size == 3) drawTriangle(points[poly[0]][0], points[poly[0]][1], points[poly[0]][2],
                                 points[poly[1]][0], points[poly[1]][1], points[poly[1]][2],
-                                points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c0, norm);
+                                points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c);
     else {
         float x0=points[poly[0]][0], y0=points[poly[0]][1], z0=points[poly[0]][2];
         for (int i = 0; i < size - 2; ++i) {
             drawTriangle(x0,y0,z0,
                          points[poly[1]][0], points[poly[1]][1], points[poly[1]][2],
-                         points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c0, norm);
+                         points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c);
             poly = &poly[1];
         }
     }
@@ -57,10 +66,8 @@ inline float triangle_area (float x1, float y1, float x2, float y2, float x3, fl
 //void QRasterizeZBuffer::drawTriangle(const Vector3D &p0, const Vector3D &p1, const Vector3D &p2, QRColor c) {
 void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
                                      float p2x, float p2y, float p2z,
-                                     float p3x, float p3y, float p3z, QRColor c0, const Vector3D &norm) {
+                                     float p3x, float p3y, float p3z, QRColor c) {
     //cout << p1z << ' ' << p2z << ' ' << p3z << '\n';
-    QRColor c;
-    Vector3D vecPos;
     int xl = QRound(p1x), yl = QRound(p1y);
     int xr = QRound(p2x), yr = QRound(p2y);
     int xw = QRound(p3x), yw = QRound(p3y);
@@ -77,8 +84,6 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
 
         if (xl == xr && yl == yr) {
             if (zl - zbuf[yl*w + xl] < -QREPS) {
-                vecPos[0]=xl, vecPos[1]=yl, vecPos[2]=zl;
-                colorManager->lightenColor(vecPos, norm, c0, c);
                 img->setPixel(xl, yl, c);
                 zbuf[yl*w + xl] = zl;
             }
@@ -92,8 +97,6 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
             float dx = (xr - xl) / (yr - yl + 0.), fx = xl;
             for (int y = yl; y != yr; ++y) {
                 if (z - zbuf[pos + x] < -QREPS) {
-                    vecPos[0]=x, vecPos[1]=y, vecPos[2]=z;
-                    colorManager->lightenColor(vecPos, norm, c0, c);
                     img->setPixel(x, y, c);
                     zbuf[pos + x] = z;
                 }
@@ -109,8 +112,6 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
             float dy = (yr - yl) / (xr - xl + 0.), fy = yl;
             for (int x = xl; x != xr; ++x) {
                 if (z - zbuf[pos + x] < -QREPS) {
-                    vecPos[0]=x, vecPos[1]=y, vecPos[2]=z;
-                    colorManager->lightenColor(vecPos, norm, c0, c);
                     img->setPixel(x, y, c);
                     zbuf[pos + x] = z;
                 }
@@ -163,8 +164,6 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
                 z = (fabs(b1)*zr + fabs(b2)*zl + (S0 - fabs(b1) - fabs(b2))*zw) / S0;
                 //pixel_lock.lock();   //todo fine without it on small polys, awful on big ones!
                 if (z - zbuf[pos+x] < -QREPS) {
-                    vecPos[0]=x, vecPos[1]=y, vecPos[2]=z;
-                    colorManager->lightenColor(vecPos, norm, c0, c);
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
                 }
@@ -183,8 +182,6 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
                 z = (fabs(b1)*zr + fabs(b2)*zl + (S0 - fabs(b1) - fabs(b2))*zw) / S0;
                 //pixel_lock.lock();
                 if (z - zbuf[pos+x] <-QREPS) {
-                    vecPos[0]=x, vecPos[1]=y, vecPos[2]=z;
-                    colorManager->lightenColor(vecPos, norm, c0, c);
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
                 }

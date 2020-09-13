@@ -29,6 +29,7 @@ protected:
     virtual void project();
     virtual void rasterize();
     virtual void repaint();
+    virtual void addShades();
     virtual void printRenderTimes();
 
     void threadDrawPolygons(int thread_num=0);
@@ -47,6 +48,7 @@ protected:
     QuickRenderMetaData data;
 
     // model data
+    QRVector<QRColor> textures;
     sptr<QRPolygon3D>* polygons;
     sptr<QRPoint3D>* points;
     QRVector<sptr<QRPolygon3D>> local_polys;
@@ -54,6 +56,7 @@ protected:
     Vector3D screenData, transZero;
     // metrics & logging
     std::string polygonData;
+    bool shaded = false;
 };
 
 

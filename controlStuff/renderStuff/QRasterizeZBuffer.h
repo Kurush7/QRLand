@@ -44,6 +44,7 @@ public:
     // data may be spoiled! (reversed and rounded, both guaranteed!)
     void draw(Vector3D *_poly, int size, const Vector3D &norm, const QRTexture *texture);
     void draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture);
+    void draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRColor &color);
     void clearBuf();
     void clearZBufOnly();
     void fillMissing();
@@ -56,7 +57,7 @@ private:
 
     void drawTriangle(float p1x, float p1y, float zl,
             float p2x, float p2y, float zr,
-            float p3x, float p3y, float zw, QRColor c, const Vector3D &norm);
+            float p3x, float p3y, float zw, QRColor c);
 
     void fillRow(renderData &data);
     inline void jumpL(renderData &);
