@@ -12,10 +12,15 @@
 class QuickRenderer: public QRenderer {
 public:
     QuickRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene);
-    ~QuickRenderer() {}
+    QuickRenderer(const sptr<QRImage> &img, QRPolyScene3D *scene);
+    ~QuickRenderer() {
+        delete cameraTransformer;
+    }
     virtual void render();
 
 protected:
+    friend class QuickShadowRenderer;
+
     virtual void initRender();
     virtual bool modelCameraCut();    // returns true if smth of the model is still visible. model field holds it
     virtual void getPolygons();
@@ -32,12 +37,11 @@ protected:
 
     QRVector<sptr<Quick3DCutter>> cutters;
 
-    QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
 
     QRCamera3D *camera;
     QRPolyModel3D *model;
-    QRTransformer3D *cameraTransformer, *modelTransformer, *imageTransformer;
+    QRTransformer3D *cameraTransformer = nullptr, *modelTransformer, *imageTransformer;
     Transformer3D modelCameraTransformer, projector;
 
     QuickRenderMetaData data;

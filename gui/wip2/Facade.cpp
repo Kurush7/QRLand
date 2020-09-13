@@ -30,9 +30,9 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     // renderer creation
     //renderer = sptr<QRenderer>(new FullThreadRenderer(main_image, scene));
-    renderer = sptr<QRenderer>(new QuickRenderer(main_image, scene));
-    auto shadowRenderer = QuickShadowRenderer(main_image, scene);
-    shadowRenderer.generateShades();
+    auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
+    QuickShadowRenderer shadowRenderer(r, 0);
+    renderer = r;
 
     // builder creation
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
@@ -58,6 +58,7 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
         topDown->addFigure(*f);
 
     topDown->drawHeightMap();
+    shadowRenderer.generateShades();
 
     //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));
     //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),

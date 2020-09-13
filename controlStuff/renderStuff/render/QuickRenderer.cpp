@@ -6,8 +6,18 @@
 
 // TODO НАФИГ В QRENDERDATA СОХРАНЯТЬ XYZ?!
 
+QuickRenderer::QuickRenderer(const sptr<QRImage> &img, QRPolyScene3D *scene)
+    : QRenderer(img, scene), zbuf(img, colorManager),
+            data(thread_cnt) {
+        for (auto li=scene->getLights(); li; ++li)
+            colorManager->addLight(*li);
+
+        for (int i = 0; i < thread_cnt; ++i)
+            cutters.push_back(sptr<Quick3DCutter>(new Quick3DCutter(*data.data[i])));
+}
+
 QuickRenderer::QuickRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
-        : QRenderer(image, scene), colorManager(new QRLightManager), zbuf(image, colorManager),
+        : QRenderer(image, scene), zbuf(image, colorManager),
           data(thread_cnt) {
     for (auto li=scene->getLights(); li; ++li)
         colorManager->addLight(*li);
@@ -34,8 +44,6 @@ void QuickRenderer::initRender() {
 
     imageTransformer = mcr.create().release();
     imageTransformer->accumulate(scr.create()->getMatrix());
-    cout << projector.getMatrix() << '\n' << imageTransformer->getMatrix() << "\n***\n";
-
     //colorManager->transformLightsPosition(cameraTransformer);
 
     // init zbuffer, fill in black

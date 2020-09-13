@@ -102,9 +102,6 @@ void Quick3DCutter::innerCutter(size_t ind) {
         Np = P.getSize();
     }
     if (!P.isEmpty()) {
-        for (auto p: P)
-            cout << p << '\n';
-        cout << '\n';
         data.addPoly(P.getPureArray(), Np, ind);
     }
 }

@@ -75,3 +75,10 @@ PolygonIterator RoamLandscape::getPolygons() const {
         frames[i].getAllPolygons(polygons);
     return PolygonIterator(polygons);
 }
+
+void RoamLandscape::addAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info) {
+    // todo too long
+    for (auto it = getPolygons(); it; ++it)
+        polygons.push_back(*it);
+
+}

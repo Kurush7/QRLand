@@ -30,6 +30,7 @@ public:
     virtual bool isAdditivePolygons() {return false;}
     virtual void updateCamera(const sptr<QRCamera3D> &camera, std::string *info=nullptr) {}
     virtual void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr) {}
+    virtual void addAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr) {}
 
     virtual PolygonIterator getPolygons() const = 0;
     virtual PointIterator getPoints() const = 0;

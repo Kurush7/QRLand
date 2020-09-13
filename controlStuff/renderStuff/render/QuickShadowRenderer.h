@@ -8,21 +8,23 @@
 #include "QuickRenderer.h"
 
 // works for only on light source!
-class QuickShadowRenderer: public QuickRenderer {
+class QuickShadowRenderer {
 public:
-    QuickShadowRenderer(const sptr<QRImage> &img, const sptr<QRPolyScene3D> &scene, int light_source_pos=0);
+    QuickShadowRenderer(sptr<QuickRenderer> &r, int light_source_pos=0);
     virtual void render();
     void generateShades() {render();}
 
 protected:
-    virtual void initRender();
-    virtual void prepareData();
-    virtual void rasterize();
+    void initRender();
+    void prepareData();
+    void rasterize();
 
     void transformPoints();
     void threadTransformPoints(size_t size, int offset, int step, int thread_num=0);
 
     int light_source_pos;
+    sptr<QuickRenderer> renderer;
+    sptr<QRImage> image;
 };
 
 

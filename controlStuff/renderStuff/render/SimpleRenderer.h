@@ -39,7 +39,6 @@ private:
     int thread_cnt = RENDER_THREAD_CNT;
     PolyRectCutter *cutters;
 
-    QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
 
     QRCamera3D *camera;

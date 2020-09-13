@@ -19,8 +19,8 @@ public:
     virtual void setBg(const QRColor &color) = 0;
     virtual void refillBg() = 0;
 
-    virtual int getWidth() = 0;
-    virtual int getHeight() = 0;
+    virtual int getWidth() const = 0;
+    virtual int getHeight() const = 0;
     virtual unsigned char* getData() = 0;
 };
 
@@ -36,8 +36,8 @@ public:
     virtual void setBg(const QRColor &color) {}
     virtual void refillBg() {}
 
-    virtual int getWidth() {return width;}
-    virtual int getHeight() {return height;}
+    virtual int getWidth() const {return width;}
+    virtual int getHeight() const {return height;}
     virtual unsigned char* getData() {return nullptr;}  // TODO VEEEEEEEEEERY ACCURATE
 
 private:

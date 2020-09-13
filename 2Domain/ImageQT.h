@@ -55,8 +55,8 @@ public:
     virtual void setBg(const QRColor &color) {bg = color;}
     virtual void refillBg();
 
-    virtual int getWidth() {return canvas->getWidth();}
-    virtual int getHeight() {return canvas->getHeight();}
+    virtual int getWidth() const {return canvas->getWidth();}
+    virtual int getHeight() const {return canvas->getHeight();}
     virtual unsigned char* getData() {return data;}
 
 private:
