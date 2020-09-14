@@ -74,7 +74,7 @@ void QuickRenderer::threadDrawPolygons(int thread_num) {
         if (poly->isShaded())
             colorManager->ambientLight(c);
         else
-            colorManager->lightenColor(ZeroVector, poly->getNormal(), c);
+            colorManager->lightenColor(poly->getNormal(), c);
         zbuf.draw(dt->points, dt->polygons[k], dt->polygonSize[k],
                   //dt->normals[k], textures[dt->rawPolyMap[k]]);
                   dt->normals[k], c);
@@ -159,34 +159,6 @@ void QuickRenderer::project() {
     endMeasureTimeIncrement(4);
 }
 
-void QuickRenderer::addShades() {
-    return;
-    colorManager->setTransformFrom(modelTransformer->getMatrix());
-
-    textures.reserve(polygon_cnt);
-    for (size_t i = 0; i < polygon_cnt; ++i) {
-        auto poly = polygons[i].get();
-        auto t = poly->getTexture();
-        QRColor c = t->getColor();
-
-        /*int shaded = 0;
-        int cnt = 0;
-        Vector3D point = ZeroVector, v;
-        for (auto p = poly->getPointIndexes(); p; ++p) {
-            v = points[*p]->getVector();
-            point += v;
-            cnt++;
-            shaded += colorManager->isShaded(v);
-        }
-        point /= cnt;
-        //shaded += colorManager->isShaded(point);
-        if (shaded > 1 || colorManager->isShaded(point))
-        //if (shaded)
-            colorManager->ambientLight(c);*/
-        textures[i] = c;
-    }
-}
-
 void QuickRenderer::rasterize() {
     // rasterization
     startMeasureTimeStamp(5);
@@ -227,7 +199,6 @@ void QuickRenderer::render () {
 
         prepareData();
         cameraCut();
-        addShades();
         project();
         rasterize();
     }

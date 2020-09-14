@@ -144,8 +144,6 @@ void QuickShadowRenderer::transformPoints() {
     renderer->data.matrix = renderer->imageTransformer->getMatrix();
 
 
-
-
     auto dt = renderer->data.data[0];
     for (size_t j = 0; j < dt->pointsSize; ++j) {
         renderer->data.matrix.mult(dt->myPoints[j]);

@@ -16,18 +16,29 @@ public:
     QRLight(const Vector3D &pos, const Vector3D dir = XVector+ZVector,
               const Vector3D &amb = defaultAmb, const Vector3D &diff = defaultDiff,
               const Vector3D &spec = defaultSpec)
-            : pos(pos), ambient(amb), diffuse(diff), specular(spec), lightDir(dir) {}
+            : pos(pos), ambient(amb[0]), diffuse(diff[0]), specular(spec[0]), lightDir(len3Norm(dir)) {   // todo -1 ... hardcode for normal orientation
+        bare_pos[0] = pos[0], bare_pos[1] = pos[1], bare_pos[2] = pos[2];
+        bare_dir[0] = lightDir[0], bare_dir[1] = lightDir[1], bare_dir[2] = lightDir[2];
+    }
 
 
     Vector3D getLightVector() {return lightDir;}
-
     Vector3D getPosition() {return pos;}
-    Vector3D getIntensity(const Vector3D &pos, const Vector3D &normal) {
-        Vector3D i = ZeroVector + ambient;
-        float x = cos3(-1*normal, lightDir);
-        if (x >= 0)
-            i += diffuse * x;    // -1: angle between returning light, not falling...
-        return i;
+
+    //Vector3D getIntensity(const Vector3D &pos, const Vector3D &normal) {
+    //    float x = getIntensity(normal.arr);
+    //    return Vector3D(x,x,x);
+    //}
+
+    // todo.... no color-masks. basic intencity common for all
+    float getIntensity(const Vector3D &normal) {
+        float res = ambient;
+        // todo control: normal & lightDir must be normed
+        //float x = cos3(normal, lightDir);
+        float x = bare_dir[0]*normal[0] + bare_dir[1]*normal[1] + bare_dir[2]*normal[2];
+        if (x < 0) res -= diffuse * x;
+        return res;
+
         // todo: divide by (distance + constant), add specular, manage with fabs
     }
 
@@ -41,11 +52,12 @@ public:
         pos = pos0;
     }
 
-    Vector3D& getAmbient() {return ambient;}
+    float getAmbient() {return ambient;}
 
 private:
+    float bare_pos[4], bare_dir[4];
     Vector3D pos, pos0, lightDir;
-    Vector3D ambient, diffuse, specular;
+    float ambient, diffuse, specular;
 };
 
 

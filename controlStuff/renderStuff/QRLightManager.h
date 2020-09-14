@@ -24,30 +24,23 @@ public:
 
     QRLight* getLight(int pos) {return lights[pos];}
 
-    void addLight(const sptr<QRLight> &light) {lights[size++] = light.get();} // todo check for max_size
+    void addLight(const sptr<QRLight> &light) {
+        lights[size++] = light.get();
+        ambience_sum += light->getAmbient();
+    } // todo check for max_size
     // todo delete light
 
     void ambientLight(QRColor &c) {
-        Vector3D intens = ZeroVector;
-        // todo optimize: precompute all ambiences
-
-        for (int i = 0; i < size; ++i)
-            intens += lights[i]->getAmbient();
-        c.r = c.r * intens[0];
-        c.g = c.g * intens[1];
-        c.b = c.b * intens[2];
+        c.r = c.r * ambience_sum;
+        c.g = c.g * ambience_sum;
+        c.b = c.b * ambience_sum;
     }
 
-    void lightenColor(const Vector3D &pos, const Vector3D &normal, QRColor &c) {
-        Vector3D intens = ZeroVector;
-        // todo optimize: precompute all ambiences
-
-        for (int i = 0; i < size; ++i)
-            intens += lights[i]->getIntensity(pos, normal);
-
-        c.r = intens[0] * c.r;
-        c.g = intens[1] * c.g;
-        c.b = intens[2] * c.b;
+    void lightenColor(const Vector3D &normal, QRColor &c) {
+        float intens = lights[0]->getIntensity(normal);
+        c.r = intens * c.r;
+        c.g = intens * c.g;
+        c.b = intens * c.b;
         // todo alpha here....)))
     }
 
@@ -105,6 +98,7 @@ private:
     int shadeW=0, shadeH=0, maxShadeSize=0;
     int lightShaded = -1;
     bool shading = false;
+    float ambience_sum = 0;
     Matrix3D reProjectMatrix, from = makeID(), to = makeID();
 
     // todo here transform matrix & shadow-zbuffer

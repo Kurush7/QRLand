@@ -29,7 +29,6 @@ protected:
     virtual void project();
     virtual void rasterize();
     virtual void repaint();
-    virtual void addShades();
     virtual void printRenderTimes();
 
     void threadDrawPolygons(int thread_num=0);
