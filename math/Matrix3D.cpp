@@ -125,11 +125,13 @@ Matrix3D transpose(const Matrix3D &m) {
 }
 
 Matrix3D inverse(const Matrix3D &m) {
-    Matrix3D move({{0,0,0, -m[0][3]}, {0,0,0, -m[1][3]},
-                   {0,0,0, -m[2][3]}, {0,0,0, -m[3][3]}});
+    Matrix3D move({{1,0,0, -m[0][3]}, {0,1,0, -m[1][3]},
+                   {0,0,1, -m[2][3]}, {0,0,0, -m[3][3]}});
     Matrix3D rotate(m);
     rotate[0][3] = rotate[1][3] = rotate[2][3] = rotate[3][3] = 0;
-    return transpose(rotate) * move;
+    rotate[3][0] = rotate[3][1] = rotate[3][2] = 0;
+    move =  transpose(rotate) * move;
+    return move;
 }
 
 

@@ -56,11 +56,16 @@ public:
     virtual sptr<QRTexture>& getTextureUnsafe() = 0;
     virtual void setTexture(const sptr<QRTexture>&) = 0;
 
+    virtual void setShaded(bool x) {is_shaded = x;}
+    virtual bool isShaded() {return is_shaded;}
+
     // todo virtual QREdge3D& operator=(){}
     // todo get triangles? pointset....
     // todo bare array getter?
 private:
     sptr<QRPolygon3D> p;
+protected:
+    bool is_shaded = false;
 };
 
 std::ostream& operator<<(std::ostream &os, const sptr<QRPolygon3D> &p);

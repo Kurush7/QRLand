@@ -24,16 +24,13 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
                                              QRINF, Vector3D(0,-100,-150), Vector3D(M_PI,0,0)));
     scene->addCamera(cam, "observeCamera");
 
-    cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 5, 5, QRINF,
+    cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 20, 20, QRINF,
             Vector3D(0,40, 0), Vector3D(M_PI/2,0,0), true));
     scene->addCamera(cam, "walkCamera");
     scene->setActiveCamera("observeCamera");
 
     // renderer creation
     //renderer = sptr<QRenderer>(new FullThreadRenderer(main_image, scene));
-    auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
-    renderer = r;
-
     // builder creation
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
             129, 129, 1, 1)); // another world step ruins all???
@@ -59,6 +56,9 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     topDown->drawHeightMap();
 
+    auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
+    renderer = r;
+    renderer->getColorManager()->setWorldStep(1);
     QuickShadowRenderer shadowRenderer(r, 0);
     shadowRenderer.generateShades();
 

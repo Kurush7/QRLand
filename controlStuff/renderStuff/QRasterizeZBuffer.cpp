@@ -10,9 +10,8 @@ std::mutex pixel_lock;
 //  !!! видны пятна задних областей - если выключен мьютекс !!!
 // segfault: dy = 0.000000...., но при округлении они разносятся в разные стороны... бесконечный прирост
 void QRasterizeZBuffer::draw(Vector3D *poly, int size, const Vector3D &norm, const QRTexture *texture) {
-    auto c0 = texture->getColor();
-    QRColor c;
-    colorManager->lightenColor(ZeroVector, norm, c0, c);
+    auto c = texture->getColor();
+    //colorManager->lightenColor(ZeroVector, norm, c);
 
     if (size == 3) drawTriangle(poly[0][0], poly[0][1], poly[0][2],
                                 poly[1][0], poly[1][1], poly[1][2],
@@ -35,19 +34,18 @@ void QRasterizeZBuffer::draw(float** points, int32_t* poly, int size, const Vect
 }
 
 void QRasterizeZBuffer::draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRColor &c0) {
-    QRColor c;
-    colorManager->lightenColor(ZeroVector, norm, c0, c);
+    //colorManager->lightenColor(ZeroVector, norm, c0);
 
     // todo optimize
     if (size == 3) drawTriangle(points[poly[0]][0], points[poly[0]][1], points[poly[0]][2],
                                 points[poly[1]][0], points[poly[1]][1], points[poly[1]][2],
-                                points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c);
+                                points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c0);
     else {
         float x0=points[poly[0]][0], y0=points[poly[0]][1], z0=points[poly[0]][2];
         for (int i = 0; i < size - 2; ++i) {
             drawTriangle(x0,y0,z0,
                          points[poly[1]][0], points[poly[1]][1], points[poly[1]][2],
-                         points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c);
+                         points[poly[2]][0], points[poly[2]][1], points[poly[2]][2], c0);
             poly = &poly[1];
         }
     }

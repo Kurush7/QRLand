@@ -87,3 +87,9 @@ void RoamLandscape::addMaxDetailPolygons(QRVector<sptr<QRPolygon3D>> &polygons, 
     for (size_t i = 0; i < allSize; ++i)
         frames[i].addMaxDetailedPolygons(polygons);
 }
+
+void RoamLandscape::defineShades(const QRVector<bool> &isShadedPoint) {
+    size_t allSize = dimFrameCnt*dimFrameCnt;
+    for (size_t i = 0; i < allSize; ++i)
+        frames[i].defineShades(isShadedPoint, points.width());
+}

@@ -34,6 +34,7 @@ public:
     virtual void addMaxDetailPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr) {
         addAllPolygons(polygons, info);
     }    // for roam: most-detail-level polygons
+    virtual void defineShades(const QRVector<bool> &isShadedPoint) {}
 
     virtual PolygonIterator getPolygons() const = 0;
     virtual PointIterator getPoints() const = 0;

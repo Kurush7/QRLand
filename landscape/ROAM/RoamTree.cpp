@@ -12,12 +12,14 @@ float CameraCoordsX, CameraCoordsY, CameraCoordsZ;
 
 RoamNode::RoamNode(size_t i1, size_t j1, size_t i2, size_t j2, size_t i3, size_t j3,
          const sptr<QRTexture> &texture, LinkMap &links, const QRMatrix<sptr<QRPoint3D>> &points,
-         RoamNode *parent): parent(parent) {
+         RoamNode *parent): parent(parent), i1(i1), i2(i2), i3(i3), j1(j1), j2(j2), j3(j3) {
     if (!useIndexedPolygons)
         triangle = sptr<QRPolygon3D>(new Triangle3D(points[i1][j1],points[i2][j2],points[i3][j3], texture));
     else {
         size_t w = points.width();
-        triangle = sptr<QRPolygon3D>(new IndexPolygon3D({i1*w+j1, i2*w+j2, i3*w+j3}, texture, points.getArray()));
+        triangle = sptr<QRPolygon3D>(new IndexPolygon3D({static_cast<int>(i1*w+j1), // todo wtf here?
+                                                         static_cast<int>(i2*w+j2),
+                                                         static_cast<int>(i3*w+j3)}, texture, points.getArray()));
     }
 
     workPoint = (points[i2][j2]->getVector() + points[i3][j3]->getVector()) / 2;
@@ -110,6 +112,16 @@ void RoamNode::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     }
 }
 
+void RoamNode::defineShades(const QRVector<bool> &shaded, size_t w) {
+    bool is_shaded = false;
+    is_shaded = shaded[i1*w + j1] & shaded[i2*w + j2] & shaded[i3*w + j3];
+    triangle->setShaded(is_shaded);
+    if (left) {
+        left->defineShades(shaded, w);
+        right->defineShades(shaded, w);
+    }
+}
+
 
 Frame::Frame(Frame&& f): left(f.left), right(f.right),
 center(f.center), radius(f.radius), isVisible(f.isVisible) {
@@ -165,4 +177,9 @@ void Frame::addMaxDetailedPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
 void Frame::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     left->getAllPolygons(polygons);
     right->getAllPolygons(polygons);
+}
+
+void Frame::defineShades(const QRVector<bool> &isShadedPoint, size_t width) {
+    left->defineShades(isShadedPoint, width);
+    right->defineShades(isShadedPoint, width);
 }

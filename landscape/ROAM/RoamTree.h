@@ -23,7 +23,7 @@ struct RoamNode {
     RoamNode *link = nullptr, *left=nullptr, *right=nullptr, *parent=nullptr;
     char mustDraw = 1;     // 0 - no, 1 - yes, 2 - no, came from link
     float delta;
-
+    size_t i1, j1, i2, j2, i3, j3;
     RoamNode() = default;
     // workpoint is one between p2 and p3
     RoamNode(size_t i1, size_t j1, size_t i2, size_t j2, size_t i3, size_t j3,
@@ -42,6 +42,7 @@ struct RoamNode {
     void addMaxDetailedPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     void getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     void drawCommandNeigbour();
+    void defineShades(const QRVector<bool> &isShadedPoint, size_t width);
 
 };
 
@@ -67,6 +68,8 @@ struct Frame {
     void addMaxDetailedPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     void getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     bool updateCamera(const sptr<QRCamera3D> &camera);  // returns wether it's visible
+    void defineShades(const QRVector<bool> &isShadedPoint, size_t width);
+
 };
 
 

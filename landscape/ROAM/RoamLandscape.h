@@ -22,13 +22,14 @@ public:
     virtual void addAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr);
     virtual void addMaxDetailPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr);
 
+    virtual void defineShades(const QRVector<bool> &isShadedPoint);
+
     virtual PolygonIterator getPolygons() const;
     virtual PointIterator getPoints() const {return points.begin();}
     virtual sptr<QRPolygon3D>* getPurePolygons() const {return nullptr;} // todo not working
     virtual sptr<QRPoint3D>* getPurePoints() const {return points.getPureArray();}
     virtual size_t getPolygonCnt() const {return lastPolyCount;}
     virtual size_t getPointCnt() const {return points.getSize();}
-
 
     virtual void setValues(PointIterator pt, PolygonIterator pg) {}       //todo
     virtual float getRadius() const {return QRINF;}                 // todo

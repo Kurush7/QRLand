@@ -143,6 +143,9 @@ void QuickShadowRenderer::transformPoints() {
     renderer->imageTransformer->accumulate(scr.create()->getMatrix());
     renderer->data.matrix = renderer->imageTransformer->getMatrix();
 
+
+
+
     auto dt = renderer->data.data[0];
     for (size_t j = 0; j < dt->pointsSize; ++j) {
         renderer->data.matrix.mult(dt->myPoints[j]);
@@ -175,5 +178,13 @@ void QuickShadowRenderer::render() {
     Matrix3D to = renderer->imageTransformer->getMatrix() * renderer->cameraTransformer->getMatrix();
     man->setTransformTo(to);
 
-    renderer->repaint();
+    // todo this fuck works only if there's only one model to render, and it's ROAM-landscape one
+    man->setTransformFrom(renderer->modelTransformer->getMatrix());
+    auto points = renderer->points;
+    size_t size = renderer->point_cnt;
+    QRVector<bool> visiblePoints(size);
+    for (size_t i = 0; i < size; ++i)
+        visiblePoints[i] = renderer->colorManager->isShaded(points[i]->getVector());
+    renderer->model->defineShades(visiblePoints);
+    //renderer->repaint();
 }
