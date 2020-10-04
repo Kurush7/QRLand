@@ -98,6 +98,13 @@ void LandscapeBuilder::updateHeightMap() {
             points[i][j]->setVector(v);
         }
     }
+    // todo update polygons
+    if (!landscape) return;
+    QRVector<sptr<QRPolygon3D>> polys;
+    landscape->addAllPolygons(polys);
+    auto pts = landscape->getPurePoints();
+    for (size_t i = 0; i < polys.getSize(); ++i)
+        polys[i]->updateNormalIndex(pts);
 }
 
 void LandscapeBuilder::scaleGrid() {
@@ -143,6 +150,8 @@ void LandscapeBuilder::scaleGrid() {
                         plateManager.getPlates(), plateManager.getMove());
 
     waterManager->updateMatrices(heightMap, points);
-    for (auto it = toolManager.getAllTools(); it; ++it)
+    for (auto it = disturbManager.getAll(); it; ++it)
+        it->get()->setToolData(toolData);
+    for (auto it = toolManager.getAllTools(); it; ++it)   // todo this is deprecated
         it->get()->setToolData(toolData);
 }

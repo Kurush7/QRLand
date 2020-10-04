@@ -16,6 +16,8 @@ void BFSWalk(QRQueue<QRPair<int, int>> &start_q, int w, int h, QRMatrix<float> *
     map<pair<int, int>, bool> used;
 
     int dx[] = {0,0,1,-1}, dy[] = {1,-1,0,0};
+    // todo shuffle it
+
     int start_cnt = 0;
     while (! start_q.isEmpty()) {
         start_cnt++;
@@ -40,6 +42,7 @@ void BFSWalk(QRQueue<QRPair<int, int>> &start_q, int w, int h, QRMatrix<float> *
             (*hmap)[y][x] = tmp;
         }
         start_cnt--;
+        if (start_cnt == -10) break;
 
         for (int i = 0; i < 4; ++i) {
             int x1 = x+dx[i], y1 = y+dy[i];

@@ -7,7 +7,7 @@
 
 const float layerLevelMult = 0.3;
 
-const float minHillHeightParam = 5;
+const float minHillHeightParam = 20;
 const float maxHillHeightParam = 20;
 const float minHillSteepCoef = 0.1;
 const float maxHillSteepCoef = 0.5;

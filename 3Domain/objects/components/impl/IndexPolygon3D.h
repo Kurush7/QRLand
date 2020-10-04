@@ -35,6 +35,9 @@ public:
     // todo stuff not working
     virtual void setNormal(const Vector3D &n) {}
     virtual void updateNormal() {}
+    virtual void updateNormalIndex(const sptr<QRPoint3D>* points) {
+        definePlane(points);
+    }
     virtual Vector3D computeNewPlane() {}
 
     virtual void switchNormal() {normal = -1 * normal; d *= -1;}
@@ -53,7 +56,8 @@ private:
     Vector3D normal; // normal: len(a,b,c) = 1, d=1;
     float d;  // plane's d: ax+by+c+D=0
 
-    void definePlane(const QRVector<sptr<QRPoint3D>> &points);
+    void definePlane(const sptr<QRPoint3D>*points);
+    void definePlane(const QRVector<sptr<QRPoint3D>> &points) {definePlane(points.getPureArray());}
 };
 
 

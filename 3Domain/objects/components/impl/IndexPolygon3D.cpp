@@ -29,7 +29,7 @@ PolyPosition IndexPolygon3D::where(const Vector3D &v) const {
     return (x == 1? FRONT : (x == -1? BEHIND : ON));
 }
 
-void IndexPolygon3D::definePlane(const QRVector<sptr<QRPoint3D>> &pts) {
+void IndexPolygon3D::definePlane(const sptr<QRPoint3D>* pts) {
     if ( points.getSize() < 3)
         throw QRBadParamException(__FILE__, __LINE__, __TIME__,
                                   "failed to set polygon on 2 or less points");

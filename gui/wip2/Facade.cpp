@@ -32,7 +32,7 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     // builder creation
     // DO NOT SET LESSER THAN 64: OR CHANGE FRAME SIZE
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
-            17, 17, 1)); // another world step ruins all???
+            17, 17, 5));
     topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
 
     builder->setTools({

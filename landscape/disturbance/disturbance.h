@@ -13,6 +13,7 @@
 
 class DisturbanceManager {
 public:
+    QRVectorIterator<sptr<QRTool>> getAll() {return tools.begin();}
     void add(sptr<QRTool> t) {tools.push_back(t);}
 
     void process() {

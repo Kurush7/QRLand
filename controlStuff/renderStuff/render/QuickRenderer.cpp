@@ -88,7 +88,6 @@ void QuickRenderer::threadCutPolygons(size_t size, int offset, int thread_num) {
         cutters[thread_num]->cutPoly(pos);
         cnt++;
     }
-    cout << "thread: " << thread_num << ' ' << cnt << '\n';
 }
 
 void QuickRenderer::getPolygons() {
@@ -159,11 +158,7 @@ void QuickRenderer::project() {
         for (size_t j = 0; j < dt->pointsSize; ++j) {  // todo make one big-matrix multiply
             float x = dt->myPoints[j][0], y = dt->myPoints[j][1];
             data.matrix.projMult(dt->myPoints[j]);
-
-            if (dt->myPoints[j][0] < 0 || dt->myPoints[j][1] < 0 || dt->myPoints[j][0] >= screenData[2]
-            || dt->myPoints[j][1] >= screenData[3]) cout << "*** ";
         }
-        cout << "thread after: " << i << ' ' << dt->pointsSize << '\n';
     }
 
     endMeasureTimeIncrement(4);

@@ -27,6 +27,7 @@ public:
     }
 
 private:
+    bool inited=false;
     size_t centerX, centerY;
     float height, give;
 };
