@@ -30,7 +30,7 @@ public:
 
     // todo maybe transform matrix as unnecessary parameter
     virtual bool addModel(const sptr<QRPolyModel3D> &m, const Vector3D &v) = 0;
-
+    virtual void clearModels() = 0;
 
     virtual sptr<QRCamera3D> getActiveCamera() = 0;
     virtual std::string getActiveCameraName() = 0;

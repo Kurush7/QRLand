@@ -8,6 +8,8 @@ using namespace std;
 // TODO MORE DETAILS ON THE EDGES..... WTF?!!!!!!
 // todo top-down inverts x and y... wtf?!
 // todo camera: in self-rotate mode moves by X and Y are in camera's coords, but not aligned to camera's rotation
+// todo negative scale for camera when in 1st view
+// todo frame visibility: hides fuck up?
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -27,27 +29,38 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     scene->addCamera(cam, "walkCamera");
     scene->setActiveCamera("observeCamera");
 
-    // renderer creation
-    //renderer = sptr<QRenderer>(new FullThreadRenderer(main_image, scene));
     // builder creation
+    // DO NOT SET LESSER THAN 64: OR CHANGE FRAME SIZE
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
-            129, 129, 1, 1)); // another world step ruins all???
+            17, 17, 1)); // another world step ruins all???
     topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
 
     builder->setTools({
-        {LayerTool, freqAVERAGE},
+        //{LayerTool, freqAVERAGE},
+        {HillTool, freqRARE},
+        {HillTool, freqRARE},
+        {HillTool, freqRARE},
+        {HillTool, freqRARE},
+        {HillTool, freqRARE},
+        {HillTool, freqRARE},
         {HillTool, freqRARE},
         //{PlateMountainsTool, freqUNIQUE}
     });
-    builder->process(100);
-    builder->useTool(PlateMountainsTool);
+    builder->process(0);
+    //builder->disturbManager.add(sptr<QRTool>(new HillTool))
+    //builder->disturbManager.process();
+    //builder->useTool(PlateMountainsTool);
 
+    //builder->scaleGrid();
     sptr<QRPolyModel3D> land = builder->createLandscape();
     scene->addModel(land, Vector3D(0,0,0));
 
-    builder->activateWaterManager();
+    /*builder->activateWaterManager();
     //builder->waterManager->setWaterLevel(35);
-    builder->waterManager->setWaterLevel(30);
+    builder->waterManager->setWaterLevel(0);
+    builder->waterManager->addRiverSource(40, 40);
+    builder->waterManager->addRiverSource(100, 100);
+    builder->waterManager->addRainSource();*/
 
     for (auto f = builder->plateManager.getPlates(); f; ++f)
         topDown->addFigure(*f);
@@ -56,10 +69,12 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
     renderer = r;
-    renderer->getColorManager()->setWorldStep(1);
+    renderer->getColorManager()->setWorldStep(builder->getWorldStep());
     QuickShadowRenderer shadowRenderer(r, 0);
     shadowRenderer.generateShades();
 
+
+    renderer->render();
     //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));
     //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
     //       Vector3D(0,0,0));
@@ -103,15 +118,21 @@ void Facade::setWaterVisible(bool x) {
     builder->waterManager->setWaterStatus(x);
     renderer->render();
 }
+void Facade::setShadesVisible(bool x) {
+    renderer->setUseShades(x);
+    renderer->render();
+}
 
 void Facade::erosionIteration() {
     static int cnt = 0;
     cnt++;
-    startMeasureTime;
     builder->waterManager->erosionIteration();
-    cout << "erosion finished in " << endMeasureTime << '\n';
-    if (cnt == 10)
+    if (cnt == 20) {
+        startMeasureTime;
+        builder->waterManager->updateWater();
+        cout << "\nwater update: " << endMeasureTime << "\n\n";
         cnt = 0, draw();
+    }
 }
 
 void Facade::undo() {

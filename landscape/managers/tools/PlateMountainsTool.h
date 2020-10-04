@@ -13,7 +13,7 @@
 
 class PlateMountainsTool: public QRTool {
 public:
-    virtual void process() {
+    virtual bool process() {
         QRMatrix<float> *local = data.hmap;
         std::map<QRLine2D, double> edges;    // tense, edge
         for (int i = 0; i < data.plates.getSize(); ++i) {
@@ -58,8 +58,10 @@ public:
                 return (end || outOfEdge);
             };
 
-            BFSWalk(data.width, data.height, a[0]/step, a[1]/step, f);
+            //BFSWalk(data.width, data.height, a[0]/step, a[1]/step, f);
         }
+
+        return false;
     }
 
 private:

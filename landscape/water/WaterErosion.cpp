@@ -8,35 +8,39 @@ void WaterManager::erosionIteration(float dt) {
     if (!erosionReady) initErosionData();
     for (auto s: waterSources)
         s->use(dt);
+
+    startMeasureTime;
     updateFlux(dt);
     updateFlux2(dt);
     erosionDeposition();
     transportSediment(dt);
     evaporation(dt);
+    cout << "erosion iteration: " << endMeasureTime << "\n";
 
-    if (waterEnabled) updateWater();
 }
 
 void WaterManager::updateFlux(float dt) {
     // flux: 0-left, 1-right, 2-up, 3-down
-    size_t w = hmap.width(), h = hmap.height();
+    int w = hmap.width(), h = hmap.height();
     dt = dt*fluxPipeCapacity*gravity;
     float val, k;
-    for (size_t i = 0; i < h; ++i)
-        for (size_t j = 0; j < w; ++j) {
+
+    for (int i = 0; i < h; ++i)
+        flux[i][0][0] = flux[i][w-1][0] = 0;
+    for (int j = 0; j < w; ++j)
+        flux[0][j][0] = flux[h-1][j][0] = 0;
+
+    for (int i = 1; i < h-1; ++i)
+        for (int j = 1; j < w-1; ++j) {
             // left
             val = hmap[i][j]+waterLevel[i][j];
-            if (j == 0) flux[i][j][0] = 0;
-            else flux[i][j][0] = max(0.f, flux[i][j][0] + dt*(val-hmap[i][j-1]-waterLevel[i][j-1]));
+            flux[i][j][0] = max(0.f, flux[i][j][0] + dt*(val-hmap[i][j-1]-waterLevel[i][j-1]));
             // right
-            if (j == w-1) flux[i][j][1] = 0;
-            else flux[i][j][1] = max(0.f, flux[i][j][1] + dt*(val-hmap[i][j+1]-waterLevel[i][j+1]));
+            flux[i][j][1] = max(0.f, flux[i][j][1] + dt*(val-hmap[i][j+1]-waterLevel[i][j+1]));
             // up
-            if (i == 0) flux[i][j][2] = 0;
-            else flux[i][j][2] = max(0.f, flux[i][j][2] + dt*(val-hmap[i-1][j]-waterLevel[i-1][j]));
+            flux[i][j][2] = max(0.f, flux[i][j][2] + dt*(val-hmap[i-1][j]-waterLevel[i-1][j]));
             // down
-            if (i == h-1) flux[i][j][3] = 0;
-            else flux[i][j][3] = max(0.f, flux[i][j][3] + dt*(val-hmap[i+1][j]-waterLevel[i+1][j]));
+            flux[i][j][3] = max(0.f, flux[i][j][3] + dt*(val-hmap[i+1][j]-waterLevel[i+1][j]));
 
             // scale
             if (sum(flux[i][j]) > QREPS) {
@@ -112,31 +116,31 @@ void WaterManager::erosionDeposition() {
             sum += sediment[i][j];
             //cout << '\n';
         }
-    cout << d << ' ' << s <<  ' ' << sum << '\n';
+    //cout << d << ' ' << s <<  ' ' << sum << '\n';
 }
 
 void WaterManager::transportSediment(float dt) {
-    size_t w = hmap.width(), h = hmap.height();
+    int w = hmap.width(), h = hmap.height();
     float x, y, s, len;
-    size_t i1, j1;
-    for (size_t i = 0; i < h; ++i)
-        for (size_t j = 0; j < w; ++j) {
+    int i1, j1;
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j) {
             x = j - velocity[i][j][0]*dt;
             y = i - velocity[i][j][1]*dt;
             i1 = round(y), j1 = round(x);
             if (fabs(x-j1) < QREPS && fabs(y-i1) < QREPS && i1>=0 && i1<h && j1>=0 && j1<w)
-                sediment[i][j] = sediment[(size_t)round(y)][(size_t)round(x)];
+                sediment[i][j] = sediment[i1][j1];  // point-hit
             else {
                 auto f = [x, y](float a, float b) {return sqrt((x-a)*(x-a)+(y-b)*(y-b));};
                 j1 = floor(x), i1 = floor(y);
                 len = 0, s = 0;
 
                 if (i1 >= 0 && i1 < h && j1 >= 0 && j1 < w) s += sediment[i1][j1] * f(j1, i1), len+=f(j1, i1);
-                j1 = ceil(x);
+                j1++;
                 if (i1 >= 0 && i1 < h && j1 >= 0 && j1 < w) s += sediment[i1][j1] * f(j1, i1), len+=f(j1, i1);
-                i1 = ceil(y);
+                i1++;
                 if (i1 >= 0 && i1 < h && j1 >= 0 && j1 < w) s += sediment[i1][j1] * f(j1, i1), len+=f(j1, i1);
-                j1 = floor(x);
+                j1--;
                 if (i1 >= 0 && i1 < h && j1 >= 0 && j1 < w) s += sediment[i1][j1] * f(j1, i1), len+=f(j1, i1);
                 sediment[i][j] = len < QREPS? 0 : s / len;
             }

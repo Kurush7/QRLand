@@ -24,6 +24,8 @@ public:
     }
     const sptr<QRTool> & getTool();
 
+    QRVectorIterator<sptr<QRTool>> getAllTools() {return tools.begin();}
+
 private:
     QRVector<sptr<QRTool>> tools;
     QRVector<ToolFrequency> frequences;

@@ -13,13 +13,27 @@
 #include "WaterConfig.h"
 #include "WaterSource.h"
 
+
 // todo some hardcoding here about "points are in range [-width/2, width/2][-height/2, height/2]"
 // todo define worldstep etc. each time on updating for independence
 class WaterManager {
 public:
     WaterManager(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts);
     void setPolygons(const QRVectorIterator<sptr<QRPolygon3D>> &polys) {polygons = polys;}
+    void updateMatrices(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts);
     // todo update hmap etc. here
+
+    void addRiverSource(size_t x, size_t y, float intensity=1) {
+        waterSources.push_back(sptr<WaterSource>(new RiverSource(waterLevel,
+                                                                 intensity*worldStep*riverIntencityCoef,
+                                                                 x, y)));
+    }
+
+    void addRainSource(float dropCnt = rainDropCnt, float intensity=1) {
+        waterSources.push_back(sptr<WaterSource>(new RainWaterSource(waterLevel,
+                                                                     intensity*worldStep*rainDropIntencityCoef,
+                                                                     dropCnt)));
+    }
 
     void enableWater() {
         if (waterEnabled) return;
@@ -36,6 +50,7 @@ public:
     void setWaterLevel(float wl);
     void erosionIteration(float dt = defaultErosionDT);
 
+    void updateWater();
 private:
     bool waterEnabled = true;
     float worldStep, width, height;
@@ -60,7 +75,6 @@ private:
     bool erosionReady = false;
     void initErosionData();
     void resetWater();
-    void updateWater();
 
     void updateFlux(float dt);
     void updateFlux2(float dt);

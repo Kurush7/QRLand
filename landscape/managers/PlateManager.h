@@ -14,13 +14,6 @@ class PlateManager {
 public:
     PlateManager(double width, double height,
             size_t plateCnt=defaultPlateCnt): w(width), h(height) {
-        /*QRVector<Vector3D> plate;
-        plate.push_back({0,0,0});
-        plate.push_back({5,0,0});
-        plate.push_back({5,5,0});
-        plate.push_back({0,5,0});
-        plates.push_back(sptr<QRFrame2D>(new QRFrame2D(plate,
-                QRColor("red"))));*/
         buildPlates(definePoints(plateCnt));
     }
 

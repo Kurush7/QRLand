@@ -53,4 +53,25 @@ private:
     uniform_int_distribution<size_t> dist_w, dist_h;
 };
 
+
+
+class RiverSource: public WaterSource {
+public:
+    // radius is set in grid's amount (rad=2: two adjacent values in a grid)
+    RiverSource(QRMatrix<float> &waterLevel, float riverIntensity, size_t pos_x, size_t pos_y):
+            WaterSource(waterLevel), riverIntensity(riverIntensity){
+        x = min(pos_x, waterLevel.width());
+        y = min(pos_y, waterLevel.height());
+    }
+
+    virtual void use(float dt) {
+        waterLevel[y][x] += riverIntensity;
+    }
+
+private:
+    float riverIntensity;
+    size_t x, y;
+};
+
+
 #endif //BIG3DFLUFFY_WATERSOURCE_H

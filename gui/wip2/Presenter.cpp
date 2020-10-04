@@ -81,6 +81,9 @@ void Presenter::undo() {
 void Presenter::setWaterVisible() {
     facade->setWaterVisible(window.waterCheckBox->isChecked());
 }
+void Presenter::setShadesVisible() {
+    facade->setShadesVisible(window.shadesCheckBox->isChecked());
+}
 
 void Presenter::erosionIteration() {
     facade->erosionIteration();
@@ -96,6 +99,13 @@ void Presenter::changeCamera() {
     facade->changeCamera();
 }
 
+void Presenter::scaleGrid() {
+    facade->scaleGrid();
+}
+
+void Presenter::process() {
+    facade->process();
+}
 
 void Presenter::draw(bool reset) {
     static int cnt = 0;

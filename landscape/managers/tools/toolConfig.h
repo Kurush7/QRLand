@@ -7,10 +7,10 @@
 
 const float layerLevelMult = 0.3;
 
-const float minHillHeightParam = 1;
-const float maxHillHeightParam = 5;
-const float minHillSteepCoef = 0.01;
-const float maxHillSteepCoef = 0.05;
+const float minHillHeightParam = 5;
+const float maxHillHeightParam = 20;
+const float minHillSteepCoef = 0.1;
+const float maxHillSteepCoef = 0.5;
 const size_t maxHillRadius = 10;
 
 const double plateMountainHeightCoef = 20;

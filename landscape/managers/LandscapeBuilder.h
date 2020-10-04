@@ -12,6 +12,8 @@
 #include "managers/tools/QRToolFabric.h"
 #include "managers/tools/QRToolManager.h"
 
+#include "../disturbance/disturbance.h"
+
 #include "PlateManager.h"
 
 // todo avoid point matrix copies when building landscape
@@ -23,13 +25,14 @@
 // but all calculations with height are made in [0, width][0, height]
 class LandscapeBuilder {
 public:
-    LandscapeBuilder(size_t width, size_t height,
-            size_t polyStep=1, double world_step=1);
+    LandscapeBuilder(size_t width, size_t height, double world_step=1);
 
     void setTools(QRVector<QRPair<ToolName, ToolFrequency>>);
 
-    void process(int step_cnt);
+    void process(int step_cnt=1);
     void useTool(ToolName);
+
+    void scaleGrid();
 
     sptr<QRPolyModel3D> createLandscape();
 
@@ -44,17 +47,19 @@ public:
 
     PlateManager plateManager;
     sptr<WaterManager> waterManager;
+    DisturbanceManager disturbManager;
+    QRToolManager toolManager;
 private:
     sptr<QRPolyModel3D> landscape = nullptr;
     QRMatrix<float> heightMap;
     QRMatrix<sptr<QRPoint3D>> points;
 
-    QRToolManager toolManager;
+    ToolData toolData;
+
+    std::default_random_engine generator = std::default_random_engine();
 
     size_t width, height;     // point width&height (points count, not polygons)
-    size_t maxWidth, maxHeight;
-    size_t step;
-    double worldStep;  // step - polyStep (1,2,4 etc), x-y-Step - coordinate steps
+    double worldStep;  // world-grid steps for each axis
 
     void clearHeightMap();
     void buildPoints();

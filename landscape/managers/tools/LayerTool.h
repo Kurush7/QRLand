@@ -9,7 +9,7 @@
 
 class LayerTool: public QRTool {
 public:
-    virtual void process() {
+    virtual bool process() {
         // not good - every time to create new generators - is it?
         uniform_int_distribution<size_t> dist_w(0, data.width-1);
         uniform_int_distribution<size_t> dist_h(0, data.height-1);
@@ -26,6 +26,7 @@ public:
             for (size_t y = yd; y <= yu; ++y)
                 (*data.hmap)[y][x] += data.worldStep * layerLevelMult;
 
+        return false;
     }
 
 private:

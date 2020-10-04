@@ -7,7 +7,11 @@ set(source_list ${source_list}
         ${path}/basic/QRLandscapeSurface.cpp
         ${path}/basic/QRLandscapeSurfaceCreator.cpp
 
+        ${path}/managers/random_generator.cpp
+
         ${path}/decoration/TopDownVisualizer.cpp
+
+        ${path}/disturbance/disturbance.cpp
 
         ${path}/ROAM/RoamLandscape.cpp
         ${path}/ROAM/RoamTree.cpp

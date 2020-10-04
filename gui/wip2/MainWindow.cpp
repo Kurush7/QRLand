@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     erosionLabel = new QRLabel("\nводная эрозия:", 120,this);
 
     waterCheckBox = new QCheckBox("вода", this);
+    shadesCheckBox = new QCheckBox("тени", this);
 
     g1 = new QButtonGroup(this);
     g2 = new QButtonGroup(this);
@@ -40,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
     undoBtn = new QPushButton("откатить", this);
     erosionStart = new QPushButton("старт", this);
     erosionEnd = new QPushButton("стоп", this);
+    scaleGrid = new QPushButton("diamond-square", this);
+    process = new QPushButton("process", this);
 
     ui = new QRLayoutManager("global", QRHor);
     ui->addLayers("left right", QRVert);
@@ -50,13 +53,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->addWidgets({{"canvas", hmap.get()}}, "hmap");
 
-    ui->addLayers("label move scale rotate undo water", QRHor, "settings");
+    ui->addLayers("label move scale rotate undo check scaleGrid process", QRHor, "settings");
     ui->addWidgets({{"radio", moveRad}}, "settings/move");
     ui->addWidgets({{"radio", scaleRad}}, "settings/scale");
     ui->addWidgets({{"radio", rotateRad}}, "settings/rotate");
     ui->addWidgets({{"label", settingsLabel}}, "settings/label");
     ui->addWidgets({{"undo", undoBtn}}, "settings/undo");
-    ui->addWidgets({{"water", waterCheckBox}}, "settings/water");
+    ui->addWidgets({{"scale", scaleGrid}}, "settings/scaleGrid");
+    ui->addWidgets({{"process", process}}, "settings/process");
+    ui->addWidgets({{"water", waterCheckBox}, {"shades", shadesCheckBox}}, "settings/check");
 
     ui->addLayers("label view1 view2", QRHor, "camera");
     ui->addWidgets({{"radio", view1Rad}}, "camera/view1");
@@ -107,11 +112,14 @@ void MainWindow::addLogic() {
             [this](float val, float x, float y, QRModifiers m) {presenter->scale(-val);});
 
     connect(undoBtn, &QPushButton::clicked, [this]() {presenter->undo();});
+    connect(scaleGrid, &QPushButton::clicked, [this]() {presenter->scaleGrid();});
+    connect(process, &QPushButton::clicked, [this]() {presenter->process();});
 
     connect(view1Rad, &QRadioButton::clicked, [this]() {presenter->changeCamera();});
     connect(view2Rad, &QRadioButton::clicked, [this]() {presenter->changeCamera();});
 
     connect(waterCheckBox, &QCheckBox::clicked, [this]() {presenter->setWaterVisible();});
+    connect(shadesCheckBox, &QCheckBox::clicked, [this]() {presenter->setShadesVisible();});
 
     connect(erosionStart, &QPushButton::clicked, [this]() {erosionTimer.start();});
     connect(erosionEnd, &QPushButton::clicked, [this]() {erosionTimer.stop();});

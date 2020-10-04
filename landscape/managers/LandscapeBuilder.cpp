@@ -3,6 +3,7 @@
 //
 
 #include "LandscapeBuilder.h"
+#include "managers/random_generator.h"
 
 size_t squared(size_t x) {
     size_t a = 1;
@@ -14,19 +15,16 @@ size_t squaredInc(size_t x) {
     return squared(x) + 1;
 }
 
-LandscapeBuilder::LandscapeBuilder(size_t _width, size_t _height,
-        size_t polyStep, double world_step):
-heightMap(squared(_width)/squared(polyStep)+1,
-         squared(_width)/squared(polyStep)+1),
-points(squared(_width)/squared(polyStep)+1,
-        squared(_width)/squared(polyStep)+1),
+LandscapeBuilder::LandscapeBuilder(size_t _width, size_t _height, double world_step):
+heightMap(squaredInc(_width),
+          squaredInc(_width)),
+points(squaredInc(_width),
+       squaredInc(_width)),
 plateManager(squaredInc(_width)*world_step-world_step,
                squaredInc(_height)*world_step-world_step)
 {
-    maxWidth = squaredInc(_width), maxHeight = squaredInc(_height);
-    step = squared(polyStep);
-    width = squared(_width) / step + 1,
-    height = squared(_width) / step + 1;
+    width = squaredInc(_width),
+    height = squaredInc(_width);
 
     worldStep = world_step;
 
@@ -35,18 +33,19 @@ plateManager(squaredInc(_width)*world_step-world_step,
 
     // this must go when map and points are ready!
     waterManager = sptr<WaterManager>(new WaterManager(heightMap, points));
+
+    toolData = ToolData(&heightMap, width, height, worldStep,
+                        plateManager.getPlates(), plateManager.getMove());
 }
 
 void LandscapeBuilder::setTools(QRVector<QRPair<ToolName, ToolFrequency>> toolSet) {
-    ToolData data(&heightMap, width, height, worldStep,
-                  plateManager.getPlates(), plateManager.getMove());
-
     auto toolFabric = initToolFabric();
     sptr<QRTool> tool;
     for (auto &item: toolSet) {
         tool = toolFabric.create(item.fst);
-        tool->setToolData(data);
+        tool->setToolData(toolData);
         toolManager.addTool(tool, item.snd);
+        disturbManager.add(tool);
     }
     // todo setHMap and others for new tool
 }
@@ -72,31 +71,21 @@ void LandscapeBuilder::buildPoints() {
 
 void LandscapeBuilder::process(int step_cnt) {
     for (int i = 0; i < step_cnt; ++i)
-        toolManager.getTool()->process();
-
+        disturbManager.process();
     updateHeightMap();
 }
 
 void LandscapeBuilder::useTool(ToolName name) {
-    // todo ineffective with data
-    ToolData data(&heightMap, width, height, worldStep,
-            plateManager.getPlates(), plateManager.getMove());
-
     auto toolFabric = initToolFabric();
     sptr<QRTool> tool = toolFabric.create(name);
-    tool->setToolData(data);
+    tool->setToolData(toolData);
     tool->process();
     updateHeightMap();
 }
 
 sptr<QRPolyModel3D> LandscapeBuilder::createLandscape() {
-    if (!landscape) {
-        // todo consider *2 (square is 2 triangles, so...)
-        if (width*height > maxNoLODPolygonCnt)
-            landscape = sptr<QRPolyModel3D>(new RoamLandscape(points));
-        else
-            landscape = sptr<QRPolyModel3D>(new QRLandscapeSurface(points));
-    }
+    landscape.reset();
+    landscape = sptr<QRPolyModel3D>(new RoamLandscape(points));
     return landscape;
 }
 
@@ -109,4 +98,51 @@ void LandscapeBuilder::updateHeightMap() {
             points[i][j]->setVector(v);
         }
     }
+}
+
+void LandscapeBuilder::scaleGrid() {
+    // prepare
+    auto newW = width*2 - 1;
+    auto newH = height*2 - 1;
+    auto newHmap = QRMatrix<float>(newW, newH);
+
+    for (int i = 0, oldi=0; i < newH; i += 2, oldi++)
+        for (int j = 0, oldj=0; j < newW; j+= 2, oldj++)
+            newHmap[i][j] = heightMap[oldi][oldj];
+
+
+    double k = 0.2;
+    uniform_real_distribution<float> shift(-worldStep*k, worldStep*k);
+    // diamond square
+    for (int i = 1; i < newH; i += 2)
+        for (int j = 1; j < newW; j += 2) {
+            newHmap[i][j] = (newHmap[i-1][j - 1] + newHmap[i-1][j + 1] + newHmap[i+1][j-1] + newHmap[i+1][j+1]) / 4;
+            newHmap[i][j] += shift(default_generator);
+        }
+
+    float tmp, cnt;
+    for (int i = 0; i < newH; i++)
+        for (int j = i%2? 0:1; j < newW; j+=2) {
+            tmp = 0, cnt=0;
+            if (j > 0) tmp += newHmap[i][j - 1], cnt++;
+            if (j < newW-1) tmp += newHmap[i][j + 1], cnt++;
+            if (i > 0) tmp += newHmap[i-1][j], cnt++;
+            if (i < newH-1) tmp += newHmap[i+1][j], cnt++;
+            newHmap[i][j] = tmp / cnt;
+            newHmap[i][j] += shift(default_generator);
+        }
+
+    // update
+    width = newW, height = newH;
+    worldStep /= 2;
+    heightMap = newHmap;
+
+    points.resize(newW, newH);
+    buildPoints();
+    toolData = ToolData(&heightMap, width, height, worldStep,
+                        plateManager.getPlates(), plateManager.getMove());
+
+    waterManager->updateMatrices(heightMap, points);
+    for (auto it = toolManager.getAllTools(); it; ++it)
+        it->get()->setToolData(toolData);
 }

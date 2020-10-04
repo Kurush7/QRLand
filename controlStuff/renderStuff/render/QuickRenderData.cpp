@@ -48,7 +48,7 @@ void QuickRenderMetaData::init(const Matrix3D &m, const Matrix3D &modelMatrix, s
     if (point_arr_size < raw_pnt_cnt*secure_coef)
         point_arr = new float[raw_pnt_cnt*secure_coef], point_arr_size = raw_pnt_cnt*secure_coef;
     if (points_size < point_arr_size/3)
-        points = new float*[raw_pnt_cnt*secure_coef], points_size = point_arr_size/3;
+        points = new float*[point_arr_size/3], points_size = point_arr_size/3;
 
     pointCodes.reserve(raw_pnt_cnt);
     pointCodes.setSize(raw_pnt_cnt);

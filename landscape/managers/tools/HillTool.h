@@ -10,31 +10,25 @@
 
 class HillTool: public QRTool {
 public:
-    virtual void process() {
-        float maxH = maxHillHeightParam*data.worldStep;
-        uniform_int_distribution<size_t> dist_w(0, data.width-1);
-        uniform_int_distribution<size_t> dist_h(0, data.height-1);
-        uniform_real_distribution<float> dist_hill(minHillHeightParam*data.worldStep, maxH);
-        uniform_real_distribution<float> coef_d(minHillSteepCoef, minHillSteepCoef);
+    HillTool() {}
 
-        size_t centerX = dist_w(generator);
-        size_t centerY = dist_h(generator);
-        float height = dist_hill(generator);
+    virtual void setToolData(const ToolData &dt);
 
-        QRMatrix<float> *local = data.hmap;
-        float coef = -1 * coef_d(generator);
-        auto f = [centerX, centerY, height, coef, local](size_t x, size_t y){
-            float dist = sqrt((x-centerX)*(x-centerX) + (y-centerY)*(y-centerY));
-            float h = height + dist*coef;
-            (*local)[y][x] += h;
-            return (h < QREPS);
-        };
+    virtual bool process() {
+        if (height <= 0) return false;
+        (*data.hmap)[centerY][centerX] += give;
+        height -= give;
 
-        BFSWalk(data.width, data.height, centerX, centerY, f);
+        QRQueue<QRPair<int, int>> q;
+        q.push({centerX, centerY});
+
+        BFSWalk(q, data.width, data.height, data.hmap);
+        return true;
     }
 
 private:
-    std::default_random_engine generator = std::default_random_engine();
+    size_t centerX, centerY;
+    float height, give;
 };
 
 class HillToolCreator: public QRToolCreator {

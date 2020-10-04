@@ -32,6 +32,8 @@ void QuickRenderer::initRender() {
     projector = Transformer3D(camera->getProjectionTransformer()->getMatrix());
     screenData = camera->getScreen();
 
+    cout << "###  ###  " << screenData[2] << ' ' << screenData[3] << '\n';
+
     auto mcr = MoveTransformer3DCreator(Vector3D(screenData[2]/2, 0,0,0));
     auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/screenData[2],
                                                   image->getHeight()/screenData[3], 1,0));
@@ -71,20 +73,22 @@ void QuickRenderer::threadDrawPolygons(int thread_num) {
     for (size_t k = 0; k < sz; ++k) {
         poly = polygons[dt->rawPolyMap[k]].get();
         c = poly->getTexture()->getColor();
-        if (poly->isShaded())
+        if (useShades && poly->isShaded())
             colorManager->ambientLight(c);
         else
             colorManager->lightenColor(poly->getNormal(), c);
         zbuf.draw(dt->points, dt->polygons[k], dt->polygonSize[k],
-                  //dt->normals[k], textures[dt->rawPolyMap[k]]);
                   dt->normals[k], c);
     }
 }
 
-void QuickRenderer::threadCutPolygons(size_t size, int offset, int step, int thread_num) {
-    for (size_t k = 0, pos=offset; k < size; ++k, pos+=step) {
+void QuickRenderer::threadCutPolygons(size_t size, int offset, int thread_num) {
+    int cnt = 0;
+    for (size_t pos=offset; pos < size + offset; pos++) {
         cutters[thread_num]->cutPoly(pos);
+        cnt++;
     }
+    cout << "thread: " << thread_num << ' ' << cnt << '\n';
 }
 
 void QuickRenderer::getPolygons() {
@@ -136,7 +140,7 @@ void QuickRenderer::cameraCut() {
     size_t remain = polygon_cnt % thread_cnt;
     for (size_t i = 0; i < thread_cnt; ++i)
         threads[i] = thread(&QuickRenderer::threadCutPolygons, this,
-                            thread_size + (i < remain), i, thread_cnt, i);
+                            thread_size + (i < remain), i*thread_size, i);
 
     for (size_t i = 0; i < thread_cnt; ++i) threads[i].join();
 
@@ -152,8 +156,14 @@ void QuickRenderer::project() {
     data.matrix.addPerspective(projector.getMatrix());
     for (int i = 0; i < thread_cnt; ++i) {
         auto dt = data.data[i];
-        for (size_t j = 0; j < dt->pointsSize; ++j)  // todo make one big-matrix multiply
+        for (size_t j = 0; j < dt->pointsSize; ++j) {  // todo make one big-matrix multiply
+            float x = dt->myPoints[j][0], y = dt->myPoints[j][1];
             data.matrix.projMult(dt->myPoints[j]);
+
+            if (dt->myPoints[j][0] < 0 || dt->myPoints[j][1] < 0 || dt->myPoints[j][0] >= screenData[2]
+            || dt->myPoints[j][1] >= screenData[3]) cout << "*** ";
+        }
+        cout << "thread after: " << i << ' ' << dt->pointsSize << '\n';
     }
 
     endMeasureTimeIncrement(4);

@@ -21,23 +21,16 @@ public:
         bare_dir[0] = lightDir[0], bare_dir[1] = lightDir[1], bare_dir[2] = lightDir[2];
     }
 
-
     Vector3D getLightVector() {return lightDir;}
     Vector3D getPosition() {return pos;}
 
-    //Vector3D getIntensity(const Vector3D &pos, const Vector3D &normal) {
-    //    float x = getIntensity(normal.arr);
-    //    return Vector3D(x,x,x);
-    //}
-
     // todo.... no color-masks. basic intencity common for all
     float getIntensity(const Vector3D &normal) {
-        float res = ambient;
         // todo control: normal & lightDir must be normed
         //float x = cos3(normal, lightDir);
         float x = bare_dir[0]*normal[0] + bare_dir[1]*normal[1] + bare_dir[2]*normal[2];
-        if (x < 0) res -= diffuse * x;
-        return res;
+        if (x < 0) return ambient - diffuse * x;
+        return ambient;
 
         // todo: divide by (distance + constant), add specular, manage with fabs
     }

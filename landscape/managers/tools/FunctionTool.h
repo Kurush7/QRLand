@@ -9,7 +9,7 @@
 
 class FunctionTool: public QRTool {
 public:
-    virtual void process() {
+    virtual bool process() {
         double x, y = -(data.height+0.)/2.*data.worldStep;
         for(size_t i = 0; i < data.height; ++i) {
             x = -(data.width+0.)/2.*data.worldStep;
@@ -20,7 +20,9 @@ public:
             }
             y += data.worldStep;
         }
+        return false;
     }
+
 };
 
 class FunctionToolCreator: public QRToolCreator {

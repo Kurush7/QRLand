@@ -18,6 +18,9 @@ public:
     }
     virtual void render();
 
+    virtual void setUseShades(bool x) {
+        useShades = x;}
+
 protected:
     friend class QuickShadowRenderer;
 
@@ -32,7 +35,7 @@ protected:
     virtual void printRenderTimes();
 
     void threadDrawPolygons(int thread_num=0);
-    void threadCutPolygons(size_t size, int offset, int step, int thread_num=0);
+    void threadCutPolygons(size_t size, int offset, int thread_num=0);
     int thread_cnt = RENDER_THREAD_CNT;
 
     QRVector<sptr<Quick3DCutter>> cutters;
@@ -40,14 +43,13 @@ protected:
     QRasterizeZBuffer zbuf;
 
     QRCamera3D *camera;
-    QRPolyModel3D *model;
+    QRPolyModel3D *model = nullptr;
     QRTransformer3D *cameraTransformer = nullptr, *modelTransformer, *imageTransformer;
     Transformer3D modelCameraTransformer, projector;
 
     QuickRenderMetaData data;
 
     // model data
-    QRVector<QRColor> textures;
     sptr<QRPolygon3D>* polygons;
     sptr<QRPoint3D>* points;
     QRVector<sptr<QRPolygon3D>> local_polys;
@@ -55,7 +57,8 @@ protected:
     Vector3D screenData, transZero;
     // metrics & logging
     std::string polygonData;
-    bool shaded = false;
+
+    bool useShades=false;
 };
 
 

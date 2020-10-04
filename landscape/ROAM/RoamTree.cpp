@@ -75,7 +75,8 @@ void RoamNode::update() {
         float r = RoamUpdateConstant *
                   (x + (CameraCoordsZ - workPoint[2]) * (CameraCoordsZ - workPoint[2])) *
                   (x + (CameraCoordsZ - workPoint[2]) * (CameraCoordsZ - workPoint[2]));
-        mustDraw = (l <= r);
+
+        mustDraw = l < r;
     }
 
     if (mustDraw == 0) {
@@ -149,6 +150,7 @@ Frame::Frame(const QRMatrix<sptr<QRPoint3D>> &points,
     Vector3D v1 = points[d][l]->getVector();
     Vector3D v2 = points[u][r]->getVector();
     v1[2] = zmin, v2[2] = zmax;
+    // too what if z's are updated?... and they are....
     center = (v1 + v2) / 2;
     radius = vectorLen(v1-v2) / 2;
 }

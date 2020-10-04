@@ -13,12 +13,15 @@
 #include "2Domain.h"
 #include "toolConfig.h"
 
+#include "../random_generator.h"
+#include "diamondSquare.h"
+
 struct ToolData {
     ToolData() = default;
     ToolData(QRMatrix<float> *hmap, size_t w, size_t h,
             double wS, const QRVectorIterator<sptr<QRFrame2D>> &plates,
             const QRVectorIterator<Vector3D> &move): hmap(hmap), width(w), height(h), worldStep(wS),
-            plates(plates), moveVectors(move) {
+            plates(plates), moveVectors(move){
 
     }
 
@@ -32,7 +35,7 @@ struct ToolData {
 
 class QRTool {
 public:
-    virtual void process() = 0;
+    virtual bool process() = 0;
     virtual void setToolData(const ToolData &dt) {data = dt;}
 protected:
     ToolData data;
