@@ -7,6 +7,8 @@
 
 #include "../ROAM/RoamLandscape.h"
 #include "../water/WaterManager.h"
+#include "../climate/ClimateManager.h"
+
 
 #include "../landscapeConfig.h"
 #include "managers/tools/QRToolFabric.h"
@@ -34,7 +36,7 @@ public:
 
     void scaleGrid();
 
-    sptr<QRPolyModel3D> createLandscape();
+    sptr<RoamLandscape> createLandscape();
 
     const QRMatrix<float>& getHeightMap() {return heightMap;}
     double getWorldStep() {return worldStep;}
@@ -49,10 +51,11 @@ public:
 
     PlateManager plateManager;
     sptr<WaterManager> waterManager;
+    sptr<ClimateManager> climateManager;
     DisturbanceManager disturbManager;
     QRToolManager toolManager;
 private:
-    sptr<QRPolyModel3D> landscape = nullptr;
+    sptr<RoamLandscape> landscape = nullptr;
     QRVector<sptr<QRPolygon3D>> lowest_polygons;
     QRMatrix<float> heightMap;
     QRMatrix<sptr<QRPoint3D>> points;

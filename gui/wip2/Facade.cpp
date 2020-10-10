@@ -51,8 +51,8 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     });
     builder->process(0);
 
-    sptr<QRPolyModel3D> land = builder->createLandscape();
-    scene->addModel(land, Vector3D(0,0,0));
+    landscape = builder->createLandscape();
+    scene->addModel(landscape, Vector3D(0,0,0));
 
     builder->activateWaterManager();
     builder->waterManager->setWaterLevel(10);
@@ -129,9 +129,12 @@ void Facade::erosionIteration() {
     builder->waterManager->erosionIteration();
     if (cnt == 20) {
         startMeasureTime;
+        builder->climateManager->on_the_7th_day();
         builder->waterManager->updateWater();
+        landscape->interpolateColors(); // todo optimize: not each iteration
         cout << "\nwater update: " << endMeasureTime << "\n\n";
-        cnt = 0, draw();
+        cnt = 0,
+        draw();
     }
 }
 

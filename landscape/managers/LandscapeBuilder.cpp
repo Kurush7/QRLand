@@ -33,6 +33,7 @@ plateManager(squaredInc(_width)*world_step,
 
     // this must go when map and points are ready!
     waterManager = sptr<WaterManager>(new WaterManager(heightMap, points));
+    climateManager = sptr<ClimateManager>(new ClimateManager(heightMap, points));
 
     toolData = ToolData(&heightMap, width, height, worldStep,
                         plateManager.getPlates(), plateManager.getMove());
@@ -83,12 +84,16 @@ void LandscapeBuilder::useTool(ToolName name) {
     updateHeightMap();
 }
 
-sptr<QRPolyModel3D> LandscapeBuilder::createLandscape() {
+sptr<RoamLandscape> LandscapeBuilder::createLandscape() {
     landscape.reset();
-    landscape = sptr<QRPolyModel3D>(new RoamLandscape(points));
+    landscape = sptr<RoamLandscape>(new RoamLandscape(points));
+
     lowest_polygons.clear();
     landscape->addMaxDetailPolygons(lowest_polygons);
-    waterManager->setPolygons(lowest_polygons);
+
+    waterManager->setPolygons(&lowest_polygons);
+    climateManager->setPolygons(&lowest_polygons);
+
     return landscape;
 }
 
@@ -153,6 +158,7 @@ void LandscapeBuilder::scaleGrid() {
                         plateManager.getPlates(), plateManager.getMove());
 
     waterManager->updateMatrices(heightMap, points);
+    climateManager->updateMatrices(heightMap, points);
     //lowest_polygons.clear();
     //landscape->addMaxDetailPolygons(lowest_polygons);
     //waterManager->setPolygons(lowest_polygons.begin());

@@ -31,9 +31,9 @@ public:
     void scaleGrid() {
         builder->scaleGrid();
         //builder->useTool(HillTool);
-        sptr<QRPolyModel3D> land = builder->createLandscape();
+        landscape = builder->createLandscape();
         scene->clearModels();
-        scene->addModel(land, Vector3D(0,0,0));
+        scene->addModel(landscape, Vector3D(0,0,0));
 
         shadowRenderer->generateShades();
 
@@ -54,6 +54,7 @@ private:
     sptr<QuickShadowRenderer> shadowRenderer;
     sptr<TopDownVisualizer> topDown = nullptr;
     sptr<LandscapeBuilder> builder;
+    sptr<RoamLandscape> landscape;
 };
 
 

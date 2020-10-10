@@ -123,6 +123,17 @@ void RoamNode::defineShades(const QRVector<bool> &shaded, size_t w) {
     }
 }
 
+void RoamNode::interpolateColors() {
+    if (left) {
+        left->interpolateColors();
+        right->interpolateColors();
+        QRColor a = left->triangle->getTexture()->getColor();
+        QRColor b = right->triangle->getTexture()->getColor();
+        triangle->setTexture(sptr<QRTexture>(new ColorTexture(mixColors(a, b))));
+        // todo update: low-level with one texture, these may be enough just to change
+    }
+}
+
 
 Frame::Frame(Frame&& f): left(f.left), right(f.right),
 center(f.center), radius(f.radius), isVisible(f.isVisible) {
@@ -184,4 +195,9 @@ void Frame::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
 void Frame::defineShades(const QRVector<bool> &isShadedPoint, size_t width) {
     left->defineShades(isShadedPoint, width);
     right->defineShades(isShadedPoint, width);
+}
+
+void Frame::interpolateColors() {
+    left->interpolateColors();
+    right->interpolateColors();
 }

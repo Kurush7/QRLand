@@ -43,6 +43,7 @@ struct RoamNode {
     void getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     void drawCommandNeigbour();
     void defineShades(const QRVector<bool> &isShadedPoint, size_t width);
+    void interpolateColors();
 
 };
 
@@ -69,6 +70,7 @@ struct Frame {
     void getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons);
     bool updateCamera(const sptr<QRCamera3D> &camera);  // returns wether it's visible
     void defineShades(const QRVector<bool> &isShadedPoint, size_t width);
+    void interpolateColors();
 
 };
 

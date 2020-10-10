@@ -82,10 +82,10 @@ void WaterManager::updateWater() {
     size_t w, h;
 
     // todo one water-point will increase level, but no water polygons will be made. check neigbours
-    int sz = polygons.getSize();
+    int sz = polygons->getSize();
     int a, b, wdth = points.width();
     for (int k = 0; k < sz; ++k) {
-        poly = polygons[k].get();
+        poly = (*polygons)[k].get();
         waterFlag = true;
 
         int32_t* indexes = poly->getPurePointIndexes();
@@ -103,14 +103,14 @@ void WaterManager::updateWater() {
             points[a][b]->setVector(v);
         }
 
-
-        auto it = changedPolygons.find(polygons[k]);
+        auto it = changedPolygons.find((*polygons)[k]);
         if (waterFlag) {
-            if (it == changedPolygons.end()) {
-                changedPolygons[polygons[k]] = poly->getTexture();
-                poly->setTexture(waterTexture);
-            }
-        } else {
+            if (it == changedPolygons.end())
+                changedPolygons[(*polygons)[k]] = poly->getTexture();
+
+            poly->setTexture(waterTexture);
+        }
+        else {
             if (it != changedPolygons.end()) {
                 it->first->setTexture(it->second);
                 changedPolygons.erase(it);

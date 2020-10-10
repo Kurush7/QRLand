@@ -23,6 +23,8 @@ public:
     virtual void addMaxDetailPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr);
 
     virtual void defineShades(const QRVector<bool> &isShadedPoint);
+    virtual void interpolateColors();
+
 
     virtual PolygonIterator getPolygons() const;
     virtual PointIterator getPoints() const {return points.begin();}

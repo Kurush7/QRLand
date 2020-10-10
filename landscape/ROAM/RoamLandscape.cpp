@@ -93,3 +93,9 @@ void RoamLandscape::defineShades(const QRVector<bool> &isShadedPoint) {
     for (size_t i = 0; i < allSize; ++i)
         frames[i].defineShades(isShadedPoint, points.width());
 }
+
+void RoamLandscape::interpolateColors() {
+    size_t allSize = dimFrameCnt*dimFrameCnt;
+    for (size_t i = 0; i < allSize; ++i)
+        frames[i].interpolateColors();
+}

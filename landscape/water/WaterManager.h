@@ -19,7 +19,7 @@
 class WaterManager {
 public:
     WaterManager(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts);
-    void setPolygons(const QRVectorIterator<sptr<QRPolygon3D>> &polys) {polygons = polys;}
+    void setPolygons(QRVector<sptr<QRPolygon3D>> *polys) {polygons = polys;}
     void updateMatrices(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts);
     // todo update hmap etc. here
 
@@ -56,7 +56,7 @@ private:
     float worldStep, width, height;
 
     QRMatrix<sptr<QRPoint3D>> &points;
-    QRVector<sptr<QRPolygon3D>> polygons;   // todo link?
+    QRVector<sptr<QRPolygon3D>> *polygons;
 
     QRMatrix<float> &hmap;
     QRMatrix<float> waterLevel;
