@@ -7,7 +7,7 @@ set(source_list ${source_list}
         ${path}/basic/QRLandscapeSurface.cpp
         ${path}/basic/QRLandscapeSurfaceCreator.cpp
 
-        ${path}/managers/random_generator.cpp
+        ${path}/random_generator.cpp
 
         ${path}/decoration/TopDownVisualizer.cpp
 

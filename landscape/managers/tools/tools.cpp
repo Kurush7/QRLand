@@ -3,7 +3,31 @@
 //
 
 #include "HillTool.h"
-#include "../random_generator.cpp"
+#include "PlateMountainsTool.h"
+#include "../../random_generator.h"
+
+void PlateMountainsTool::setToolData(const ToolData &dt) {
+    data = dt;
+    give = data.worldStep*2;
+    if (!inited) {
+        height = 1e9; // todo!!!
+        inited=true;
+    }
+
+    edges.clear();
+    for (int i = 0; i < data.plates.getSize(); ++i) {
+        auto plate = data.plates[i];
+        Vector3D move = data.moveVectors[i];
+        for (auto &edge: plate->edges) {
+            auto normal = len2Norm(edge.getNormal());
+            if (normal == XVector || normal == YVector || normal == -1*XVector || normal == -1*YVector) continue;
+            double tense = scalar(normal, move);
+            if (edges.find(edge) == edges.end())
+                edges[edge] = 0;
+            edges[edge] += tense;
+        }
+    }
+}
 
 void HillTool::setToolData(const ToolData &dt) {
     data = dt;
@@ -17,11 +41,12 @@ void HillTool::setToolData(const ToolData &dt) {
         centerX = dist_w(default_generator);
         centerY = dist_h(default_generator);
         height = dist_hill(default_generator);
-        give = data.worldStep;
+        give = data.worldStep*2;
     }
     else {
         // todo
         centerX *= 2;
         centerY *= 2;
+        give = data.worldStep*2;
     }
 }

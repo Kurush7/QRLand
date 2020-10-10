@@ -22,7 +22,7 @@ public:
         QRQueue<QRPair<int, int>> q;
         q.push({centerX, centerY});
 
-        BFSWalk(q, data.width, data.height, data.hmap);
+        BFSHillWalk(q, data.width, data.height, data.hmap, data.worldStep);
         return true;
     }
 

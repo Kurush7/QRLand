@@ -10,10 +10,40 @@ WaterManager::WaterManager(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts
     waterLevel.fill(0);
 }
 
-void WaterManager::updateMatrices(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts) {
+void WaterManager::updateMatrices(QRMatrix<float> &hm, QRMatrix<sptr<QRPoint3D>> &pts) {
+    hmap = hm;
+    points = pts;
+
+    float w = hm.width(), h = hm.height();
+    auto newWL = QRMatrix<float>(w, h);
+    for (int i = 0, oldi=0; i < h; i += 2, oldi++)
+        for (int j = 0, oldj=0; j < w; j+= 2, oldj++)
+            newWL[i][j] = waterLevel[oldi][oldj];
+    float tmp, cnt;
+
+    for (int i = 1; i < h; i += 2)
+        for (int j = 1; j < w; j += 2)
+            newWL[i][j] = (newWL[i-1][j - 1] + newWL[i-1][j + 1] + newWL[i+1][j-1] + newWL[i+1][j+1]) / 4;
+
+    for (int i = 0; i < h; i++)
+        for (int j = i%2? 0:1; j < w; j+=2) {
+            tmp = 0, cnt=0;
+            if (j > 0) tmp += newWL[i][j - 1], cnt++;
+            if (j < w-1) tmp += newWL[i][j + 1], cnt++;
+            if (i > 0) tmp += newWL[i-1][j], cnt++;
+            if (i < h-1) tmp += newWL[i+1][j], cnt++;
+            newWL[i][j] = tmp / cnt;
+        }
+    waterLevel = newWL;
+
+
     worldStep = points[0][1]->getVector()[0] - points[0][0]->getVector()[0];
     width = worldStep * points.width();
     height = worldStep * points.height();
+    erosionReady = false;
+
+    for (auto &s: waterSources)
+        s->scaleGrid(waterLevel);
 }
 
 void WaterManager::initErosionData() {
@@ -53,40 +83,26 @@ void WaterManager::updateWater() {
 
     // todo one water-point will increase level, but no water polygons will be made. check neigbours
     int sz = polygons.getSize();
+    int a, b, wdth = points.width();
     for (int k = 0; k < sz; ++k) {
         poly = polygons[k].get();
         waterFlag = true;
-        if (poly->isPointData()) {
-            // todo optimize: no iterators
-            for (auto p = poly->getPoints(); p; ++p) {
-                v = p->get()->getVector();
-                w = getXIndex(v[0]), h = getYIndex(v[1]);
-                if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) {
-                    waterFlag = false;
-                    continue;
-                }
 
-                v[2] = hmap[h][w] + waterLevel[h][w];
-                p->get()->setVector(v);
+        int32_t* indexes = poly->getPurePointIndexes();
+        int sz = poly->getSize();
+        for (int i = 0; i < sz; ++i) {
+            a = indexes[i] / wdth, b = indexes[i] % wdth;
+            v = points[a][b]->getVector();
+            w = getXIndex(v[0]), h = getYIndex(v[1]);
+            if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) {
+                waterFlag = false;
+                continue;
             }
-        }
-        else {
-            int a, b, wdth = points.getSize();
-            int32_t* indexes = poly->getPurePointIndexes();
-            int sz = poly->getSize();
-            for (int i = 0; i < sz; ++i) {
-                a = indexes[i] / wdth, b = indexes[i] % wdth;
-                v = points[a][b]->getVector();
-                w = getXIndex(v[0]), h = getYIndex(v[1]);
-                if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) {
-                    waterFlag = false;
-                    continue;
-                }
 
-                v[2] = hmap[h][w] + waterLevel[h][w];
-                points[a][b]->setVector(v);
-            }
+            v[2] = hmap[h][w] + waterLevel[h][w];
+            points[a][b]->setVector(v);
         }
+
 
         auto it = changedPolygons.find(polygons[k]);
         if (waterFlag) {

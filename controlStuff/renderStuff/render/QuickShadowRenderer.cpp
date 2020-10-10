@@ -110,7 +110,6 @@ void QuickShadowRenderer::transformPoints() {
     float l=1e9,r=-1e9,u=-1e9,d=1e9;
     for (int i = 0; i < renderer->thread_cnt; ++i) {
         auto dt = renderer->data.data[i];
-        cout << dt->pointsSize << '\n';
         for (size_t j = 0; j < dt->pointsSize; ++j) {
             l = min(l, dt->myPoints[j][0]);
             r = max(r, dt->myPoints[j][0]);

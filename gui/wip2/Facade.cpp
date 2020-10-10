@@ -10,6 +10,9 @@ using namespace std;
 // todo camera: in self-rotate mode moves by X and Y are in camera's coords, but not aligned to camera's rotation
 // todo negative scale for camera when in 1st view
 // todo frame visibility: hides fuck up?
+// todo water manager fucked up
+// todo LOD: ignores small details
+// todo erosion: water accumulating at the borders
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -37,30 +40,26 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 
     builder->setTools({
         //{LayerTool, freqAVERAGE},
+        /*{HillTool, freqRARE},
         {HillTool, freqRARE},
         {HillTool, freqRARE},
         {HillTool, freqRARE},
         {HillTool, freqRARE},
         {HillTool, freqRARE},
-        {HillTool, freqRARE},
-        {HillTool, freqRARE},
-        //{PlateMountainsTool, freqUNIQUE}
+        {HillTool, freqRARE},*/
+        {PlateMountainsTool, freqUNIQUE}
     });
     builder->process(0);
-    //builder->disturbManager.add(sptr<QRTool>(new HillTool))
-    //builder->disturbManager.process();
-    //builder->useTool(PlateMountainsTool);
 
-    //builder->scaleGrid();
     sptr<QRPolyModel3D> land = builder->createLandscape();
     scene->addModel(land, Vector3D(0,0,0));
 
-    /*builder->activateWaterManager();
-    //builder->waterManager->setWaterLevel(35);
+    builder->activateWaterManager();
+    builder->waterManager->setWaterLevel(10);
     builder->waterManager->setWaterLevel(0);
     builder->waterManager->addRiverSource(40, 40);
     builder->waterManager->addRiverSource(100, 100);
-    builder->waterManager->addRainSource();*/
+    builder->waterManager->addRainSource();
 
     for (auto f = builder->plateManager.getPlates(); f; ++f)
         topDown->addFigure(*f);
@@ -70,8 +69,9 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
     renderer = r;
     renderer->getColorManager()->setWorldStep(builder->getWorldStep());
-    QuickShadowRenderer shadowRenderer(r, 0);
-    shadowRenderer.generateShades();
+    // todo move to renderer itself
+    shadowRenderer = sptr<QuickShadowRenderer>(new QuickShadowRenderer(r, 0));
+    shadowRenderer->generateShades();
 
 
     renderer->render();

@@ -40,8 +40,10 @@ public:
     double getWorldStep() {return worldStep;}
 
     bool activateWaterManager() {
-        if (landscape)
-            waterManager->setPolygons(landscape->getPolygons());
+        if (landscape) {
+            // todo method not needed
+            //waterManager->setPolygons(lowest_polygons.begin());
+        }
         return bool(landscape);
     }
 
@@ -51,6 +53,7 @@ public:
     QRToolManager toolManager;
 private:
     sptr<QRPolyModel3D> landscape = nullptr;
+    QRVector<sptr<QRPolygon3D>> lowest_polygons;
     QRMatrix<float> heightMap;
     QRMatrix<sptr<QRPoint3D>> points;
 

@@ -13,59 +13,56 @@
 
 class PlateMountainsTool: public QRTool {
 public:
+
+
+    virtual void setToolData(const ToolData &dt);
+
     virtual bool process() {
         QRMatrix<float> *local = data.hmap;
-        std::map<QRLine2D, double> edges;    // tense, edge
-        for (int i = 0; i < data.plates.getSize(); ++i) {
-            auto plate = data.plates[i];
-            Vector3D move = data.moveVectors[i];
-            for (auto &edge: plate->edges) {
-                auto normal = len2Norm(edge.getNormal());
-                if (normal == XVector || normal == YVector || normal == -1*XVector || normal == -1*YVector) continue;
-                double tense = scalar(normal, move);
-                if (edges.find(edge) == edges.end())
-                    edges[edge] = 0;
-                edges[edge] += tense;
+
+        float max_w = data.width * data.worldStep;
+        float max_h = data.height * data.worldStep;
+        for (auto &e: edges) {
+            QRQueue<QRPair<int, int>> q;
+
+            auto edge = e.first;
+            double tense = e.second;
+            if (fabs(tense) < mountainsMinTense)
+                tense = sign(tense) * mountainsMinTense;
+            float dh = tense * plateMountainHeightCoef * data.worldStep;
+
+            Vector3D a = edge.a, b = edge.b;
+            a /= data.worldStep, b /= data.worldStep;
+            float dx = b[0] - a[0], dy = b[1]-a[1];
+            if (dx > dy) {
+                dy /= fabs(dx);
+                dx /= fabs(dx);
             }
-        }
-
-        for (auto &x: edges) {
-            auto edge = x.first;
-            double tense = x.second;
-            auto normal = len2Norm(edge.getNormal());
-            Vector3D a = edge.a, b = edge.b, eq = len2Norm(edge.getEq());
-            a[2] = 1, b[2] = 1;
-            float height = tense * plateMountainHeightCoef * data.worldStep;
-             float step = data.worldStep;
-            auto f = [local, height, a, b, eq, step, normal](size_t x, size_t y){
-                Vector3D p(x*step,y*step,1,0);
-                float lineDist = fabs(scalar(p, eq));
-
-                float h = height - lineDist*plateMountainSteepCoef * sign(height);
-                (*local)[y][x] += h;
-
-                bool outOfEdge;
-                p -= lineDist * normal;
-                if (fabs(scalar(p, eq)) > QREPS) p += 2 * lineDist * normal;
-                if (scalar(lenNorm(p-a), lenNorm(p-b)) < -QREPS)
-                    outOfEdge = false;
-                else {
-                    double dist = min(vectorLen(p-a), vectorLen(p-b));
-                    outOfEdge = dist > 2*step;  // todo hardcode
+            else {
+                dx /= fabs(dy);
+                dy /= fabs(dy);
+            }
+            int step_cnt = (b[0]-a[0]) / dx;
+            float x = a[0], y = a[1];
+            int xi, yi;
+            for (int i = 0; i < step_cnt; ++i) {
+                xi = QRound(x), yi = QRound(y);
+                x += dx, y += dy;
+                if (xi >= 0 and xi < data.width and yi >= 0 and yi < data.height) {
+                    q.push({xi, yi});
+                    (*data.hmap)[yi][xi] += dh;
                 }
+            }
 
-                bool end = height * h < QREPS;
-                return (end || outOfEdge);
-            };
-
-            //BFSWalk(data.width, data.height, a[0]/step, a[1]/step, f);
+            BFSMountainWalk(q, data.width, data.height, data.hmap, data.worldStep);
         }
-
-        return false;
+        return true;
     }
 
 private:
-    std::default_random_engine generator = std::default_random_engine();
+    std::map<QRLine2D, double> edges;
+    bool inited=false;
+    float height, give;
 };
 
 class PlateMountainsToolCreator: public QRToolCreator {

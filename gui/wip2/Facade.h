@@ -35,6 +35,7 @@ public:
         scene->clearModels();
         scene->addModel(land, Vector3D(0,0,0));
 
+        shadowRenderer->generateShades();
 
         renderer->getColorManager()->setWorldStep(builder->getWorldStep());
         //todo QuickShadowRenderer shadowRenderer(r, 0);
@@ -50,6 +51,7 @@ private:
     sptr<BaseCommandManager> manager;
     sptr<QRPolyScene3D> scene;
     sptr<QuickRenderer> renderer;
+    sptr<QuickShadowRenderer> shadowRenderer;
     sptr<TopDownVisualizer> topDown = nullptr;
     sptr<LandscapeBuilder> builder;
 };

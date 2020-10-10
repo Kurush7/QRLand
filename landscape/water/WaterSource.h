@@ -17,6 +17,7 @@ class WaterSource {
 public:
     WaterSource(QRMatrix<float> &waterLevel): waterLevel(waterLevel) {}
     virtual void use(float dt) = 0;
+    virtual void scaleGrid(QRMatrix<float> &newWL) {waterLevel = newWL;}
 protected:
     QRMatrix<float> &waterLevel;
 };
@@ -33,17 +34,14 @@ public:
         dist_h = uniform_int_distribution<size_t>(0, waterLevel.height()-1);
     }
 
-    virtual void use(float dt) {
-        size_t w, h;
-        for(int k = 0; k < dropCnt; ++k) {
-            w = dist_w(generator);
-            h = dist_h(generator);
-            for (int i = -dropRad+1; i < dropRad; ++i)
-                for (int j = -dropRad+1; j < dropRad; ++j)
-                    if (w+i < width && w+i >= 0 && h+j<height && h+j >= 0)
-                        waterLevel[h+j][w+i] += dropIntensity;
-        }
+    virtual void scaleGrid(QRMatrix<float> &newWL) {
+        WaterSource::scaleGrid(newWL);
+        width = waterLevel.width(), height = waterLevel.height();
+        dist_w = uniform_int_distribution<size_t>(0, waterLevel.width()-1);
+        dist_h = uniform_int_distribution<size_t>(0, waterLevel.height()-1);
     }
+
+    virtual void use(float dt);
 
 private:
     float dropIntensity;
@@ -62,6 +60,12 @@ public:
             WaterSource(waterLevel), riverIntensity(riverIntensity){
         x = min(pos_x, waterLevel.width());
         y = min(pos_y, waterLevel.height());
+    }
+
+    virtual void scaleGrid(QRMatrix<float> &newWL) {
+        WaterSource::scaleGrid(newWL);
+        x *= 2;
+        y *= 2;
     }
 
     virtual void use(float dt) {

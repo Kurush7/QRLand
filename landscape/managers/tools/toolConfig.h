@@ -8,12 +8,16 @@
 const float layerLevelMult = 0.3;
 
 const float minHillHeightParam = 20;
-const float maxHillHeightParam = 20;
-const float minHillSteepCoef = 0.1;
-const float maxHillSteepCoef = 0.5;
-const size_t maxHillRadius = 10;
+const float maxHillHeightParam = 5;
+const float hillStopCoef = 4;
 
-const double plateMountainHeightCoef = 20;
-const double plateMountainSteepCoef = 0.9;
+const float diamondSquareRandomCoef = 0.1;
+const float diamondSquareRandomUpdateCoef = 0.05;
+
+const float plateMountainHeightCoef = 10;
+const float mountainPriorCoef = 2;
+const float mountainStopCoef = 4;
+const float mountainsDSRandomCoef=0.4;
+const float mountainsMinTense=0.2;
 
 #endif //BIG3DFLUFFY_TOOLCONFIG_H

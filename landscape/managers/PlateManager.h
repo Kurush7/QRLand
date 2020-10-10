@@ -17,6 +17,14 @@ public:
         buildPlates(definePoints(plateCnt));
     }
 
+    void scalePlates() {
+        for (auto &p: plates)
+            for (auto &e: p->edges) {
+                e.a[0] *= 2, e.a[1] *= 2;
+                e.b[0] *= 2, e.b[1] *= 2;
+            }
+    }
+
     QRVectorIterator<sptr<QRFrame2D>> getPlates() {return plates.begin();}
     QRVectorIterator<Vector3D> getMove() {return moveVectors.begin();}
 

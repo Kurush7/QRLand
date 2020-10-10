@@ -13,7 +13,6 @@
 #include "2Domain.h"
 #include "toolConfig.h"
 
-#include "../random_generator.h"
 #include "diamondSquare.h"
 
 struct ToolData {

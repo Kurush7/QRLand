@@ -7,8 +7,8 @@
 
 
 // todo manage parameters for best perfomance
-// todo return
-const float maxPixelError = 0;
+// todo add minimal visible level
+const float maxPixelError = 0;  //0.2
 const size_t FrameSize = 9;
 const float pixelsPerUnit = 200;
 

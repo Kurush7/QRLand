@@ -3,7 +3,7 @@
 //
 
 #include "LandscapeBuilder.h"
-#include "managers/random_generator.h"
+#include "random_generator.h"
 
 size_t squared(size_t x) {
     size_t a = 1;
@@ -20,8 +20,8 @@ heightMap(squaredInc(_width),
           squaredInc(_width)),
 points(squaredInc(_width),
        squaredInc(_width)),
-plateManager(squaredInc(_width)*world_step-world_step,
-               squaredInc(_height)*world_step-world_step)
+plateManager(squaredInc(_width)*world_step,
+               squaredInc(_height)*world_step)
 {
     width = squaredInc(_width),
     height = squaredInc(_width);
@@ -86,6 +86,9 @@ void LandscapeBuilder::useTool(ToolName name) {
 sptr<QRPolyModel3D> LandscapeBuilder::createLandscape() {
     landscape.reset();
     landscape = sptr<QRPolyModel3D>(new RoamLandscape(points));
+    lowest_polygons.clear();
+    landscape->addMaxDetailPolygons(lowest_polygons);
+    waterManager->setPolygons(lowest_polygons);
     return landscape;
 }
 
@@ -118,8 +121,7 @@ void LandscapeBuilder::scaleGrid() {
             newHmap[i][j] = heightMap[oldi][oldj];
 
 
-    double k = 0.2;
-    uniform_real_distribution<float> shift(-worldStep*k, worldStep*k);
+    uniform_real_distribution<float> shift(-worldStep*diamondSquareRandomCoef, worldStep*diamondSquareRandomCoef);
     // diamond square
     for (int i = 1; i < newH; i += 2)
         for (int j = 1; j < newW; j += 2) {
@@ -146,12 +148,18 @@ void LandscapeBuilder::scaleGrid() {
 
     points.resize(newW, newH);
     buildPoints();
+    //plateManager.scalePlates();
     toolData = ToolData(&heightMap, width, height, worldStep,
                         plateManager.getPlates(), plateManager.getMove());
 
     waterManager->updateMatrices(heightMap, points);
+    //lowest_polygons.clear();
+    //landscape->addMaxDetailPolygons(lowest_polygons);
+    //waterManager->setPolygons(lowest_polygons.begin());
+
+
     for (auto it = disturbManager.getAll(); it; ++it)
         it->get()->setToolData(toolData);
-    for (auto it = toolManager.getAllTools(); it; ++it)   // todo this is deprecated
-        it->get()->setToolData(toolData);
+    //for (auto it = toolManager.getAllTools(); it; ++it)   // todo this is deprecated
+    //    it->get()->setToolData(toolData);
 }
