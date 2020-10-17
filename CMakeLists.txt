@@ -27,6 +27,7 @@ include_directories(containers)
 include_directories(exceptions)
 include_directories(math)
 include_directories(controlStuff)
+include_directories(gui)
 include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -48,15 +49,6 @@ target_link_libraries(all_lib
 add_subdirectory(gui)
 #add_subdirectory(tests)
 
-add_library(wip1_lib
-        gui/wip1/MainWindow.cpp
-        gui/wip1/Presenter.cpp
-        gui/wip1/Facade.cpp
-        )
-target_link_libraries(wip1_lib
-        ${QT_INCLUDES}
-        )
-
 add_library(wip2_lib
         gui/wip2/MainWindow.cpp
         gui/wip2/Presenter.cpp
@@ -66,11 +58,22 @@ target_link_libraries(wip2_lib
         ${QT_INCLUDES}
         )
 
+add_library(prod_lib
+        gui/prod/MainWindow.cpp
+        gui/prod/Facade.cpp
+        gui/prod/EditorWindow.cpp
+        gui/prod/EditorPresenter.cpp
+        )
+target_link_libraries(prod_lib
+        ${QT_INCLUDES}
+        )
 
 add_executable(main.exe
-        main.cpp)
+        main.cpp
+        gui/style.css)
 target_link_libraries(main.exe
-        wip2_lib
+        prod_lib
+        views_lib
         widgets_lib
         all_lib
         )
@@ -80,6 +83,7 @@ target_link_libraries(main.exe ${QT_LIBRARIES} ${OPENGL_LIBRARIES})
 
 add_custom_command(
         TARGET main.exe POST_BUILD
+        DEPENDS ${CMAKE_SOURCE_DIR}/gui/style.css
         COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_SOURCE_DIR}/gui/style.css
         ${CMAKE_CURRENT_BINARY_DIR}/gui/style.css)

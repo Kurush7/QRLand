@@ -1,3 +1,19 @@
+QPushButton#GlobalButton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 6px;
+}
+QPushButton#GlobalButton:pressed {
+    color: white;
+    border: 3px solid #303030;
+    background: #3AA200;
+}
+
 QPushButton#BigButton {
     font-size: 20px;
     height: 40px;

@@ -29,5 +29,7 @@
 #include <QtOpenGL/QGLWidget>
 #include <QOpenGLTexture>
 #include <QButtonGroup>
+#include <QMenu>
+#include <QMenuBar>
 
 #endif //BIG3DFLUFFY_QTINCLUDES_H
