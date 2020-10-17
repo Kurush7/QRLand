@@ -43,6 +43,7 @@ EditorWindow::EditorWindow(QWidget *parent)
     erosionEnd = new QPushButton("стоп", this);
     scaleGrid = new QPushButton("diamond-square", this);
     process = new QPushButton("process", this);
+    save = new QPushButton("save", this);
 
     ui = new QRLayoutManager("global", QRHor);
     ui->addLayers("left right", QRVert);
@@ -58,7 +59,7 @@ EditorWindow::EditorWindow(QWidget *parent)
     ui->addWidgets({{"radio", scaleRad}}, "settings/scale");
     ui->addWidgets({{"radio", rotateRad}}, "settings/rotate");
     ui->addWidgets({{"label", settingsLabel}}, "settings/label");
-    ui->addWidgets({{"undo", undoBtn}}, "settings/undo");
+    ui->addWidgets({{"undo", undoBtn}, {"save", save}}, "settings/undo");
     ui->addWidgets({{"scale", scaleGrid}}, "settings/scaleGrid");
     ui->addWidgets({{"process", process}}, "settings/process");
     ui->addWidgets({{"water", waterCheckBox}, {"shades", shadesCheckBox}}, "settings/check");
@@ -124,5 +125,6 @@ void EditorWindow::addLogic() {
     connect(erosionStart, &QPushButton::clicked, [this]() {erosionTimer.start();});
     connect(erosionEnd, &QPushButton::clicked, [this]() {erosionTimer.stop();});
     connect(&erosionTimer, &QTimer::timeout, [this]() {presenter->erosionIteration();});
+    connect(save, &QPushButton::clicked, [this]() {presenter->save();});
 }
 

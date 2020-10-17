@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent) {
     setDarkTheme();
 
-    newBtn = new QPushButton("новый ландшафт", this);
-    openBtn = new QPushButton("открыть ландшафт", this);
+    newBtn = new QPushButton("новый проект", this);
+    openBtn = new QPushButton("открыть...", this);
 
     openFile = new QFileDialog(this);
 

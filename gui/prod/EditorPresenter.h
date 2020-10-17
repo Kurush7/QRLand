@@ -34,6 +34,7 @@ public:
     void erosionIteration();
     void scaleGrid();
     void process();
+    void save() {facade->save();}
 
 private:
     void defineTransformParams(float&, float&, float&, QRKey);

@@ -9,6 +9,7 @@
 #include "managers/QRManagers.h"
 #include "landscape/QRLandscape.h"
 #include "renderStuff.h"
+#include "managers/SaveLoadManager.h"
 
 class Facade {
 public:
@@ -26,6 +27,11 @@ public:
     void process() {
         builder->process();
         renderer->render();
+    }
+    void save() {
+        if (!landscape) return;
+        SaveLoadManager man;
+        man.saveSTL(landscape);
     }
 
     void scaleGrid() {

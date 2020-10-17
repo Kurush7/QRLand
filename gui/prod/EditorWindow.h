@@ -37,7 +37,7 @@ private:
 
     QCheckBox *waterCheckBox, *shadesCheckBox;
 
-    QPushButton *undoBtn, *erosionStart, *erosionEnd, *scaleGrid, *process;
+    QPushButton *undoBtn, *erosionStart, *erosionEnd, *scaleGrid, *process, *save;
 
     QTimer erosionTimer;
 };

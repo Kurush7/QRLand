@@ -9,10 +9,10 @@
 
 class SaveLoadManager {
 public:
-    void save(const sptr<RoamLandscape> &land);
-    void saveSTL(const sptr<RoamLandscape> &land);
+    // todo! now saves only triangular index polygons
+    void save(const sptr<RoamLandscape> &land, std::string filename);
+    void saveSTL(const sptr<RoamLandscape> &land, std::string filename="landscape.stl");
     uptr<RoamLandscape> load(std::string);
-    uptr<RoamLandscape> loadSTL(std::string);
 };
 
 
