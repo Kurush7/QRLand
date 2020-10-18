@@ -4,6 +4,7 @@ set(CMAKE_AUTOUIC ON)
 
 add_library(widgets_lib STATIC
         ColorEdit.cpp
+        QRInput.cpp
         CustomDoubleValidator.cpp
         LineSpacer.cpp
         QRadioField.cpp

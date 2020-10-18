@@ -10,6 +10,7 @@ MainWindow::~MainWindow() {}
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent) {
+    setWindowTitle("QRLandscaping");
     setDarkTheme();
 
     newBtn = new QPushButton("новый проект", this);

@@ -8,6 +8,7 @@
 #include "QTIncludes.h"
 #include <QMenu>
 #include <QMenuBar>
+#include "QRSettings.h"
 
 class QRMenu: public QMenuBar {
 public:
@@ -22,11 +23,18 @@ public:
             auto *quit = new QAction("Выход", this);
             file->addAction(quit);
 
-        auto *edit = addMenu("Правка");
+        auto *settings = addMenu("Правка");
+        auto *set_action = new QAction("Параметры", this);
+        settings->addAction(set_action);
+
         auto *view = addMenu("Вид");
         auto *help = addMenu("Справка");
 
         connect(quit, &QAction::triggered, qApp, QApplication::quit);
+        connect(set_action, &QAction::triggered, []() {
+            auto w = new QRSettings();
+            w->show();
+        });
     }
 };
 

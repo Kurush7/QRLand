@@ -31,5 +31,7 @@
 #include <QButtonGroup>
 #include <QMenu>
 #include <QMenuBar>
+#include <QWindow>
+#include <QScrollArea>
 
 #endif //BIG3DFLUFFY_QTINCLUDES_H

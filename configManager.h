@@ -2,8 +2,8 @@
 // Created by kurush on 18.10.2020.
 //
 
-#ifndef BIG3DFLUFFY_LOADCONFIG_H
-#define BIG3DFLUFFY_LOADCONFIG_H
+#ifndef BIG3DFLUFFY_CONFIGMANAGER_H
+#define BIG3DFLUFFY_CONFIGMANAGER_H
 
 #include <sstream>
 #include <string>
@@ -14,5 +14,6 @@
 #include "QRConstants.h"
 
 void loadConfig();
+void saveConfig();
 
-#endif //BIG3DFLUFFY_LOADCONFIG_H
+#endif //BIG3DFLUFFY_CONFIGMANAGER_H

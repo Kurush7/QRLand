@@ -1,0 +1,73 @@
+
+//
+
+// Created by kurush on 18.10.2020.
+
+//
+RENDER_THREAD_CNT=4
+
+// math staff
+QREPS=1e-5
+QRSMALL_EPS=1e-9
+QREPS_MINI=1e-3
+QRINF=1e9
+SELECTION_ERROR=1.05;    // for selection of frame model on clic
+
+// render stuff
+MAX_LIGHT_CNT=10
+MAX_POINT_CNT=1e6
+SCENE_DIST=10.
+PROJECTIVE_COEF=0.03
+maxPolygonPointCnt=16
+minQuickRenderDataBufferSize=1000
+
+// gui stuff
+BUTTON_REPRESS_TIME_MSEC=15
+
+// landscape
+maxNoLODPolygonCnt=10000
+defaultPlateCnt=16
+
+// QRColor plateBorderColor = QRColor("green");
+minPlateMoveForce=0.6
+maxPlateMoveForce=0.6
+
+// water
+minimalDrawWaterLevelCoef=0.1
+defaultErosionDT=0.1
+rainDropIntencityCoef=0.1
+rainDropCnt=5; // todo change to per-area drop-cn
+rainDropRadius=1
+riverIntencityCoef=0.5
+sedimentCapacity=0.02
+dissolveConstant=0.02
+depositionConstant=0.02
+defaultSlope=0.1
+evaporationCoef=0.002
+fluxPipeCapacity=1
+gravity=1
+
+// roam
+
+// todo add minimal visible level
+maxPixelError=0.2
+FrameSize=9
+pixelsPerUnit=200
+
+// tools
+layerLevelMult=0.3
+minHillHeightParam=20
+maxHillHeightParam=5
+hillStopCoef=4
+diamondSquareRandomCoef=0.1
+diamondSquareRandomUpdateCoef=0.05
+plateMountainHeightCoef=10
+mountainPriorCoef=2
+mountainStopCoef=4
+mountainsDSRandomCoef=0.4
+mountainsMinTense=0.2
+
+// climate
+maxZSteepCoef=0.55
+
+// new line must be here!!!!

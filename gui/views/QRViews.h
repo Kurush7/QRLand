@@ -6,5 +6,6 @@
 #define BIG3DFLUFFY_QRVIEWS_H
 
 #include "QRMenu.h"
+#include "QRSettings.h"
 
 #endif //BIG3DFLUFFY_QRVIEWS_H

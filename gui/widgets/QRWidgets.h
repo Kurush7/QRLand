@@ -5,6 +5,7 @@
 #ifndef BIG3DFLUFFY_QRWIDGETS_H
 #define BIG3DFLUFFY_QRWIDGETS_H
 
+#include "QRInput.h"
 #include "ColorEdit.h"
 #include "LineSpacer.h"
 #include "QRLabel.h"

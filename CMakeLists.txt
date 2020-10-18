@@ -71,7 +71,7 @@ target_link_libraries(prod_lib
 add_executable(main.exe
         main.cpp
         gui/style.css
-        loadConfig.cpp
+        configManager.cpp
         QRConstants.cpp)
 target_link_libraries(main.exe
         prod_lib

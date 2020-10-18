@@ -7,7 +7,7 @@
 #include <QLibraryInfo>
 
 #include "gui/wip2/MainWindow.h"
-#include "loadConfig.h"
+#include "configManager.h"
 
 
 using namespace std;
