@@ -74,6 +74,18 @@ void WaterManager::resetWater() {
     changedPolygons.clear();
 }
 
+void WaterManager::setWaterMatrix(QRMatrix<float>&m) {
+    if (m.width() != waterLevel.width() || m.height() != waterLevel.height()) {
+        cerr << "updating hmap: wrong sizes";
+        return;
+    }
+    for (size_t i = 0; i < m.height(); ++i)
+        for (size_t j = 0; j < m.width(); ++j)
+            waterLevel[i][j] = m[i][j];
+
+    updateWater();
+}
+
 void WaterManager::updateWater() {
     if (!waterEnabled) return; // todo MUST UPDATE HMAP
     QRPolygon3D *poly;

@@ -12,7 +12,7 @@
 #include "../basic/QRLandscapeTexture.h"
 
 #include "globalConfig.h"
-#include "RoamConfig.h"
+#include "QRConstants.h"
 
 struct RoamNode;
 using LinkMap = std::map<Vector3D, RoamNode*>;

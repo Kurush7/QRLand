@@ -8,7 +8,7 @@
 #include <random>
 
 #include "2Domain.h"
-#include "../landscapeConfig.h"
+#include "QRConstants.h"
 
 class PlateManager {
 public:

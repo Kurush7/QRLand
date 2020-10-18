@@ -28,10 +28,34 @@ public:
         builder->process();
         renderer->render();
     }
+
     void save() {
         if (!landscape) return;
-        SaveLoadManager man;
         man.saveSTL(landscape);
+        man.save(builder);
+    }
+    void load(string file) {
+        sptr<LandscapeBuilder> b = man.load(file);
+        if (!b) {
+            cerr << "FAILED TO LOAD LANDSCAPE";
+            return;
+        }
+
+        builder = b;
+        landscape = builder->createLandscape();
+        scene->clearModels();
+        scene->addModel(landscape, Vector3D(0,0,0));
+        builder->waterManager->enableWater();
+        builder->waterManager->setWaterMatrix(man.water);
+
+        builder->climateManager->on_the_7th_day();
+        builder->waterManager->updateWater();
+        landscape->interpolateColors();
+
+        shadowRenderer->generateShades();
+        renderer->getColorManager()->setWorldStep(builder->getWorldStep());
+
+        renderer->render();
     }
 
     void scaleGrid() {
@@ -44,8 +68,6 @@ public:
         shadowRenderer->generateShades();
 
         renderer->getColorManager()->setWorldStep(builder->getWorldStep());
-        //todo QuickShadowRenderer shadowRenderer(r, 0);
-        //shadowRenderer.generateShades();
 
         renderer->render();
     }
@@ -61,6 +83,8 @@ private:
     sptr<TopDownVisualizer> topDown = nullptr;
     sptr<LandscapeBuilder> builder;
     sptr<RoamLandscape> landscape;
+
+    SaveLoadManager man;
 };
 
 

@@ -11,7 +11,7 @@
 #include "containers/QRContainers.h"
 #include "math/QRMath.h"
 #include "objects/objects.h"
-#include "../renderConfig.h"
+#include "QRConstants.h"
 
 
 class QuickRenderData {

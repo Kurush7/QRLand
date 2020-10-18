@@ -9,7 +9,7 @@
 #include "containers/QRContainers.h"
 #include "math/QRMath.h"
 #include "objects/objects.h"
-#include "WaterConfig.h"
+#include "QRConstants.h"
 
 // todo add climate here
 

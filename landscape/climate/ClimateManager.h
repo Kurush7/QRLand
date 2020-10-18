@@ -10,7 +10,7 @@
 #include "objects/objects.h"
 #include "basic/QRLandscapeTexture.h"
 
-#include "ClimateConfig.h"
+#include "QRConstants.h"
 
 
 class ClimateManager {

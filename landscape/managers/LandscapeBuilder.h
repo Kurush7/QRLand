@@ -9,8 +9,7 @@
 #include "../water/WaterManager.h"
 #include "../climate/ClimateManager.h"
 
-
-#include "../landscapeConfig.h"
+#include "QRConstants.h"
 #include "managers/tools/QRToolFabric.h"
 #include "managers/tools/QRToolManager.h"
 
@@ -39,6 +38,7 @@ public:
     sptr<RoamLandscape> createLandscape();
 
     const QRMatrix<float>& getHeightMap() {return heightMap;}
+    void setHeightMap(const QRMatrix<float>& hm);
     double getWorldStep() {return worldStep;}
 
     bool activateWaterManager() {

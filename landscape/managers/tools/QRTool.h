@@ -11,7 +11,7 @@
 #include "containers/QRContainers.h"
 #include "math/QRMath.h"
 #include "2Domain.h"
-#include "toolConfig.h"
+#include "QRConstants.h"
 
 #include "diamondSquare.h"
 

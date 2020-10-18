@@ -36,6 +36,7 @@ public:
     void process();
     void save() {facade->save();}
 
+    sptr<Facade> facade;
 private:
     void defineTransformParams(float&, float&, float&, QRKey);
     void draw(bool reset=false);
@@ -46,7 +47,6 @@ private:
     EditorWindow &window;
 
     sptr<QRImage> image, hmap_image;
-    sptr<Facade> facade;
 
     bool is1Active=true;
 };

@@ -11,7 +11,7 @@
 
 #include "ROAM/RoamLandscape.h"
 #include "ROAM/RoamLandscapeCreator.h"
-#include "ROAM/RoamConfig.h"
+#include "QRConstants.h"
 
 #include "managers/LandscapeBuilder.h"
 

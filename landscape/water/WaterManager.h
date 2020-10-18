@@ -10,7 +10,7 @@
 #include "objects/objects.h"
 #include "basic/QRLandscapeTexture.h"
 
-#include "WaterConfig.h"
+#include "QRConstants.h"
 #include "WaterSource.h"
 
 
@@ -50,9 +50,12 @@ public:
     void setWaterLevel(float wl);
     void erosionIteration(float dt = defaultErosionDT);
 
+    QRMatrix<float>& getWaterLevel() {return waterLevel;}
+    void setWaterMatrix(QRMatrix<float>&m);
+
     void updateWater();
 private:
-    bool waterEnabled = true;
+    bool waterEnabled = false;
     float worldStep, width, height;
 
     QRMatrix<sptr<QRPoint3D>> &points;

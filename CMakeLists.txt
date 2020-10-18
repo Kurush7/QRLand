@@ -70,7 +70,9 @@ target_link_libraries(prod_lib
 
 add_executable(main.exe
         main.cpp
-        gui/style.css)
+        gui/style.css
+        loadConfig.cpp
+        QRConstants.cpp)
 target_link_libraries(main.exe
         prod_lib
         views_lib
@@ -86,4 +88,8 @@ add_custom_command(
         DEPENDS ${CMAKE_SOURCE_DIR}/gui/style.css
         COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_SOURCE_DIR}/gui/style.css
-        ${CMAKE_CURRENT_BINARY_DIR}/gui/style.css)
+        ${CMAKE_CURRENT_BINARY_DIR}/gui/style.css
+
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/config.txt
+        ${CMAKE_CURRENT_BINARY_DIR}/config.txt)

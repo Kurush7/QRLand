@@ -97,6 +97,24 @@ sptr<RoamLandscape> LandscapeBuilder::createLandscape() {
     return landscape;
 }
 
+void LandscapeBuilder::setHeightMap(const QRMatrix<float>& hm) {
+    if (hm.width() != heightMap.width() || hm.height() != heightMap.height()) {
+        cerr << "updating hmap: wrong sizes";
+        return;
+    }
+    for (size_t i = 0; i < hm.height(); ++i)
+        for (size_t j = 0; j < hm.width(); ++j)
+            heightMap[i][j] = hm[i][j];
+
+    updateHeightMap();
+
+    waterManager->updateMatrices(heightMap, points);
+    climateManager->updateMatrices(heightMap, points);
+
+    for (auto it = disturbManager.getAll(); it; ++it)
+        it->get()->setToolData(toolData);
+}
+
 void LandscapeBuilder::updateHeightMap() {
     Vector3D v;
     for(size_t i = 0; i < height; ++i) {

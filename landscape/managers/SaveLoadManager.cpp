@@ -9,8 +9,62 @@
 
 using namespace std;
 
-void SaveLoadManager::save(const sptr<RoamLandscape> &land, string filename) {
+void SaveLoadManager::save(const sptr<LandscapeBuilder> &builder, string filename) {
 
+
+    auto hmap = builder->getHeightMap();
+    auto water = builder->waterManager->getWaterLevel();
+    int32_t w = hmap.width(), h = hmap.height();
+    float step = builder->getWorldStep();
+
+    filename += ".qrland";
+    FILE *f = fopen(filename.c_str(), "wb");
+    for (int i = 0; i < header.size(); ++i)
+        fwrite(&header[i], sizeof(char), 1, f);
+    fwrite(&step, sizeof(float), 1, f);
+    fwrite(&w, sizeof(int32_t), 1, f);
+    fwrite(&h, sizeof(int32_t), 1, f);
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j)
+            fwrite(&hmap[i][j], sizeof(float), 1, f);
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j)
+            fwrite(&water[i][j], sizeof(float), 1, f);
+    fclose(f);
+}
+
+uptr<LandscapeBuilder> SaveLoadManager::load(std::string filename) {
+    int32_t w, h;
+    float step;
+
+    FILE *f = fopen(filename.c_str(), "rb");
+
+    // header protection
+    char c;
+    for (int i = 0; i < header.size(); ++i) {
+        fread(&c, sizeof(char), 1, f);
+        if (c != header[i])
+            return nullptr;
+    }
+
+    fread(&step, sizeof(float), 1, f);
+    fread(&w, sizeof(int32_t), 1, f);
+    fread(&h, sizeof(int32_t), 1, f);
+
+    hmap.resize(w, h);
+    water.resize(w, h);
+
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j)
+            fread(&hmap[i][j], sizeof(float), 1, f);
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j)
+            fread(&water[i][j], sizeof(float), 1, f);
+    fclose(f);
+
+    auto builder = uptr<LandscapeBuilder>(new LandscapeBuilder(w, h, step));
+    builder->setHeightMap(hmap);
+    return builder;
 }
 
 void SaveLoadManager::saveSTL(const sptr<RoamLandscape> &land, string filename){
@@ -27,9 +81,9 @@ void SaveLoadManager::saveSTL(const sptr<RoamLandscape> &land, string filename){
     fwrite(&n, sizeof(int32_t), 1, f);
 
     auto fw = [f](Vector3D v) {
-        fwrite((const void*)&v[0], sizeof(float), 1, f);
-        fwrite((const void*)&v[1], sizeof(float), 1, f);
-        fwrite((const void*)&v[2], sizeof(float), 1, f);
+        fwrite(&v[0], sizeof(float), 1, f);
+        fwrite(&v[1], sizeof(float), 1, f);
+        fwrite(&v[2], sizeof(float), 1, f);
     };
 
     for (int i = 0; i < n; ++i) {
@@ -50,8 +104,4 @@ void SaveLoadManager::saveSTL(const sptr<RoamLandscape> &land, string filename){
     }
 
     fclose(f);
-}
-
-uptr<RoamLandscape> SaveLoadManager::load(std::string) {
-
 }

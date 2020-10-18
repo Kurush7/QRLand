@@ -61,8 +61,11 @@ void MainWindow::addLogic() {
     });
 
     connect(openBtn, &QPushButton::clicked, [this]() {
-        string str = openFile->getOpenFileName().toStdString();
-        cout << str;
+        string file = openFile->getOpenFileName().toStdString();
+        auto *x = new EditorWindow();
+        x->presenter->facade->load(file);
+        x->show();
+        this->close();
     });
 }
 

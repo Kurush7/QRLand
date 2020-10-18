@@ -17,9 +17,10 @@ Q_OBJECT
 public:
     explicit EditorWindow(QWidget *parent = nullptr);
     virtual ~EditorWindow();
+
+    sptr<EditorPresenter> presenter;
 private:
     friend class EditorPresenter;
-    sptr<EditorPresenter> presenter;
 
     void decorate();
     void addLogic();

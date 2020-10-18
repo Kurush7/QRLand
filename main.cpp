@@ -7,11 +7,15 @@
 #include <QLibraryInfo>
 
 #include "gui/wip2/MainWindow.h"
+#include "loadConfig.h"
+
 
 using namespace std;
 
 
 int main(int argc, char *argv[]) {
+    loadConfig();
+
     //no use QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
     QApplication app(argc, argv);
 
