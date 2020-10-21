@@ -93,27 +93,40 @@ private:
     int whatPressed = 0; // 0 - nothing, 1 - arrow, 2 - line
     sptr<QRArrow2D> pressedArrow;
     int PAIndex = 0;
+    QRVector<QRPair<int, int>> pressedPoints;
 
     // todo control release
     void onMousePressed(float x, float y) {
+        whatPressed = 0;
         Vector3D p{x, img->getHeight() - y};
         for (int i = 0; i < arrows.getSize(); ++i) {
             Vector3D v = arrows[i]->b;
             v = drawer->transformer->transform(v);
-            if (vectorLen2(v - p) < 3) {
+            if (vectorLen2(v - p) < 5) {
                 pressedArrow = arrows[i];
                 whatPressed = 1;
                 PAIndex = i;
                 return;
             }
         }
-        whatPressed = 0;
+
+        pressedPoints.clear();
+        for (int i = 0; i < plates.getSize(); ++i)
+            for (int j = 0; j < plates[i]->points.getSize(); ++j) {
+                Vector3D v = plates[i]->points[j];
+                v = drawer->transformer->transform(v);
+                if (vectorLen2(v - p) < 5) {
+                    whatPressed = 2;
+                    pressedPoints.push_back({i, j});
+                }
+            }
     }
 
     void onMouseMoved(float dx, float dy) {
         Vector3D p{dx, -dy};
         p[0] *= data.w * data.step / img->getWidth();
         p[1] *= data.h * data.step / img->getHeight();
+
         if (!whatPressed) return;
         else if (whatPressed == 1) {
             auto c = plates[PAIndex]->center;
@@ -127,9 +140,16 @@ private:
                 curlen = 1;
             }
             moves[PAIndex] = len2Norm(moves[PAIndex]) * curlen;
-            cout << moves[PAIndex] << '\n';
             pressedArrow->updateEq();
         }
+        else if (whatPressed == 2) {
+            for (int i = 0; i < pressedPoints.getSize(); ++i) {
+                int pl = pressedPoints[i].fst, pt = pressedPoints[i].snd;
+                plates[pl]->points[pt] += p;
+                plates[pl]->updateEdges();
+            }
+        }
+
         drawer->draw();
     }
 };

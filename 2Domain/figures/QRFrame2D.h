@@ -16,10 +16,7 @@ public:
     QRFrame2D() = default;
     QRFrame2D(const QRVector<Vector3D> &points, QRColor _color=QRColor("black")): points(points) {
         color = _color;
-        for (int i = 0; i < points.getSize() - 1; ++i)
-            edges.push_back(QRLine2D(points[i], points[i+1], color));
-        edges.push_back(QRLine2D(points[points.getSize()-1],
-                points[0], color));
+        updateEdges();
 
         center = ZeroVector;
         for (auto &p: points)
@@ -30,6 +27,14 @@ public:
     QRVector<QRLine2D> edges;
     QRVector<Vector3D> points;
     Vector3D center;
+
+    void updateEdges() {
+        edges.clear();
+        for (int i = 0; i < points.getSize() - 1; ++i)
+            edges.push_back(QRLine2D(points[i], points[i+1], color));
+        edges.push_back(QRLine2D(points[points.getSize()-1],
+                                 points[0], color));
+    }
 
     virtual void draw(const sptr<QRImage> &img) {
         for (auto &x: edges)
