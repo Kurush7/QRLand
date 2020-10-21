@@ -26,7 +26,7 @@ public:
             QRQueue<QRPair<int, int>> q;
 
             auto edge = e.first;
-            double tense = e.second;
+            double tense = minPlateMoveForce + e.second * maxPlateMoveForce;
             if (fabs(tense) < mountainsMinTense)
                 tense = sign(tense) * mountainsMinTense;
             float dh = tense * plateMountainHeightCoef * data.worldStep;

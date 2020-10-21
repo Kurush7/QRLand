@@ -25,13 +25,12 @@ void PlateManager::buildPlates(QRVector<Vector3D> points) {
         plates[i]->setColor(QRColor("green"));  //todo COLOR HARDCODE
 
     uniform_real_distribution<double> gd(0, 1);
-    uniform_real_distribution<double> gForce(minPlateMoveForce,
-            maxPlateMoveForce);
+    uniform_real_distribution<double> gdir(-1, 1);
     for (int i = 0; i < plates.getSize(); ++i) {
-        double x = gd(default_generator), y = gd(default_generator);
+        double x = gdir(default_generator), y = gdir(default_generator);
         Vector3D vec(x,y,0,0);
         vec = lenNorm(vec);
-        vec = vec * gForce(default_generator);
+        vec = vec * gd(default_generator);
         moveVectors.push_back(vec);
     }
 

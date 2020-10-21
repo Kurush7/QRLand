@@ -38,7 +38,7 @@ private:
 
     double w, h;
     QRVector<sptr<QRFrame2D>> plates;
-    QRVector<Vector3D> moveVectors;
+    QRVector<Vector3D> moveVectors;  // normed!!!
 };
 
 

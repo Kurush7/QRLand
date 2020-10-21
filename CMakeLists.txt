@@ -32,7 +32,7 @@ include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set (path "")
-set(source_list "tests/TimeTest.cpp")
+set(source_list "tests/TimeTest.cpp" 2Domain/figures/QRArrow2D.h)
 add_subdirectory(2Domain)
 add_subdirectory(3Domain)
 add_subdirectory(containers)

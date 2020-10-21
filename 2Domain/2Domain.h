@@ -15,6 +15,7 @@
 #include "figures/QRFrame2D.h"
 #include "figures/QRPoint2D.h"
 #include "figures/QRFrame2D.h"
+#include "figures/QRArrow2D.h"
 
 #include "transformers/ScaleTransformer.h"
 

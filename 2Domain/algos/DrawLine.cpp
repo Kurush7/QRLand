@@ -18,7 +18,7 @@ void drawLine(const sptr<QRImage> image, const Vector3D &a, const Vector3D &b,
     for (int i = 0; i <= ll; ++i) {
         xi = round(x), yi = round(y);
         if (xi >= 0 && xi < image->getWidth() && yi >=0 && yi < image->getHeight())
-            image->setPixel(yi, xi, color);
+            image->setPixel(xi, yi, color);
         x += dx, y += dy;
     }
 }

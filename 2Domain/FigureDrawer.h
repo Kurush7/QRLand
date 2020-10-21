@@ -20,12 +20,12 @@ public:
 
     void setScale(float w, float h) {kw = w, kh = h;}
 
+    sptr<QRTransformer2D> transformer = nullptr;
 private:
     const sptr<QRImage> &img;
 
     float kw = 1, kh = 1;
     QRVector<sptr<QRFigure2D>> figures;
-    sptr<QRTransformer2D> transformer = nullptr;
 };
 
 
