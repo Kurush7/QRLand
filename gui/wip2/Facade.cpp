@@ -14,7 +14,7 @@ using namespace std;
 // todo LOD: ignores small details
 // todo erosion: water accumulating at the borders
 
-Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
+Facade::Facade(ModelInitData dt, const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
     manager = sptr<BaseCommandManager> (new CommandManager());
 

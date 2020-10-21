@@ -81,10 +81,12 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
         else if (xw > xr) swap(xw,xr), swap(yw,yr), swap(zw,zr);
 
         if (xl == xr && yl == yr) {
+            pixel_lock.lock();
             if (zl - zbuf[yl*w + xl] < -QREPS) {
                 img->setPixel(xl, yl, c);
                 zbuf[yl*w + xl] = zl;
             }
+            pixel_lock.unlock();
             return;
         };
 
@@ -94,10 +96,12 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
             int pos = yl*w, x = xl;
             float dx = (xr - xl) / (yr - yl + 0.), fx = xl;
             for (int y = yl; y != yr; ++y) {
+                pixel_lock.lock();
                 if (z - zbuf[pos + x] < -QREPS) {
                     img->setPixel(x, y, c);
                     zbuf[pos + x] = z;
                 }
+                pixel_lock.unlock();
                 pos += w;
                 fx += dx;
                 z += dz;
@@ -109,10 +113,12 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
             int pos = yl*w, y = yl;
             float dy = (yr - yl) / (xr - xl + 0.), fy = yl;
             for (int x = xl; x != xr; ++x) {
+                pixel_lock.lock();
                 if (z - zbuf[pos + x] < -QREPS) {
                     img->setPixel(x, y, c);
                     zbuf[pos + x] = z;
                 }
+                pixel_lock.unlock();
                 fy += dy;
                 z += dz;
                 y = QRound(fy);
@@ -160,12 +166,12 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
             // todo here may be full-check for borders (left-up rule)
             if (lval > -QREPS_MINI && l2val > -QREPS_MINI) {
                 z = (fabs(b1)*zr + fabs(b2)*zl + (S0 - fabs(b1) - fabs(b2))*zw) / S0;
-                //pixel_lock.lock();   //todo fine without it on small polys, awful on big ones!
+                pixel_lock.lock();
                 if (z - zbuf[pos+x] < -QREPS) {
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
                 }
-                //pixel_lock.unlock();
+                pixel_lock.unlock();
             }
             lval += la, rval += ra; l2val += l2a;
             x++;
@@ -178,12 +184,12 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
         while (lval > -QREPS_MINI && (third_line!=1 || l2val > -QREPS_MINI)) {
             if (rval > -QREPS_MINI && l2val > -QREPS_MINI) {
                 z = (fabs(b1)*zr + fabs(b2)*zl + (S0 - fabs(b1) - fabs(b2))*zw) / S0;
-                //pixel_lock.lock();
+                pixel_lock.lock();
                 if (z - zbuf[pos+x] <-QREPS) {
                     img->setPixel(x, y, c);
                     zbuf[pos+x] = z;
                 }
-                //pixel_lock.unlock();
+                pixel_lock.unlock();
             }
             lval -= la, rval -= ra; l2val -= l2a;
             x--;

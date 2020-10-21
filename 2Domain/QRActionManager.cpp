@@ -50,8 +50,13 @@ void QRActionManager::keyReleaseEvent(QKeyEvent *event) {
 void QRActionManager::mousePressEvent(QMouseEvent *event) {
     cur_mouse_x = event->pos().x();
     cur_mouse_y = event->pos().y();
+    mods.mouseLeftPressed = true;
 
     emit QRMousePressed(cur_mouse_x, cur_mouse_y, mods);
+}
+
+void QRActionManager::mouseReleaseEvent(QMouseEvent *event) {
+    mods.mouseLeftPressed = false;
 }
 
 void QRActionManager::wheelEvent(QWheelEvent *event) {

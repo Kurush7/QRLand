@@ -11,7 +11,7 @@ QRVector<Vector3D> PlateManager::definePoints(int cnt) {
     float x, y;
     QRVector<Vector3D> pts;
     for (int i = 0; i < cnt; ++i) {
-        x = gx(generator), y = gy(generator);
+        x = gx(default_generator), y = gy(default_generator);
         pts.push_back({x,y,0});
     }
 
@@ -28,10 +28,10 @@ void PlateManager::buildPlates(QRVector<Vector3D> points) {
     uniform_real_distribution<double> gForce(minPlateMoveForce,
             maxPlateMoveForce);
     for (int i = 0; i < plates.getSize(); ++i) {
-        double x = gd(generator), y = gd(generator);
+        double x = gd(default_generator), y = gd(default_generator);
         Vector3D vec(x,y,0,0);
         vec = lenNorm(vec);
-        vec = vec * gForce(generator);
+        vec = vec * gForce(default_generator);
         moveVectors.push_back(vec);
     }
 

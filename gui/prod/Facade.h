@@ -11,9 +11,18 @@
 #include "renderStuff.h"
 #include "managers/SaveLoadManager.h"
 
+struct ModelInitData {
+    int w, h, seed;
+    float step;
+    ModelInitData(int w, int h, int seed, float step): w(w), h(h), seed(seed), step(step) {}
+    ModelInitData(): w(17), h(17), seed(17), step(1) {} // todo hardcode
+    sptr<PlateManager> plateManager = nullptr;
+};
+
+
 class Facade {
 public:
-    Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img);
+    Facade(ModelInitData dt, const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img);
     void draw();
 
     void moveCamera(float dx, float dy, float dz);

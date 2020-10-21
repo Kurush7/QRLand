@@ -9,10 +9,12 @@
 #include "ImageQT.h"
 #include "QRCanvas.h"
 #include "QRImage.h"
+#include "FigureDrawer.h"
 
 #include "figures/QRLine2D.h"
 #include "figures/QRFrame2D.h"
 #include "figures/QRPoint2D.h"
+#include "figures/QRFrame2D.h"
 
 #include "transformers/ScaleTransformer.h"
 

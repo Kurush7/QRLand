@@ -33,6 +33,14 @@ public:
     void process(int step_cnt=1);
     void useTool(ToolName);
 
+    void setPlateManager(sptr<PlateManager> man) {
+        plateManager = man;
+        toolData = ToolData(&heightMap, width, height, worldStep,
+                            plateManager->getPlates(), plateManager->getMove());
+        for (auto it = disturbManager.getAll(); it; ++it)
+            it->get()->setToolData(toolData);
+    }
+
     void scaleGrid();
 
     sptr<RoamLandscape> createLandscape();
@@ -49,7 +57,7 @@ public:
         return bool(landscape);
     }
 
-    PlateManager plateManager;
+    sptr<PlateManager> plateManager;
     sptr<WaterManager> waterManager;
     sptr<ClimateManager> climateManager;
     DisturbanceManager disturbManager;

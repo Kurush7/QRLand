@@ -19,9 +19,7 @@ LandscapeBuilder::LandscapeBuilder(size_t _width, size_t _height, double world_s
 heightMap(squaredInc(_width),
           squaredInc(_width)),
 points(squaredInc(_width),
-       squaredInc(_width)),
-plateManager(squaredInc(_width)*world_step,
-               squaredInc(_height)*world_step)
+       squaredInc(_width))
 {
     width = squaredInc(_width),
     height = squaredInc(_width);
@@ -31,12 +29,13 @@ plateManager(squaredInc(_width)*world_step,
     clearHeightMap();
     buildPoints();
 
+    plateManager = sptr<PlateManager>(new PlateManager(width*world_step, height*world_step));
     // this must go when map and points are ready!
     waterManager = sptr<WaterManager>(new WaterManager(heightMap, points));
     climateManager = sptr<ClimateManager>(new ClimateManager(heightMap, points));
 
     toolData = ToolData(&heightMap, width, height, worldStep,
-                        plateManager.getPlates(), plateManager.getMove());
+                        plateManager->getPlates(), plateManager->getMove());
 }
 
 void LandscapeBuilder::setTools(QRVector<QRPair<ToolName, ToolFrequency>> toolSet) {
@@ -173,7 +172,7 @@ void LandscapeBuilder::scaleGrid() {
     buildPoints();
     //plateManager.scalePlates();
     toolData = ToolData(&heightMap, width, height, worldStep,
-                        plateManager.getPlates(), plateManager.getMove());
+                        plateManager->getPlates(), plateManager->getMove());
 
     waterManager->updateMatrices(heightMap, points);
     climateManager->updateMatrices(heightMap, points);

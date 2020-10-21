@@ -10,7 +10,7 @@ EditorWindow::~EditorWindow() {
     presenter.reset();
 }
 
-EditorWindow::EditorWindow(QWidget *parent)
+EditorWindow::EditorWindow(ModelInitData data, QWidget *parent)
         : QMainWindow(parent) {
     setDarkTheme();
 
@@ -79,7 +79,7 @@ EditorWindow::EditorWindow(QWidget *parent)
 
     decorate();
     addLogic();
-    presenter = sptr<EditorPresenter>(new EditorPresenter(*this));
+    presenter = sptr<EditorPresenter>(new EditorPresenter(data, *this));
 }
 
 void EditorWindow::decorate() {
@@ -111,6 +111,9 @@ void EditorWindow::addLogic() {
             [this](QRKey k, QRModifiers m) {presenter->transform(k);});
     connect(canvas.get(), &QRCanvas::QRMouseWheelMoved,
             [this](float val, float x, float y, QRModifiers m) {presenter->scale(-val);});
+    connect(canvas.get(), &QRCanvas::QRMouseMoved,
+            [this](float dx, float dy, QRModifiers m) {if (m.mouseLeftPressed)
+                presenter->transformMouse(dx, dy);});
 
     connect(undoBtn, &QPushButton::clicked, [this]() {presenter->undo();});
     connect(scaleGrid, &QPushButton::clicked, [this]() {presenter->scaleGrid();});

@@ -9,6 +9,7 @@
 
 #include "2Domain.h"
 #include "QRConstants.h"
+#include "random_generator.h"
 
 class PlateManager {
 public:
@@ -28,6 +29,9 @@ public:
     QRVectorIterator<sptr<QRFrame2D>> getPlates() {return plates.begin();}
     QRVectorIterator<Vector3D> getMove() {return moveVectors.begin();}
 
+    void setPlates(QRVectorIterator<sptr<QRFrame2D>> ps) {plates = ps;}
+    void setMove(QRVectorIterator<Vector3D> mv) {moveVectors = mv;}
+
 private:
     QRVector<Vector3D> definePoints(int cnt);
     void buildPlates(QRVector<Vector3D> points);
@@ -35,8 +39,6 @@ private:
     double w, h;
     QRVector<sptr<QRFrame2D>> plates;
     QRVector<Vector3D> moveVectors;
-
-    std::default_random_engine generator = std::default_random_engine();
 };
 
 

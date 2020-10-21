@@ -21,12 +21,13 @@ class EditorWindow;
 class EditorPresenter: public QObject {
 Q_OBJECT
 public:
-    explicit EditorPresenter(EditorWindow &w);
+    explicit EditorPresenter(ModelInitData dt, EditorWindow &w);
     ~EditorPresenter() {
         facade.reset();
     }
     void undo();
     void transform(QRKey);
+    void transformMouse(float dx, float dy);
     void scale(float times);
     void changeCamera();
     void setWaterVisible();

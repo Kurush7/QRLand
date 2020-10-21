@@ -9,10 +9,10 @@
 using namespace std;
 using namespace chrono;
 
-EditorPresenter::EditorPresenter(EditorWindow &w): window(w) {
+EditorPresenter::EditorPresenter(ModelInitData data, EditorWindow &w): window(w) {
     image = sptr<QRImage>(new ImageQT(window.canvas));
     hmap_image = sptr<QRImage>(new ImageQT(window.hmap));
-    facade = sptr<Facade>(new Facade(image, hmap_image));
+    facade = sptr<Facade>(new Facade(data, image, hmap_image));
 
     //facade->addCube(10,0,0,0, QRColor("red"));
     draw();
@@ -29,6 +29,19 @@ void EditorPresenter::transform(QRKey d) {
     else {
         facade->scaleCamera(x,y,z);
     }
+    draw(window.scaleRad->isChecked());
+}
+
+void EditorPresenter::transformMouse(float dx, float dy) {
+    cout << dx<< " || " << dy << '\n';
+    if (fabs(dx) >= fabs(dy)) dy = 0;
+    else dx = 0;
+    float x=0, y=0, z=0;
+    float k = 500;
+    z = dx / k;
+    x = dy / k;
+
+    facade->rotateCamera(x,y,z);
     draw(window.scaleRad->isChecked());
 }
 

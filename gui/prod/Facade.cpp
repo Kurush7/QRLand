@@ -13,13 +13,13 @@ using namespace std;
 // todo water manager fucked up
 // todo LOD: ignores small details
 // todo erosion: water accumulating at the borders
+// todo mouse camera move: fix axes
 
-Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
+Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
     manager = sptr<BaseCommandManager> (new CommandManager());
 
     // scene creation
-    //auto lightPos = lenNorm(Vector3D(1,1,-3,0));
     auto lightPos = lenNorm(Vector3D(1,1,0.5,0));
     auto cr = PolySceneCreatorNoCamera(lightPos, -1*lightPos);
     scene = cr.create();
@@ -33,9 +33,9 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     scene->setActiveCamera("observeCamera");
 
     // builder creation
-    // DO NOT SET LESSER THAN 64: OR CHANGE FRAME SIZE
     builder = sptr<LandscapeBuilder>(new LandscapeBuilder(
-            17, 17, 5));
+            data.w, data.h, data.step));
+    builder->setPlateManager(data.plateManager);
     topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_img));
 
     builder->setTools({
@@ -55,13 +55,12 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     scene->addModel(landscape, Vector3D(0,0,0));
 
     builder->activateWaterManager();
-    builder->waterManager->setWaterLevel(10);
     builder->waterManager->setWaterLevel(0);
     builder->waterManager->addRiverSource(40, 40);
     builder->waterManager->addRiverSource(100, 100);
     builder->waterManager->addRainSource();
 
-    for (auto f = builder->plateManager.getPlates(); f; ++f)
+    for (auto f = builder->plateManager->getPlates(); f; ++f)
         topDown->addFigure(*f);
 
     topDown->drawHeightMap();
@@ -69,18 +68,11 @@ Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
     auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
     renderer = r;
     renderer->getColorManager()->setWorldStep(builder->getWorldStep());
-    // todo move to renderer itself
     shadowRenderer = sptr<QuickShadowRenderer>(new QuickShadowRenderer(r, 0));
     shadowRenderer->generateShades();
 
 
     renderer->render();
-    //scene->addModel(sptr<QRPolyModel3D>(new QRLandscapeSurface(2,2, 10)), Vector3D(0,0,0));
-    //scene->addModel(RandomHMapLandscapeSurfaceCreator(50, 50, 0.2).create(),
-    //       Vector3D(0,0,0));
-    //scene->addModel(RoamLandscapeCreator(129, 129, 0.1).create(),
-    //       Vector3D(0,0,0));
-    //scene->addModel(CubeModelCreator(10, sptr<QRTexture>(new ColorTexture(127,127,127))).create(),Vector3D(0,0,0));
 }
 
 void Facade::draw() {

@@ -79,6 +79,8 @@ public:
         ui->addWidgets({{"label", lab}}, cur_layer);
         addInput("озеленение: макс. уровень наклона", &maxZSteepCoef, cur_layer, true);
 
+        ui->generateSpacers();
+
         w->setLayout(ui->getRootLayout());
         setWidget(w);
     }

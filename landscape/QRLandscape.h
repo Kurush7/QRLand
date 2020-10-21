@@ -17,4 +17,6 @@
 
 #include "decoration/TopDownVisualizer.h"
 
+#include "random_generator.h"
+
 #endif //BIG3DFLUFFY_QRLANDSCAPE_H

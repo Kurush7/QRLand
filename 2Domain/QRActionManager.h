@@ -16,7 +16,7 @@ enum QRKey {
     QRKey_E, QRKey_R
 };
 struct QRModifiers {
-    bool ctrl, shift, alt;
+    bool ctrl, shift, alt, mouseLeftPressed;
 };
 
 
@@ -40,6 +40,7 @@ private:
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void keyReleaseEvent(QKeyEvent *) override;
     virtual void mousePressEvent(QMouseEvent *) override;
+    virtual void mouseReleaseEvent(QMouseEvent *) override;
     virtual void wheelEvent(QWheelEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
 

@@ -10,6 +10,7 @@
 #include "../../globalDefines.h"
 
 #include "EditorWindow.h"
+#include "NewModelStartWindow.h"
 
 #include "2Domain.h"
 
@@ -32,6 +33,7 @@ private:
     QFileDialog *openFile;
 
     EditorWindow *editorWindow;
+    NewModelStartWindow *startWindow;
 };
 
 #endif //MAIN_WINDOW

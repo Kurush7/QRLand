@@ -34,11 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::decorate() {
-    auto sepLays = ui->getSepLayers();
-    for (auto lay = sepLays.begin(); lay != sepLays.end(); ++lay) {
-        (*lay)->addChild(new QRLayoutNode("sep", QRHor, nullptr, new LineSpacer("color:rgb(100,100,100)", 300)));
-        (*lay)->getLayout()->setAlignment(Qt::AlignCenter);
-    }
+    ui->generateSpacers();
 
     setFixedWidth(800);
     setFixedHeight(600);
@@ -56,7 +52,7 @@ void MainWindow::decorate() {
 
 void MainWindow::addLogic() {
     connect(newBtn, &QPushButton::clicked, [this]() {
-        auto *x = new EditorWindow();
+        auto *x = new NewModelStartWindow();
         x->show();
         this->close();
     });

@@ -10,12 +10,12 @@
 #include "../../globalDefines.h"
 #include "2Domain.h"
 
-const int erosionFPS = 30;
+const int erosionFPS = 30;  // todo fuck off from here
 
 class EditorWindow: public QMainWindow {
 Q_OBJECT
 public:
-    explicit EditorWindow(QWidget *parent = nullptr);
+    explicit EditorWindow(ModelInitData dt = ModelInitData(), QWidget *parent = nullptr);
     virtual ~EditorWindow();
 
     sptr<EditorPresenter> presenter;
