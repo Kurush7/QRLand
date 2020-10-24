@@ -24,7 +24,7 @@ Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRI
     auto cr = PolySceneCreatorNoCamera(lightPos, -1*lightPos);
     scene = cr.create();
     auto cam = sptr<QRCamera3D>(new Camera3D(100, 100, -5,50, 50,
-                                             QRINF, Vector3D(0,-100,-150), Vector3D(M_PI,0,0)));
+                                             QRINF, Vector3D(0,-100,-100), Vector3D(M_PI,0,0)));
     scene->addCamera(cam, "observeCamera");
 
     cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 20, 20, QRINF,

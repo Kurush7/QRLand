@@ -15,6 +15,7 @@ public:
     }
 
     void addFigure(const sptr<QRFigure2D> &figure) {figures.push_back(figure);}
+    void clearFigures() {figures.clear();}
 
     void draw();
 

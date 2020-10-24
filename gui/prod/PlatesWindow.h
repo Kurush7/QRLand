@@ -78,6 +78,7 @@ private:
         moves = manager->getMove();
         for (auto f = plates.begin(); f; f++)
             drawer->addFigure(*f);
+        arrows.clear();
         for (int i = 0; i < moves.getSize(); ++i) {
             auto inter = plates[i]->rayCenterIntersect(moves[i]);
             float len = vectorLen(plates[i]->center - inter);
