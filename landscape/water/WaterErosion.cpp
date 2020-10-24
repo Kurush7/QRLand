@@ -8,7 +8,6 @@ void WaterManager::erosionIteration(float dt) {
     if (!erosionReady) initErosionData();
     for (auto &s: waterSources)
         s->use(dt);
-// todo update river sources
 
     startMeasureTime;
     updateFlux(dt);

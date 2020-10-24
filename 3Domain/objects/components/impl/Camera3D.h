@@ -32,12 +32,12 @@ class Camera3D: public QRCamera3D {
 public:
     friend class Camera3DMemento;
 
-    Camera3D(float w, float h, float zDist, float screen,
+    Camera3D(float w, float h,
              float nearCutter, float farCutter = QRINF, const Vector3D &pos=ZVector, const Vector3D &rot=ZVector,
-             bool selfRotate = false);
+             bool selfRotate = false, float zDist=-5);
     ~Camera3D() {p.reset();}
     virtual sptr<QRObject3D> copy() {return sptr<QRCamera3D>(new Camera3D(width, height,
-            origin[2], screen, nearCutter, farCutter));}
+            nearCutter, farCutter));}   // todo fill other params
     virtual uptr<QRMemento> save();
     virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitCamera3D(p);}
     wptr<QRCamera3D> getPointer() {return p;}

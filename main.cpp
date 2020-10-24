@@ -6,7 +6,8 @@
 #include <QLocale>
 #include <QLibraryInfo>
 
-#include "gui/wip2/MainWindow.h"
+#include "gui/prod/MainWindow.h"
+#include "gui/prod/EditorWindow.h"
 #include "configManager.h"
 
 
@@ -31,9 +32,14 @@ int main(int argc, char *argv[]) {
     if (translator->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         app.installTranslator(translator);
 
-    MainWindow window;
-    window.setWindowIcon(QIcon("i.ico"));
-    window.show();
+    //MainWindow window;
+    //window.setWindowIcon(QIcon("i.ico"));
+    //window.show();
+    // todo delete from here
+    string file = "landscape.qrland";
+    auto *x = new EditorWindow(ModelInitData(), false);
+    x->presenter->facade->load(file);
+    x->show();
 
     return app.exec();
 }

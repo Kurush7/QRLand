@@ -21,7 +21,7 @@ class EditorWindow;
 class EditorPresenter: public QObject {
 Q_OBJECT
 public:
-    explicit EditorPresenter(ModelInitData dt, EditorWindow &w);
+    explicit EditorPresenter(EditorWindow &w, ModelInitData dt, bool initFacade = true);
     ~EditorPresenter() {
         facade.reset();
     }
@@ -36,6 +36,7 @@ public:
     void scaleGrid();
     void process();
     void save() {facade->save();}
+    void updateMiniCoords(float x, float y);
 
     sptr<Facade> facade;
 private:
@@ -48,6 +49,8 @@ private:
     EditorWindow &window;
 
     sptr<QRImage> image, hmap_image;
+
+    float rotCamera = 0;
 
     bool is1Active=true;
 };

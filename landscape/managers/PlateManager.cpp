@@ -20,7 +20,7 @@ QRVector<Vector3D> PlateManager::definePoints(int cnt) {
 
 
 void PlateManager::buildPlates(QRVector<Vector3D> points) {
-    plates = buildVoronoiDiagramOnRect(0,w,0,h, points);
+    plates = buildVoronoiDiagramOnRect(0,w-1,0,h-1, points);
     for (int i = 0; i < plates.getSize(); ++i)
         plates[i]->setColor(QRColor("green"));  //todo COLOR HARDCODE
 

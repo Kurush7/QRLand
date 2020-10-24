@@ -10,14 +10,13 @@ EditorWindow::~EditorWindow() {
     presenter.reset();
 }
 
-EditorWindow::EditorWindow(ModelInitData data, QWidget *parent)
+EditorWindow::EditorWindow(ModelInitData data,  bool initFacade, QWidget *parent)
         : QMainWindow(parent) {
     setDarkTheme();
 
     canvas = sptr<QRCanvas> (new QRCanvas(600, 600, this));
 
-    hmap = sptr<QRCanvas> (new QRCanvas(128, 128, this));
-
+    canvasMini = sptr<QRCanvas> (new QRCanvas(150, 150, this));
 
     moveRad = new QRadioButton("move", this);
     rotateRad = new QRadioButton("rotate", this);
@@ -35,6 +34,15 @@ EditorWindow::EditorWindow(ModelInitData data, QWidget *parent)
     waterCheckBox = new QCheckBox("вода", this);
     shadesCheckBox = new QCheckBox("тени", this);
 
+    miniScreenHmap = new QCheckBox("карта высот", this);
+    miniScreenPlates = new QCheckBox("границы плит", this);
+    miniScreenWater = new QCheckBox("водная карта", this);
+    miniScreenX = new QRLabel("\nx: 0", 60,this);
+    miniScreenY = new QRLabel("\ny: 0", 60,this);
+    miniScreenZ = new QRLabel("\nz: 0", 60,this);
+
+    multiRadio = new QRadioField("карта_высот вода разное", 320, this);
+
     g1 = new QButtonGroup(this);
     g2 = new QButtonGroup(this);
 
@@ -50,10 +58,24 @@ EditorWindow::EditorWindow(ModelInitData data, QWidget *parent)
     ui->addWidgets({{"canvas", canvas.get()}, {"label", drawTimeLabel}}, "left");
 
     ui->goToPath("right");
-    ui->addLayers("hmap settings  camera erosion", QRVert);
+    ui->addLayers("miniMap big_radio hmap water misc", QRVert);
 
-    ui->addWidgets({{"canvas", hmap.get()}}, "hmap");
+    ui->addWidgets({{"radio", multiRadio}}, "big_radio");
 
+    // minimap
+    ui->addLayers("coords image", QRHor, "miniMap");
+    ui->addLayers("canvas boxes", QRVert, "miniMap/image");
+    ui->addWidgets({{"x", miniScreenX},
+                    {"y", miniScreenY},
+                    {"z", miniScreenZ},}, "miniMap/coords");
+    ui->addWidgets({{"miniMap", canvasMini.get()}}, "miniMap/image/canvas");
+    ui->addWidgets({{"hmap", miniScreenHmap}, {"water", miniScreenWater},
+                    {"plates", miniScreenPlates}}, "miniMap/image/boxes");
+
+
+    // misc
+    ui->addLayers("settings camera erosion", QRVert, "misc");
+    ui->goToPath("misc");
     ui->addLayers("label move scale rotate undo check scaleGrid process", QRHor, "settings");
     ui->addWidgets({{"radio", moveRad}}, "settings/move");
     ui->addWidgets({{"radio", scaleRad}}, "settings/scale");
@@ -79,7 +101,12 @@ EditorWindow::EditorWindow(ModelInitData data, QWidget *parent)
 
     decorate();
     addLogic();
-    presenter = sptr<EditorPresenter>(new EditorPresenter(data, *this));
+
+    presenter = sptr<EditorPresenter>(new EditorPresenter(*this, data, initFacade));
+    waterWidget = new EditorWaterWidget(presenter->facade, this);
+    ui->goToPath("right", true);
+    ui->addWidgets({{"water", waterWidget}}, "water");
+    multiRadio->addWidgets({waterWidget}, "вода");
 }
 
 void EditorWindow::decorate() {
@@ -89,8 +116,12 @@ void EditorWindow::decorate() {
         (*lay)->getLayout()->setAlignment(Qt::AlignCenter);
     }
 
+    multiRadio->addWidgets(ui->getAllWidgets("right/misc", true), "разное");
+
     waterCheckBox->setChecked(true);
     rotateRad->setChecked(true);
+    miniScreenHmap->setChecked(true);
+    miniScreenPlates->setChecked(true);
 
     undoBtn->setFixedWidth(64);
 
@@ -129,5 +160,20 @@ void EditorWindow::addLogic() {
     connect(erosionEnd, &QPushButton::clicked, [this]() {erosionTimer.stop();});
     connect(&erosionTimer, &QTimer::timeout, [this]() {presenter->erosionIteration();});
     connect(save, &QPushButton::clicked, [this]() {presenter->save();});
+
+    connect(miniScreenHmap, &QCheckBox::clicked, [this]() {
+        presenter->facade->topDown->setDrawHMap(miniScreenHmap->isChecked());
+        presenter->facade->topDown->drawMiniMap();
+    });
+    connect(miniScreenWater, &QCheckBox::clicked, [this]() {
+        presenter->facade->topDown->setDrawWater(miniScreenWater->isChecked());
+        presenter->facade->topDown->drawMiniMap();
+    });
+    connect(miniScreenPlates, &QCheckBox::clicked, [this]() {
+        presenter->facade->topDown->setDrawPlates(miniScreenPlates->isChecked());
+        presenter->facade->topDown->drawMiniMap();
+    });
+    connect(canvasMini.get(), &QRCanvas::QRMouseMoved,
+            [this](float x, float y, QRModifiers m) {presenter->updateMiniCoords(x, y);});
 }
 

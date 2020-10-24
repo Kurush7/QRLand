@@ -9,13 +9,13 @@
 using namespace std;
 using namespace chrono;
 
-EditorPresenter::EditorPresenter(ModelInitData data, EditorWindow &w): window(w) {
+EditorPresenter::EditorPresenter(EditorWindow &w, ModelInitData data,  bool initFacade): window(w) {
     image = sptr<QRImage>(new ImageQT(window.canvas));
-    hmap_image = sptr<QRImage>(new ImageQT(window.hmap));
-    facade = sptr<Facade>(new Facade(data, image, hmap_image));
-
-    //facade->addCube(10,0,0,0, QRColor("red"));
-    draw();
+    hmap_image = sptr<QRImage>(new ImageQT(window.canvasMini));
+    if (initFacade)
+        facade = sptr<Facade>(new Facade(data, image, hmap_image));
+    else
+        facade = sptr<Facade>(new Facade(image, hmap_image));
 }
 
 void EditorPresenter::transform(QRKey d) {
@@ -24,8 +24,12 @@ void EditorPresenter::transform(QRKey d) {
 
     if (window.moveRad->isChecked())
         facade->moveCamera(x,y,z);
-    else if (window.rotateRad->isChecked())
-        facade->rotateCamera(x,y,z);
+    else if (window.rotateRad->isChecked()) {
+        rotCamera += z;
+        x = y * cos(rotCamera);
+        y = y * -sin(rotCamera);
+        facade->rotateCamera(x, y, z);
+    }
     else {
         facade->scaleCamera(x,y,z);
     }
@@ -33,15 +37,16 @@ void EditorPresenter::transform(QRKey d) {
 }
 
 void EditorPresenter::transformMouse(float dx, float dy) {
-    cout << dx<< " || " << dy << '\n';
     if (fabs(dx) >= fabs(dy)) dy = 0;
     else dx = 0;
     float x=0, y=0, z=0;
     float k = 500;
     z = dx / k;
-    x = dy / k;
+    x = dy * cos(rotCamera) / k;
+    y = dy * -sin(rotCamera) / k;
 
     facade->rotateCamera(x,y,z);
+    rotCamera += z;
     draw(window.scaleRad->isChecked());
 }
 
@@ -132,6 +137,19 @@ void EditorPresenter::draw(bool reset) {
     if (draw_cnt > 50) draw_cnt = 0, draw_time_msec=0;
     draw_time_msec = (draw_time_msec * draw_cnt + time) / (draw_cnt+1);
     draw_cnt++;
-    window.drawTimeLabel->setText("среднее ремя отрисовки: " + QString::number(draw_time_msec) +
+    window.drawTimeLabel->setText("среднее время отрисовки: " + QString::number(draw_time_msec) +
     " msec ... (" + QString::number(int(1000/draw_time_msec) )+ " FPS)");
+}
+
+void EditorPresenter::updateMiniCoords(float x0, float y0) {
+    auto p = window.canvasMini->mapFromGlobal(QCursor::pos());
+    int x = (p.x() + 0.) / window.canvasMini->getWidth() * (facade->builder->getHeightMap().width() + 0.);
+    int y = (window.canvasMini->getHeight() - p.y() + 0.) / window.canvasMini->getHeight() * (facade->builder->getHeightMap().height() + 0.);
+    float z = facade->builder->getHeightMap()[y][x];
+    float xf = round(x * facade->builder->getWorldStep() * 100.) / 100.;
+    float yf = round(y * facade->builder->getWorldStep() * 100.) / 100.;
+    z = round(z * 100.) / 100.;
+    window.miniScreenX->setText("x: " + QString::number(xf));
+    window.miniScreenY->setText("y: " + QString::number(yf));
+    window.miniScreenZ->setText("z: " + QString::number(z));
 }

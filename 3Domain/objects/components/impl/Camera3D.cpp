@@ -9,9 +9,8 @@ uptr<QRMemento> Camera3D::save() {
     return uptr<QRMemento>(new Camera3DMemento(p));
 }
 
-Camera3D::Camera3D(float w, float h, float zDist, float s,
-                   float n, float f, const Vector3D &pos, const Vector3D &rot, bool _selfRotate)
-                   : QRCamera3D(w,h), screen(s), nearCutter(n), farCutter(f) {
+Camera3D::Camera3D(float w, float h, float n, float f, const Vector3D &pos, const Vector3D &rot, bool _selfRotate, float zDist)
+                   : QRCamera3D(w,h), screen(n), nearCutter(n), farCutter(f) {
     p = sptr<Camera3D>(this, [](void *ptr){});
     viewUpVector = YVector;
     deepVector = ZVector;
@@ -71,13 +70,15 @@ void Camera3D::scale(float scale) {
 void Camera3D::rotate(const Vector3D &rotate) {
     if (!selfRotate) {
         // rotate around zeroPoint
-        auto cr = RotateTransformer3DCreator (rotate);
+        auto cr = RotateTransformer3DCreator(rotate);
         auto t = cr.create();
         worldCoordsOrigin = t->transform(worldCoordsOrigin);
         auto localZero = t->transform(ZeroVector);
         auto yPoint = t->transform(viewUpVector);
+
         deepVector = lenNorm(localZero - worldCoordsOrigin);
         viewUpVector = lenNorm(yPoint - localZero);
+
         defineAxisTransformer();
     }
     else {

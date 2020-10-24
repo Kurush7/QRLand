@@ -59,7 +59,7 @@ void MainWindow::addLogic() {
 
     connect(openBtn, &QPushButton::clicked, [this]() {
         string file = openFile->getOpenFileName().toStdString();
-        auto *x = new EditorWindow();
+        auto *x = new EditorWindow(ModelInitData(), false);
         x->presenter->facade->load(file);
         x->show();
         this->close();

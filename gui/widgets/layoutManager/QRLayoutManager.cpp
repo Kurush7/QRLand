@@ -59,6 +59,16 @@ void QRLayoutManager::addWidgets(std::vector<std::pair<std::string, QWidget*>> w
     cur = old;
 }
 
+void QRLayoutManager::addNode(QRLayoutNode* node, string path, bool isAbsolute) {
+    auto old = cur;
+    goToPath(path, isAbsolute);
+    for (auto widget: node->getAllWidgets()) {
+        cur->addChild(new QRLayoutNode(widget->objectName().toStdString(), LayerType::QRHor, cur, widget));
+    }
+    //cur->addChild(node);
+    cur = old;
+}
+
 QLayout* QRLayoutManager::getRootLayout() {
     return root->getLayout();
 }
@@ -77,6 +87,14 @@ QWidget* QRLayoutManager::getWidget(string path, bool isAbsolute) {
 
     swap(old, cur);
     return old->getWidget();
+}
+
+QRLayoutNode* QRLayoutManager::getNode(string path, bool isAbsolute) {
+    auto old = cur;
+    goToPath(path, isAbsolute);
+
+    swap(old, cur);
+    return old;
 }
 
 void QRLayoutManager::goUp() {

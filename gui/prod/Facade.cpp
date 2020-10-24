@@ -14,6 +14,16 @@ using namespace std;
 // todo LOD: ignores small details
 // todo erosion: water accumulating at the borders
 // todo mouse camera move: fix axes
+// todo camera 1st view: bugged rotations
+// todo LOD on-off
+// todo xyz-widget: on-off
+// todo TURN OFF WATER AND OTHER PROCESSES WHEN SCALING HMAP
+
+Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
+: main_image(main_img), hmap_image(hmap_img) {
+
+}
+
 
 Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -23,12 +33,13 @@ Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRI
     auto lightPos = lenNorm(Vector3D(1,1,0.5,0));
     auto cr = PolySceneCreatorNoCamera(lightPos, -1*lightPos);
     scene = cr.create();
-    auto cam = sptr<QRCamera3D>(new Camera3D(100, 100, -5,50, 50,
-                                             QRINF, Vector3D(0,-100,-100), Vector3D(M_PI,0,0)));
+    auto cam = sptr<QRCamera3D>(new Camera3D(data.w*data.step/16., data.h*data.step/16., data.step,
+            QRINF, Vector3D(0,-data.w*data.step,-data.h*data.step), Vector3D(6*M_PI/7,0,0),
+            false, -data.step*5));
     scene->addCamera(cam, "observeCamera");
 
-    cam = sptr<QRCamera3D>(new Camera3D(1, 1, -5, 20, 20, QRINF,
-            Vector3D(0,40, 0), Vector3D(M_PI/2,0,0), true));
+    cam = sptr<QRCamera3D>(new Camera3D(1, 1, data.step, QRINF,
+            Vector3D(0,0,-1), Vector3D(M_PI/2,0,0), true));
     scene->addCamera(cam, "walkCamera");
     scene->setActiveCamera("observeCamera");
 
@@ -40,37 +51,28 @@ Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRI
 
     builder->setTools({
         //{LayerTool, freqAVERAGE},
-        /*{HillTool, freqRARE},
-        {HillTool, freqRARE},
-        {HillTool, freqRARE},
-        {HillTool, freqRARE},
-        {HillTool, freqRARE},
-        {HillTool, freqRARE},
-        {HillTool, freqRARE},*/
+        //{HillTool, freqRARE},
         {PlateMountainsTool, freqUNIQUE}
     });
-    builder->process(0);
 
     landscape = builder->createLandscape();
     scene->addModel(landscape, Vector3D(0,0,0));
 
-    builder->activateWaterManager();
-    builder->waterManager->setWaterLevel(0);
-    builder->waterManager->addRiverSource(40, 40);
-    builder->waterManager->addRiverSource(100, 100);
+    builder->waterManager->enableWater();
+    //builder->waterManager->setWaterLevel(0);
+    //builder->waterManager->addRiverSource(40, 40);
+    //builder->waterManager->addRiverSource(100, 100);
     builder->waterManager->addRainSource();
 
     for (auto f = builder->plateManager->getPlates(); f; ++f)
         topDown->addFigure(*f);
-
-    topDown->drawHeightMap();
+    topDown->drawMiniMap();
 
     auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
     renderer = r;
     renderer->getColorManager()->setWorldStep(builder->getWorldStep());
     shadowRenderer = sptr<QuickShadowRenderer>(new QuickShadowRenderer(r, 0));
     shadowRenderer->generateShades();
-
 
     renderer->render();
 }
@@ -124,6 +126,7 @@ void Facade::erosionIteration() {
         builder->climateManager->on_the_7th_day();
         builder->waterManager->updateWater();
         landscape->interpolateColors(); // todo optimize: not each iteration
+        topDown->drawMiniMap();       // todo not here
         cout << "\nwater update: " << endMeasureTime << "\n\n";
         cnt = 0,
         draw();

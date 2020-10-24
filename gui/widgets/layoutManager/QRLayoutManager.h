@@ -44,10 +44,13 @@ public:
 
     void addLayers(std::string, LayerType,  std::string = ".", bool isAbsolute = false);
     void addWidgets(std::vector<std::pair<std::string, QWidget*>>, std::string path = ".", bool isAbsolute = false);
+    void addNode(QRLayoutNode* node, std::string path=".", bool isAbsolute=false);
 
+    QRLayoutNode* getRoot() {return root;}
     QLayout* getRootLayout();
     QLayout* getLayout(std::string, bool isAbsolute = false);
     QWidget* getWidget(std::string, bool isAbsolute = false);
+    QRLayoutNode* getNode(std::string, bool isAbsolute = false);
     std::vector<QWidget*> getAllWidgets(std::string, bool);
 
     void goUp();

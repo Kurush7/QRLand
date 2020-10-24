@@ -106,13 +106,10 @@ void WaterManager::updateWater() {
             a = indexes[i] / wdth, b = indexes[i] % wdth;
             v = points[a][b]->getVector();
             w = getXIndex(v[0]), h = getYIndex(v[1]);
-            if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) {
-                waterFlag = false;
-                continue;
-            }
 
             v[2] = hmap[h][w] + waterLevel[h][w];
             points[a][b]->setVector(v);
+            if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) waterFlag = false;
         }
 
         auto it = changedPolygons.find((*polygons)[k]);

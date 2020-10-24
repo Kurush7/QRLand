@@ -49,13 +49,6 @@ public:
     void setHeightMap(const QRMatrix<float>& hm);
     double getWorldStep() {return worldStep;}
 
-    bool activateWaterManager() {
-        if (landscape) {
-            // todo method not needed
-            //waterManager->setPolygons(lowest_polygons.begin());
-        }
-        return bool(landscape);
-    }
 
     sptr<PlateManager> plateManager;
     sptr<WaterManager> waterManager;

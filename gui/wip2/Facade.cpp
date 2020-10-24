@@ -64,7 +64,7 @@ Facade::Facade(ModelInitData dt, const sptr<QRImage> &main_img, const sptr<QRIma
     for (auto f = builder->plateManager.getPlates(); f; ++f)
         topDown->addFigure(*f);
 
-    topDown->drawHeightMap();
+    topDown->drawMiniMap();
 
     auto r = sptr<QuickRenderer>(new QuickRenderer(main_image, scene));
     renderer = r;

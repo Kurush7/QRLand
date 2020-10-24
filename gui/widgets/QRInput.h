@@ -6,6 +6,7 @@
 #define BIG3DFLUFFY_QRINPUT_H
 
 #include <string>
+#include <functional>
 
 #include "QTIncludes.h"
 
@@ -24,21 +25,22 @@ public:
         init();
     }
 
-private:
     QLabel *label;
     QLineEdit *edit;
+protected:
     std::string name;
     float *varf;
     int *vari;
     bool vf;
     int width;
+    QHBoxLayout *lay;
 
     void init() {
         label = new QLabel(name.c_str(), this);
         edit = new QLineEdit(this);
         edit->setText(QString::number(vf? *varf : *vari));
 
-        auto *lay = new QHBoxLayout();
+        lay = new QHBoxLayout();
         lay->addWidget(label);
         lay->addWidget(edit);
         setLayout(lay);
@@ -59,5 +61,31 @@ private:
     }
 };
 
+
+class QRInputBtn: public QRInput {
+public:
+    QRInputBtn(std::string name, std::string btn,
+            float *var, QWidget *parent = nullptr,
+            std::function<void()> f=nullptr, int width = 80) :
+            QRInput(name, var, parent, width) {
+        auto b = new QPushButton(btn.c_str(), this);
+        lay->addWidget(b);
+
+        if (f) {
+            connect(b, &QPushButton::clicked, f);
+        }
+    }
+
+    QRInputBtn(std::string name, std::string btn, int *var, QWidget *parent = nullptr,
+               std::function<void()> f=nullptr, int width = 80) :
+            QRInput(name, var, parent, width) {
+        auto b = new QPushButton(btn.c_str(), this);
+        lay->addWidget(b);
+
+        if (f) {
+            connect(b, &QPushButton::clicked, f);
+        }
+    }
+};
 
 #endif //BIG3DFLUFFY_QRINPUT_H

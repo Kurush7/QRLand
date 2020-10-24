@@ -21,7 +21,7 @@ vector<string> split(const string& s, char sep){
     return ret;
 }
 
-QRMultiRadioField::QRMultiRadioField(string names, int width): QWidget() {
+QRMultiRadioField::QRMultiRadioField(string names, int width, QWidget *parent): QWidget(parent) {
     auto nameSplit = split(names, ' ');
     int n = nameSplit.size();
     active.clear();
