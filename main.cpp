@@ -37,8 +37,7 @@ int main(int argc, char *argv[]) {
     //window.show();
     // todo delete from here
     string file = "landscape.qrland";
-    auto *x = new EditorWindow(ModelInitData(), false);
-    x->presenter->facade->load(file);
+    auto *x = new EditorWindow(ModelInitData(), file);
     x->show();
 
     return app.exec();

@@ -61,10 +61,10 @@ public:
         ui->addWidgets({{"label", lab}}, cur_layer);
         addInput("мин. видимый уровень воды", &minimalDrawWaterLevelCoef, cur_layer, true);
         addInput("интервал времени на итерацию", &defaultErosionDT, cur_layer);
-        addInput("интенсивность 'капли' дождя", &rainDropIntencityCoef, cur_layer);
+        addInput("интенсивность 'капли' дождя", &maxRainDropIntencityCoef, cur_layer);
         addInput("радиус 'капли' дождя", &rainDropRadius, cur_layer);
         addInput("число 'капель' дождя", &rainDropCnt, cur_layer);
-        addInput("интенсивность рек", &riverIntencityCoef, cur_layer);
+        addInput("интенсивность рек", &maxRiverIntencityCoef, cur_layer);
         addInput("объем переносимой почвы", &sedimentCapacity, cur_layer);
         addInput("коэф. размытия", &dissolveConstant, cur_layer);
         addInput("коэф. нанесения", &depositionConstant, cur_layer);

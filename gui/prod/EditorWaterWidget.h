@@ -17,35 +17,44 @@
 #include "QRToolFrame.h"
 
 
+const int erosionFPS = 30;  // todo fuck off from here
+
 class EditorWaterWidget: public QWidget {
 public:
-    EditorWaterWidget(sptr<Facade> f, QWidget *parent=nullptr): QWidget(parent), facade(f) {
-        ui = new QRLayoutManager("global", QRVert);
-
-        auto show = new QCheckBox("отображать воду", this);
-        connect(show, &QCheckBox::clicked, [this, show]() {facade->setWaterVisible(show->isChecked());});
-        show->setChecked(true);
-
-        auto setWaterLevel = new QRInputBtn("уровень воды:", "установить", &waterLevel, this,
-                [this](){facade->builder->waterManager->setWaterLevel(waterLevel);});
-
-        ui->addLayers("check setLevel $ data $", QRHor);
-        ui->addWidgets({{"show", show}}, "check");
-        ui->addWidgets({{"input", setWaterLevel}}, "setLevel");
-
-        auto dt = new WaterSourceToolFrame(this);
-        ui->addWidgets({{"w", dt}}, "data");
-
-
-        ui->generateSpacers();
-        setLayout(ui->getRootLayout());
-    }
+    EditorWaterWidget(sptr<Facade> f, QWidget *parent=nullptr);
 
 private:
+    bool adding = false;
     QRLayoutManager *ui;
     sptr<Facade> facade;
     float waterLevel;
-};
 
+    QWidget *w;
+    QScrollArea *scr;
+    QVBoxLayout *lay;
+    WaterSourceToolFrame *addWidget = nullptr;
+    int rain_source;
+
+    void addSource() {
+        if (adding) return;
+        addWidget = new WaterSourceToolFrame(facade, lay, this);
+        lay->addWidget(addWidget);
+        adding = true;
+        connect(addWidget, &WaterSourceToolFrame::deleted, [this](){
+            adding = false;
+            delete addWidget; addWidget=nullptr;});
+    }
+
+    void addRainSource() {
+        rain_source = facade->builder->waterManager->addRainSource();
+        auto f = new QRToolFrame("дождь", [this](bool x) {
+            facade->builder->waterManager->setSourceEnabled(rain_source, x);
+        },
+ [this](float val) {
+             facade->builder->waterManager->setSourceIntensity(rain_source, val);
+         });
+        lay->addWidget(f);
+    }
+};
 
 #endif //BIG3DFLUFFY_EDITORWATERWIDGET_H

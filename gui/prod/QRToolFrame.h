@@ -9,47 +9,102 @@
 #include "Facade.h"
 #include "../QTIncludes.h"
 #include "../widgets/QRWidgets.h"
+#include "landscape/managers/LandscapeBuilder.h"
 
-class QRToolFrame: public QWidget {
+class QRToolFrame: public QFrame {
 public:
-    QRToolFrame(QRVector<QWidget*> data, QWidget *parent=nullptr): QWidget(parent) {
+    QRToolFrame(QString label, function<void(bool)> exec, function<void(float)> onChanged,
+            QWidget *parent=nullptr): QFrame(parent) {
         ui = new QRLayoutManager("global", QRHor);
 
-        auto play = new QPushButton("◾", this); //▶
-        auto submit = new QPushButton("добавить", this);
+        auto play = new QPushButton("▶", this);
+        auto lab = new QRLabel(label, this);
+        slider = new QSlider(Qt::Horizontal , this);
+        slider->setMinimum(0);
+        slider->setMaximum(100);
+        slider->setValue(50);
 
-        ui->addWidgets({{"play", play}});
+        ui->addWidgets({{"play", play}, {"label", lab}, {"slider", slider}});
 
-        int i = 0;
-        for (auto &w: data) {
-            ui->addWidgets({{(QString("data") + QString::number(i)).toStdString(), w}});
-            i++;
-        }
+        setLayout(ui->getRootLayout());
+        setFrameShape(Box);
 
-        ui->addWidgets({{"btn", submit}});
+        connect(slider, &QSlider::valueChanged, [this, onChanged]() {
+            onChanged((float)slider->value() / 100.);
+        });
+
+        connect(play, &QPushButton::clicked, [this, play, exec](){
+                if (play->text() == "▶") {
+                    play->setText("◾");
+                    play->setStyleSheet("color:yellow");
+                    exec(false);
+                }
+                else {
+                    play->setText("▶");
+                    play->setStyleSheet("color:#3873d9");
+                    exec(true);
+                }
+        });
+
+        play->setFixedWidth(32);
+        play->setStyleSheet("color:#3873d9");
     }
 
     QRLayoutManager *ui;
+    QSlider *slider;
 };
 
+
+static int riverSourceCnt = 0;
 class WaterSourceToolFrame: public QFrame {
+Q_OBJECT
 public:
-    WaterSourceToolFrame(QWidget *parent=nullptr): QFrame(parent) {
+    WaterSourceToolFrame(sptr<Facade> facade,
+            QLayout *lay, QWidget *parent=nullptr): QFrame(parent),
+                                                                 insert_lay(lay), facade(facade) {
+        ui = new QRLayoutManager("global", QRHor);
 
         auto xi = new QRInput("x:", &x, this);
         auto yi = new QRInput("y:", &y, this);
+        auto submit = new QPushButton("добавить", this);
 
-        frame = new QRToolFrame({xi->label, xi->edit, yi->label, yi->edit}, parent);
-        setLayout(frame->ui->getRootLayout());
-        QLayout *lay;
-        //setStyleSheet("QFrame{border: 2px solid green;}");
+        ui->addWidgets({{"xl", xi->label}, {"xe", xi->edit},
+                        {"yl", yi->label}, {"ye", yi->edit},
+                        {"btn", submit}});
+
+        setLayout(ui->getRootLayout());
         setFrameShape(Box);
+
+        connect(submit, &QPushButton::clicked, [this, facade](){
+            size_t x0, y0;
+            x0 = x / facade->builder->getWorldStep();
+            y0 = facade->builder->getHeightMap().height()-1 -  y / facade->builder->getWorldStep();
+            x0 = max((size_t)1, min(x0, facade->builder->getHeightMap().width()-2));    // todo a bit of hardcode
+            y0 = max((size_t)1, min(y0, facade->builder->getHeightMap().height()-2));
+            source_number = facade->builder->waterManager->addRiverSource(x0, y0);
+
+            int sn = source_number;
+            auto f = new QRToolFrame("источник: x=" + QString::number(int(x*100)/100.)
+                    + ", y=" + QString::number(int(y*100)/100.),[sn, facade](bool x) {
+                    facade->builder->waterManager->setSourceEnabled(sn, x);
+            },
+            [sn, facade](float val) {
+                facade->builder->waterManager->setSourceIntensity(sn, val);
+            });
+            insert_lay->addWidget(f);
+            emit deleted();
+        });
     }
 
-private:
-    QRToolFrame *frame;
+signals:
+    void deleted();
 
+private:
+    sptr<Facade> facade;
+    QLayout *insert_lay;
+    QRLayoutManager *ui;
     float x=0, y=0;
+    int source_number = -1;
 };
 
 

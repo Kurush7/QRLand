@@ -36,6 +36,7 @@ class QRTool {
 public:
     virtual bool process() = 0;
     virtual void setToolData(const ToolData &dt) {data = dt;}
+    virtual void setIntensity(float x) {}     // from 0 to 1
 protected:
     ToolData data;
 };

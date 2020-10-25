@@ -15,7 +15,7 @@
 
 enum ToolName {
     FunctionTool, LayerTool, HillTool,
-    PlateMountainsTool
+    PlateMountainsTool, HillSetTool,
 };
 
 class QRToolFabric {

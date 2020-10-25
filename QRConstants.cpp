@@ -37,11 +37,12 @@ float minimalDrawWaterLevelCoef = 0.1;
 
 float defaultErosionDT = 0.1;
 
-float rainDropIntencityCoef = 0.1;
+float maxRainDropIntencityCoef = 0.1;
 int rainDropCnt = 5; // todo change to per-area drop-cnt
 int rainDropRadius = 1;
 
-float riverIntencityCoef = 0.5;
+float maxRiverIntencityCoef = 0.5;
+int maxHillCnt = 10;
 
 float sedimentCapacity = 0.02;
 float dissolveConstant = 0.02;

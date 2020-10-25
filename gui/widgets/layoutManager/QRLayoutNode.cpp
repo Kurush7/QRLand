@@ -6,8 +6,9 @@
 
 using namespace std;
 
-QRLayoutNode::QRLayoutNode(std::string _name, LayerType _type, QRLayoutNode *prev, QWidget* _widget)
-        : name(_name), type(_type), widget(_widget), prev(prev) {
+QRLayoutNode::QRLayoutNode(std::string _name, LayerType _type, QRLayoutNode *prev, QWidget* _widget,
+                           bool scrollable)
+        : name(_name), type(_type), widget(_widget), prev(prev), scrollable(scrollable) {
     switch (type) {
         case LayerType::QRHor:
             layout = new QHBoxLayout();
@@ -21,6 +22,19 @@ QRLayoutNode::QRLayoutNode(std::string _name, LayerType _type, QRLayoutNode *pre
     if (widget) {
         isLeaf = true;
         layout->addWidget(widget);
+    }
+    else if (scrollable) {
+        // todo not working
+        scr = new QScrollArea();
+        auto w = new QWidget();
+        layout->addWidget(w);
+        layout->addWidget(scr);
+
+        if (type == QRHor) layout = new QHBoxLayout();
+        else layout = new QVBoxLayout();
+
+        w->setLayout(layout);
+        scr->setWidget(w);
     }
 }
 QRLayoutNode::~QRLayoutNode() {

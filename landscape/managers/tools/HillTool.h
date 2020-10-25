@@ -13,6 +13,7 @@ public:
     HillTool() {}
 
     virtual void setToolData(const ToolData &dt);
+    virtual void setIntensity(float x) {}
 
     virtual bool process() {
         if (height <= 0) return false;
@@ -37,6 +38,45 @@ public:
     virtual uptr<QRTool> create() {return uptr<QRTool>(new HillTool());}
 };
 
+class HillSetTool: public QRTool {
+public:
+    HillSetTool() {}
 
+    virtual void setToolData(const ToolData &dt);
+    virtual void setIntensity(float x) {
+        hillCnt = maxHillCnt * x;
+        fill();
+    }
+
+    virtual bool process() {
+        QRVector<HillTool> new_tools;
+        for (auto &t: tools) {
+            if (t.process())
+                new_tools.push_back(t);
+        }
+        tools = new_tools;
+        fill();
+        return true;
+    }
+
+private:
+    void fill() {
+        if (tools.getSize() < hillCnt) {
+            for (int i = 0; i < hillCnt - tools.getSize(); ++i) {
+                tools.push_back(HillTool());
+                tools[tools.getSize()-1].setToolData(data);
+            }
+        }
+    }
+
+    bool inited=false;
+    int hillCnt = 0;
+    QRVector<HillTool> tools;
+};
+
+class HillSetToolCreator: public QRToolCreator {
+public:
+    virtual uptr<QRTool> create() {return uptr<QRTool>(new HillSetTool());}
+};
 
 #endif //BIG3DFLUFFY_HILLTOOL_H

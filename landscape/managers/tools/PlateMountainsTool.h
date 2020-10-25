@@ -16,6 +16,8 @@ public:
 
 
     virtual void setToolData(const ToolData &dt);
+    virtual void setIntensity(float x) {
+        intensity = x;}
 
     virtual bool process() {
         QRMatrix<float> *local = data.hmap;
@@ -29,7 +31,7 @@ public:
             double tense = minPlateMoveForce + e.second * maxPlateMoveForce;
             if (fabs(tense) < mountainsMinTense)
                 tense = sign(tense) * mountainsMinTense;
-            float dh = tense * plateMountainHeightCoef * data.worldStep;
+            float dh = tense * plateMountainHeightCoef * data.worldStep * intensity;
 
             Vector3D a = edge.a, b = edge.b;
             a /= data.worldStep, b /= data.worldStep;
@@ -63,6 +65,7 @@ private:
     std::map<QRLine2D, double> edges;
     bool inited=false;
     float height, give;
+    float intensity=1;
 };
 
 class PlateMountainsToolCreator: public QRToolCreator {

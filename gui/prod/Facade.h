@@ -72,13 +72,9 @@ public:
         scene->setActiveCamera("observeCamera");
 
         builder = b;
-        builder->setTools({
-            {PlateMountainsTool, freqUNIQUE}
-                          });
         landscape = builder->createLandscape();
         builder->waterManager->enableWater();
         builder->waterManager->setWaterMatrix(man.water);
-        builder->waterManager->addRainSource();
 
         builder->climateManager->on_the_7th_day();
         builder->waterManager->updateWater();

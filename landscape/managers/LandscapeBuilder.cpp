@@ -50,6 +50,17 @@ void LandscapeBuilder::setTools(QRVector<QRPair<ToolName, ToolFrequency>> toolSe
     // todo setHMap and others for new tool
 }
 
+int LandscapeBuilder::addTool(QRPair<ToolName, ToolFrequency> item) {
+    auto toolFabric = initToolFabric();
+    sptr<QRTool> tool;
+    tool = toolFabric.create(item.fst);
+    tool->setToolData(toolData);
+    toolManager.addTool(tool, item.snd);
+    int num = disturbManager.add(tool);
+    return num;
+    }
+    // todo setHMap and others for new tool
+
 void LandscapeBuilder::clearHeightMap() {
     for(size_t i = 0; i < height; ++i)
         for(size_t j = 0; j < width; ++j)

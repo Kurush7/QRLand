@@ -10,7 +10,7 @@ EditorWindow::~EditorWindow() {
     presenter.reset();
 }
 
-EditorWindow::EditorWindow(ModelInitData data,  bool initFacade, QWidget *parent)
+EditorWindow::EditorWindow(ModelInitData data, string initFacade, QWidget *parent)
         : QMainWindow(parent) {
     setDarkTheme();
 
@@ -18,21 +18,7 @@ EditorWindow::EditorWindow(ModelInitData data,  bool initFacade, QWidget *parent
 
     canvasMini = sptr<QRCanvas> (new QRCanvas(150, 150, this));
 
-    moveRad = new QRadioButton("move", this);
-    rotateRad = new QRadioButton("rotate", this);
-    scaleRad = new QRadioButton("scale", this);
-
-    view1Rad = new QRadioButton("обзорная камера", this);
-    view2Rad = new QRadioButton("прогулочная камера", this);
-
-    settingsLabel = new QRLabel("настройки", 80, this);
     drawTimeLabel = new QRLabel("время отрисовки:", 500,this);
-    cameraLabel = new QRLabel("\nкамера:", 80,this);
-
-    erosionLabel = new QRLabel("\nводная эрозия:", 120,this);
-
-    waterCheckBox = new QCheckBox("вода", this);
-    shadesCheckBox = new QCheckBox("тени", this);
 
     miniScreenHmap = new QCheckBox("карта высот", this);
     miniScreenPlates = new QCheckBox("границы плит", this);
@@ -42,16 +28,6 @@ EditorWindow::EditorWindow(ModelInitData data,  bool initFacade, QWidget *parent
     miniScreenZ = new QRLabel("\nz: 0", 60,this);
 
     multiRadio = new QRadioField("карта_высот вода разное", 320, this);
-
-    g1 = new QButtonGroup(this);
-    g2 = new QButtonGroup(this);
-
-    undoBtn = new QPushButton("откатить", this);
-    erosionStart = new QPushButton("старт", this);
-    erosionEnd = new QPushButton("стоп", this);
-    scaleGrid = new QPushButton("diamond-square", this);
-    process = new QPushButton("process", this);
-    save = new QPushButton("save", this);
 
     ui = new QRLayoutManager("global", QRHor);
     ui->addLayers("left right", QRVert);
@@ -73,40 +49,33 @@ EditorWindow::EditorWindow(ModelInitData data,  bool initFacade, QWidget *parent
                     {"plates", miniScreenPlates}}, "miniMap/image/boxes");
 
 
-    // misc
-    ui->addLayers("settings camera erosion", QRVert, "misc");
-    ui->goToPath("misc");
-    ui->addLayers("label move scale rotate undo check scaleGrid process", QRHor, "settings");
-    ui->addWidgets({{"radio", moveRad}}, "settings/move");
-    ui->addWidgets({{"radio", scaleRad}}, "settings/scale");
-    ui->addWidgets({{"radio", rotateRad}}, "settings/rotate");
-    ui->addWidgets({{"label", settingsLabel}}, "settings/label");
-    ui->addWidgets({{"undo", undoBtn}, {"save", save}}, "settings/undo");
-    ui->addWidgets({{"scale", scaleGrid}}, "settings/scaleGrid");
-    ui->addWidgets({{"process", process}}, "settings/process");
-    ui->addWidgets({{"water", waterCheckBox}, {"shades", shadesCheckBox}}, "settings/check");
-
-    ui->addLayers("label view1 view2", QRHor, "camera");
-    ui->addWidgets({{"radio", view1Rad}}, "camera/view1");
-    ui->addWidgets({{"radio", view2Rad}}, "camera/view2");
-    ui->addWidgets({{"label", cameraLabel}}, "camera/label");
-
-    ui->addLayers("label buttons", QRHor, "erosion");
-    ui->addWidgets({{"label", erosionLabel}}, "erosion/label");
-    ui->addWidgets({{"start", erosionStart}, {"end", erosionEnd}}, "erosion/buttons");
-
     mainWidget = new QWidget();
     mainWidget->setLayout(ui->getRootLayout());
     setCentralWidget(mainWidget);
 
+
+    auto menu = new QRMenu(this);
+    setMenuBar(menu);
+
     decorate();
     addLogic();
 
-    presenter = sptr<EditorPresenter>(new EditorPresenter(*this, data, initFacade));
-    waterWidget = new EditorWaterWidget(presenter->facade, this);
+    presenter = sptr<EditorPresenter>(new EditorPresenter(*this, data, initFacade.empty()));
+    if (!initFacade.empty())
+        presenter->facade->load(initFacade);
     ui->goToPath("right", true);
+
+    waterWidget = new EditorWaterWidget(presenter->facade, this);
     ui->addWidgets({{"water", waterWidget}}, "water");
     multiRadio->addWidgets({waterWidget}, "вода");
+
+    hmapWidget = new EditorHMapWidget(presenter->facade, this);
+    ui->addWidgets({{"hmap", hmapWidget}}, "water");
+    multiRadio->addWidgets({hmapWidget}, "карта_высот");
+
+    miscWidget = new EditorMiscWidget(presenter->facade, this);
+    ui->addWidgets({{"misc", miscWidget}}, "misc");
+    multiRadio->addWidgets({miscWidget}, "разное");
 }
 
 void EditorWindow::decorate() {
@@ -118,21 +87,9 @@ void EditorWindow::decorate() {
 
     multiRadio->addWidgets(ui->getAllWidgets("right/misc", true), "разное");
 
-    waterCheckBox->setChecked(true);
-    rotateRad->setChecked(true);
+
     miniScreenHmap->setChecked(true);
     miniScreenPlates->setChecked(true);
-
-    undoBtn->setFixedWidth(64);
-
-    settingsLabel->setObjectName("headerLabel");
-
-    g1->addButton(moveRad);
-    g1->addButton(scaleRad);
-    g1->addButton(rotateRad);
-
-    g2->addButton(view2Rad);
-    g2->addButton(view1Rad);
 }
 
 void EditorWindow::addLogic() {
@@ -146,20 +103,7 @@ void EditorWindow::addLogic() {
             [this](float dx, float dy, QRModifiers m) {if (m.mouseLeftPressed)
                 presenter->transformMouse(dx, dy);});
 
-    connect(undoBtn, &QPushButton::clicked, [this]() {presenter->undo();});
-    connect(scaleGrid, &QPushButton::clicked, [this]() {presenter->scaleGrid();});
-    connect(process, &QPushButton::clicked, [this]() {presenter->process();});
-
-    connect(view1Rad, &QRadioButton::clicked, [this]() {presenter->changeCamera();});
-    connect(view2Rad, &QRadioButton::clicked, [this]() {presenter->changeCamera();});
-
-    connect(waterCheckBox, &QCheckBox::clicked, [this]() {presenter->setWaterVisible();});
-    connect(shadesCheckBox, &QCheckBox::clicked, [this]() {presenter->setShadesVisible();});
-
-    connect(erosionStart, &QPushButton::clicked, [this]() {erosionTimer.start();});
-    connect(erosionEnd, &QPushButton::clicked, [this]() {erosionTimer.stop();});
     connect(&erosionTimer, &QTimer::timeout, [this]() {presenter->erosionIteration();});
-    connect(save, &QPushButton::clicked, [this]() {presenter->save();});
 
     connect(miniScreenHmap, &QCheckBox::clicked, [this]() {
         presenter->facade->topDown->setDrawHMap(miniScreenHmap->isChecked());

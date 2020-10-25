@@ -18,12 +18,14 @@ using namespace std;
 // todo LOD on-off
 // todo xyz-widget: on-off
 // todo TURN OFF WATER AND OTHER PROCESSES WHEN SCALING HMAP
+// todo water source at 0,0: not flowing anywhere
+// todo dynamic tense for mountains
+// todo save: river sources, mountains
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
 
 }
-
 
 Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -62,7 +64,6 @@ Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRI
     //builder->waterManager->setWaterLevel(0);
     //builder->waterManager->addRiverSource(40, 40);
     //builder->waterManager->addRiverSource(100, 100);
-    builder->waterManager->addRainSource();
 
     for (auto f = builder->plateManager->getPlates(); f; ++f)
         topDown->addFigure(*f);

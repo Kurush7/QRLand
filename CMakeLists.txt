@@ -63,7 +63,7 @@ add_library(prod_lib
         gui/prod/Facade.cpp
         gui/prod/EditorWindow.cpp
         gui/prod/EditorPresenter.cpp
-        gui/prod/NewModelStartWindow.cpp gui/prod/NewModelStartWindow.h gui/prod/PlatesWindow.cpp gui/prod/PlatesWindow.h gui/prod/EditorWaterWidget.cpp gui/prod/EditorWaterWidget.h gui/prod/QRToolFrame.cpp gui/prod/QRToolFrame.h)
+        gui/prod/NewModelStartWindow.cpp gui/prod/NewModelStartWindow.h gui/prod/PlatesWindow.cpp gui/prod/PlatesWindow.h gui/prod/EditorWaterWidget.cpp gui/prod/EditorWaterWidget.h gui/prod/QRToolFrame.cpp gui/prod/QRToolFrame.h gui/prod/EditorHMapWidget.cpp gui/prod/EditorHMapWidget.h gui/prod/EditorMiscWidget.cpp gui/prod/EditorMiscWidget.h)
 target_link_libraries(prod_lib
         ${QT_INCLUDES}
         )

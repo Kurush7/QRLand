@@ -35,10 +35,10 @@ maxPlateMoveForce=0.6
 // water
 minimalDrawWaterLevelCoef=0.1
 defaultErosionDT=0.1
-rainDropIntencityCoef=0.1
+maxRainDropIntencityCoef=0.1
 rainDropCnt=5; // todo change to per-area drop-cn
 rainDropRadius=1
-riverIntencityCoef=0.5
+maxRiverIntencityCoef=0.5
 sedimentCapacity=0.02
 dissolveConstant=0.02
 depositionConstant=0.02

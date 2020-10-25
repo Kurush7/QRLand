@@ -10,13 +10,15 @@
 #include "../../globalDefines.h"
 #include "2Domain.h"
 #include "EditorWaterWidget.h"
-
-const int erosionFPS = 30;  // todo fuck off from here
+#include "EditorHMapWidget.h"
+#include "EditorMiscWidget.h"
+#include "views/QRMenu.h"
 
 class EditorWindow: public QMainWindow {
 Q_OBJECT
 public:
-    explicit EditorWindow(ModelInitData dt = ModelInitData(), bool initFacade = true, QWidget *parent = nullptr);
+    explicit EditorWindow(ModelInitData dt = ModelInitData(), std::string initFacade = "",
+            QWidget *parent = nullptr);
     virtual ~EditorWindow();
 
     sptr<EditorPresenter> presenter;
@@ -31,13 +33,7 @@ private:
     QRLayoutManager *ui;
     sptr<QRCanvas> canvas, canvasMini;
 
-    QRadioButton *moveRad, *rotateRad, *scaleRad;
-    QRadioButton *view1Rad, *view2Rad;
-    QButtonGroup *g1, *g2;
-
-    QRLabel *settingsLabel, *drawTimeLabel, *cameraLabel, *erosionLabel;
-    QCheckBox *waterCheckBox, *shadesCheckBox;
-    QPushButton *undoBtn, *erosionStart, *erosionEnd, *scaleGrid, *process, *save;
+    QRLabel *drawTimeLabel;
 
     // mini-screen data
     QCheckBox *miniScreenHmap, *miniScreenWater, *miniScreenPlates;
@@ -46,6 +42,8 @@ private:
     // big data
     QRadioField *multiRadio;
     EditorWaterWidget *waterWidget;
+    EditorHMapWidget *hmapWidget;
+    EditorMiscWidget *miscWidget;
 
     QTimer erosionTimer;
 };

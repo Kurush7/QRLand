@@ -63,8 +63,8 @@ map<string, float*> getFloatConfigMap() {
     m[GET_VARIABLE_NAME(maxPlateMoveForce)] = &maxPlateMoveForce;
     m[GET_VARIABLE_NAME(minimalDrawWaterLevelCoef)] = &minimalDrawWaterLevelCoef;
     m[GET_VARIABLE_NAME(defaultErosionDT)] = &defaultErosionDT;
-    m[GET_VARIABLE_NAME(rainDropIntencityCoef)] = &rainDropIntencityCoef;
-    m[GET_VARIABLE_NAME(riverIntencityCoef)] = &riverIntencityCoef;
+    m[GET_VARIABLE_NAME(maxRainDropIntencityCoef)] = &maxRainDropIntencityCoef;
+    m[GET_VARIABLE_NAME(maxRiverIntencityCoef)] = &maxRiverIntencityCoef;
     m[GET_VARIABLE_NAME(sedimentCapacity)] = &sedimentCapacity;
     m[GET_VARIABLE_NAME(dissolveConstant)] = &dissolveConstant;
     m[GET_VARIABLE_NAME(depositionConstant)] = &depositionConstant;
@@ -102,5 +102,6 @@ map<string, int*> getIntConfigMap() {
     m[GET_VARIABLE_NAME(rainDropCnt)] = &rainDropCnt;
     m[GET_VARIABLE_NAME(rainDropRadius)] = &rainDropRadius;
     m[GET_VARIABLE_NAME(FrameSize)] = &FrameSize;
+    m[GET_VARIABLE_NAME(maxHillCnt)] = &maxHillCnt;
     return m;
 }

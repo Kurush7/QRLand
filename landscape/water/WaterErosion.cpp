@@ -6,8 +6,9 @@
 
 void WaterManager::erosionIteration(float dt) {
     if (!erosionReady) initErosionData();
-    for (auto &s: waterSources)
-        s->use(dt);
+    for (int i = 0; i < waterSources.getSize(); ++i)
+        if (waterSourcesEnabled[i])
+            waterSources[i]->use(dt);
 
     startMeasureTime;
     updateFlux(dt);
@@ -26,21 +27,23 @@ void WaterManager::updateFlux(float dt) {
     float val, k;
 
     for (int i = 0; i < h; ++i)
-        flux[i][0][0] = flux[i][w-1][0] = 0;
+        flux[i][0][2] = dt * (hmap[i][0]+waterLevel[i][0]),
+        flux[i][w-1][3] = dt* (hmap[i][w-1]+waterLevel[i][w-1]);
     for (int j = 0; j < w; ++j)
-        flux[0][j][0] = flux[h-1][j][0] = 0;
+        flux[0][j][0] = dt * (hmap[0][j]+waterLevel[0][j]),
+        flux[h-1][j][1] = dt * (hmap[h-1][j]+waterLevel[h-1][j]);
 
-    for (int i = 1; i < h-1; ++i)
-        for (int j = 1; j < w-1; ++j) {
-            // left
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j) {
             val = hmap[i][j]+waterLevel[i][j];
-            flux[i][j][0] = max(0.f, flux[i][j][0] + dt*(val-hmap[i][j-1]-waterLevel[i][j-1]));
-            // right
-            flux[i][j][1] = max(0.f, flux[i][j][1] + dt*(val-hmap[i][j+1]-waterLevel[i][j+1]));
-            // up
-            flux[i][j][2] = max(0.f, flux[i][j][2] + dt*(val-hmap[i-1][j]-waterLevel[i-1][j]));
-            // down
-            flux[i][j][3] = max(0.f, flux[i][j][3] + dt*(val-hmap[i+1][j]-waterLevel[i+1][j]));
+            if (j > 0) // left
+                flux[i][j][0] = max(0.f, flux[i][j][0] + dt * (val - hmap[i][j - 1] - waterLevel[i][j - 1]));
+            if (j != w-1) // right
+                flux[i][j][1] = max(0.f, flux[i][j][1] + dt * (val - hmap[i][j + 1] - waterLevel[i][j + 1]));
+            if (i > 0) // up
+                flux[i][j][2] = max(0.f, flux[i][j][2] + dt*(val-hmap[i-1][j]-waterLevel[i-1][j]));
+            if (i != h-1)// down
+                flux[i][j][3] = max(0.f, flux[i][j][3] + dt*(val-hmap[i+1][j]-waterLevel[i+1][j]));
 
             // scale
             if (sum(flux[i][j]) > QREPS) {
@@ -52,7 +55,7 @@ void WaterManager::updateFlux(float dt) {
 
 void WaterManager::updateFlux2(float dt) {
     // velocity: 0-x, 1-y
-    size_t w = hmap.width(), h = hmap.height();
+    size_t w = hmap.width()-1, h = hmap.height()-1;
     float dv, dwx, dwy;
     float area = worldStep * worldStep;
     float avgWater;

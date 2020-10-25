@@ -17,10 +17,11 @@ enum ToolFrequency {
 
 class QRToolManager {
 public:
-    void addTool(const sptr<QRTool> &tool, ToolFrequency freq) {
+    int addTool(const sptr<QRTool> &tool, ToolFrequency freq) {
         tools.push_back(tool);
         frequences.push_back(freq);
         freq_sum += freq;
+        return tools.getSize();
     }
     const sptr<QRTool> & getTool();
 

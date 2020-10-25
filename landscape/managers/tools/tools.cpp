@@ -50,3 +50,12 @@ void HillTool::setToolData(const ToolData &dt) {
         give = data.worldStep*2;
     }
 }
+
+void HillSetTool::setToolData(const ToolData &dt) {
+    data = dt;
+    if (!inited) {
+        inited = true;
+    }
+    for (auto &t: tools)
+        t.setToolData(data);
+}

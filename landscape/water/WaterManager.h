@@ -23,16 +23,24 @@ public:
     void updateMatrices(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts);
     // todo update hmap etc. here
 
-    void addRiverSource(size_t x, size_t y, float intensity=1) {
+    void setSourceIntensity(int num, float x) {
+        waterSources[num-1]->setIntensity(x);}
+    void setSourceEnabled(int num, bool en) {waterSourcesEnabled[num-1] = en;}
+
+    int addRiverSource(size_t x, size_t y, float intensity=1) {
         waterSources.push_back(sptr<WaterSource>(new RiverSource(waterLevel,
-                                                                 intensity*worldStep*riverIntencityCoef,
+                                                                 intensity * worldStep * maxRiverIntencityCoef,
                                                                  x, y)));
+        waterSourcesEnabled.push_back(true);
+        return waterSources.getSize();
     }
 
-    void addRainSource(float dropCnt = rainDropCnt, float intensity=1) {
+    int addRainSource(float dropCnt = rainDropCnt, float intensity=1) {
         waterSources.push_back(sptr<WaterSource>(new RainWaterSource(waterLevel,
-                                                                     intensity*worldStep*rainDropIntencityCoef,
+                                                                     intensity * worldStep * maxRainDropIntencityCoef,
                                                                      dropCnt)));
+        waterSourcesEnabled.push_back(true);
+        return waterSources.getSize();
     }
 
     void enableWater() {
@@ -70,6 +78,7 @@ private:
     sptr<QRTexture> waterTexture = QRTexturesMap[QRWATER_MATERIAL];
 
     QRVector<sptr<WaterSource>> waterSources;
+    QRVector<bool> waterSourcesEnabled;
 
 
     size_t getXIndex(float x);

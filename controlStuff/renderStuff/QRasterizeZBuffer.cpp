@@ -69,6 +69,9 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
     int xl = QRound(p1x), yl = QRound(p1y);
     int xr = QRound(p2x), yr = QRound(p2y);
     int xw = QRound(p3x), yw = QRound(p3y);
+    xl = max(0, min(xl, w-1)), yl=max(0, min(yl, h-1));
+    xr = max(0, min(xr, w-1)), yr=max(0, min(yr, h-1));
+    xw = max(0, min(xw, w-1)), yw=max(0, min(yw, h-1));
 
     float zl = p1z, zr = p2z, zw = p3z;
     float S0 = fabs(triangle_area(p3x, p3y, p1x, p1y, p2x, p2y));
@@ -221,6 +224,7 @@ bool is_black(uchar *a) {
 }
 
 void QRasterizeZBuffer::fillMissing() {
+    return; //todo?
     auto data = img->getData();
     int pos=0;
     int border=2;

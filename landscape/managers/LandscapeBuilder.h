@@ -29,6 +29,7 @@ public:
     LandscapeBuilder(size_t width, size_t height, double world_step=1);
 
     void setTools(QRVector<QRPair<ToolName, ToolFrequency>>);
+    int addTool(QRPair<ToolName, ToolFrequency>);
 
     void process(int step_cnt=1);
     void useTool(ToolName);

@@ -39,11 +39,12 @@ extern float minimalDrawWaterLevelCoef;
 
 extern float defaultErosionDT;
 
-extern float rainDropIntencityCoef;
+extern float maxRainDropIntencityCoef;
 extern int rainDropCnt;
 extern int rainDropRadius;
 
-extern float riverIntencityCoef;
+extern float maxRiverIntencityCoef;
+extern int maxHillCnt;
 
 extern float sedimentCapacity;
 extern float dissolveConstant;

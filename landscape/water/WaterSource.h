@@ -18,6 +18,7 @@ public:
     WaterSource(QRMatrix<float> &waterLevel): waterLevel(waterLevel) {}
     virtual void use(float dt) = 0;
     virtual void scaleGrid(QRMatrix<float> &newWL) {waterLevel = newWL;}
+    virtual void setIntensity(float x) {} // from 0 to 1
 protected:
     QRMatrix<float> &waterLevel;
 };
@@ -32,6 +33,10 @@ public:
         width = waterLevel.width(), height = waterLevel.height();
         dist_w = uniform_int_distribution<size_t>(0, waterLevel.width()-1);
         dist_h = uniform_int_distribution<size_t>(0, waterLevel.height()-1);
+    }
+
+    virtual void setIntensity(float x) {
+        dropIntensity = maxRainDropIntencityCoef * x;
     }
 
     virtual void scaleGrid(QRMatrix<float> &newWL) {
@@ -60,6 +65,10 @@ public:
             WaterSource(waterLevel), riverIntensity(riverIntensity){
         x = min(pos_x, waterLevel.width());
         y = min(pos_y, waterLevel.height());
+    }
+
+    virtual void setIntensity(float x) {
+        riverIntensity = maxRiverIntencityCoef * x;
     }
 
     virtual void scaleGrid(QRMatrix<float> &newWL) {

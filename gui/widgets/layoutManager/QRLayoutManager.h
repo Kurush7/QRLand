@@ -42,8 +42,10 @@ public:
         }
     }
 
-    void addLayers(std::string, LayerType,  std::string = ".", bool isAbsolute = false);
-    void addWidgets(std::vector<std::pair<std::string, QWidget*>>, std::string path = ".", bool isAbsolute = false);
+    void addLayers(std::string, LayerType,  std::string = ".", bool isAbsolute = false,
+                   bool scrollable=false);
+    void addWidgets(std::vector<std::pair<std::string, QWidget*>>,
+            std::string path = ".", bool isAbsolute = false);
     void addNode(QRLayoutNode* node, std::string path=".", bool isAbsolute=false);
 
     QRLayoutNode* getRoot() {return root;}
