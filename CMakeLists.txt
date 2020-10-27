@@ -49,14 +49,14 @@ target_link_libraries(all_lib
 add_subdirectory(gui)
 #add_subdirectory(tests)
 
-add_library(wip2_lib
-        gui/wip2/MainWindow.cpp
-        gui/wip2/Presenter.cpp
-        gui/wip2/Facade.cpp
-        )
-target_link_libraries(wip2_lib
-        ${QT_INCLUDES}
-        )
+#add_library(wip2_lib
+#        gui/wip2/MainWindow.cpp
+#        gui/wip2/Presenter.cpp
+#        gui/wip2/Facade.cpp
+#)
+#target_link_libraries(wip2_lib
+#        ${QT_INCLUDES}
+#        )
 
 add_library(prod_lib
         gui/prod/MainWindow.cpp

@@ -38,18 +38,14 @@ public:
 
     void lightenColor(const Vector3D &normal, QRColor &c) {
         float intens = lights[0]->getIntensity(normal);
+        //intens = 0.5;
         c.r = intens * c.r;
         c.g = intens * c.g;
         c.b = intens * c.b;
         // todo alpha here....)))
     }
 
-    virtual bool isShaded(const Vector3D &p) {
-        Vector3D v = p;
-        v = reProjectMatrix * v;
-        int x = round(v[0]), y = round(v[1]);
-        return shadeZBuf[y*shadeW + x] < v[2] - worldStep;
-    }
+    virtual bool isShaded(const Vector3D &p);
 
     void transformLightsPosition(const QRTransformer3D *trans) {
         for (int i = 0; i < size; ++i)

@@ -21,7 +21,7 @@ public:
     EditorMiscWidget(sptr<Facade> f, QWidget *parent=nullptr);
 
 private:
-
+    float x=1, y=1, z=-0.5;
     QRLayoutManager *ui;
     sptr<Facade> facade;
 

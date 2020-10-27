@@ -21,6 +21,7 @@ using namespace std;
 // todo water source at 0,0: not flowing anywhere
 // todo dynamic tense for mountains
 // todo save: river sources, mountains
+// todo beyound the right border - draws column on the left...
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -32,7 +33,7 @@ Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRI
     manager = sptr<BaseCommandManager> (new CommandManager());
 
     // scene creation
-    auto lightPos = lenNorm(Vector3D(1,1,0.5,0));
+    auto lightPos = lenNorm(Vector3D(-1,-1,0.5,0));
     auto cr = PolySceneCreatorNoCamera(lightPos, -1*lightPos);
     scene = cr.create();
     auto cam = sptr<QRCamera3D>(new Camera3D(data.w*data.step/16., data.h*data.step/16., data.step,

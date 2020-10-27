@@ -47,6 +47,10 @@ public:
 
     float getAmbient() {return ambient;}
 
+    void setLightDir(Vector3D v) {lightDir = len3Norm(v); for (int i = 0; i < 3; ++i) bare_dir[i] = lightDir[i];}
+    void setLightPos(Vector3D v) {for (int i = 0; i < 3; ++i) bare_pos[i] = v[i]; pos = v, pos0 = v;}
+
+
 private:
     float bare_pos[4], bare_dir[4];
     Vector3D pos, pos0, lightDir;

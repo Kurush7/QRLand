@@ -18,6 +18,7 @@ protected:
     void initRender();
     void prepareData();
     void rasterize();
+    void addFakeBorders();
 
     void transformPoints();
     void threadTransformPoints(size_t size, int offset, int step, int thread_num=0);
@@ -25,6 +26,8 @@ protected:
     int light_source_pos;
     sptr<QuickRenderer> renderer;
     sptr<QRImage> image;
+    QRVector<sptr<QRPolygon3D>> polys;
+    QRVector<sptr<QRPoint3D>> points;
 };
 
 

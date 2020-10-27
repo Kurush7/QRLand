@@ -38,6 +38,8 @@ public:
 
     virtual PolygonIterator getPolygons() const = 0;
     virtual PointIterator getPoints() const = 0;
+    virtual QRVector<sptr<QRPoint3D>>& getPointArray() {};
+    virtual QRVector<sptr<QRPolygon3D>>& getPolygonArray() {};
     virtual sptr<QRPolygon3D>* getPurePolygons() const = 0;
     virtual sptr<QRPoint3D>* getPurePoints() const = 0;
     virtual size_t getPolygonCnt() const = 0;

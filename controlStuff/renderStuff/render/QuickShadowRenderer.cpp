@@ -3,6 +3,7 @@
 //
 
 #include "QuickShadowRenderer.h"
+#include "objects/components/impl.h"
 
 QuickShadowRenderer::QuickShadowRenderer(sptr<QuickRenderer> &r, int light_source_pos)
 :image(new FakeImage(r->getImage()->getWidth(), r->getImage()->getHeight())),
@@ -15,8 +16,9 @@ void QuickShadowRenderer::initRender() {
     else ox = Vector3D(1, 1, (-lightDir[0]-lightDir[1]) / lightDir[2]);
     oy = lenNorm(ox*lightDir);  // todo left, right......
 
-    cout << "ox: " << ox << "\noy: " << oy << "\noz: " << lightDir << '\n';
-
+    //cout << "ox: " << ox << "\noy: " << oy << "\noz: " << lightDir << '\n';
+    //float k = 1e3;
+    //ox = ox*k, oy = oy*k, lightDir = lightDir*k;
     renderer->cameraTransformer = new AxisChangeTransformer(ox, oy, lightDir, ZeroVector);    // todo delete it!
 
     // todo MUST NOT CLEAR IMAGE: NO DATA THERE!!!
@@ -45,10 +47,66 @@ void QuickShadowRenderer::prepareData() {
     startMeasureTimeStamp(2);
     renderer->points = renderer->model->getPurePoints();
     renderer->point_cnt = renderer->model->getPointCnt();
+    addFakeBorders();
     renderer->data.init(renderer->modelCameraTransformer.getMatrix(), renderer->modelTransformer->getMatrix(),
                         renderer->points, renderer->polygons, renderer->point_cnt, renderer->polygon_cnt);
-
     endMeasureTimeIncrement(2);
+}
+
+void QuickShadowRenderer::addFakeBorders() {
+    // add borders
+    int h = sqrt(renderer->point_cnt);
+    auto pts = renderer->points;
+    int w = h, k;
+
+    polys.clear();
+    points.clear();
+    float minZ = 1e9;
+    for (int i = 0; i < renderer->polygon_cnt; ++i)
+        polys.push_back(renderer->polygons[i]);
+    for (int i = 0; i < renderer->point_cnt; ++i) {
+        points.push_back(renderer->points[i]);
+        minZ = min(minZ, points[i]->getVector()[2]);
+    }
+    minZ -= 1e3;
+
+    Vector3D v;
+    int sz = points.getSize();
+    for (int i = 0; i < h; i+=h-1) {
+        v = points[i*w]->getVector();
+        v[2] = minZ;
+        points.push_back(sptr<QRPoint3D>(new Point3D(v)));
+        sz++;
+        for (int j = 1; j < w; j++) {
+            k = i * w + j;
+            v = points[k]->getVector();
+            v[2] = minZ;
+            points.push_back(sptr<QRPoint3D>(new Point3D(v)));
+            sz++;
+            polys.push_back(sptr<QRPolygon3D>(new IndexPolygon3D({k-1, sz-2, sz-1}, DEFAULT_TEXTURE, points)));
+            polys.push_back(sptr<QRPolygon3D>(new IndexPolygon3D({k-1, k, sz-1}, DEFAULT_TEXTURE, points)));
+        }
+    }
+    for (int j = 0; j < w; j+=w-1) {
+        v = points[j]->getVector();
+        v[2] = minZ;
+        points.push_back(sptr<QRPoint3D>(new Point3D(v)));
+        sz++;
+        for (int i = 1; i < h; i++) {
+            k = i * w + j;
+            v = points[k]->getVector();
+            v[2] = minZ;
+            points.push_back(sptr<QRPoint3D>(new Point3D(v)));
+            sz++;
+            polys.push_back(sptr<QRPolygon3D>(new IndexPolygon3D({k-w, sz-2, sz-1}, DEFAULT_TEXTURE, points)));
+            polys.push_back(sptr<QRPolygon3D>(new IndexPolygon3D({k-w, k, sz-1}, DEFAULT_TEXTURE, points)));
+        }
+    }
+
+    renderer->polygons = polys.getPureArray();
+    renderer->polygon_cnt = polys.getSize();
+    renderer->points = points.getPureArray();
+    renderer->point_cnt = points.getSize();
 }
 
 void QuickShadowRenderer::rasterize() {
@@ -182,6 +240,7 @@ void QuickShadowRenderer::render() {
     QRVector<bool> visiblePoints(size);
     for (size_t i = 0; i < size; ++i)
         visiblePoints[i] = renderer->colorManager->isShaded(points[i]->getVector());
+
     renderer->model->defineShades(visiblePoints);
     //renderer->repaint();
 }

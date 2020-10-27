@@ -39,11 +39,22 @@ public:
         renderer->render();
     }
 
+    void setLightDir(Vector3D v) {
+        sptr<QRLight> li = *scene->getLights(); // the first one
+        li->setLightDir(v);
+        li->setLightPos(-1*v);
+
+        shadowRenderer->generateShades();
+
+        renderer->render();
+    }
+
     void save() {
         if (!landscape) return;
         man.saveSTL(landscape);
         man.save(builder);
     }
+
     void load(string file) {
         manager = sptr<BaseCommandManager> (new CommandManager());
 
@@ -54,7 +65,7 @@ public:
         }
 
         // scene creation
-        auto lightPos = lenNorm(Vector3D(1,1,0.5,0));
+        auto lightPos = lenNorm(Vector3D(-1,-1,0.5,0));
         auto cr = PolySceneCreatorNoCamera(lightPos, -1*lightPos);
         scene = cr.create();
         double step = b->getWorldStep();
