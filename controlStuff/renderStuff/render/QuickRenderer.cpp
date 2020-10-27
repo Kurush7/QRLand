@@ -28,6 +28,7 @@ QuickRenderer::QuickRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3
 
 void QuickRenderer::initRender() {
     camera = scene->getActiveCamera().get();
+    cameraViewVector = camera->getViewVector();
     cameraTransformer = camera->getAxisTransformer().get();
     projector = Transformer3D(camera->getProjectionTransformer()->getMatrix());
     screenData = camera->getScreen();
@@ -77,6 +78,7 @@ void QuickRenderer::threadDrawPolygons(int thread_num) {
             colorManager->ambientLight(c);
         else
             colorManager->lightenColor(poly->getNormal(), c);
+
         zbuf.draw(dt->points, dt->polygons[k], dt->polygonSize[k],
                   dt->normals[k], c);
     }

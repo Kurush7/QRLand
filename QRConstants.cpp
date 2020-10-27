@@ -23,6 +23,8 @@ int minQuickRenderDataBufferSize = 1000;
 
 // gui stuff
 float BUTTON_REPRESS_TIME_MSEC = 15;
+int hmapFPS = 2;
+int erosionFPS = 30;
 
 // landscape
 int maxNoLODPolygonCnt = 10000;
@@ -57,6 +59,7 @@ float gravity = 1;
 // roam
 // todo add minimal visible level
 float maxPixelError = 0.2;
+float currentPixelError = 0.2;
 int FrameSize = 9;
 float pixelsPerUnit = 200;
 
@@ -78,4 +81,6 @@ float mountainsMinTense=0.2;
 
 // climate
 float maxZSteepCoef = 0.55;
+float grassMaxHeight = 2;
+float snowMinHeight = 5;
 // new line must be here!!!!

@@ -18,7 +18,7 @@ public:
         setFixedHeight(400);
         auto w = new QWidget();
         ui = new QRLayoutManager("global", QRVert);
-        ui->addLayers("render $ landscape $ water $ climate", QRVert);     // todo sep not working
+        ui->addLayers("render $ gui $ landscape $ water $ climate", QRVert);     // todo sep not working
 
         auto save = new QPushButton("сохранить конфигурацию", this);
         ui->addLayers("save", QRHor);
@@ -33,12 +33,20 @@ public:
         addInput("число потоков", &RENDER_THREAD_CNT, cur_layer);
         addInput("макс. число вершин модели", &MAX_POINT_CNT, cur_layer);
 
+        cur_layer="gui";
+        lab = new QRLabel("Частоты обновления");
+        lab->setObjectName("headerLabel");
+        ui->addWidgets({{"label", lab}}, cur_layer);
+        addInput("частота генератора карты высот (1/с)", &hmapFPS, cur_layer, true);
+        addInput("частота генератора воды (1/c)", &erosionFPS, cur_layer);
+
         cur_layer="landscape";
         lab = new QRLabel("Генерация карты высот");
         lab->setObjectName("headerLabel");
         ui->addWidgets({{"label", lab}}, cur_layer);
         addInput("LOD: длина сегмента (число точек)", &FrameSize, cur_layer, true);
         addInput("LOD: макс. ошибка отрисовки", &maxPixelError, cur_layer);
+        addInput("LOD: текущая ошибка отрисовки", &currentPixelError, cur_layer);
         addInput("LOD: число пикселей на единицу", &pixelsPerUnit, cur_layer);
         addInput("мин. скорость литосферных плит", &minPlateMoveForce, cur_layer);
         addInput("макс. скорость литосферных плит", &maxPlateMoveForce, cur_layer);
@@ -46,6 +54,7 @@ public:
         addInput("layerLevelMult", &layerLevelMult, cur_layer);
         addInput("холм: мин. высота (относит.)", &minHillHeightParam, cur_layer);
         addInput("холм: макс. высота (относит.)", &maxHillHeightParam, cur_layer);
+        addInput("холм: макс. количество", &maxHillCnt, cur_layer);
         addInput("холм: макс. коэф. затухания", &hillStopCoef, cur_layer);
         addInput("DiamondSquare: сила рандомных изменений (scale)", &diamondSquareRandomCoef, cur_layer);
         addInput("DiamondSquare. сила рандомных изменений (tools)", &diamondSquareRandomUpdateCoef, cur_layer);
@@ -78,6 +87,8 @@ public:
         lab->setObjectName("headerLabel");
         ui->addWidgets({{"label", lab}}, cur_layer);
         addInput("озеленение: макс. уровень наклона", &maxZSteepCoef, cur_layer, true);
+        addInput("озеленение: макс. высота", &grassMaxHeight, cur_layer);
+        addInput("снег: мин. высота", &snowMinHeight, cur_layer);
 
         ui->generateSpacers();
 

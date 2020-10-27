@@ -5,23 +5,23 @@
 #include "Facade.h"
 using namespace std;
 
-// TODO MORE DETAILS ON THE EDGES..... WTF?!!!!!!
-// todo top-down inverts x and y... wtf?!
-// todo camera: in self-rotate mode moves by X and Y are in camera's coords, but not aligned to camera's rotation
-// todo negative scale for camera when in 1st view
-// todo frame visibility: hides fuck up?
-// todo water manager fucked up
-// todo LOD: ignores small details
-// todo erosion: water accumulating at the borders
-// todo mouse camera move: fix axes
-// todo camera 1st view: bugged rotations
-// todo LOD on-off
-// todo xyz-widget: on-off
-// todo TURN OFF WATER AND OTHER PROCESSES WHEN SCALING HMAP
-// todo water source at 0,0: not flowing anywhere
-// todo dynamic tense for mountains
-// todo save: river sources, mountains
+// MORE DETAILS ON THE EDGES.....?!!!!!!
+//  negative scale for camera when in 1st view
+// camera 1st view: bugged rotations
 // todo beyound the right border - draws column on the left...
+
+// water source at 0,0: not flowing anywhere: hardcoded solution
+// erosion: water accumulating at the borders: check now
+
+// todo guide
+// todo input validation
+// todo action manager: water & hmap: one at a time + colorizing; TURN OFF WATER AND OTHER PROCESSES WHEN SCALING HMAP
+
+// todo dynamic tense for mountains
+// todo save: river sources, mountains, save as btns
+// todo on/off render statistics
+// todo shadows: bigger image size
+// todo set water level: turn off water generation first
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -119,20 +119,11 @@ void Facade::setShadesVisible(bool x) {
     renderer->render();
 }
 
-void Facade::erosionIteration() {
-    static int cnt = 0;
-    cnt++;
-    builder->waterManager->erosionIteration();
-    if (cnt == 20) {
-        startMeasureTime;
-        builder->climateManager->on_the_7th_day();
-        builder->waterManager->updateWater();
-        landscape->interpolateColors(); // todo optimize: not each iteration
-        topDown->drawMiniMap();       // todo not here
-        cout << "\nwater update: " << endMeasureTime << "\n\n";
-        cnt = 0,
-        draw();
-    }
+void Facade::erosionIteration(bool draw_flag, bool useTools) {
+    builder->waterManager->erosionIteration(defaultErosionDT, useTools);
+
+    if (draw_flag) renderer->render();
+
 }
 
 void Facade::undo() {

@@ -4,19 +4,21 @@
 
 #include "WaterManager.h"
 
-void WaterManager::erosionIteration(float dt) {
+void WaterManager::erosionIteration(float dt, bool useTools) {
     if (!erosionReady) initErosionData();
-    for (int i = 0; i < waterSources.getSize(); ++i)
-        if (waterSourcesEnabled[i])
-            waterSources[i]->use(dt);
+    if (useTools) {
+        for (int i = 0; i < waterSources.getSize(); ++i)
+            if (waterSourcesEnabled[i])
+                waterSources[i]->use(dt);
+    }
 
-    startMeasureTime;
+    //startMeasureTime;
     updateFlux(dt);
     updateFlux2(dt);
     erosionDeposition();
     transportSediment(dt);
     evaporation(dt);
-    cout << "erosion iteration: " << endMeasureTime << "\n";
+    //cout << "erosion iteration: " << endMeasureTime << "\n";
 
 }
 

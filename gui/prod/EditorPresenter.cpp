@@ -109,7 +109,7 @@ void EditorPresenter::draw(bool reset) {
 void EditorPresenter::updateMiniCoords(float x0, float y0) {
     auto p = window.canvasMini->mapFromGlobal(QCursor::pos());
     int x = (p.x() + 0.) / window.canvasMini->getWidth() * (facade->builder->getHeightMap().width() + 0.);
-    int y = (window.canvasMini->getHeight() - p.y() + 0.) / window.canvasMini->getHeight() * (facade->builder->getHeightMap().height() + 0.);
+    int y = (p.y() + 0.) / window.canvasMini->getHeight() * (facade->builder->getHeightMap().height() + 0.);
     float z = facade->builder->getHeightMap()[y][x];
     float xf = round(x * facade->builder->getWorldStep() * 100.) / 100.;
     float yf = round(y * facade->builder->getWorldStep() * 100.) / 100.;

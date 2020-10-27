@@ -73,6 +73,7 @@ map<string, float*> getFloatConfigMap() {
     m[GET_VARIABLE_NAME(fluxPipeCapacity)] = &fluxPipeCapacity;
     m[GET_VARIABLE_NAME(gravity)] = &gravity;
     m[GET_VARIABLE_NAME(maxPixelError)] = &maxPixelError;
+    m[GET_VARIABLE_NAME(currentPixelError)] = &currentPixelError;
     m[GET_VARIABLE_NAME(pixelsPerUnit)] = &pixelsPerUnit;
     m[GET_VARIABLE_NAME(layerLevelMult)] = &layerLevelMult;
     m[GET_VARIABLE_NAME(minHillHeightParam)] = &minHillHeightParam;
@@ -86,6 +87,8 @@ map<string, float*> getFloatConfigMap() {
     m[GET_VARIABLE_NAME(mountainsDSRandomCoef)] = &mountainsDSRandomCoef;
     m[GET_VARIABLE_NAME(mountainsMinTense)] = &mountainsMinTense;
     m[GET_VARIABLE_NAME(maxZSteepCoef)] = &maxZSteepCoef;
+    m[GET_VARIABLE_NAME(grassMaxHeight)] = &grassMaxHeight;
+    m[GET_VARIABLE_NAME(snowMinHeight)] = &snowMinHeight;
 
     return m;
 }
@@ -103,5 +106,7 @@ map<string, int*> getIntConfigMap() {
     m[GET_VARIABLE_NAME(rainDropRadius)] = &rainDropRadius;
     m[GET_VARIABLE_NAME(FrameSize)] = &FrameSize;
     m[GET_VARIABLE_NAME(maxHillCnt)] = &maxHillCnt;
+    m[GET_VARIABLE_NAME(hmapFPS)] = &erosionFPS;
+    m[GET_VARIABLE_NAME(erosionFPS)] = &erosionFPS;
     return m;
 }

@@ -51,6 +51,7 @@ gravity=1
 
 // todo add minimal visible level
 maxPixelError=0.2
+currentPixelError=0.2
 FrameSize=9
 pixelsPerUnit=200
 

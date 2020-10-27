@@ -36,7 +36,7 @@ RoamLandscape::RoamLandscape(const QRMatrix<sptr<QRPoint3D>> &points): points(po
 void RoamLandscape::updateCamera(const sptr<QRCamera3D> &camera, string *info) {
     size_t allSize = dimFrameCnt*dimFrameCnt;
     double d = camera->getScreenDistance();
-    RoamUpdateConstant = maxPixelError*maxPixelError /d/d /pixelsPerUnit/pixelsPerUnit;
+    RoamUpdateConstant = currentPixelError*currentPixelError /d/d /pixelsPerUnit/pixelsPerUnit;
     auto c = camera->getWorldOriginCoord();
     CameraCoordsX = c[0], CameraCoordsY = c[1], CameraCoordsZ = c[2];
     

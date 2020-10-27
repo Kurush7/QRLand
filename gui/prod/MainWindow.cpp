@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     //setCentralWidget(mainWidget);
 
 
-    menu = new QRMenu(this);
+    menu = new QRMenu(nullptr, this);
     setMenuBar(menu);
 
     decorate();
@@ -58,7 +58,7 @@ void MainWindow::addLogic() {
     });
 
     connect(openBtn, &QPushButton::clicked, [this]() {
-        string file = openFile->getOpenFileName().toStdString();
+        string file = openFile->getOpenFileName(0, "Открыть существующий проект", "", "*.qrland").toStdString();
         auto *x = new EditorWindow(ModelInitData(), file);
         x->show();
         this->close();

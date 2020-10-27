@@ -13,6 +13,7 @@
 #include "EditorHMapWidget.h"
 #include "EditorMiscWidget.h"
 #include "views/QRMenu.h"
+#include "ActionManager.h"
 
 class EditorWindow: public QMainWindow {
 Q_OBJECT
@@ -46,6 +47,9 @@ private:
     EditorMiscWidget *miscWidget;
 
     QTimer erosionTimer;
+    sptr<ActionManager> actionManager;
+
+    QRMenu *menu;
 };
 
 #endif //EDITOR_WINDOW

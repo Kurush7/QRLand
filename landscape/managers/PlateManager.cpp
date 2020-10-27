@@ -5,8 +5,8 @@
 #include "PlateManager.h"
 
 QRVector<Vector3D> PlateManager::definePoints(int cnt) {
-    uniform_real_distribution<double> gx(0, w);
-    uniform_real_distribution<double> gy(0, h);
+    uniform_real_distribution<double> gx(0, w-1);
+    uniform_real_distribution<double> gy(0, h-1);
 
     float x, y;
     QRVector<Vector3D> pts;
@@ -20,7 +20,7 @@ QRVector<Vector3D> PlateManager::definePoints(int cnt) {
 
 
 void PlateManager::buildPlates(QRVector<Vector3D> points) {
-    plates = buildVoronoiDiagramOnRect(0,w-1,0,h-1, points);
+    plates = buildVoronoiDiagramOnRect(0,w,0,h, points);
     for (int i = 0; i < plates.getSize(); ++i)
         plates[i]->setColor(QRColor(56, 115, 215));  //todo COLOR HARDCODE
 

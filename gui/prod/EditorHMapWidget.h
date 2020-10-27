@@ -15,17 +15,17 @@
 #include "../QTIncludes.h"
 #include "../widgets/QRWidgets.h"
 #include "QRToolFrame.h"
-
-const int hmapFPS = 2;  // todo fuck off from here
+#include "ActionManager.h"
 
 class EditorHMapWidget: public QWidget {
 public:
-    EditorHMapWidget(sptr<Facade> f, QWidget *parent=nullptr);
+    EditorHMapWidget(sptr<Facade> f, sptr<ActionManager>, QWidget *parent=nullptr);
 
 private:
     //bool adding = false;
     QRLayoutManager *ui;
     sptr<Facade> facade;
+    sptr<ActionManager> manager;
     //float waterLevel;
 
     QWidget *w;

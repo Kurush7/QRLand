@@ -15,16 +15,15 @@
 #include "../QTIncludes.h"
 #include "../widgets/QRWidgets.h"
 #include "QRToolFrame.h"
-
-
-const int erosionFPS = 30;  // todo fuck off from here
+#include "ActionManager.h"
 
 class EditorWaterWidget: public QWidget {
 public:
-    EditorWaterWidget(sptr<Facade> f, QWidget *parent=nullptr);
+    EditorWaterWidget(sptr<Facade> f, sptr<ActionManager>, QWidget *parent=nullptr);
 
 private:
     bool adding = false;
+    sptr<ActionManager> manager;
     QRLayoutManager *ui;
     sptr<Facade> facade;
     float waterLevel;

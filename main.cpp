@@ -32,13 +32,14 @@ int main(int argc, char *argv[]) {
     if (translator->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         app.installTranslator(translator);
 
-    //MainWindow window;
-    //window.setWindowIcon(QIcon("i.ico"));
-    //window.show();
+    MainWindow window;
+    window.setWindowIcon(QIcon("i.ico"));
+    window.show();
+
     // todo delete from here
-    string file = "landscape.qrland";
-    auto *x = new EditorWindow(ModelInitData(), file);
-    x->show();
+    //string file = "landscape.qrland";
+    //auto *x = new EditorWindow(ModelInitData(), file);
+    //x->show();
 
     return app.exec();
 }

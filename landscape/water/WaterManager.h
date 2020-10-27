@@ -56,7 +56,7 @@ public:
     void setWaterStatus(bool x) {x? enableWater() : disableWater(); }
 
     void setWaterLevel(float wl);
-    void erosionIteration(float dt = defaultErosionDT);
+    void erosionIteration(float dt = defaultErosionDT, bool useTools=true);
 
     QRMatrix<float>& getWaterLevel() {return waterLevel;}
     void setWaterMatrix(QRMatrix<float>&m);

@@ -17,6 +17,8 @@ extern float QRINF;
 extern float SELECTION_ERROR;    // for selection of frame model on click
 
 extern float BUTTON_REPRESS_TIME_MSEC;
+extern int hmapFPS;
+extern int erosionFPS;
 
 extern int MAX_LIGHT_CNT;
 extern int MAX_POINT_CNT;
@@ -57,6 +59,7 @@ extern float fluxPipeCapacity;
 extern float gravity;
 
 extern float maxPixelError;
+extern float currentPixelError;
 extern int FrameSize;
 extern float pixelsPerUnit;
 
@@ -76,4 +79,6 @@ extern float mountainsDSRandomCoef;
 extern float mountainsMinTense;
 
 extern float maxZSteepCoef;
+extern float grassMaxHeight;
+extern float snowMinHeight;
 #endif //BIG3DFLUFFY_QRCONSTANTS_H

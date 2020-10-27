@@ -26,14 +26,24 @@ void ClimateManager::on_the_7th_day() {
     int sz = polygons->getSize();
     int a, b, wdth = points.width();
 
+    int ind;
     for (int k = 0; k < sz; ++k) {
         poly = (*polygons)[k].get();
+        //auto indexes = poly->getPurePointIndexes();
         auto normal = lenNorm(poly->getNormal());
-        if (isSteep(normal)) {
-            texture = QRTexturesMap[QRVSTONE_MATERIAL];
+        ind = poly->getPurePointIndexes()[0];
+        a = ind / wdth, b = ind % wdth;
+        v = points[a][b]->getVector();
+        //w = getXIndex(v[0]), h = getYIndex(v[1]);
+
+        if (v[2] >= snowMinHeight) {
+            texture = QRTexturesMap[QRVSNOW_MATERIAL];
+        }
+        else if (!isSteep(normal) && v[2] <= grassMaxHeight) {
+            texture = QRTexturesMap[QRVGRASS_MATERIAL];
         }
         else
-            texture = QRTexturesMap[QRVGRASS_MATERIAL];
+            texture = QRTexturesMap[QRVSTONE_MATERIAL];
 
         /*int sz = poly->getSize();
         int32_t* indexes = poly->getPurePointIndexes();

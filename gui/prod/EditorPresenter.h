@@ -35,7 +35,7 @@ public:
     void erosionIteration();
     void scaleGrid();
     void process();
-    void save() {facade->save();}
+    void save() {}
     void updateMiniCoords(float x, float y);
 
     sptr<Facade> facade;

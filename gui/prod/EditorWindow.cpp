@@ -53,29 +53,34 @@ EditorWindow::EditorWindow(ModelInitData data, string initFacade, QWidget *paren
     mainWidget->setLayout(ui->getRootLayout());
     setCentralWidget(mainWidget);
 
-
-    auto menu = new QRMenu(this);
-    setMenuBar(menu);
-
     decorate();
     addLogic();
 
     presenter = sptr<EditorPresenter>(new EditorPresenter(*this, data, initFacade.empty()));
     if (!initFacade.empty())
         presenter->facade->load(initFacade);
+
+    menu = new QRMenu(presenter->facade, this);
+    setMenuBar(menu);
+
+    actionManager =  sptr<ActionManager>(new ActionManager(presenter->facade));
+
     ui->goToPath("right", true);
 
-    waterWidget = new EditorWaterWidget(presenter->facade, this);
+    waterWidget = new EditorWaterWidget(presenter->facade, actionManager, this);
     ui->addWidgets({{"water", waterWidget}}, "water");
     multiRadio->addWidgets({waterWidget}, "вода");
 
-    hmapWidget = new EditorHMapWidget(presenter->facade, this);
+    hmapWidget = new EditorHMapWidget(presenter->facade, actionManager, this);
     ui->addWidgets({{"hmap", hmapWidget}}, "water");
     multiRadio->addWidgets({hmapWidget}, "карта_высот");
 
     miscWidget = new EditorMiscWidget(presenter->facade, this);
     ui->addWidgets({{"misc", miscWidget}}, "misc");
     multiRadio->addWidgets({miscWidget}, "разное");
+
+
+    connect(menu, &QRMenu::onQuit, [this](){this->close();});
 }
 
 void EditorWindow::decorate() {

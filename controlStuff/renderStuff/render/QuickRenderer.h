@@ -43,6 +43,7 @@ protected:
     QRasterizeZBuffer zbuf;
 
     QRCamera3D *camera;
+    Vector3D cameraViewVector;
     QRPolyModel3D *model = nullptr;
     QRTransformer3D *cameraTransformer = nullptr, *modelTransformer, *imageTransformer;
     Transformer3D modelCameraTransformer, projector;

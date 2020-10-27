@@ -4,7 +4,8 @@
 
 #include "EditorWaterWidget.h"
 
-EditorWaterWidget::EditorWaterWidget(sptr<Facade> f, QWidget *parent): QWidget(parent), facade(f) {
+EditorWaterWidget::EditorWaterWidget(sptr<Facade> f, sptr<ActionManager> am, QWidget *parent): QWidget(parent),
+facade(f), manager(am) {
     ui = new QRLayoutManager("global", QRVert);
 
     auto show = new QCheckBox("отображать воду", this);
@@ -24,7 +25,7 @@ EditorWaterWidget::EditorWaterWidget(sptr<Facade> f, QWidget *parent): QWidget(p
             erosionTimer->stop();
         }
     });
-    connect(erosionTimer, &QTimer::timeout, [this]() {facade->erosionIteration();});
+    connect(erosionTimer, &QTimer::timeout, [this]() {manager->processWater();});
 
     auto setWaterLevel = new QRInputBtn("уровень воды:", "установить", &waterLevel, this,
                                         [this](){facade->builder->waterManager->setWaterLevel(waterLevel);});

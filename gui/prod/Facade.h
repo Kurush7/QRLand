@@ -33,10 +33,16 @@ public:
     void changeCamera();
     void setWaterVisible(bool x);
     void setShadesVisible(bool x);
-    void erosionIteration();
-    void process() {
+    void erosionIteration(bool draw=true, bool useTools=true);
+    void process(bool draw=true) {
         builder->process();
-        renderer->render();
+        if (draw) renderer->render();
+    }
+    void updateClimate(bool draw=true) {
+        builder->climateManager->on_the_7th_day();
+        builder->waterManager->updateWater();
+        landscape->interpolateColors();
+        if (draw) renderer->render();
     }
 
     void setLightDir(Vector3D v) {
@@ -49,10 +55,12 @@ public:
         renderer->render();
     }
 
-    void save() {
+    void save(string file, bool isStl=false) {
         if (!landscape) return;
-        man.saveSTL(landscape);
-        man.save(builder);
+        if (isStl)
+            man.saveSTL(landscape, file);
+        else
+            man.save(builder, file);
     }
 
     void load(string file) {

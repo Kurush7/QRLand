@@ -42,6 +42,7 @@ public:
     virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitCamera3D(p);}
     wptr<QRCamera3D> getPointer() {return p;}
 
+    virtual Vector3D getViewVector() {return deepVector;}
 
     virtual bool isVisible(){return false;}
     virtual void move(const Vector3D &move);
