@@ -83,13 +83,13 @@ target_link_libraries(main.exe
 qt5_use_modules(main.exe Widgets OpenGL)
 target_link_libraries(main.exe ${QT_LIBRARIES} ${OPENGL_LIBRARIES})
 
-add_custom_command(
-        TARGET main.exe POST_BUILD
-        DEPENDS ${CMAKE_SOURCE_DIR}/gui/style.css
-        COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/gui/style.css
-        ${CMAKE_CURRENT_BINARY_DIR}/gui/style.css
-
-        COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/config.txt
-        ${CMAKE_CURRENT_BINARY_DIR}/config.txt)
+#add_custom_command(
+#        TARGET main.exe POST_BUILD
+#        DEPENDS ${CMAKE_SOURCE_DIR}/gui/style.css
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#        ${CMAKE_SOURCE_DIR}/gui/style.css
+#        ${CMAKE_CURRENT_BINARY_DIR}/gui/style.css
+#
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#        ${CMAKE_SOURCE_DIR}/config.txt
+#        ${CMAKE_CURRENT_BINARY_DIR}/config.txt)

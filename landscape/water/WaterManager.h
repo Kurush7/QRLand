@@ -62,6 +62,8 @@ public:
     void setWaterMatrix(QRMatrix<float>&m);
 
     void updateWater();
+
+    QRVector<sptr<WaterSource>> waterSources;
 private:
     bool waterEnabled = false;
     float worldStep, width, height;
@@ -77,7 +79,6 @@ private:
     std::map<sptr<QRPolygon3D>, sptr<QRTexture>> changedPolygons;
     sptr<QRTexture> waterTexture = QRTexturesMap[QRWATER_MATERIAL];
 
-    QRVector<sptr<WaterSource>> waterSources;
     QRVector<bool> waterSourcesEnabled;
 
 

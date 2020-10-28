@@ -19,6 +19,9 @@ public:
     virtual void use(float dt) = 0;
     virtual void scaleGrid(QRMatrix<float> &newWL) {waterLevel = newWL;}
     virtual void setIntensity(float x) {} // from 0 to 1
+
+    virtual Vector3D getData() {return ZeroVector;}
+    virtual void setData(Vector3D) {}
 protected:
     QRMatrix<float> &waterLevel;
 };
@@ -66,6 +69,9 @@ public:
         x = min(pos_x, waterLevel.width());
         y = min(pos_y, waterLevel.height());
     }
+
+    virtual Vector3D getData() {return Vector3D(x, y, riverIntensity);}
+    virtual void setData(Vector3D v) {x = v[0], y = v[1], riverIntensity = v[2];}
 
     virtual void setIntensity(float x) {
         riverIntensity = maxRiverIntencityCoef * x;

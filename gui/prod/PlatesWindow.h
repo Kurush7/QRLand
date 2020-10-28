@@ -99,7 +99,7 @@ private:
     // todo control release
     void onMousePressed(float x, float y) {
         whatPressed = 0;
-        Vector3D p{x, img->getHeight() - y};
+        Vector3D p{x, y};
         for (int i = 0; i < arrows.getSize(); ++i) {
             Vector3D v = arrows[i]->b;
             v = drawer->transformer->transform(v);
@@ -124,7 +124,7 @@ private:
     }
 
     void onMouseMoved(float dx, float dy) {
-        Vector3D p{dx, -dy};
+        Vector3D p{dx, dy};
         p[0] *= data.w * data.step / img->getWidth();
         p[1] *= data.h * data.step / img->getHeight();
 

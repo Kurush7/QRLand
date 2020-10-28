@@ -99,6 +99,8 @@ public:
         builder->waterManager->updateWater();
         landscape->interpolateColors();
 
+        builder->setPlateManager(builder->plateManager);
+
         topDown = sptr<TopDownVisualizer>(new TopDownVisualizer(builder, hmap_image));
 
         for (auto f = builder->plateManager->getPlates(); f; ++f)

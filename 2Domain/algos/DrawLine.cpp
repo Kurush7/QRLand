@@ -6,6 +6,7 @@
 
 void drawLine(const sptr<QRImage> image, const Vector3D &a, const Vector3D &b,
               const QRColor &color) {
+    float h = image->getHeight();
     float dx = b[0] - a[0], dy = b[1] - a[1];
     float Dx = fabs(dx), Dy = fabs(dy);
     float L =  Dx > Dy ? Dx : Dy;
@@ -18,7 +19,7 @@ void drawLine(const sptr<QRImage> image, const Vector3D &a, const Vector3D &b,
     for (int i = 0; i <= ll; ++i) {
         xi = round(x), yi = round(y);
         if (xi >= 0 && xi < image->getWidth() && yi >=0 && yi < image->getHeight())
-            image->setPixel(xi, yi, color);
+            image->setPixel(xi, h - 1 - yi, color);
         x += dx, y += dy;
     }
 }

@@ -10,12 +10,13 @@
 using namespace std;
 
 void SaveLoadManager::save(const sptr<LandscapeBuilder> &builder, string filename) {
-
-
     auto hmap = builder->getHeightMap();
     auto water = builder->waterManager->getWaterLevel();
     int32_t w = hmap.width(), h = hmap.height();
     float step = builder->getWorldStep();
+    auto plates = builder->plateManager->getPlatesArray();
+    auto &moves = builder->plateManager->moveVectors;
+    auto &sources = builder->waterManager->waterSources;
 
     filename += ".qrland";
     FILE *f = fopen(filename.c_str(), "wb");
@@ -24,12 +25,42 @@ void SaveLoadManager::save(const sptr<LandscapeBuilder> &builder, string filenam
     fwrite(&step, sizeof(float), 1, f);
     fwrite(&w, sizeof(int32_t), 1, f);
     fwrite(&h, sizeof(int32_t), 1, f);
+    // save hmap
     for (int i = 0; i < h; ++i)
         for (int j = 0; j < w; ++j)
             fwrite(&hmap[i][j], sizeof(float), 1, f);
+    // save water
     for (int i = 0; i < h; ++i)
         for (int j = 0; j < w; ++j)
             fwrite(&water[i][j], sizeof(float), 1, f);
+
+    // save plates
+    int sz = plates.getSize();
+    fwrite(&sz, sizeof(int), 1, f);
+    for (int p = 0; p < sz; ++p) {
+        auto &points = plates[p]->points;
+        int sz2 = points.getSize();
+        fwrite(&moves[p][0], sizeof(float), 1, f);
+        fwrite(&moves[p][1], sizeof(float), 1, f);
+        fwrite(&sz2, sizeof(int), 1, f);
+        for (int i = 0; i < sz2; ++i) {
+            auto &pt = points[i];
+            fwrite(&pt.arr[0], sizeof(float), 1, f);
+            fwrite(&pt.arr[1], sizeof(float), 1, f);
+        }
+    }
+
+    // save water sources
+    sz = sources.getSize();
+    fwrite(&sz, sizeof(int), 1, f);
+    for (int p = 0; p < sz; ++p) {
+        Vector3D data = sources[p]->getData();
+        fwrite(&data[0], sizeof(float), 1, f);
+        fwrite(&data[1], sizeof(float), 1, f);
+        fwrite(&data[2], sizeof(float), 1, f);
+        fwrite(&data[3], sizeof(float), 1, f);
+    }
+
     fclose(f);
 }
 
@@ -54,16 +85,59 @@ uptr<LandscapeBuilder> SaveLoadManager::load(std::string filename) {
     hmap.resize(w, h);
     water.resize(w, h);
 
+    // load hmap
     for (int i = 0; i < h; ++i)
         for (int j = 0; j < w; ++j)
             fread(&hmap[i][j], sizeof(float), 1, f);
+
+    // load water
     for (int i = 0; i < h; ++i)
         for (int j = 0; j < w; ++j)
             fread(&water[i][j], sizeof(float), 1, f);
-    fclose(f);
+
+    // load plates
+    QRVector<sptr<QRFrame2D>> plates;
+    QRVector<Vector3D> moves, points;
+    int sz;
+    fread(&sz, sizeof(int), 1, f);
+    moves.reserve(sz); moves.setSize(sz);
+    for (int p = 0; p < sz; ++p) {
+        fread(&moves[p][0], sizeof(float), 1, f);
+        fread(&moves[p][1], sizeof(float), 1, f);
+        int sz2;
+        fread(&sz2, sizeof(int), 1, f);
+        points.reserve(sz2); points.setSize(sz2);
+        for (int i = 0; i < sz2; ++i) {
+            Vector3D pt = ZeroVector;
+            fread(&pt.arr[0], sizeof(float), 1, f);
+            fread(&pt.arr[1], sizeof(float), 1, f);
+            points[i] = pt;
+        }
+        plates.push_back(sptr<QRFrame2D>(new QRFrame2D(points, QRColor("green"))));
+    }
 
     auto builder = uptr<LandscapeBuilder>(new LandscapeBuilder(w, h, step));
     builder->setHeightMap(hmap);
+
+    builder->plateManager->moveVectors = moves;
+    builder->plateManager->plates = plates;
+
+    // load water sources
+    QRVector<sptr<WaterSource>> sources;
+    fread(&sz, sizeof(int), 1, f);
+    for (int p = 0; p < sz; ++p) {
+        Vector3D data;
+        fread(&data[0], sizeof(float), 1, f);
+        fread(&data[1], sizeof(float), 1, f);
+        fread(&data[2], sizeof(float), 1, f);
+        fread(&data[3], sizeof(float), 1, f);
+        if (data == ZeroVector) builder->waterManager->addRainSource();
+        else
+            builder->waterManager->addRiverSource(data[0], data[1], data[2]);
+    }
+
+    fclose(f);
+
     return builder;
 }
 

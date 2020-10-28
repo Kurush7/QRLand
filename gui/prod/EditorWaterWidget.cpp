@@ -52,6 +52,7 @@ facade(f), manager(am) {
     ui->addWidgets({{"sroll", scr}}, "data");
 
     addRainSource();
+    loadSources();
 
     ui->generateSpacers();
     setLayout(ui->getRootLayout());

@@ -27,18 +27,19 @@ public:
     }
 
     QRVectorIterator<sptr<QRFrame2D>> getPlates() {return plates.begin();}
+    QRVector<sptr<QRFrame2D>>& getPlatesArray() {return plates;}
     QRVectorIterator<Vector3D> getMove() {return moveVectors.begin();}
 
     void setPlates(QRVectorIterator<sptr<QRFrame2D>> ps) {plates = ps;}
     void setMove(QRVectorIterator<Vector3D> mv) {moveVectors = mv;}
 
+    QRVector<Vector3D> moveVectors;  // normed!!!
+    QRVector<sptr<QRFrame2D>> plates;
 private:
     QRVector<Vector3D> definePoints(int cnt);
     void buildPlates(QRVector<Vector3D> points);
 
     double w, h;
-    QRVector<sptr<QRFrame2D>> plates;
-    QRVector<Vector3D> moveVectors;  // normed!!!
 };
 
 

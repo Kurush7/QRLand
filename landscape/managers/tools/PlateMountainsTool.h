@@ -26,12 +26,8 @@ public:
         float max_h = data.height * data.worldStep;
         for (auto &e: edges) {
             QRQueue<QRPair<int, int>> q;
-
             auto edge = e.first;
-            double tense = minPlateMoveForce + e.second * maxPlateMoveForce;
-            if (fabs(tense) < mountainsMinTense)
-                tense = sign(tense) * mountainsMinTense;
-            float dh = tense * plateMountainHeightCoef * data.worldStep * intensity;
+            double tense, dh, tvec;
 
             Vector3D a = edge.a, b = edge.b;
             a /= data.worldStep, b /= data.worldStep;
@@ -51,18 +47,27 @@ public:
                 xi = QRound(x), yi = QRound(y);
                 x += dx, y += dy;
                 if (xi >= 0 and xi < data.width and yi >= 0 and yi < data.height) {
+                    tvec = cos2(e.second.fst, len2Norm(Vector3D(x,y,0) - e.second.snd));   // todo need lennorm?
+                    tvec = sign(tvec) * tvec * tvec;
+                    tense = minPlateMoveForce + tvec * (maxPlateMoveForce-minPlateMoveForce);
+                    if (fabs(tense) < mountainsMinTense)
+                        tense = sign(tense) * mountainsMinTense;
+                    dh = tense * plateMountainHeightCoef * data.worldStep * intensity;
+
                     q.push({xi, yi});
                     (*data.hmap)[yi][xi] += dh;
                 }
             }
+            cout << '\n';
 
             BFSMountainWalk(q, data.width, data.height, data.hmap, data.worldStep);
         }
+        cout << "\n============\n\n";
         return true;
     }
 
 private:
-    std::map<QRLine2D, double> edges;
+    std::map<QRLine2D, QRPair<Vector3D, Vector3D>> edges;   // center, move
     bool inited=false;
     float height, give;
     float intensity=1;

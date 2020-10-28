@@ -44,15 +44,49 @@ private:
             delete addWidget; addWidget=nullptr;});
     }
 
-    void addRainSource() {
-        rain_source = facade->builder->waterManager->addRainSource();
-        auto f = new QRToolFrame("дождь", [this](bool x) {
+    void addRainSource(int init = -1) {
+        int rain_source = init;
+        if (rain_source == -1)
+            rain_source = facade->builder->waterManager->addRainSource();
+
+        auto f = new QRToolFrame("дождь", [this, rain_source](bool x) {
             facade->builder->waterManager->setSourceEnabled(rain_source, x);
         },
- [this](float val) {
+ [this, rain_source](float val) {
              facade->builder->waterManager->setSourceIntensity(rain_source, val);
          });
         lay->addWidget(f);
+    }
+
+    void addRiverSource(int init = -1, Vector3D data=ZeroVector) {
+        // todo check lambda correct capturing
+        int rain_source = init;
+        if (rain_source == -1)
+            rain_source = facade->builder->waterManager->addRainSource();
+
+        QString label = "источник: x=" + QString::number(int(data[0]*100)/100.)
+                + ", y=" + QString::number(int(data[1]*100)/100.);
+        auto f = new QRToolFrame(label, [this, rain_source](bool x) {
+                                     facade->builder->waterManager->setSourceEnabled(rain_source, x);
+                                 },
+                                 [this, rain_source](float val) {
+                                     facade->builder->waterManager->setSourceIntensity(rain_source, val);
+                                 });
+        lay->addWidget(f);
+    }
+
+
+    void loadSources() {
+        int i = 0;
+        for (auto &s: facade->builder->waterManager->waterSources) {
+            Vector3D data = s->getData();
+            float step = facade->builder->getWorldStep();
+            if (data != ZeroVector) {
+                data[1] = facade->builder->getHeightMap().height()-1 - data[1];
+                addRiverSource(i, data);
+            }
+            i++;
+        }
     }
 };
 

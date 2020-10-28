@@ -21,10 +21,10 @@ void PlateMountainsTool::setToolData(const ToolData &dt) {
         for (auto &edge: plate->edges) {
             auto normal = len2Norm(edge.getNormal());
             if (normal == XVector || normal == YVector || normal == -1*XVector || normal == -1*YVector) continue;
-            double tense = scalar(normal, move);
+            Vector3D tense = move;      // moves len = 1
             if (edges.find(edge) == edges.end())
-                edges[edge] = 0;
-            edges[edge] += tense;
+                edges[edge] = {plate->getCenter(), tense};
+            else edges[edge].snd = len2Norm((edges[edge].snd + tense) / 2);
         }
     }
 }

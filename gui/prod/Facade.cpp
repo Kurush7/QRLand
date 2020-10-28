@@ -15,12 +15,12 @@ using namespace std;
 
 // todo guide
 // todo input validation
-// todo action manager: water & hmap: one at a time + colorizing; TURN OFF WATER AND OTHER PROCESSES WHEN SCALING HMAP
 
-// todo dynamic tense for mountains
+// dynamic tense for mountains..... almost
 // todo save: river sources, mountains, save as btns
-// todo on/off render statistics
+// todo on/off render statistics, add poly count
 // todo shadows: bigger image size
+// todo water: on off....
 // todo set water level: turn off water generation first
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
