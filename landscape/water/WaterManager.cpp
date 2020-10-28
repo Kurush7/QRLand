@@ -111,6 +111,7 @@ void WaterManager::updateWater() {
             points[a][b]->setVector(v);
             if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) waterFlag = false;
         }
+        poly->updateNormal();
 
         auto it = changedPolygons.find((*polygons)[k]);
         if (waterFlag) {

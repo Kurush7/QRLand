@@ -102,7 +102,10 @@ void EditorPresenter::draw(bool reset) {
     if (draw_cnt > 50) draw_cnt = 0, draw_time_msec=0;
     draw_time_msec = (draw_time_msec * draw_cnt + time) / (draw_cnt+1);
     draw_cnt++;
-    window.drawTimeLabel->setText("среднее время отрисовки: " + QString::number(draw_time_msec) +
+    int w = facade->builder->getHeightMap().width();
+    int h = facade->builder->getHeightMap().height();
+    window.drawTimeLabel->setText("размер модели:" +QString::number(w)+ "*" +QString::number(w)+
+    "\nсреднее время отрисовки: " + QString::number(draw_time_msec) +
     " msec ... (" + QString::number(int(1000/draw_time_msec) )+ " FPS)");
 }
 

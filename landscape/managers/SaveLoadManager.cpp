@@ -18,7 +18,8 @@ void SaveLoadManager::save(const sptr<LandscapeBuilder> &builder, string filenam
     auto &moves = builder->plateManager->moveVectors;
     auto &sources = builder->waterManager->waterSources;
 
-    filename += ".qrland";
+    if(filename.find(".qrland") == -1)  // todo not tested
+        filename += ".qrland";
     FILE *f = fopen(filename.c_str(), "wb");
     for (int i = 0; i < header.size(); ++i)
         fwrite(&header[i], sizeof(char), 1, f);

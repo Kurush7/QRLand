@@ -14,6 +14,9 @@ EditorMiscWidget::EditorMiscWidget(sptr<Facade> f, QWidget *parent): QWidget(par
     auto zin = new QRInput("z:", &z, this);
     auto lightBtn = new QPushButton("применить", this);
 
+    auto fps = new QCheckBox("отображать FPS", this);
+    fps->setChecked(true);
+    connect(fps, &QCheckBox::clicked, [this, fps](){emit showFPS(fps->isChecked());});
 
     auto roamLab = new QRLabel("уровень детализации", this);
     auto slider = new QSlider(Qt::Horizontal , this);
@@ -30,7 +33,7 @@ EditorMiscWidget::EditorMiscWidget(sptr<Facade> f, QWidget *parent): QWidget(par
     ui = new QRLayoutManager("global", QRVert);
     ui->addLayers("shades lod $ light", QRVert);
 
-    ui->addWidgets({{"shades", shadesCheckBox}}, "shades");
+    ui->addWidgets({{"shades", shadesCheckBox}, {"fps", fps}}, "shades");
 
     ui->addLayers("data", QRHor, "lod");
     ui->addWidgets({{"label", roamLab}, {"slider", slider}}, "lod/data");

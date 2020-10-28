@@ -81,6 +81,9 @@ EditorWindow::EditorWindow(ModelInitData data, string initFacade, QWidget *paren
 
 
     connect(menu, &QRMenu::onQuit, [this](){this->close();});
+    connect(miscWidget, &EditorMiscWidget::showFPS, [this](bool x) {
+        drawTimeLabel->setVisible(x);
+    });
 }
 
 void EditorWindow::decorate() {

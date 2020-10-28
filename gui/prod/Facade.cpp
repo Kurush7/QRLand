@@ -17,11 +17,9 @@ using namespace std;
 // todo input validation
 
 // dynamic tense for mountains..... almost
-// todo save: river sources, mountains, save as btns
 // todo on/off render statistics, add poly count
 // todo shadows: bigger image size
-// todo water: on off....
-// todo set water level: turn off water generation first
+// todo single pixels problem
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {

@@ -17,8 +17,12 @@
 #include "QRToolFrame.h"
 
 class EditorMiscWidget: public QWidget {
+    Q_OBJECT
 public:
     EditorMiscWidget(sptr<Facade> f, QWidget *parent=nullptr);
+
+signals:
+    void showFPS(bool x);
 
 private:
     float x=1, y=1, z=-0.5;
