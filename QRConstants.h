@@ -8,6 +8,7 @@
 #include <thread>
 
 extern int RENDER_THREAD_CNT;
+extern int shadowScaleCoef;
 
 extern float QREPS;
 extern float QRSMALL_EPS;

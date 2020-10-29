@@ -21,6 +21,8 @@ public:
     virtual void setUseShades(bool x) {
         useShades = x;}
 
+
+    sptr<QRasterizeZBuffer> zbuf;
 protected:
     friend class QuickShadowRenderer;
 
@@ -39,8 +41,6 @@ protected:
     int thread_cnt = RENDER_THREAD_CNT;
 
     QRVector<sptr<Quick3DCutter>> cutters;
-
-    QRasterizeZBuffer zbuf;
 
     QRCamera3D *camera;
     Vector3D cameraViewVector;

@@ -37,10 +37,10 @@ public:
     virtual QRLightManager *getColorManager() {return colorManager;}
 
 
+    QRLightManager *colorManager;
 protected:
     QRImage *image;
     QRPolyScene3D *scene;
-    QRLightManager *colorManager;
 };
 
 #endif //BIG3DFLUFFY_QRENDERER_H

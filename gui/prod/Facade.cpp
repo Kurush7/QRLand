@@ -18,7 +18,8 @@ using namespace std;
 
 // dynamic tense for mountains..... almost
 // todo on/off render statistics, add poly count
-// todo shadows: bigger image size
+// shadows: bigger image size, some bugs
+// todo thread_cnt=8
 // todo single pixels problem
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
@@ -72,7 +73,8 @@ Facade::Facade(ModelInitData data, const sptr<QRImage> &main_img, const sptr<QRI
     renderer = r;
     renderer->getColorManager()->setWorldStep(builder->getWorldStep());
     shadowRenderer = sptr<QuickShadowRenderer>(new QuickShadowRenderer(r, 0));
-    shadowRenderer->generateShades();
+    shadowRenderer->generateShades(builder->getWidth(),
+                                   builder->getHeight());
 
     renderer->render();
 }

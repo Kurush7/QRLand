@@ -50,7 +50,8 @@ public:
         li->setLightDir(v);
         li->setLightPos(-1*v);
 
-        shadowRenderer->generateShades();
+        shadowRenderer->generateShades(builder->getWidth(),
+                builder->getHeight());
 
         renderer->render();
     }
@@ -114,7 +115,8 @@ public:
         renderer = r;
         renderer->getColorManager()->setWorldStep(builder->getWorldStep());
         shadowRenderer = sptr<QuickShadowRenderer>(new QuickShadowRenderer(r, 0));
-        shadowRenderer->generateShades();
+        shadowRenderer->generateShades(builder->getWidth(),
+                                       builder->getHeight());
 
         renderer->render();
     }
@@ -126,7 +128,8 @@ public:
         scene->clearModels();
         scene->addModel(landscape, Vector3D(0,0,0));
 
-        shadowRenderer->generateShades();
+        shadowRenderer->generateShades(builder->getWidth(),
+                                       builder->getHeight());
 
         renderer->getColorManager()->setWorldStep(builder->getWorldStep());
 

@@ -10,19 +10,27 @@ QuickShadowRenderer::QuickShadowRenderer(sptr<QuickRenderer> &r, int light_sourc
 light_source_pos(light_source_pos), renderer(r) {}
 
 void QuickShadowRenderer::initRender() {
+    // set bigger-size image for shadows' correct generation
+    //size_t newW = gridW * shadowScaleCoef, newH = gridH * shadowScaleCoef;
+    size_t newW = renderer->image->getWidth() * shadowScaleCoef,
+           newH = renderer->image->getHeight() * shadowScaleCoef;
+    shadowCanvas = sptr<QRCanvas> (new QRCanvas(newW, newH));
+    shadowImage = sptr<QRImage>(new ImageQT(shadowCanvas));
+    shadowBuffer = sptr<QRasterizeZBuffer> (new QRasterizeZBuffer(shadowImage, renderer->colorManager));
+    oldImage = renderer->image;
+    renderer->image = shadowImage.get();
+    swap(renderer->zbuf, shadowBuffer);
+
     auto light = renderer->colorManager->getLight(light_source_pos);
     Vector3D lightDir = light->getLightVector(), ox, oy;
     if (fabs(lightDir[2]) < QREPS) ox = ZVector;
     else ox = Vector3D(1, 1, (-lightDir[0]-lightDir[1]) / lightDir[2]);
     oy = lenNorm(ox*lightDir);  // todo left, right......
 
-    //cout << "ox: " << ox << "\noy: " << oy << "\noz: " << lightDir << '\n';
-    //float k = 1e3;
-    //ox = ox*k, oy = oy*k, lightDir = lightDir*k;
     renderer->cameraTransformer = new AxisChangeTransformer(ox, oy, lightDir, ZeroVector);    // todo delete it!
 
     // todo MUST NOT CLEAR IMAGE: NO DATA THERE!!!
-    renderer->zbuf.clearZBufOnly();
+    renderer->zbuf->clearZBufOnly();
 }
 
 void QuickShadowRenderer::prepareData() {
@@ -112,13 +120,6 @@ void QuickShadowRenderer::addFakeBorders() {
 void QuickShadowRenderer::rasterize() {
     startMeasureTimeStamp(5);
 
-    /*size_t thread_size = polygon_cnt / thread_cnt;
-    thread threads[renderer->thread_cnt];
-    //size_t remain = polygon_cnt % thread_cnt;
-    for (size_t i = 0; i < renderer->thread_cnt; ++i)
-        threads[i] = thread(&QuickRenderer::threadDrawPolygons, renderer.get(), i);
-
-    for (size_t i = 0; i < renderer->thread_cnt; ++i) threads[i].join();*/
     renderer->threadDrawPolygons(0);
 
      endMeasureTimeIncrement(5);
@@ -155,14 +156,6 @@ void QuickShadowRenderer::threadTransformPoints(size_t size, int offset, int ste
 }
 
 void QuickShadowRenderer::transformPoints() {
-    /*size_t thread_size = renderer->polygon_cnt / renderer->thread_cnt;
-    thread threads[renderer->thread_cnt];
-    size_t remain = renderer->polygon_cnt % renderer->thread_cnt;
-    for (size_t i = 0; i < renderer->thread_cnt; ++i)
-        threads[i] = thread(&QuickShadowRenderer::threadTransformPoints, this,
-                            thread_size + (i < remain), i, renderer->thread_cnt, i);
-
-    for (size_t i = 0; i < renderer->thread_cnt; ++i) threads[i].join();*/
     threadTransformPoints(renderer->polygon_cnt, 0, 1, 0);
 
     float l=1e9,r=-1e9,u=-1e9,d=1e9;
@@ -183,12 +176,10 @@ void QuickShadowRenderer::transformPoints() {
     // todo if render it: some data extends over limits!!!
     renderer->screenData[2] = r-l;
     renderer->screenData[3] = u-d;
-    //renderer->screenData[2] = 2*max(fabs(r),fabs(l));
-    //renderer->screenData[3] = 2*max(fabs(u), fabs(d));
-    cout << l << ' ' << r << " <=> " << u << ' ' <<  d<< '\n';
+
     auto mcr = MoveTransformer3DCreator(Vector3D(-l, -d,0));
-    auto scr = ScaleTransformer3DCreator(Vector3D(image->getWidth()/renderer->screenData[2],
-                                                  image->getHeight()/renderer->screenData[3], 1,0));
+    auto scr = ScaleTransformer3DCreator(Vector3D(shadowImage->getWidth()/renderer->screenData[2],
+                                                  shadowImage->getHeight()/renderer->screenData[3], 1,0));
 
     // screenData is used in rasterizer, which works already in image coords
     renderer->screenData[0] = image->getWidth()/2;
@@ -228,8 +219,9 @@ void QuickShadowRenderer::render() {
 
     auto man = renderer->getColorManager();
     man->useShades(true);
-    int w = renderer->zbuf.getW(), h = renderer->zbuf.getH();
-    man->setShadesZBuf(renderer->zbuf.getZBuf(), w, h, light_source_pos);
+    float w = renderer->zbuf->getW(), h = renderer->zbuf->getH();
+    man->setShadesZBuf(renderer->zbuf->getZBuf(), w, h, light_source_pos);
+
     Matrix3D to = renderer->imageTransformer->getMatrix() * renderer->cameraTransformer->getMatrix();
     man->setTransformTo(to);
 
@@ -242,5 +234,7 @@ void QuickShadowRenderer::render() {
         visiblePoints[i] = renderer->colorManager->isShaded(points[i]->getVector());
 
     renderer->model->defineShades(visiblePoints);
-    //renderer->repaint();
+
+    renderer->image = oldImage;
+    swap(renderer->zbuf, shadowBuffer);
 }

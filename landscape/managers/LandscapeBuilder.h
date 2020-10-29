@@ -28,6 +28,9 @@ class LandscapeBuilder {
 public:
     LandscapeBuilder(size_t width, size_t height, double world_step=1);
 
+    size_t getWidth() {return heightMap.width();}
+    size_t getHeight() {return heightMap.height();}
+
     void setTools(QRVector<QRPair<ToolName, ToolFrequency>>);
     int addTool(QRPair<ToolName, ToolFrequency>);
 

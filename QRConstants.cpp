@@ -3,6 +3,7 @@
 //
 
 int RENDER_THREAD_CNT = 4;
+int shadowScaleCoef=10;
 
 // math staff
 float QREPS = 1e-5;

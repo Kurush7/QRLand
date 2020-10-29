@@ -7,23 +7,27 @@
 // TODO НАФИГ В QRENDERDATA СОХРАНЯТЬ XYZ?!
 
 QuickRenderer::QuickRenderer(const sptr<QRImage> &img, QRPolyScene3D *scene)
-    : QRenderer(img, scene), zbuf(img, colorManager),
+    : QRenderer(img, scene),
             data(thread_cnt) {
-        for (auto li=scene->getLights(); li; ++li)
-            colorManager->addLight(*li);
+    for (auto li=scene->getLights(); li; ++li)
+        colorManager->addLight(*li);
 
-        for (int i = 0; i < thread_cnt; ++i)
-            cutters.push_back(sptr<Quick3DCutter>(new Quick3DCutter(*data.data[i])));
+    for (int i = 0; i < thread_cnt; ++i)
+        cutters.push_back(sptr<Quick3DCutter>(new Quick3DCutter(*data.data[i])));
+
+    zbuf = sptr<QRasterizeZBuffer>(new QRasterizeZBuffer(img, colorManager));
 }
 
 QuickRenderer::QuickRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
-        : QRenderer(image, scene), zbuf(image, colorManager),
+        : QRenderer(image, scene),
           data(thread_cnt) {
     for (auto li=scene->getLights(); li; ++li)
         colorManager->addLight(*li);
 
     for (int i = 0; i < thread_cnt; ++i)
         cutters.push_back(sptr<Quick3DCutter>(new Quick3DCutter(*data.data[i])));
+
+    zbuf = sptr<QRasterizeZBuffer>(new QRasterizeZBuffer(image, colorManager));
 }
 
 void QuickRenderer::initRender() {
@@ -53,7 +57,7 @@ void QuickRenderer::initRender() {
     //colorManager->setTransformFrom(back);
 
     // init zbuffer, fill in black
-    zbuf.clearBuf();
+    zbuf->clearBuf();
 }
 
 bool QuickRenderer::modelCameraCut() {
@@ -79,7 +83,7 @@ void QuickRenderer::threadDrawPolygons(int thread_num) {
         else
             colorManager->lightenColor(poly->getNormal(), c);
 
-        zbuf.draw(dt->points, dt->polygons[k], dt->polygonSize[k],
+        zbuf->draw(dt->points, dt->polygons[k], dt->polygonSize[k],
                   dt->normals[k], c);
     }
 }
@@ -181,7 +185,7 @@ void QuickRenderer::rasterize() {
 
 void QuickRenderer::repaint() {
     startMeasureTimeStamp(6);
-    zbuf.fillMissing();
+    zbuf->fillMissing();
     endMeasureTimeIncrement(6);
     startMeasureTimeStamp(7);
     image->repaint();
@@ -191,7 +195,7 @@ void QuickRenderer::repaint() {
 
 
 void QuickRenderer::render () {
-    //return;
+    thread_cnt = RENDER_THREAD_CNT;
     resetAccumulators;
     startMeasureTimeStamp(63);
     initRender();
@@ -211,7 +215,6 @@ void QuickRenderer::render () {
     }
 
     //colorManager->resetLightsPosition();
-
     repaint();
     printRenderTimes();
 }

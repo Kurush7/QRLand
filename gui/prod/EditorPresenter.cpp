@@ -104,7 +104,7 @@ void EditorPresenter::draw(bool reset) {
     draw_cnt++;
     int w = facade->builder->getHeightMap().width();
     int h = facade->builder->getHeightMap().height();
-    window.drawTimeLabel->setText("размер модели:" +QString::number(w)+ "*" +QString::number(w)+
+    window.drawTimeLabel->setText("размер модели: " +QString::number(w)+ "*" +QString::number(w)+
     "\nсреднее время отрисовки: " + QString::number(draw_time_msec) +
     " msec ... (" + QString::number(int(1000/draw_time_msec) )+ " FPS)");
 }

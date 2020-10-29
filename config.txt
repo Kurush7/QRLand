@@ -5,6 +5,7 @@
 
 //
 RENDER_THREAD_CNT=4
+shadowScaleCoef=10
 
 // math staff
 QREPS=1e-5

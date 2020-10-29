@@ -32,6 +32,7 @@ public:
         ui->addWidgets({{"label", lab}}, cur_layer);
         addInput("число потоков", &RENDER_THREAD_CNT, cur_layer);
         addInput("макс. число вершин модели", &MAX_POINT_CNT, cur_layer);
+        addInput("качество теней, коэф.(int)", &shadowScaleCoef, cur_layer);
 
         cur_layer="gui";
         lab = new QRLabel("Частоты обновления");

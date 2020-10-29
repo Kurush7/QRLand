@@ -78,12 +78,7 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
 
     // line and dot drawing
     if (triangle_area(xw, yw, xl, yl, xr, yr) == 0) {
-        if (xl > xr) swap(xl,xr), swap(yl,yr), swap(zl,zr);
-        else if (xr < xl) swap(xl,xr), swap(yl,yr), swap(zl,zr);
-        if (xw < xl) swap(xl,xw), swap(yl,yw), swap(zl,zw);
-        else if (xw > xr) swap(xw,xr), swap(yw,yr), swap(zw,zr);
-
-        if (xl == xr && yl == yr) {
+        if (xl == xr && yl == yr && xl==xw && yl==yw) {
             pixel_lock.lock();
             if (zl - zbuf[yl*w + xl] < -QREPS) {
                 img->setPixel(xl, yl, c);
@@ -93,8 +88,20 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
             return;
         };
 
+        if (xl == xr && xl == xw) {
+            if (yl > yr) swap(xl, xr), swap(yl, yr), swap(zl, zr);
+            if (yw < yl) swap(xl, xw), swap(yl, yw), swap(zl, zw);
+            else if (yw > yr) swap(xw, xr), swap(yw, yr), swap(zw, zr);
+        }
+        else {
+            if (xl > xr) swap(xl, xr), swap(yl, yr), swap(zl, zr);
+            if (xw < xl) swap(xl, xw), swap(yl, yw), swap(zl, zw);
+            else if (xw > xr) swap(xw, xr), swap(yw, yr), swap(zw, zr);
+        }
+
         float z = zl, dz;
-        if (xr-xl < yr-yl) {
+        if (abs(xr-xl) < abs(yr-yl)) {
+            if (yl > yr) swap(xl, xr), swap(yl, yr), swap(zl, zr);
             dz = (zr - zl) / (yr - yl + 0.);
             int pos = yl*w, x = xl;
             float dx = (xr - xl) / (yr - yl + 0.), fx = xl;
@@ -112,6 +119,7 @@ void QRasterizeZBuffer::drawTriangle(float p1x, float p1y, float p1z,
             }
         }
         else {
+            if (xl > xr) swap(xl, xr), swap(yl, yr), swap(zl, zr);
             dz = (zr - zl) / (xr - xl + 0.);
             int pos = yl*w, y = yl;
             float dy = (yr - yl) / (xr - xl + 0.), fy = yl;
@@ -224,7 +232,6 @@ bool is_black(uchar *a) {
 }
 
 void QRasterizeZBuffer::fillMissing() {
-    return; //todo?
     auto data = img->getData();
     int pos=0;
     int border=2;
@@ -247,3 +254,38 @@ void QRasterizeZBuffer::fillMissing() {
     for (int k = 0; k < border; ++k)
         for (int j = 0; j < w; ++j) {data[pos++] = 0; data[pos++] = 0; data[pos++] = 0; data[pos++] = 0;}
 }
+
+
+/*void QRasterizeZBuffer::fillMissing() {
+    auto data = img->getData();
+
+    int pos=0;
+    int border=2;
+    for (int k = 0; k < border; ++k)
+        for (int j = 0; j < w; ++j) {data[pos++] = 0; data[pos++] = 0; data[pos++] = 0; data[pos++] = 0;}
+
+    int last_active;
+    for (int i = border; i < h-border; ++i) {
+        for (int k = 0; k < border; ++k) {data[pos++] = 0; data[pos++] = 0; data[pos++] = 0; data[pos++] = 0;}
+        last_active=-1;
+        for (int j = border; j < w-border; ++j, pos+=4) {
+            if (!is_black(&data[pos])) {
+                if (last_active >= 0) {
+                    for (int k = last_active+4; k < pos; k += 4) {
+                        data[k] = data[k - 4], data[k + 1] = data[k - 3],
+                        data[k + 2] = data[k - 2], data[k + 3] = data[k - 1];
+                    }
+                    last_active = -1;
+                }
+            }
+            else if (last_active < 0)
+                last_active = pos - 4;
+
+        }
+
+        for (int k = 0; k < border; ++k) {data[pos++] = 0; data[pos++] = 0; data[pos++] = 0; data[pos++] = 0;}
+    }
+
+    for (int k = 0; k < border; ++k)
+        for (int j = 0; j < w; ++j) {data[pos++] = 0; data[pos++] = 0; data[pos++] = 0; data[pos++] = 0;}
+}*/
