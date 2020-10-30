@@ -83,7 +83,7 @@ private:
             float step = facade->builder->getWorldStep();
 
             data[0] = data[0] / facade->builder->getWidth() * miniMapSize;
-            data[1] = data[1] / facade->builder->getWidth() * miniMapSize;
+            data[1] = data[1] / facade->builder->getHeight() * miniMapSize;
 
             if (data != ZeroVector) {
                 data[1] = miniMapSize - data[1];

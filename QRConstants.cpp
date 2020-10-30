@@ -69,8 +69,8 @@ float pixelsPerUnit = 200;
 // tools
 float layerLevelMult = 0.3;
 
-float minHillHeightParam = 20;
-float maxHillHeightParam = 5;
+float minHillHeightParam = 5;
+float maxHillHeightParam = 20;
 float hillStopCoef = 4;
 
 float diamondSquareRandomCoef = 0.1;

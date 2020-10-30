@@ -114,9 +114,11 @@ void EditorPresenter::updateMiniCoords(float x0, float y0) {
     int x = (p.x() + 0.) / window.canvasMini->getWidth() * (facade->builder->getWidth() + 0.);
     int y = (p.y() + 0.) / window.canvasMini->getHeight() * (facade->builder->getHeight() + 0.);
     float z = facade->builder->getHeightMap()[y][x];
+    y = facade->builder->getHeight() - y;
 
     x = (p.x() + 0.) / window.canvasMini->getWidth() * miniMapSize;
     y = (p.y() + 0.) / window.canvasMini->getHeight() * miniMapSize;
+    y = miniMapSize - y;
     x = max(0, min((int)miniMapSize, x));
     y = max(0, min((int)miniMapSize, y));
 

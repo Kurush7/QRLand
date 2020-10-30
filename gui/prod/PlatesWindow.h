@@ -19,6 +19,12 @@ public:
         img = sptr<QRImage>(new ImageQT(canvas));
         initPlatesAndDrawer();
 
+        canvas->setToolTip("Вы можете изменять форму, направление и скорость движения литосферных плит:\n"
+                           "- кликните по вершине многоугольника и перемещайте ее;\n"
+                           "- кликните по концу стрелки и перемещайте ее. \n"
+                           "Стрелка обозначает направление"
+                           "движения плиты\n, длина пропорциональна скорости движения.");
+
         ui->addLayers("canvas data save", QRVert);
         ui->addWidgets({{"canvas", canvas.get()}}, "canvas");
 

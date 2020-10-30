@@ -14,13 +14,15 @@ using namespace std;
 // erosion: water accumulating at the borders: check now
 
 // todo guide
-// todo input validation
+// input validation
 
 // dynamic tense for mountains..... almost
 // shadows: bigger image size, some bugs
-// todo thread_cnt=8: label
 // single pixels problem: almost solved
 // todo too long shadowing
+// todo 127->256: fuckup on water, segfault
+// todo water flowing outside
+// todo maintain waterLevel, set it to 0 when loading
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {

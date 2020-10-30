@@ -30,7 +30,7 @@ public:
         QLabel *lab = new QRLabel("Рендеринг");
         lab->setObjectName("headerLabel");
         ui->addWidgets({{"label", lab}}, cur_layer);
-        addInput("число потоков", &RENDER_THREAD_CNT, cur_layer);
+        addInput("число потоков *(обновление после перезагрузки)", &RENDER_THREAD_CNT, cur_layer);
         addInput("макс. число вершин модели", &MAX_POINT_CNT, cur_layer);
         addInput("качество теней, коэф.(int)", &shadowScaleCoef, cur_layer);
 

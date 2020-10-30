@@ -9,9 +9,9 @@ EditorMiscWidget::EditorMiscWidget(sptr<Facade> f, QWidget *parent): QWidget(par
     //auto save = new QPushButton("save", this);
 
     auto lab = new QRLabel("направление источника света:", this);
-    auto xin = new QRInput("x:", &x);
-    auto yin = new QRInput("y:", &y);
-    auto zin = new QRInput("z:", &z);
+    auto xin = new QRInput("x:", &x, -1000, 1000);
+    auto yin = new QRInput("y:", &y, -1000, 1000);
+    auto zin = new QRInput("z:", &z, -1000, 1000);
     auto lightBtn = new QPushButton("применить", this);
 
     auto fps = new QCheckBox("отображать FPS", this);

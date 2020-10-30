@@ -93,7 +93,12 @@ void EditorWindow::decorate() {
         (*lay)->getLayout()->setAlignment(Qt::AlignCenter);
     }
 
-    canvas->setToolTip("use wsad");
+    canvas->setToolTip("Управление:\n- клавиши WSAD для перемещения модели (английская раскладка);\n"
+                       "- перемещайте мышь с левой кнопкой для вращения модели;\n"
+                       "- колесико мыши для масштабирования.");
+
+    canvasMini->setToolTip("Кликните мышкой по миникарте, чтобы получить координаты выбранной точки");
+
 
     multiRadio->addWidgets(ui->getAllWidgets("right/misc", true), "разное");
 
@@ -128,6 +133,8 @@ void EditorWindow::addLogic() {
         presenter->facade->topDown->drawMiniMap();
     });
     connect(canvasMini.get(), &QRCanvas::QRMouseMoved,
+            [this](float x, float y, QRModifiers m) {presenter->updateMiniCoords(x, y);});
+    connect(canvasMini.get(), &QRCanvas::QRMousePressed,
             [this](float x, float y, QRModifiers m) {presenter->updateMiniCoords(x, y);});
 }
 

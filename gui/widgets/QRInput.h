@@ -48,7 +48,7 @@ protected:
         edit = new QLineEdit(this);
         edit->setText(QString::number(vf? *varf : *vari));
 
-        edit->setValidator(new QRDoubleValidator(from, to, isInt?0:2));
+        edit->setValidator(new QRDoubleValidator(from, to, isInt?0:4));
 
         lay = new QHBoxLayout();
         lay->addWidget(label);

@@ -27,7 +27,7 @@ public:
         ui->addWidgets({{"play", play}, {"label", lab}, {"slider", slider}});
 
         setLayout(ui->getRootLayout());
-        setFrameShape(Box);
+        //setFrameShape(Panel);
 
         connect(slider, &QSlider::valueChanged, [this, onChanged]() {
             onChanged((float)slider->value() / 100.);
@@ -64,8 +64,8 @@ public:
                                                                  insert_lay(lay), facade(facade) {
         ui = new QRLayoutManager("global", QRHor);
 
-        auto xi = new QRInput("x:", &x);
-        auto yi = new QRInput("y:", &y);
+        auto xi = new QRInput("x:", &x, 0, miniMapSize);
+        auto yi = new QRInput("y:", &y, 0, miniMapSize);
         auto submit = new QPushButton("добавить", this);
 
         ui->addWidgets({{"xl", xi->label}, {"xe", xi->edit},
@@ -73,7 +73,7 @@ public:
                         {"btn", submit}});
 
         setLayout(ui->getRootLayout());
-        setFrameShape(Box);
+        //setFrameShape(Box);
 
         connect(submit, &QPushButton::clicked, [this, facade](){
             size_t x0, y0;

@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     QFile styleF;
-    styleF.setFileName("gui/style.css");
+    styleF.setFileName("style.css");
     styleF.open(QFile::ReadOnly);
     QString qssStr = styleF.readAll();
     app.setStyleSheet(qssStr);
