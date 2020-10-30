@@ -195,7 +195,7 @@ void QuickRenderer::repaint() {
 
 
 void QuickRenderer::render () {
-    thread_cnt = RENDER_THREAD_CNT;
+    // if need be, must update data structures: thread_cnt = RENDER_THREAD_CNT;
     resetAccumulators;
     startMeasureTimeStamp(63);
     initRender();

@@ -77,8 +77,9 @@ public:
 
         connect(submit, &QPushButton::clicked, [this, facade](){
             size_t x0, y0;
-            x0 = x / facade->builder->getWorldStep();
-            y0 = facade->builder->getHeightMap().height()-1 -  y / facade->builder->getWorldStep();
+            x0 = x / facade->builder->getWorldStep() / miniMapSize * facade->builder->getWidth();
+            y0 = facade->builder->getHeight()-1 -
+                    y / facade->builder->getWorldStep() / miniMapSize * facade->builder->getHeight();
             x0 = max((size_t)1, min(x0, facade->builder->getHeightMap().width()-2));    // todo a bit of hardcode
             y0 = max((size_t)1, min(y0, facade->builder->getHeightMap().height()-2));
             source_number = facade->builder->waterManager->addRiverSource(x0, y0);

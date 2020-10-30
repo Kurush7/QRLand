@@ -23,6 +23,8 @@ void SaveLoadManager::save(const sptr<LandscapeBuilder> &builder, string filenam
     FILE *f = fopen(filename.c_str(), "wb");
     for (int i = 0; i < header.size(); ++i)
         fwrite(&header[i], sizeof(char), 1, f);
+
+    fwrite(&random_seed, sizeof(int), 1, f);
     fwrite(&step, sizeof(float), 1, f);
     fwrite(&w, sizeof(int32_t), 1, f);
     fwrite(&h, sizeof(int32_t), 1, f);
@@ -38,12 +40,14 @@ void SaveLoadManager::save(const sptr<LandscapeBuilder> &builder, string filenam
     // save plates
     int sz = plates.getSize();
     fwrite(&sz, sizeof(int), 1, f);
+    int sz2;
+    QRVector<Vector3D> points;
     for (int p = 0; p < sz; ++p) {
-        auto &points = plates[p]->points;
-        int sz2 = points.getSize();
+        points = plates[p]->points;
+        sz2 = points.getSize();
+        fwrite(&sz2, sizeof(int), 1, f);
         fwrite(&moves[p][0], sizeof(float), 1, f);
         fwrite(&moves[p][1], sizeof(float), 1, f);
-        fwrite(&sz2, sizeof(int), 1, f);
         for (int i = 0; i < sz2; ++i) {
             auto &pt = points[i];
             fwrite(&pt.arr[0], sizeof(float), 1, f);
@@ -78,7 +82,8 @@ uptr<LandscapeBuilder> SaveLoadManager::load(std::string filename) {
         if (c != header[i])
             return nullptr;
     }
-
+    fread(&random_seed, sizeof(int), 1, f);
+    default_generator = default_random_engine(random_seed);
     fread(&step, sizeof(float), 1, f);
     fread(&w, sizeof(int32_t), 1, f);
     fread(&h, sizeof(int32_t), 1, f);
@@ -98,23 +103,22 @@ uptr<LandscapeBuilder> SaveLoadManager::load(std::string filename) {
 
     // load plates
     QRVector<sptr<QRFrame2D>> plates;
-    QRVector<Vector3D> moves, points;
-    int sz;
+    QRVector<Vector3D> moves;
+    int sz, sz2;
     fread(&sz, sizeof(int), 1, f);
     moves.reserve(sz); moves.setSize(sz);
     for (int p = 0; p < sz; ++p) {
+        QRVector<Vector3D> points;
+        fread(&sz2, sizeof(int), 1, f);
         fread(&moves[p][0], sizeof(float), 1, f);
         fread(&moves[p][1], sizeof(float), 1, f);
-        int sz2;
-        fread(&sz2, sizeof(int), 1, f);
-        points.reserve(sz2); points.setSize(sz2);
         for (int i = 0; i < sz2; ++i) {
             Vector3D pt = ZeroVector;
             fread(&pt.arr[0], sizeof(float), 1, f);
             fread(&pt.arr[1], sizeof(float), 1, f);
-            points[i] = pt;
+            points.push_back(pt);
         }
-        plates.push_back(sptr<QRFrame2D>(new QRFrame2D(points, QRColor("green"))));
+        plates.push_back(sptr<QRFrame2D>(new QRFrame2D(points, QRColor(56, 115, 215))));
     }
 
     auto builder = uptr<LandscapeBuilder>(new LandscapeBuilder(w, h, step));

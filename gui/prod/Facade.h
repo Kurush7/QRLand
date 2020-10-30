@@ -80,10 +80,10 @@ public:
         double step = b->getWorldStep();
         double w = b->getHeightMap().width(), h = b->getHeightMap().height();
         auto cam = sptr<QRCamera3D>(new Camera3D(w*step/16.,
-                h*step/16., step,
+                h*step/16., 1,
                 QRINF, Vector3D(0,-w*step,-h*step),
                 Vector3D(6*M_PI/7,0,0),
-                false, -step*5));
+                false, -5));
         scene->addCamera(cam, "observeCamera");
 
         cam = sptr<QRCamera3D>(new Camera3D(1, 1, step, QRINF,

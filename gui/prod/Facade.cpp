@@ -8,7 +8,7 @@ using namespace std;
 // MORE DETAILS ON THE EDGES.....?!!!!!!
 //  negative scale for camera when in 1st view
 // camera 1st view: bugged rotations
-// todo beyound the right border - draws column on the left...
+// beyound the right border - draws column on the left... filler solved the problem
 
 // water source at 0,0: not flowing anywhere: hardcoded solution
 // erosion: water accumulating at the borders: check now
@@ -17,10 +17,11 @@ using namespace std;
 // todo input validation
 
 // dynamic tense for mountains..... almost
-// todo on/off render statistics, add poly count
 // shadows: bigger image size, some bugs
-// todo thread_cnt=8
-// todo single pixels problem
+// todo thread_cnt=8: label
+// single pixels problem: almost solved
+// todo not growing down
+// todo too long shadowing
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {

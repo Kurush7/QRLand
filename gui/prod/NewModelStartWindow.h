@@ -16,7 +16,7 @@ public:
 
         addInput("начальная длина карты (кол-во точек):", &w, "data");
         addInput("начальная ширина карты (кол-во точек):", &h, "data");
-        addInput("шаг сетки:", &step, "data");
+        //addInput("шаг сетки:", &step, "data");
         addInput("зерно генератора случайных значений:", &seed, "data");
 
         auto next = new QPushButton("далее", this);
@@ -26,6 +26,7 @@ public:
             w = squaredInc(w);
             h = squaredInc(h);
             auto d = ModelInitData(w, h, seed, step);
+            random_seed = seed;
             auto *w = new PlatesWindow(d);
             w->show();
             this->close();

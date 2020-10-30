@@ -7,6 +7,10 @@
 
 #include <thread>
 
+const float miniMapSize = 1000;
+
+extern int random_seed;
+
 extern int RENDER_THREAD_CNT;
 extern int shadowScaleCoef;
 

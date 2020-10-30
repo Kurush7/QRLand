@@ -2,6 +2,8 @@
 // Created by kurush on 18.10.2020.
 //
 
+int random_seed = 17;
+
 int RENDER_THREAD_CNT = 4;
 int shadowScaleCoef=10;
 
