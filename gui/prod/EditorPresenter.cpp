@@ -111,13 +111,17 @@ void EditorPresenter::draw(bool reset) {
 
 void EditorPresenter::updateMiniCoords(float x0, float y0) {
     auto p = window.canvasMini->mapFromGlobal(QCursor::pos());
-    int x = (p.x() + 0.) / window.canvasMini->getWidth() * miniMapSize;//(facade->builder->getHeightMap().width() + 0.);
-    int y = (p.y() + 0.) / window.canvasMini->getHeight() * miniMapSize;//(facade->builder->getHeightMap().height() + 0.);
+    int x = (p.x() + 0.) / window.canvasMini->getWidth() * (facade->builder->getWidth() + 0.);
+    int y = (p.y() + 0.) / window.canvasMini->getHeight() * (facade->builder->getHeight() + 0.);
+    float z = facade->builder->getHeightMap()[y][x];
+
+    x = (p.x() + 0.) / window.canvasMini->getWidth() * miniMapSize;
+    y = (p.y() + 0.) / window.canvasMini->getHeight() * miniMapSize;
     x = max(0, min((int)miniMapSize, x));
     y = max(0, min((int)miniMapSize, y));
-    float z = facade->builder->getHeightMap()[y][x];
-    float xf = round(x * facade->builder->getWorldStep() * 100.) / 100.;
-    float yf = round(y * facade->builder->getWorldStep() * 100.) / 100.;
+
+    float xf = round(x * 100.) / 100.;
+    float yf = round(y * 100.) / 100.;
     z = round(z * 100.) / 100.;
     window.miniScreenX->setText("x: " + QString::number(xf));
     window.miniScreenY->setText("y: " + QString::number(yf));

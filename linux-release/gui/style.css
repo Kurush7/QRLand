@@ -32,12 +32,6 @@ QPushButton#arrowBtn:disabled {
     background: #303030;
 }
 
-QToolTip {
-    color: #fff;
-    background-color: #303030;
-    border: none;
-}
-
 QPushButton#RadioFieldButton {
     background-color: #305090;
     border: 1px solid #AAAAAA;

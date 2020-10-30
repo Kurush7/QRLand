@@ -9,19 +9,23 @@
 #include <functional>
 
 #include "QTIncludes.h"
+#include "QRDoubleValidator.h"
+#include "QRConstants.h"
 
 class QRInput: public QWidget {
 public:
-    QRInput(std::string name, float *var, QWidget*parent=nullptr, int width=80):
-    QWidget(parent), name(name), width(width) {
+    QRInput(std::string name, float *var, float from=0, float to=maxFloatValidate, QWidget*parent=nullptr, int width=80):
+    QWidget(parent), name(name), width(width), from(from), to(to) {
         varf = var;
         vf = true;
+        isInt=false;
         init();
     }
-    QRInput(std::string name, int *var, QWidget*parent=nullptr, int width=80):
-    QWidget(parent), name(name), width(width) {
+    QRInput(std::string name, int *var, float from=0, float to=maxFloatValidate,QWidget*parent=nullptr, int width=80):
+    QWidget(parent), name(name), width(width), from(from), to(to) {
         vari = var;
         vf = false;
+        isInt=true;
         init();
     }
 
@@ -33,12 +37,18 @@ protected:
     int *vari;
     bool vf;
     int width;
+
+    float from, to;
+    bool isInt=0;
+
     QHBoxLayout *lay;
 
     void init() {
         label = new QLabel(name.c_str(), this);
         edit = new QLineEdit(this);
         edit->setText(QString::number(vf? *varf : *vari));
+
+        edit->setValidator(new QRDoubleValidator(from, to, isInt?0:2));
 
         lay = new QHBoxLayout();
         lay->addWidget(label);
@@ -65,9 +75,9 @@ protected:
 class QRInputBtn: public QRInput {
 public:
     QRInputBtn(std::string name, std::string btn,
-            float *var, QWidget *parent = nullptr,
+            float *var, float from=0, float to=maxFloatValidate, QWidget *parent = nullptr,
             std::function<void()> f=nullptr, int width = 80) :
-            QRInput(name, var, parent, width) {
+            QRInput(name, var, from, to, parent, width) {
         auto b = new QPushButton(btn.c_str(), this);
         lay->addWidget(b);
 
@@ -76,9 +86,11 @@ public:
         }
     }
 
-    QRInputBtn(std::string name, std::string btn, int *var, QWidget *parent = nullptr,
+    QRInputBtn(std::string name, std::string btn, int *var,
+               float from=0, float to=maxFloatValidate,
+               QWidget *parent = nullptr,
                std::function<void()> f=nullptr, int width = 80) :
-            QRInput(name, var, parent, width) {
+            QRInput(name, var, from, to, parent, width) {
         auto b = new QPushButton(btn.c_str(), this);
         lay->addWidget(b);
 

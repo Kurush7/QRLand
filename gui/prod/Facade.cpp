@@ -20,7 +20,6 @@ using namespace std;
 // shadows: bigger image size, some bugs
 // todo thread_cnt=8: label
 // single pixels problem: almost solved
-// todo not growing down
 // todo too long shadowing
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)

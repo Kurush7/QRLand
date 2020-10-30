@@ -27,7 +27,7 @@ facade(f), manager(am) {
     });
     connect(erosionTimer, &QTimer::timeout, [this]() {manager->processWater();});
 
-    auto setWaterLevel = new QRInputBtn("уровень воды:", "установить", &waterLevel, this,
+    auto setWaterLevel = new QRInputBtn("уровень воды:", "установить", &waterLevel, 0, maxFloatValidate, this,
                                         [this](){facade->builder->waterManager->setWaterLevel(waterLevel);});
 
     auto addNew = new QPushButton("добавить источник воды", this);

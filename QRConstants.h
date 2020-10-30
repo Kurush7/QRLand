@@ -8,6 +8,7 @@
 #include <thread>
 
 const float miniMapSize = 1000;
+const float maxFloatValidate=1000;
 
 extern int random_seed;
 

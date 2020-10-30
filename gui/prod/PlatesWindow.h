@@ -146,8 +146,19 @@ private:
         else if (whatPressed == 2) {
             for (int i = 0; i < pressedPoints.getSize(); ++i) {
                 int pl = pressedPoints[i].fst, pt = pressedPoints[i].snd;
+                if (plates[pl]->points[pt][0] == 0) p[0] = 0;
+                if (plates[pl]->points[pt][0] == data.w * data.step) p[0] = 0;
+                if (plates[pl]->points[pt][1] == 0) p[1] = 0;
+                if (plates[pl]->points[pt][1] == data.h * data.step) p[1] = 0;
                 plates[pl]->points[pt] += p;
                 plates[pl]->updateEdges();
+
+                plates[pl]->updateCenter();
+                auto inter = plates[pl]->rayCenterIntersect(moves[pl]);
+                float len = vectorLen(plates[pl]->center - inter);
+                arrows[pl]->a = plates[pl]->getCenter();
+                arrows[pl]->b = plates[pl]->getCenter() + moves[pl] * len;
+                arrows[pl]->updateEq();
             }
         }
 

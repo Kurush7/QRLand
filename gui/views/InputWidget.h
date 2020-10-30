@@ -29,13 +29,13 @@ protected:
         static int cnt=0;
         if (reset) cnt=0;
         std::string l = "input" + std::to_string(cnt);
-        ui->addWidgets({{l, new QRInput(name, var, this)}}, where);
+        ui->addWidgets({{l, new QRInput(name, var)}}, where);
     }
     void addInput(std::string name, int* var, std::string where, bool reset=false) {
         static int cnt=0;
         if (reset) cnt=0;
         std::string l = "input" + std::to_string(cnt);
-        ui->addWidgets({{l, new QRInput(name, var, this)}}, where);
+        ui->addWidgets({{l, new QRInput(name, var)}}, where);
     }
 };
 

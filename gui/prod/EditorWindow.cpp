@@ -93,6 +93,8 @@ void EditorWindow::decorate() {
         (*lay)->getLayout()->setAlignment(Qt::AlignCenter);
     }
 
+    canvas->setToolTip("use wsad");
+
     multiRadio->addWidgets(ui->getAllWidgets("right/misc", true), "разное");
 
 

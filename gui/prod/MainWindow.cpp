@@ -59,6 +59,13 @@ void MainWindow::addLogic() {
 
     connect(openBtn, &QPushButton::clicked, [this]() {
         string file = openFile->getOpenFileName(0, "Открыть существующий проект", "", "*.qrland").toStdString();
+        ifstream iff(file);
+        if(iff.bad() || file.empty()) {
+            QMessageBox msgBox;
+            msgBox.setText("файл не найден или поврежден");
+            msgBox.exec();
+            return;
+        }
         auto *x = new EditorWindow(ModelInitData(), file);
         x->show();
         this->close();

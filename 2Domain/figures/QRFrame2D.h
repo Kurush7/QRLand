@@ -18,15 +18,19 @@ public:
         color = _color;
         updateEdges();
 
-        center = ZeroVector;
-        for (auto &p: points)
-            center += p;
-        center /= points.getSize();
+        updateCenter();
     }
 
     QRVector<QRLine2D> edges;
     QRVector<Vector3D> points;
     Vector3D center;
+
+    void updateCenter() {
+        center = ZeroVector;
+        for (auto &p: points)
+            center += p;
+        center /= points.getSize();
+    }
 
     void updateEdges() {
         edges.clear();

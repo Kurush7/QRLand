@@ -11,7 +11,7 @@ add_library(widgets_lib STATIC
         MultiRadioField.cpp
         Themes.cpp
         layoutManager/QRLayoutManager.cpp
-        layoutManager/QRLayoutNode.cpp)
+        layoutManager/QRLayoutNode.cpp QRDoubleValidator.h)
 
 target_link_libraries(widgets_lib
         Qt5::Widgets

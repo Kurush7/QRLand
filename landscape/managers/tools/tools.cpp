@@ -20,11 +20,18 @@ void PlateMountainsTool::setToolData(const ToolData &dt) {
         Vector3D move = data.moveVectors[i];
         for (auto &edge: plate->edges) {
             auto normal = len2Norm(edge.getNormal());
-            if (normal == XVector || normal == YVector || normal == -1*XVector || normal == -1*YVector) continue;
+            if (normal == XVector || normal == YVector || normal == -1*XVector || normal == -1*YVector) {
+                auto w = data.width * data.worldStep, h = data.width * data.worldStep;
+                if (edge.a[0] == 0 && edge.b[0] == 0) continue;
+                if (edge.a[0] == w && edge.b[0] == w) continue;
+                if (edge.a[1] == 0 && edge.b[1] == 0) continue;
+                if (edge.a[1] == h && edge.b[1] == h) continue;
+            }
             Vector3D tense = move;      // moves len = 1
-            if (edges.find(edge) == edges.end())
-                edges[edge] = {plate->getCenter(), tense};
-            else edges[edge].snd = len2Norm((edges[edge].snd + tense) / 2);
+            if (edges.find(edge) == edges.end()) {
+                edges[edge] = {{plate->getCenter()}, {tense}};
+            }
+            else edges[edge].snd.push_back(tense), edges[edge].fst.push_back(plate->getCenter());
         }
     }
 }

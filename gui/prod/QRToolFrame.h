@@ -64,8 +64,8 @@ public:
                                                                  insert_lay(lay), facade(facade) {
         ui = new QRLayoutManager("global", QRHor);
 
-        auto xi = new QRInput("x:", &x, this);
-        auto yi = new QRInput("y:", &y, this);
+        auto xi = new QRInput("x:", &x);
+        auto yi = new QRInput("y:", &y);
         auto submit = new QPushButton("добавить", this);
 
         ui->addWidgets({{"xl", xi->label}, {"xe", xi->edit},
