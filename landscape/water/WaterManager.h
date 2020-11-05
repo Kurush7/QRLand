@@ -19,7 +19,10 @@
 class WaterManager {
 public:
     WaterManager(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts);
-    void setPolygons(QRVector<sptr<QRPolygon3D>> *polys) {polygons = polys;}
+    void setPolygons(QRVector<sptr<QRPolygon3D>> *polys) {
+        polygons = polys;
+        changedPolygons.clear();
+    }
     void updateMatrices(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts);
     // todo update hmap etc. here
 
@@ -56,17 +59,20 @@ public:
     void setWaterStatus(bool x) {x? enableWater() : disableWater(); }
 
     void setWaterLevel(float wl);
+    float getWaterLevel() {return seaLevel;}
     void erosionIteration(float dt = defaultErosionDT, bool useTools=true);
 
-    QRMatrix<float>& getWaterLevel() {return waterLevel;}
+    QRMatrix<float>& getWaterMatrix() {return waterLevel;}
     void setWaterMatrix(QRMatrix<float>&m);
 
     void updateWater();
+    void resetWater();
+
 
     QRVector<sptr<WaterSource>> waterSources;
 private:
     bool waterEnabled = false;
-    float worldStep, width, height;
+    float worldStep, width, height, seaLevel = -1000;
 
     QRMatrix<sptr<QRPoint3D>> &points;
     QRVector<sptr<QRPolygon3D>> *polygons;
@@ -87,7 +93,6 @@ private:
 
     bool erosionReady = false;
     void initErosionData();
-    void resetWater();
 
     void updateFlux(float dt);
     void updateFlux2(float dt);

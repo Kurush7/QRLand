@@ -20,9 +20,15 @@ using namespace std;
 // shadows: bigger image size, some bugs
 // single pixels problem: almost solved
 // todo too long shadowing
-// todo 127->256: fuckup on water, segfault
-// todo water flowing outside
-// todo maintain waterLevel, set it to 0 when loading
+// todo lods: extra zone cutting on edges
+// todo water intensity setting: no auto-change for instruments
+
+
+// todo: set water level -> update water after
+// todo: scale: water fuckup: too small water move coef
+// todo: pause processes when scaling... just in case
+// todo dynamic step for move depending on step
+// todo settings fps: add '* after reload'
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {
@@ -123,9 +129,7 @@ void Facade::setShadesVisible(bool x) {
 
 void Facade::erosionIteration(bool draw_flag, bool useTools) {
     builder->waterManager->erosionIteration(defaultErosionDT, useTools);
-
     if (draw_flag) renderer->render();
-
 }
 
 void Facade::undo() {

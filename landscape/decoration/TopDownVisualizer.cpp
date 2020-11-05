@@ -7,7 +7,7 @@
 void TopDownVisualizer::drawMiniMap() {
     size_t w = img->getWidth(), h = img->getHeight();
     auto hmap = builder->getHeightMap();
-    auto waterLevel = builder->waterManager->getWaterLevel();
+    auto waterLevel = builder->waterManager->getWaterMatrix();
     size_t w_old = hmap.width(), h_old = hmap.height();
     float step = builder->getWorldStep();
     size_t i_old, j_old, c;

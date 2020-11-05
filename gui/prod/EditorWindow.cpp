@@ -63,7 +63,7 @@ EditorWindow::EditorWindow(ModelInitData data, string initFacade, QWidget *paren
     menu = new QRMenu(presenter->facade, this);
     setMenuBar(menu);
 
-    actionManager =  sptr<ActionManager>(new ActionManager(presenter->facade));
+    actionManager =  sptr<ActionManager>(new ActionManager(presenter->facade, presenter.get()));
 
     ui->goToPath("right", true);
 
@@ -111,12 +111,24 @@ void EditorWindow::addLogic() {
     erosionTimer.setInterval(1000 / erosionFPS);
 
     connect(canvas.get(), &QRCanvas::QRKeyPressed,
-            [this](QRKey k, QRModifiers m) {presenter->transform(k);});
+            [this](QRKey k, QRModifiers m) {
+        presenter->transform(k);
+        float x, y, z;
+        presenter->defineTransformParams(x,y,z, k);
+        actionManager->move(x,y,z);
+    });
     connect(canvas.get(), &QRCanvas::QRMouseWheelMoved,
-            [this](float val, float x, float y, QRModifiers m) {presenter->scale(-val);});
+            [this](float val, float x0, float y0, QRModifiers m) {
+            float x = 1 + SCALE_FULL_ROTATE_VAL * -val;
+            float y = 1 + SCALE_FULL_ROTATE_VAL * -val;
+            float z = 1 + SCALE_FULL_ROTATE_VAL * -val;
+            actionManager->scale(x, y, z);
+    });
     connect(canvas.get(), &QRCanvas::QRMouseMoved,
-            [this](float dx, float dy, QRModifiers m) {if (m.mouseLeftPressed)
-                presenter->transformMouse(dx, dy);});
+            [this](float dx, float dy, QRModifiers m) {
+        if (m.mouseLeftPressed)
+                presenter->transformMouse(dx, dy);
+    });
 
     connect(&erosionTimer, &QTimer::timeout, [this]() {presenter->erosionIteration();});
 

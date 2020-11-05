@@ -11,7 +11,6 @@ void WaterManager::erosionIteration(float dt, bool useTools) {
             if (waterSourcesEnabled[i])
                 waterSources[i]->use(dt);
     }
-
     //startMeasureTime;
     updateFlux(dt);
     updateFlux2(dt);

@@ -24,7 +24,10 @@ facade(f), manager(am) {
     connect(processTimer, &QTimer::timeout, [this]() {manager->processHMap();});
 
     auto *scale = new QPushButton("увеличить плотность сетки", this);
-    connect(scale, &QPushButton::clicked, [this](){facade->scaleGrid();});
+    connect(scale, &QPushButton::clicked, [this](){
+        facade->scaleGrid();
+        manager->processWater(true);
+    });
 
     //auto setWaterLevel = new QRInputBtn("уровень воды:", "установить", &waterLevel, this,
     //                                    [this](){facade->builder->waterManager->setWaterLevel(waterLevel);});

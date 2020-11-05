@@ -8,9 +8,12 @@ WaterManager::WaterManager(QRMatrix<float> &hmap, QRMatrix<sptr<QRPoint3D>> &pts
 : hmap(hmap), points(pts), waterLevel(hmap.width(), hmap.height()) {
     updateMatrices(hmap, pts);
     waterLevel.fill(0);
+    setWaterLevel(seaLevel);
 }
 
+// use after double-scaling only
 void WaterManager::updateMatrices(QRMatrix<float> &hm, QRMatrix<sptr<QRPoint3D>> &pts) {
+    //resetWater();
     hmap = hm;
     points = pts;
 
@@ -34,6 +37,7 @@ void WaterManager::updateMatrices(QRMatrix<float> &hm, QRMatrix<sptr<QRPoint3D>>
             if (i < h-1) tmp += newWL[i+1][j], cnt++;
             newWL[i][j] = tmp / cnt;
         }
+
     waterLevel = newWL;
 
 
@@ -44,6 +48,8 @@ void WaterManager::updateMatrices(QRMatrix<float> &hm, QRMatrix<sptr<QRPoint3D>>
 
     for (auto &s: waterSources)
         s->scaleGrid(waterLevel);
+
+    //updateWater();
 }
 
 void WaterManager::initErosionData() {
@@ -107,6 +113,9 @@ void WaterManager::updateWater() {
             v = points[a][b]->getVector();
             w = getXIndex(v[0]), h = getYIndex(v[1]);
 
+            if (hmap[h][w] < seaLevel)
+                waterLevel[h][w] = seaLevel - hmap[h][w];  // maintain sea level
+
             v[2] = hmap[h][w] + waterLevel[h][w];
             points[a][b]->setVector(v);
             if (waterLevel[h][w] < minimalDrawWaterLevelCoef * worldStep) waterFlag = false;
@@ -131,11 +140,13 @@ void WaterManager::updateWater() {
 }
 
 void WaterManager::setWaterLevel(float wl) {
+    seaLevel = wl;
     Vector3D v;
     for (size_t i = 0; i < points.height(); ++i)
         for (size_t j = 0; j < points.width(); ++j) {
             v = points[i][j]->getVector();
-            waterLevel[i][j] = max(0.f, wl - v[2]);
+            if (v[2] < wl)
+                waterLevel[i][j] = wl - v[2];
         }
 
     if(waterEnabled) updateWater();

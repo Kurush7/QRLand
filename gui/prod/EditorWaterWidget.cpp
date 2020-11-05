@@ -6,6 +6,8 @@
 
 EditorWaterWidget::EditorWaterWidget(sptr<Facade> f, sptr<ActionManager> am, QWidget *parent): QWidget(parent),
 facade(f), manager(am) {
+    waterLevel = facade->builder->waterManager->getWaterLevel();
+
     ui = new QRLayoutManager("global", QRVert);
 
     auto show = new QCheckBox("отображать воду", this);

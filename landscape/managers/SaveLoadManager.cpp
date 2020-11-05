@@ -11,7 +11,7 @@ using namespace std;
 
 void SaveLoadManager::save(const sptr<LandscapeBuilder> &builder, string filename) {
     auto hmap = builder->getHeightMap();
-    auto water = builder->waterManager->getWaterLevel();
+    auto water = builder->waterManager->getWaterMatrix();
     int32_t w = hmap.width(), h = hmap.height();
     float step = builder->getWorldStep();
     auto plates = builder->plateManager->getPlatesArray();
@@ -32,7 +32,10 @@ void SaveLoadManager::save(const sptr<LandscapeBuilder> &builder, string filenam
     for (int i = 0; i < h; ++i)
         for (int j = 0; j < w; ++j)
             fwrite(&hmap[i][j], sizeof(float), 1, f);
+
     // save water
+    float sea = builder->waterManager->getWaterLevel();
+    fwrite(&sea, sizeof(float), 1, f);
     for (int i = 0; i < h; ++i)
         for (int j = 0; j < w; ++j)
             fwrite(&water[i][j], sizeof(float), 1, f);
@@ -96,7 +99,13 @@ uptr<LandscapeBuilder> SaveLoadManager::load(std::string filename) {
         for (int j = 0; j < w; ++j)
             fread(&hmap[i][j], sizeof(float), 1, f);
 
+    auto builder = uptr<LandscapeBuilder>(new LandscapeBuilder(w, h, step));
+    builder->setHeightMap(hmap);
+
     // load water
+    float sea;
+    fread(&sea, sizeof(float), 1, f);
+    builder->waterManager->setWaterLevel(sea);
     for (int i = 0; i < h; ++i)
         for (int j = 0; j < w; ++j)
             fread(&water[i][j], sizeof(float), 1, f);
@@ -120,10 +129,6 @@ uptr<LandscapeBuilder> SaveLoadManager::load(std::string filename) {
         }
         plates.push_back(sptr<QRFrame2D>(new QRFrame2D(points, QRColor(56, 115, 215))));
     }
-
-    auto builder = uptr<LandscapeBuilder>(new LandscapeBuilder(w, h, step));
-    builder->setHeightMap(hmap);
-
     builder->plateManager->moveVectors = moves;
     builder->plateManager->plates = plates;
 

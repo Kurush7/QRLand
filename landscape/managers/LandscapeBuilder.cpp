@@ -144,6 +144,7 @@ void LandscapeBuilder::updateHeightMap() {
 }
 
 void LandscapeBuilder::scaleGrid() {
+    waterManager->resetWater();
     // prepare
     auto newW = width*2 - 1;
     auto newH = height*2 - 1;

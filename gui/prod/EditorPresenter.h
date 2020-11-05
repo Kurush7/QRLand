@@ -39,9 +39,10 @@ public:
     void updateMiniCoords(float x, float y);
 
     sptr<Facade> facade;
-private:
-    void defineTransformParams(float&, float&, float&, QRKey);
+
     void draw(bool reset=false);
+    void defineTransformParams(float&, float&, float&, QRKey);
+private:
 
     float draw_time_msec = 0;
     size_t draw_cnt = 0;

@@ -64,8 +64,8 @@ private:
         if (rain_source == -1)
             rain_source = facade->builder->waterManager->addRainSource();
 
-        QString label = "источник: x=" + QString::number(int(data[0]*100)/100.)
-                + ", y=" + QString::number(int(data[1]*100)/100.);
+        QString label = "источник: x=" + QString::number(int(data[0]*10)/10.)
+                + ", y=" + QString::number(int(data[1]*10)/10.);
         auto f = new QRToolFrame(label, [this, rain_source](bool x) {
                                      facade->builder->waterManager->setSourceEnabled(rain_source, x);
                                  },
@@ -87,7 +87,7 @@ private:
 
             if (data != ZeroVector) {
                 data[1] = miniMapSize - data[1];
-                addRiverSource(i, data);
+                addRiverSource(i+1, data);
             }
             i++;
         }
