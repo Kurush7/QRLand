@@ -15,9 +15,14 @@ bool CubeModelCreator::createPoints() {
 bool CubeModelCreator::createPolygons() {
     int arr[6][4] = {{0,1,3,2}, {4,5,7,6}, {0,1,5,4}, {1,3,7,5}, {2,3,7,6}, {0,2,6,4}};
     for (int i = 0; i < 6; ++i)
-        polygons.push_back(sptr<QRPolygon3D>(
-                new Polygon3D({points[arr[i][0]], points[arr[i][1]],
-                                   points[arr[i][2]], points[arr[i][3]]}, texture)));
+        if (useIndexedPolygons)
+            polygons.push_back(sptr<QRPolygon3D>(
+                    new IndexPolygon3D({arr[i][0], arr[i][1],
+                                   arr[i][2], arr[i][3]}, texture, points)));
+        else
+            polygons.push_back(sptr<QRPolygon3D>(
+                    new Polygon3D({points[arr[i][0]], points[arr[i][1]],
+                                       points[arr[i][2]], points[arr[i][3]]}, texture)));
 
     for (auto p: polygons)
         if (p->where(ZeroVector) == FRONT)

@@ -12,8 +12,16 @@ float CameraCoordsX, CameraCoordsY, CameraCoordsZ;
 
 RoamNode::RoamNode(size_t i1, size_t j1, size_t i2, size_t j2, size_t i3, size_t j3,
          const sptr<QRTexture> &texture, LinkMap &links, const QRMatrix<sptr<QRPoint3D>> &points,
-         RoamNode *parent): parent(parent) {
-    triangle = sptr<Triangle3D>(new Triangle3D(points[i1][j1],points[i2][j2],points[i3][j3], texture));
+         RoamNode *parent): parent(parent), i1(i1), i2(i2), i3(i3), j1(j1), j2(j2), j3(j3) {
+    if (!useIndexedPolygons)
+        triangle = sptr<QRPolygon3D>(new Triangle3D(points[i1][j1],points[i2][j2],points[i3][j3], texture));
+    else {
+        size_t w = points.width();
+        triangle = sptr<QRPolygon3D>(new IndexPolygon3D({static_cast<int>(i1*w+j1), // todo wtf here?
+                                                         static_cast<int>(i2*w+j2),
+                                                         static_cast<int>(i3*w+j3)}, texture, points.getArray()));
+    }
+
     workPoint = (points[i2][j2]->getVector() + points[i3][j3]->getVector()) / 2;
     size_t iw = (i2+i3)/2, jw = (j2+j3)/2;
     delta = fabs((points[i2][j2]->getVector()[2] + points[i3][j3]->getVector()[2]) / 2 -
@@ -67,8 +75,8 @@ void RoamNode::update() {
         float r = RoamUpdateConstant *
                   (x + (CameraCoordsZ - workPoint[2]) * (CameraCoordsZ - workPoint[2])) *
                   (x + (CameraCoordsZ - workPoint[2]) * (CameraCoordsZ - workPoint[2]));
-        mustDraw = (l <= r);
-        //if (mustDraw == 0) cout << sqrt(delta) << ": " << l << ' ' << r << '\n';
+
+        mustDraw = l < r;
     }
 
     if (mustDraw == 0) {
@@ -88,11 +96,41 @@ void RoamNode::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     mustDraw = 1;
 }
 
+void RoamNode::addMaxDetailedPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
+    if (!left || !right)
+        polygons.push_back(triangle);
+    else {
+        left->addMaxDetailedPolygons(polygons);
+        right->addMaxDetailedPolygons(polygons);
+    }
+}
+
 void RoamNode::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     polygons.push_back(triangle);
     if (left) {
         left->getAllPolygons(polygons);
         right->getAllPolygons(polygons);
+    }
+}
+
+void RoamNode::defineShades(const QRVector<bool> &shaded, size_t w) {
+    bool is_shaded = false;
+    is_shaded = shaded[i1*w + j1] & shaded[i2*w + j2] & shaded[i3*w + j3];
+    triangle->setShaded(is_shaded);
+    if (left) {
+        left->defineShades(shaded, w);
+        right->defineShades(shaded, w);
+    }
+}
+
+void RoamNode::interpolateColors() {
+    if (left) {
+        left->interpolateColors();
+        right->interpolateColors();
+        QRColor a = left->triangle->getTexture()->getColor();
+        QRColor b = right->triangle->getTexture()->getColor();
+        triangle->setTexture(sptr<QRTexture>(new ColorTexture(mixColors(a, b))));
+        // todo update: low-level with one texture, these may be enough just to change
     }
 }
 
@@ -123,8 +161,9 @@ Frame::Frame(const QRMatrix<sptr<QRPoint3D>> &points,
     Vector3D v1 = points[d][l]->getVector();
     Vector3D v2 = points[u][r]->getVector();
     v1[2] = zmin, v2[2] = zmax;
+    // todo what if z's are updated?... and they are....
     center = (v1 + v2) / 2;
-    radius = vectorLen(v1-v2) / 2;
+    radius = vectorLen(v1-v2);
 }
 
 bool Frame::updateCamera(const sptr<QRCamera3D> &camera) {
@@ -143,7 +182,22 @@ void Frame::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     right->addPolygons(polygons);
 }
 
+void Frame::addMaxDetailedPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
+    left->addMaxDetailedPolygons(polygons);
+    right->addMaxDetailedPolygons(polygons);
+}
+
 void Frame::getAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons) {
     left->getAllPolygons(polygons);
     right->getAllPolygons(polygons);
+}
+
+void Frame::defineShades(const QRVector<bool> &isShadedPoint, size_t width) {
+    left->defineShades(isShadedPoint, width);
+    right->defineShades(isShadedPoint, width);
+}
+
+void Frame::interpolateColors() {
+    left->interpolateColors();
+    right->interpolateColors();
 }

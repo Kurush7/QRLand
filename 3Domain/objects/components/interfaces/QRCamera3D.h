@@ -22,6 +22,8 @@ public:
     QRCamera3D(float w, float h): width(w), height(h) {}
     ~QRCamera3D() = default;
 
+    virtual Vector3D getViewVector() {return ZeroVector;}
+
     virtual void acceptVisitor(const sptr<QRVisitor>& visitor) = 0;
     virtual uptr<QRMemento> save() = 0;
 

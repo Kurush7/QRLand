@@ -17,7 +17,7 @@
 class QRMultiRadioField: public QWidget {
     Q_OBJECT
 public:
-    QRMultiRadioField(std::string, int = 0);
+    QRMultiRadioField(std::string, int = 0, QWidget *parent=nullptr);
     void addWidget(QWidget*, std::string);
     void addWidgets(std::vector<QWidget*>, std::string);
     bool isActive(std::string s) {return active[s];}

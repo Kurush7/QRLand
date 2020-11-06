@@ -11,10 +11,12 @@
 
 #include "ROAM/RoamLandscape.h"
 #include "ROAM/RoamLandscapeCreator.h"
-#include "ROAM/RoamConfig.h"
+#include "QRConstants.h"
 
 #include "managers/LandscapeBuilder.h"
 
 #include "decoration/TopDownVisualizer.h"
+
+#include "random_generator.h"
 
 #endif //BIG3DFLUFFY_QRLANDSCAPE_H

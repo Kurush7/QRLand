@@ -23,6 +23,7 @@ enum PolyPosition {
 };
 
 using PolygonIterator = QRVectorIterator<sptr<QRPolygon3D>>;
+using IndexIterator = QRVectorIterator<int32_t>;
 
 class QRPolygon3D: public QRObject3D {
 public:
@@ -32,14 +33,19 @@ public:
     virtual void acceptVisitor(const sptr<QRVisitor>& visitor) {visitor->visitPolygon3D(p);}
     virtual uptr<QRMemento> save();
 
-    virtual PointIterator getPoints() const = 0;
-    virtual sptr<QRPoint3D>* getPurePoints() const = 0;
-    virtual void setPoints(const PointIterator &it) = 0;
+    virtual bool isIndexData() const {return false;}
+    virtual bool isPointData() const {return true;}
+    virtual PointIterator getPoints() const {}
+    virtual IndexIterator getPointIndexes() const {}
+    virtual sptr<QRPoint3D>* getPurePoints() const {}
+    virtual int32_t* getPurePointIndexes() const {}
+    virtual void setPoints(const PointIterator &it) {}  // todo deprecated, was used for mementos
 
     virtual const Vector3D getPlane() const = 0;
     virtual const Vector3D getNormal() const = 0;
     virtual void setNormal(const Vector3D&) = 0;   // TODO VERY ACCURATE WITH THIS
     virtual void updateNormal() = 0;
+    virtual void updateNormalIndex(const sptr<QRPoint3D>* points) {}
     // points changed, return new normal instead of applying it. 3rd value contains new d-val
     virtual Vector3D computeNewPlane() = 0;
     virtual void switchNormal() = 0;
@@ -51,13 +57,16 @@ public:
     virtual sptr<QRTexture>& getTextureUnsafe() = 0;
     virtual void setTexture(const sptr<QRTexture>&) = 0;
 
-    virtual bool operator==(const QRPolygon3D &b) const = 0;
+    virtual void setShaded(bool x) {is_shaded = x;}
+    virtual bool isShaded() {return is_shaded;}
 
     // todo virtual QREdge3D& operator=(){}
     // todo get triangles? pointset....
     // todo bare array getter?
 private:
     sptr<QRPolygon3D> p;
+protected:
+    bool is_shaded = false;
 };
 
 std::ostream& operator<<(std::ostream &os, const sptr<QRPolygon3D> &p);

@@ -30,9 +30,16 @@ public:
     virtual bool isAdditivePolygons() {return false;}
     virtual void updateCamera(const sptr<QRCamera3D> &camera, std::string *info=nullptr) {}
     virtual void addPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr) {}
+    virtual void addAllPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr) {}
+    virtual void addMaxDetailPolygons(QRVector<sptr<QRPolygon3D>> &polygons, std::string *info=nullptr) {
+        addAllPolygons(polygons, info);
+    }    // for roam: most-detail-level polygons
+    virtual void defineShades(const QRVector<bool> &isShadedPoint) {}
 
     virtual PolygonIterator getPolygons() const = 0;
     virtual PointIterator getPoints() const = 0;
+    virtual QRVector<sptr<QRPoint3D>>& getPointArray() {};
+    virtual QRVector<sptr<QRPolygon3D>>& getPolygonArray() {};
     virtual sptr<QRPolygon3D>* getPurePolygons() const = 0;
     virtual sptr<QRPoint3D>* getPurePoints() const = 0;
     virtual size_t getPolygonCnt() const = 0;

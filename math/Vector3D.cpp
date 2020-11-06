@@ -153,6 +153,9 @@ float scalar3(const Vector3D &a, const Vector3D &b) {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }
 
+float scalar2(const Vector3D &a, const Vector3D &b) {
+    return a[0]*b[0] + a[1]*b[1];
+}
 
 bool isRightRotate(const Vector3D &a, const Vector3D &b, const Vector3D &c) {
     auto v1 = b-a, v2 =  c-a;
@@ -165,6 +168,10 @@ float cos(const Vector3D &a, const Vector3D &b) {
 
 float cos3(const Vector3D &a, const Vector3D &b) {
     return scalar3(a,b) / vectorLen3(a) / vectorLen3(b);
+}
+
+float cos2(const Vector3D &a, const Vector3D &b) {
+    return scalar2(a,b) / vectorLen2(a) / vectorLen2(b);
 }
 
 std::ostream& operator<<(std::ostream &os, const Vector3D &v) {

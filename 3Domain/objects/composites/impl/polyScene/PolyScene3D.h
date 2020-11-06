@@ -16,6 +16,7 @@ public:
         activeCamera = name;
     }
     virtual bool addModel(const sptr<QRPolyModel3D> &m, const Vector3D &v);
+    virtual void clearModels() {models.clear();}
 
     virtual std::string getActiveCameraName() {return activeCamera;}
     virtual sptr<QRCamera3D> getActiveCamera() {

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include <initializer_list>
+#include <QRVector/QRVector.h>
 
 #include "exceptions/MathException.h"
 #include "../QRConstants.h"
@@ -66,8 +67,10 @@ Vector3D operator /(const Vector3D&, float);
 
 float scalar(const Vector3D &a, const Vector3D &b);
 float scalar3(const Vector3D &a, const Vector3D &b);
+float scalar2(const Vector3D &a, const Vector3D &b);
 float cos(const Vector3D &a, const Vector3D &b);
 float cos3(const Vector3D &a, const Vector3D &b);
+float cos2(const Vector3D &a, const Vector3D &b);
 
 // for 2dim-vectors. others ignored
 bool isRightRotate(const Vector3D &a, const Vector3D &b, const Vector3D &c);

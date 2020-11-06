@@ -28,6 +28,8 @@ public:
     u_char r=0, g=0, b=0, alpha=255;
 };
 
+QRColor mixColors(const QRColor &a, const QRColor &b);
+
 // used for point & edge drawing. legacy code
 class Style {
 public:

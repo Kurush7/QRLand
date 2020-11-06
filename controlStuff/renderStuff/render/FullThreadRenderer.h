@@ -5,7 +5,7 @@
 #ifndef BIG3DFLUFFY_FULLTHREADRENDERER_H
 #define BIG3DFLUFFY_FULLTHREADRENDERER_H
 
-#include "QRenderer.h"
+#include "../QRenderer.h"
 
 class FullThreadRenderer: public QRenderer {
 public:
@@ -23,7 +23,6 @@ private:
     int thread_cnt = RENDER_THREAD_CNT;
     PolyRectCutter *cutters;
 
-    QRLightManager *colorManager;
     QRasterizeZBuffer zbuf;
 
     QRCamera3D *camera;

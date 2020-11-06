@@ -9,9 +9,8 @@ uptr<QRMemento> Camera3D::save() {
     return uptr<QRMemento>(new Camera3DMemento(p));
 }
 
-Camera3D::Camera3D(float w, float h, float zDist, float s,
-                   float n, float f, const Vector3D &pos, const Vector3D &rot, bool _selfRotate)
-                   : QRCamera3D(w,h), screen(s), nearCutter(n), farCutter(f) {
+Camera3D::Camera3D(float w, float h, float n, float f, const Vector3D &pos, const Vector3D &rot, bool _selfRotate, float zDist)
+                   : QRCamera3D(w,h), screen(n), nearCutter(n), farCutter(f) {
     p = sptr<Camera3D>(this, [](void *ptr){});
     viewUpVector = YVector;
     deepVector = ZVector;
@@ -60,6 +59,8 @@ void Camera3D::scale(float sx, float sy) {
 }
 
 void Camera3D::scale(float scale) {
+    // todo hardcode
+    scale = max(scale, QREPS*10);
     if (scale < QREPS)
         throw QRBadParamException(__FILE__, __LINE__, __TIME__, "negative scale for camera");
     width *= scale;
@@ -71,13 +72,15 @@ void Camera3D::scale(float scale) {
 void Camera3D::rotate(const Vector3D &rotate) {
     if (!selfRotate) {
         // rotate around zeroPoint
-        auto cr = RotateTransformer3DCreator (rotate);
+        auto cr = RotateTransformer3DCreator(rotate);
         auto t = cr.create();
         worldCoordsOrigin = t->transform(worldCoordsOrigin);
         auto localZero = t->transform(ZeroVector);
         auto yPoint = t->transform(viewUpVector);
+
         deepVector = lenNorm(localZero - worldCoordsOrigin);
         viewUpVector = lenNorm(yPoint - localZero);
+
         defineAxisTransformer();
     }
     else {
@@ -106,44 +109,37 @@ void Camera3D::rotate(const Vector3D &rotate) {
 
         axisTransformer->accumulate(new_axisTransformer->getMatrix());
     }
-
-    //cout << bind << ' ' << deepVector << ' ' << viewUpVector << '\n';
-    //cout << "world origin: " << bind + deepVector*origin[2] << '\n';
 }
 
 void Camera3D::defineFrustrum() {
     // todo scalar > 0: outside the pyramid
     // front-back
     frustrum.reserve(6);
-    //frustrum[0] = Vector3D{0,0,-1, origin[2] + nearCutter};
-    //frustrum[1] = Vector3D{0,0,-1, origin[2] + farCutter};
     frustrum[0] = Vector3D{0,0,-1, nearCutter};
     frustrum[1] = Vector3D{0,0,-1, farCutter};
     // side-left-right
     frustrum[2] = Vector3D{-2*(nearCutter)/width,0,1,0};  // right
     frustrum[3] = Vector3D{2*(nearCutter)/width,0,1,0};   // left
     // up-down
-    //frustrum[4] = Vector3D{0,-2*(nearCutter)/height,1,0};
-    //frustrum[5] = Vector3D{0,2*(nearCutter)/height,1,0};
     frustrum[4] = Vector3D{0,1,0,0};
-    frustrum[5] = Vector3D{0,nearCutter/height,1,0};
+    frustrum[5] = Vector3D{0,nearCutter/height,-1,0};
 
     frustrum.setSize(6);
 
-    cout << "camera settings:\n";
+    /*cout << "camera settings:\n";
     cout << "\tnear: " << nearCutter << '\n';
     cout << "\tfar: " << farCutter << '\n';
     cout << "\tscreen: " << screen << '\n';
     cout << "\twidth: " << width << '\n';
     cout << "\theight: " << height << '\n';
     cout << "\torigin: " << origin << '\n';
-    cout << "\tbind: " << bind << '\n';
+    cout << "\tbind: " << bind << '\n';*/
     Vector3D in_test({0,height/2,(nearCutter+farCutter)/2+origin[2],1});
     for (int i = 0; i < frustrum.getSize(); ++i) {    // 0 & 1 not needed, for func will destroy 1
         frustrum[i] = len3Norm(frustrum[i]);
         if (scalar(frustrum[i], in_test) < 0) // inside values are  > 0
             frustrum[i] = -1 * frustrum[i];
-        cout << "frustrum: " << frustrum[i] << '\n';
+        //cout << "frustrum: " << frustrum[i] << '\n';
     }
 }
 
@@ -151,12 +147,6 @@ void Camera3D::defineAxisTransformer() {
     cout << "origins:\nox= " << lenNorm(viewUpVector*deepVector) << "\noy= " << viewUpVector << '\n';
     cout << "oz= " << deepVector <<
     "\norigin= " << bind+origin << "  (origin: " << origin << " bind: " << bind << " )\n";
-
-    /*axisTransformer = sptr<QRTransformer3D>(MoveTransformer3DCreator(bind).create());
-    axisTransformer->accumulate(AxisChangeTransformer(
-            lenNorm(viewUpVector*deepVector), viewUpVector,
-            deepVector, origin).getMatrix());*/
-
 
     axisTransformer = sptr<QRTransformer3D>(new AxisChangeTransformer(
             lenNorm(viewUpVector*deepVector), viewUpVector,
@@ -184,6 +174,6 @@ int Camera3D::isVisibleSphere(const Vector3D &c, float rad) {
 }
 
 bool Camera3D::isFrontFace(const Vector3D &normal) {
-    // todo normal is already transformed into camera's coordinates!!!!!!
+    //normal must be already transformed into camera's coordinates!!!!!!
     return normal[2] < QREPS;
 }

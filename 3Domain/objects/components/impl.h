@@ -7,6 +7,7 @@
 
 #include "impl/Point3D.h"
 #include "impl/Polygon3D.h"
+#include "impl/IndexPolygon3D.h"
 #include "impl/Industry.h"
 #include "impl/Triangle3D.h"
 

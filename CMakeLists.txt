@@ -27,11 +27,12 @@ include_directories(containers)
 include_directories(exceptions)
 include_directories(math)
 include_directories(controlStuff)
+include_directories(gui)
 include_directories(landscape)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set (path "")
-set(source_list "tests/TimeTest.cpp" landscape/water/WaterErosion.cpp landscape/water/WaterConfig.h landscape/water/WaterSource.h)
+set(source_list "tests/TimeTest.cpp" 2Domain/figures/QRArrow2D.h)
 add_subdirectory(2Domain)
 add_subdirectory(3Domain)
 add_subdirectory(containers)
@@ -48,29 +49,33 @@ target_link_libraries(all_lib
 add_subdirectory(gui)
 #add_subdirectory(tests)
 
-add_library(wip1_lib
-        gui/wip1/MainWindow.cpp
-        gui/wip1/Presenter.cpp
-        gui/wip1/Facade.cpp
-        )
-target_link_libraries(wip1_lib
+#add_library(wip2_lib
+#        gui/wip2/MainWindow.cpp
+#        gui/wip2/Presenter.cpp
+#        gui/wip2/Facade.cpp
+#)
+#target_link_libraries(wip2_lib
+#        ${QT_INCLUDES}
+#        )
+
+add_library(prod_lib
+        gui/prod/MainWindow.cpp
+        gui/prod/Facade.cpp
+        gui/prod/EditorWindow.cpp
+        gui/prod/EditorPresenter.cpp
+        gui/prod/NewModelStartWindow.cpp gui/prod/NewModelStartWindow.h gui/prod/PlatesWindow.cpp gui/prod/PlatesWindow.h gui/prod/EditorWaterWidget.cpp gui/prod/EditorWaterWidget.h gui/prod/QRToolFrame.cpp gui/prod/QRToolFrame.h gui/prod/EditorHMapWidget.cpp gui/prod/EditorHMapWidget.h gui/prod/EditorMiscWidget.cpp gui/prod/EditorMiscWidget.h gui/prod/ActionManager.cpp gui/prod/ActionManager.h)
+target_link_libraries(prod_lib
         ${QT_INCLUDES}
         )
-
-add_library(wip2_lib
-        gui/wip2/MainWindow.cpp
-        gui/wip2/Presenter.cpp
-        gui/wip2/Facade.cpp
-        )
-target_link_libraries(wip2_lib
-        ${QT_INCLUDES}
-        )
-
 
 add_executable(main.exe
-        main.cpp)
+        main.cpp
+        gui/style.css
+        configManager.cpp
+        QRConstants.cpp)
 target_link_libraries(main.exe
-        wip2_lib
+        prod_lib
+        views_lib
         widgets_lib
         all_lib
         )
@@ -78,8 +83,13 @@ target_link_libraries(main.exe
 qt5_use_modules(main.exe Widgets OpenGL)
 target_link_libraries(main.exe ${QT_LIBRARIES} ${OPENGL_LIBRARIES})
 
-add_custom_command(
-        TARGET main.exe POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/gui/style.css
-        ${CMAKE_CURRENT_BINARY_DIR}/gui/style.css)
+#add_custom_command(
+#        TARGET main.exe POST_BUILD
+#        DEPENDS ${CMAKE_SOURCE_DIR}/gui/style.css
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#        ${CMAKE_SOURCE_DIR}/gui/style.css
+#        ${CMAKE_CURRENT_BINARY_DIR}/gui/style.css
+#
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#        ${CMAKE_SOURCE_DIR}/config.txt
+#        ${CMAKE_CURRENT_BINARY_DIR}/config.txt)

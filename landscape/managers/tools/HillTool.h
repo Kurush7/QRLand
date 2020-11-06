@@ -10,31 +10,27 @@
 
 class HillTool: public QRTool {
 public:
-    virtual void process() {
-        float maxH = maxHillHeightParam*data.worldStep;
-        uniform_int_distribution<size_t> dist_w(0, data.width-1);
-        uniform_int_distribution<size_t> dist_h(0, data.height-1);
-        uniform_real_distribution<float> dist_hill(minHillHeightParam*data.worldStep, maxH);
-        uniform_real_distribution<float> coef_d(minHillSteepCoef, minHillSteepCoef);
+    HillTool() {}
 
-        size_t centerX = dist_w(generator);
-        size_t centerY = dist_h(generator);
-        float height = dist_hill(generator);
+    virtual void setToolData(const ToolData &dt);
+    virtual void setIntensity(float x) {}
 
-        QRMatrix<float> *local = data.hmap;
-        float coef = -1 * coef_d(generator);
-        auto f = [centerX, centerY, height, coef, local](size_t x, size_t y){
-            float dist = sqrt((x-centerX)*(x-centerX) + (y-centerY)*(y-centerY));
-            float h = height + dist*coef;
-            (*local)[y][x] += h;
-            return (h < QREPS);
-        };
+    virtual bool process() {
+        if (height <= 0) return false;
+        (*data.hmap)[centerY][centerX] += give;
+        height -= give;
 
-        BFSWalk(data.width, data.height, centerX, centerY, f);
+        QRQueue<QRPair<int, int>> q;
+        q.push({centerX, centerY});
+
+        BFSHillWalk(q, data.width, data.height, data.hmap, data.worldStep);
+        return true;
     }
 
 private:
-    std::default_random_engine generator = std::default_random_engine();
+    bool inited=false;
+    size_t centerX, centerY;
+    float height, give;
 };
 
 class HillToolCreator: public QRToolCreator {
@@ -42,6 +38,45 @@ public:
     virtual uptr<QRTool> create() {return uptr<QRTool>(new HillTool());}
 };
 
+class HillSetTool: public QRTool {
+public:
+    HillSetTool() {}
 
+    virtual void setToolData(const ToolData &dt);
+    virtual void setIntensity(float x) {
+        hillCnt = maxHillCnt * x;
+        fill();
+    }
+
+    virtual bool process() {
+        QRVector<HillTool> new_tools;
+        for (auto &t: tools) {
+            if (t.process())
+                new_tools.push_back(t);
+        }
+        tools = new_tools;
+        fill();
+        return true;
+    }
+
+private:
+    void fill() {
+        if (tools.getSize() < hillCnt) {
+            for (int i = 0; i < hillCnt - tools.getSize(); ++i) {
+                tools.push_back(HillTool());
+                tools[tools.getSize()-1].setToolData(data);
+            }
+        }
+    }
+
+    bool inited=false;
+    int hillCnt = 0;
+    QRVector<HillTool> tools;
+};
+
+class HillSetToolCreator: public QRToolCreator {
+public:
+    virtual uptr<QRTool> create() {return uptr<QRTool>(new HillSetTool());}
+};
 
 #endif //BIG3DFLUFFY_HILLTOOL_H

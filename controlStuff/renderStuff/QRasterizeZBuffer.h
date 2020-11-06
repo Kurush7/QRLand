@@ -9,7 +9,7 @@
 #include <mutex>
 
 #include "containers/QRContainers.h"
-#include "math/QRMath.h"
+#include "math/QRMath.h"#include "QRasterizeZBuffer.h"
 #include "renderStuff/cutters/PolyRectCutter.h"
 #include "2Domain.h"
 #include "QRLightManager.h"
@@ -26,20 +26,27 @@ public:
     : img(_img.get()), colorManager(man) {
         w = img->getWidth();
         h = img->getHeight();
-        zbuf = (float*) malloc (sizeof(float*) * h*w);
-        row_example = (float*) malloc (sizeof(float*) * w);
+        zbuf = new float[w*h];
+        row_example = new float[w];
         for (int i = 0; i < w; ++i)
             row_example[i] = QRINF;
-        clearBuf();
+        clearZBufOnly();
     }
     ~QRasterizeZBuffer() {
-        free(zbuf);
-        free(row_example);
+        delete zbuf;
+        delete row_example;
     }
+
+    float* getZBuf() {return zbuf;}
+    int getW() {return w;}
+    int getH() {return h;}
 
     // data may be spoiled! (reversed and rounded, both guaranteed!)
     void draw(Vector3D *_poly, int size, const Vector3D &norm, const QRTexture *texture);
+    void draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRTexture *texture);
+    void draw(float** points, int32_t* poly, int size, const Vector3D &norm, const QRColor &color);
     void clearBuf();
+    void clearZBufOnly();
     void fillMissing();
 private:
     int w, h;
@@ -48,7 +55,9 @@ private:
     QRImage *img;
     QRLightManager *colorManager;
 
-    void drawTriangle(const Vector3D &p0, const Vector3D &p1, const Vector3D &p2, QRColor c);
+    void drawTriangle(float p1x, float p1y, float zl,
+            float p2x, float p2y, float zr,
+            float p3x, float p3y, float zw, QRColor c);
 
     void fillRow(renderData &data);
     inline void jumpL(renderData &);

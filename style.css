@@ -1,3 +1,19 @@
+QPushButton#GlobalButton {
+    background-color: #3873d9;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 6px;
+}
+QPushButton#GlobalButton:pressed {
+    color: white;
+    border: 3px solid #303030;
+    background: #305090;
+}
+
 QPushButton#BigButton {
     font-size: 20px;
     height: 40px;
@@ -14,6 +30,12 @@ QPushButton#BigButton:pressed {
 QPushButton#arrowBtn:disabled {
     color: #111;
     background: #303030;
+}
+
+QToolTip {
+    color: #fff;
+    background-color: #303030;
+    border: none;
 }
 
 QPushButton#RadioFieldButton {

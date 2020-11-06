@@ -30,7 +30,10 @@ public:
     void scale(float times);
     void changeCamera();
     void setWaterVisible();
+    void setShadesVisible();
     void erosionIteration();
+    void scaleGrid();
+    void process();
 
 private:
     void defineTransformParams(float&, float&, float&, QRKey);

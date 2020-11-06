@@ -5,13 +5,13 @@
 #include "PlateManager.h"
 
 QRVector<Vector3D> PlateManager::definePoints(int cnt) {
-    uniform_real_distribution<double> gx(0, w);
-    uniform_real_distribution<double> gy(0, h);
+    uniform_real_distribution<double> gx(0, w-1);
+    uniform_real_distribution<double> gy(0, h-1);
 
     float x, y;
     QRVector<Vector3D> pts;
     for (int i = 0; i < cnt; ++i) {
-        x = gx(generator), y = gy(generator);
+        x = gx(default_generator), y = gy(default_generator);
         pts.push_back({x,y,0});
     }
 
@@ -22,16 +22,15 @@ QRVector<Vector3D> PlateManager::definePoints(int cnt) {
 void PlateManager::buildPlates(QRVector<Vector3D> points) {
     plates = buildVoronoiDiagramOnRect(0,w,0,h, points);
     for (int i = 0; i < plates.getSize(); ++i)
-        plates[i]->setColor(plateBorderColor);
+        plates[i]->setColor(QRColor(56, 115, 215));  //todo COLOR HARDCODE
 
     uniform_real_distribution<double> gd(0, 1);
-    uniform_real_distribution<double> gForce(minPlateMoveForce,
-            maxPlateMoveForce);
+    uniform_real_distribution<double> gdir(-1, 1);
     for (int i = 0; i < plates.getSize(); ++i) {
-        double x = gd(generator), y = gd(generator);
+        double x = gdir(default_generator), y = gdir(default_generator);
         Vector3D vec(x,y,0,0);
         vec = lenNorm(vec);
-        vec = vec * gForce(generator);
+        vec = vec * gd(default_generator);
         moveVectors.push_back(vec);
     }
 

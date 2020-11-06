@@ -7,10 +7,13 @@
 
 #include "../ROAM/RoamLandscape.h"
 #include "../water/WaterManager.h"
+#include "../climate/ClimateManager.h"
 
-#include "../landscapeConfig.h"
+#include "QRConstants.h"
 #include "managers/tools/QRToolFabric.h"
 #include "managers/tools/QRToolManager.h"
+
+#include "../disturbance/disturbance.h"
 
 #include "PlateManager.h"
 
@@ -23,38 +26,51 @@
 // but all calculations with height are made in [0, width][0, height]
 class LandscapeBuilder {
 public:
-    LandscapeBuilder(size_t width, size_t height,
-            size_t polyStep=1, double world_step=1);
+    LandscapeBuilder(size_t width, size_t height, double world_step=1);
+
+    size_t getWidth() {return heightMap.width();}
+    size_t getHeight() {return heightMap.height();}
 
     void setTools(QRVector<QRPair<ToolName, ToolFrequency>>);
+    int addTool(QRPair<ToolName, ToolFrequency>);
 
-    void process(int step_cnt);
+    void process(int step_cnt=1);
     void useTool(ToolName);
 
-    sptr<QRPolyModel3D> createLandscape();
-
-    const QRMatrix<float>& getHeightMap() {return heightMap;}
-    double getWorldStep() {return worldStep;}
-
-    bool activateWaterManager() {
-        if (landscape)
-            waterManager->setPolygons(landscape->getPolygons());
-        return bool(landscape);
+    void setPlateManager(sptr<PlateManager> man) {
+        plateManager = man;
+        toolData = ToolData(&heightMap, width, height, worldStep,
+                            plateManager->getPlates(), plateManager->getMove());
+        for (auto it = disturbManager.getAll(); it; ++it)
+            it->get()->setToolData(toolData);
     }
 
-    PlateManager plateManager;
+    void scaleGrid();
+
+    sptr<RoamLandscape> createLandscape();
+
+    const QRMatrix<float>& getHeightMap() {return heightMap;}
+    void setHeightMap(const QRMatrix<float>& hm);
+    double getWorldStep() {return worldStep;}
+
+
+    sptr<PlateManager> plateManager;
     sptr<WaterManager> waterManager;
+    sptr<ClimateManager> climateManager;
+    DisturbanceManager disturbManager;
+    QRToolManager toolManager;
 private:
-    sptr<QRPolyModel3D> landscape = nullptr;
+    sptr<RoamLandscape> landscape = nullptr;
+    QRVector<sptr<QRPolygon3D>> lowest_polygons;
     QRMatrix<float> heightMap;
     QRMatrix<sptr<QRPoint3D>> points;
 
-    QRToolManager toolManager;
+    ToolData toolData;
+
+    std::default_random_engine generator = std::default_random_engine();
 
     size_t width, height;     // point width&height (points count, not polygons)
-    size_t maxWidth, maxHeight;
-    size_t step;
-    double worldStep;  // step - polyStep (1,2,4 etc), x-y-Step - coordinate steps
+    double worldStep;  // world-grid steps for each axis
 
     void clearHeightMap();
     void buildPoints();

@@ -21,7 +21,28 @@ public:
 
     void changeCamera();
     void setWaterVisible(bool x);
+    void setShadesVisible(bool x);
     void erosionIteration();
+    void process() {
+        builder->process();
+        renderer->render();
+    }
+
+    void scaleGrid() {
+        builder->scaleGrid();
+        //builder->useTool(HillTool);
+        landscape = builder->createLandscape();
+        scene->clearModels();
+        scene->addModel(landscape, Vector3D(0,0,0));
+
+        shadowRenderer->generateShades();
+
+        renderer->getColorManager()->setWorldStep(builder->getWorldStep());
+        //todo QuickShadowRenderer shadowRenderer(r, 0);
+        //shadowRenderer.generateShades();
+
+        renderer->render();
+    }
 
     void undo();
 
@@ -29,9 +50,11 @@ private:
     sptr<QRImage> main_image, hmap_image;
     sptr<BaseCommandManager> manager;
     sptr<QRPolyScene3D> scene;
-    sptr<QRenderer> renderer;
-    sptr<TopDownVisualizer> topDown;
+    sptr<QuickRenderer> renderer;
+    sptr<QuickShadowRenderer> shadowRenderer;
+    sptr<TopDownVisualizer> topDown = nullptr;
     sptr<LandscapeBuilder> builder;
+    sptr<RoamLandscape> landscape;
 };
 
 

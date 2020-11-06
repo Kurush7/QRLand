@@ -35,9 +35,9 @@ private:
 
     QRLabel *settingsLabel, *drawTimeLabel, *cameraLabel, *erosionLabel;
 
-    QCheckBox *waterCheckBox;
+    QCheckBox *waterCheckBox, *shadesCheckBox;
 
-    QPushButton *undoBtn, *erosionStart, *erosionEnd;
+    QPushButton *undoBtn, *erosionStart, *erosionEnd, *scaleGrid, *process;
 
     QTimer erosionTimer;
 };

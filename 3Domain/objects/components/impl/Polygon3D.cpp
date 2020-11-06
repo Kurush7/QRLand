@@ -11,15 +11,6 @@ Polygon3D::Polygon3D(initializer_list<sptr<QRPoint3D>> lst, const sptr<QRTexture
     definePlane();
 }
 
-bool Polygon3D::operator==(const QRPolygon3D &b) const {
-    // todo check cycle-shift
-    auto my = points.begin(), it = b.getPoints();
-    for (; it && my != points.end(); ++it, ++my)
-        if (*my != *it)
-            return false;
-    return !(my || it);     // have same dimension
-}
-
 PolyPosition Polygon3D::where(const Vector3D &v) const {
     auto x = sign(scalar(normal, v) + d);
     //cout << "where: " << v << ' ' << normal << ' ' << d << " => " << (int) x << '\n';

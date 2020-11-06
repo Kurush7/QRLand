@@ -9,5 +9,6 @@
 #include "Matrix3D.h"
 #include "Transformer3D.h"
 #include "Functions.h"
+#include "QuickMath.h"
 
 #endif //KG_QRMATH_H

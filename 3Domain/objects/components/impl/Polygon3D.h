@@ -45,8 +45,6 @@ public:
     virtual sptr<QRTexture>& getTextureUnsafe() {return texture;}
     virtual void setTexture(const sptr<QRTexture> &t) {texture = t;}
 
-    virtual bool operator==(const QRPolygon3D &b) const;
-
 private:
     QRVector<sptr<QRPoint3D>> points;
     sptr<QRTexture> texture;

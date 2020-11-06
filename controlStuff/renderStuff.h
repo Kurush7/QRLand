@@ -5,8 +5,10 @@
 #ifndef BIG3DFLUFFY_RENDERSTUFF_H
 #define BIG3DFLUFFY_RENDERSTUFF_H
 
-#include "renderStuff/render/QRenderer.h"
+#include "renderStuff/QRenderer.h"
 #include "renderStuff/render/SimpleRenderer.h"
 #include "renderStuff/render/FullThreadRenderer.h"
+#include "renderStuff/render/QuickRenderer.h"
+#include "renderStuff/render/QuickShadowRenderer.h"
 
 #endif //BIG3DFLUFFY_RENDERSTUFF_H

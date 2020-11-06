@@ -32,7 +32,7 @@ QRLayoutManager::~QRLayoutManager() {
     //delete root;
 }
 
-void QRLayoutManager::addLayers(string names, LayerType type, string path, bool isAbsolute) {
+void QRLayoutManager::addLayers(string names, LayerType type, string path, bool isAbsolute, bool scrollable) {
     auto old = cur;
     goToPath(path, isAbsolute);
 
@@ -40,22 +40,34 @@ void QRLayoutManager::addLayers(string names, LayerType type, string path, bool 
     int sep_cnt = 0;
     for (auto name: nameSplit) {
         if (name == "$") {
-                cur->addChild(new QRLayoutNode("$" + to_string(sep_cnt++), type));
+                cur->addChild(new QRLayoutNode("$" + to_string(sep_cnt++), type,
+                                               nullptr, nullptr, scrollable));
         }
         else
-            cur->addChild(new QRLayoutNode(name, type));
+            cur->addChild(new QRLayoutNode(name, type, nullptr, nullptr, scrollable));
     }
 
     cur = old;
 }
 
-void QRLayoutManager::addWidgets(std::vector<std::pair<std::string, QWidget*>> widgets, string path, bool isAbsolute) {
+void QRLayoutManager::addWidgets(std::vector<std::pair<std::string, QWidget*>> widgets,
+       string path, bool isAbsolute) {
     auto old = cur;
     goToPath(path, isAbsolute);
 
     for (auto widget: widgets) {
         cur->addChild(new QRLayoutNode(widget.first, LayerType::QRHor, cur, widget.second));
     }
+    cur = old;
+}
+
+void QRLayoutManager::addNode(QRLayoutNode* node, string path, bool isAbsolute) {
+    auto old = cur;
+    goToPath(path, isAbsolute);
+    for (auto widget: node->getAllWidgets()) {
+        cur->addChild(new QRLayoutNode(widget->objectName().toStdString(), LayerType::QRHor, cur, widget));
+    }
+    //cur->addChild(node);
     cur = old;
 }
 
@@ -77,6 +89,14 @@ QWidget* QRLayoutManager::getWidget(string path, bool isAbsolute) {
 
     swap(old, cur);
     return old->getWidget();
+}
+
+QRLayoutNode* QRLayoutManager::getNode(string path, bool isAbsolute) {
+    auto old = cur;
+    goToPath(path, isAbsolute);
+
+    swap(old, cur);
+    return old;
 }
 
 void QRLayoutManager::goUp() {

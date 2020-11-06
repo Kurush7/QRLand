@@ -19,6 +19,8 @@ public:
 
     virtual PolygonIterator getPolygons() const {return polygons.begin();}
     virtual PointIterator getPoints() const {return points.begin();}
+    virtual QRVector<sptr<QRPoint3D>>& getPointArray() {return points;}
+    virtual QRVector<sptr<QRPolygon3D>>& getPolygonArray() {return polygons;}
     virtual sptr<QRPolygon3D>* getPurePolygons() const {return polygons.getPureArray();}
     virtual sptr<QRPoint3D>* getPurePoints() const {return points.getPureArray();}
     virtual size_t getPolygonCnt() const {return polygons.getSize();}

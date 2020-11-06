@@ -17,11 +17,18 @@ public:
 
     void addFigure(const sptr<QRFigure2D> &figure) {figures.push_back(figure);}
 
-    void drawHeightMap();
+    void drawMiniMap();
+    void setDrawHMap(bool x) {draw_hmap = x;}
+    void setDrawWater(bool x) {drawWater = x;}
+    void setDrawPlates(bool x) {drawPlates = x;}
 
 private:
     const sptr<LandscapeBuilder> &builder;
     const sptr<QRImage> &img;
+
+    bool draw_hmap = true;
+    bool drawWater = false;
+    bool drawPlates = true;
 
     QRVector<sptr<QRFigure2D>> figures;
     sptr<QRTransformer2D> transformer = nullptr;

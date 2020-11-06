@@ -8,7 +8,7 @@ using namespace std;
 using namespace chrono;
 
 SimpleRenderer::SimpleRenderer(const sptr<QRImage> &image, const sptr<QRPolyScene3D> &scene)
-: QRenderer(image, scene), colorManager(new QRLightManager), zbuf(image, colorManager) {
+: QRenderer(image, scene), zbuf(image, colorManager) {
     cutters = new PolyRectCutter[thread_cnt];
     for (auto li=scene->getLights(); li; ++li)
         colorManager->addLight(*li);

@@ -53,6 +53,7 @@ public:
     size_t getSize() const {return w*h;}
 
     T* getPureArray() const {return matrix.getPureArray();}
+    const QRVector<T>& getArray() const {return matrix;}
 
     void fill(const T &x) {
         for (size_t i = 0; i < w*h; ++i)

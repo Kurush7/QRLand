@@ -6,17 +6,22 @@
 #include <QLocale>
 #include <QLibraryInfo>
 
-#include "gui/wip2/MainWindow.h"
+#include "gui/prod/MainWindow.h"
+#include "gui/prod/EditorWindow.h"
+#include "configManager.h"
+
 
 using namespace std;
 
 
 int main(int argc, char *argv[]) {
+    loadConfig();
+
     //no use QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
     QApplication app(argc, argv);
 
     QFile styleF;
-    styleF.setFileName("gui/style.css");
+    styleF.setFileName("style.css");
     styleF.open(QFile::ReadOnly);
     QString qssStr = styleF.readAll();
     app.setStyleSheet(qssStr);
@@ -30,6 +35,11 @@ int main(int argc, char *argv[]) {
     MainWindow window;
     window.setWindowIcon(QIcon("i.ico"));
     window.show();
+
+    // todo delete from here
+    //string file = "landscape.qrland";
+    //auto *x = new EditorWindow(ModelInitData(), file);
+    //x->show();
 
     return app.exec();
 }

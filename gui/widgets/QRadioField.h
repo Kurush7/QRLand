@@ -18,7 +18,7 @@
 class QRadioField: public QWidget {
 Q_OBJECT
 public:
-    QRadioField(std::string, int);
+    QRadioField(std::string, int, QWidget *parent=nullptr);
     void addWidget(QWidget*, std::string);
     void addWidgets(std::vector<QWidget*>, std::string);
     std::string getActive() {return curActive;}

@@ -7,24 +7,85 @@
 
 #include <thread>
 
-const int RENDER_THREAD_CNT = std::thread::hardware_concurrency();
+extern int maxGridSize;
+const float miniMapSize = 1000;
+const float maxFloatValidate=1000;
 
-const float QREPS = 1e-5;
-const float QRSMALL_EPS = 1e-9;
-const float QREPS_MINI = 1e-3;
-const float QRINF = 1e9;
+extern int random_seed;
 
-const float SELECTION_ERROR = 1.05;    // for selection of frame model on click
+extern int RENDER_THREAD_CNT;
+extern int shadowScaleCoef;
 
-const float BUTTON_REPRESS_TIME_MSEC = 1000/60;
+extern float QREPS;
+extern float QRSMALL_EPS;
+extern float QREPS_MINI;
+extern float QRINF;
 
-const int MAX_LIGHT_CNT = 10;
-const int MAX_POINT_CNT = 1e6;
+extern float SELECTION_ERROR;    // for selection of frame model on click
 
-const float SCENE_DIST = 10.;
-const float PROJECTIVE_COEF = 1./30.;
+extern float BUTTON_REPRESS_TIME_MSEC;
+extern int hmapFPS;
+extern int erosionFPS;
 
+extern int MAX_LIGHT_CNT;
+extern int MAX_POINT_CNT;
 
+extern float SCENE_DIST;
+extern float PROJECTIVE_COEF;
 
+extern int maxPolygonPointCnt;
+extern int minQuickRenderDataBufferSize;
 
+extern int maxNoLODPolygonCnt;
+extern int defaultPlateCnt;
+
+//extern QRColor plateBorderColor = QRColor("green");
+extern float minPlateMoveForce;
+extern float maxPlateMoveForce;
+
+// water
+extern float minimalDrawWaterLevelCoef;
+
+extern float defaultErosionDT;
+
+extern float maxRainDropIntencityCoef;
+extern int rainDropCnt;
+extern int rainDropRadius;
+
+extern float maxRiverIntencityCoef;
+extern int maxHillCnt;
+
+extern float sedimentCapacity;
+extern float dissolveConstant;
+extern float depositionConstant;
+extern float defaultSlope;
+
+extern float evaporationCoef;
+
+extern float fluxPipeCapacity;
+extern float gravity;
+
+extern float maxPixelError;
+extern float currentPixelError;
+extern int FrameSize;
+extern float pixelsPerUnit;
+
+extern float layerLevelMult;
+
+extern float minHillHeightParam;
+extern float maxHillHeightParam;
+extern float hillStopCoef;
+
+extern float diamondSquareRandomCoef;
+extern float diamondSquareRandomUpdateCoef;
+
+extern float plateMountainHeightCoef;
+extern float mountainPriorCoef;
+extern float mountainStopCoef;
+extern float mountainsDSRandomCoef;
+extern float mountainsMinTense;
+
+extern float maxZSteepCoef;
+extern float grassMaxHeight;
+extern float snowMinHeight;
 #endif //BIG3DFLUFFY_QRCONSTANTS_H
