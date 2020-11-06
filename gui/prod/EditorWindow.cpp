@@ -71,7 +71,7 @@ EditorWindow::EditorWindow(ModelInitData data, string initFacade, QWidget *paren
     ui->addWidgets({{"water", waterWidget}}, "water");
     multiRadio->addWidgets({waterWidget}, "вода");
 
-    hmapWidget = new EditorHMapWidget(presenter->facade, actionManager, this);
+    hmapWidget = new EditorHMapWidget(presenter->facade, actionManager, waterWidget, this);
     ui->addWidgets({{"hmap", hmapWidget}}, "water");
     multiRadio->addWidgets({hmapWidget}, "карта_высот");
 

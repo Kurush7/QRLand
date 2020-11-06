@@ -16,10 +16,11 @@
 #include "../widgets/QRWidgets.h"
 #include "QRToolFrame.h"
 #include "ActionManager.h"
+#include "EditorWaterWidget.h"
 
 class EditorHMapWidget: public QWidget {
 public:
-    EditorHMapWidget(sptr<Facade> f, sptr<ActionManager>, QWidget *parent=nullptr);
+    EditorHMapWidget(sptr<Facade> f, sptr<ActionManager>, EditorWaterWidget *water, QWidget *parent=nullptr);
 
 private:
     //bool adding = false;

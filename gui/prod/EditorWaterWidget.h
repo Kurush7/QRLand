@@ -21,6 +21,9 @@ class EditorWaterWidget: public QWidget {
 public:
     EditorWaterWidget(sptr<Facade> f, sptr<ActionManager>, QWidget *parent=nullptr);
 
+
+    QPushButton *iterate;
+    QTimer *erosionTimer;
 private:
     bool adding = false;
     sptr<ActionManager> manager;

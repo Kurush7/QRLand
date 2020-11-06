@@ -36,6 +36,8 @@ QRMenu::QRMenu(sptr<Facade> facade, QWidget *parent): QMenuBar(parent), facade(f
         });
     }
 
+    auto about = new QAction("О программе", this);
+    file->addAction(about);
     auto *exit = new QAction("Выход", this);
     file->addAction(exit);
 
@@ -43,13 +45,20 @@ QRMenu::QRMenu(sptr<Facade> facade, QWidget *parent): QMenuBar(parent), facade(f
     auto *set_action = new QAction("Параметры", this);
     settings->addAction(set_action);
 
-    auto *view = addMenu("Вид");
-    auto *help = addMenu("Справка");
+    addAction(about);
 
     connect(exit, &QAction::triggered, qApp, QApplication::quit);
     connect(set_action, &QAction::triggered, []() {
         auto w = new QRSettings();
         w->show();
+    });
+
+    connect(about, &QAction::triggered, []() {
+        QMessageBox msgBox;
+        msgBox.setText("Проект подготовлен в рамках выполнения курсовой работы по дисциплине "
+                       "'Компьютерная графика' студентом группы ИУ7-51Б МГТУ им. Н.Э. Баумана "
+                       "Казаковым Кириллом, 2022 год выпуска.");
+        msgBox.exec();
     });
 
 }

@@ -4,7 +4,8 @@
 
 #include "EditorHMapWidget.h"
 
-EditorHMapWidget::EditorHMapWidget(sptr<Facade> f, sptr<ActionManager> am, QWidget *parent): QWidget(parent),
+EditorHMapWidget::EditorHMapWidget(sptr<Facade> f, sptr<ActionManager> am, EditorWaterWidget *water,
+        QWidget *parent): QWidget(parent),
 facade(f), manager(am) {
     ui = new QRLayoutManager("global", QRVert);
 
@@ -24,7 +25,16 @@ facade(f), manager(am) {
     connect(processTimer, &QTimer::timeout, [this]() {manager->processHMap();});
 
     auto *scale = new QPushButton("увеличить плотность сетки", this);
-    connect(scale, &QPushButton::clicked, [this](){
+    connect(scale, &QPushButton::clicked, [this, iterate, processTimer, water](){
+        if (iterate->text() == "остановить") {
+            iterate->setText("начать генерацию");
+            processTimer->stop();
+        }
+        if (water->iterate->text() == "остановить") {
+            water->iterate->setText("начать генерацию");
+            water->erosionTimer->stop();
+        }
+
         facade->scaleGrid();
         manager->processWater(true);
     });

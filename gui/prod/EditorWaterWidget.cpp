@@ -14,10 +14,10 @@ facade(f), manager(am) {
     connect(show, &QCheckBox::clicked, [this, show]() {facade->setWaterVisible(show->isChecked());});
     show->setChecked(true);
 
-    auto *iterate = new QPushButton("начать генерацию", this);
-    QTimer *erosionTimer = new QTimer();
+    iterate = new QPushButton("начать генерацию", this);
+    erosionTimer = new QTimer();
     erosionTimer->setInterval(1000 / erosionFPS);
-    connect(iterate, &QPushButton::clicked, [this, iterate, erosionTimer](){
+    connect(iterate, &QPushButton::clicked, [this](){
         if (iterate->text() == "начать генерацию") {
             iterate->setText("остановить");
             erosionTimer->start();
@@ -29,8 +29,11 @@ facade(f), manager(am) {
     });
     connect(erosionTimer, &QTimer::timeout, [this]() {manager->processWater();});
 
-    auto setWaterLevel = new QRInputBtn("уровень воды:", "установить", &waterLevel, -maxFloatValidate, maxFloatValidate, this,
-                                        [this](){facade->builder->waterManager->setWaterLevel(waterLevel);});
+    auto setWaterLevel = new QRInputBtn("уровень воды:", "установить", &waterLevel, -maxFloatValidate, maxFloatValidate,
+                                        this,[this]() {
+                                            facade->builder->waterManager->setWaterLevel(waterLevel);
+                                            manager->processWater();
+                                        });
 
     auto addNew = new QPushButton("добавить источник воды", this);
     connect(addNew, &QPushButton::clicked, [this](){addSource();});

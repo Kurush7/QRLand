@@ -145,7 +145,7 @@ void QuickRenderer::cameraCut() {
     size_t remain = polygon_cnt % thread_cnt;
     for (size_t i = 0; i < thread_cnt; ++i)
         threads[i] = thread(&QuickRenderer::threadCutPolygons, this,
-                            thread_size + (i < remain), i*thread_size, i);
+                            thread_size + (i < remain), i*thread_size + min(remain, i), i);
 
     for (size_t i = 0; i < thread_cnt; ++i) threads[i].join();
 

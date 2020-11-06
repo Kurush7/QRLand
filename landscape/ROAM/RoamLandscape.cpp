@@ -41,8 +41,9 @@ void RoamLandscape::updateCamera(const sptr<QRCamera3D> &camera, string *info) {
     CameraCoordsX = c[0], CameraCoordsY = c[1], CameraCoordsZ = c[2];
     
     size_t skippedFrames = 0;
-    for (size_t i = 0; i < allSize; ++i)
+    for (size_t i = 0; i < allSize; ++i) {
         skippedFrames += !frames[i].updateCamera(camera);
+    }
 
     if (info) {
         ostringstream s;
@@ -57,8 +58,9 @@ void RoamLandscape::updateCamera(const sptr<QRCamera3D> &camera, string *info) {
 void RoamLandscape::addPolygons(QRVector<sptr<QRPolygon3D>> &polygons, string *info) {
     lastPolyCount = polygons.getSize();
     size_t allSize = dimFrameCnt*dimFrameCnt;
-    for (size_t i = 0; i < allSize; ++i)
+    for (size_t i = 0; i < allSize; ++i) {
         frames[i].addPolygons(polygons);
+    }
     lastPolyCount = polygons.getSize() - lastPolyCount;
 
     if (info) {
