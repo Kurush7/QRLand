@@ -109,5 +109,6 @@ map<string, int*> getIntConfigMap() {
     m[GET_VARIABLE_NAME(hmapFPS)] = &erosionFPS;
     m[GET_VARIABLE_NAME(erosionFPS)] = &erosionFPS;
     m[GET_VARIABLE_NAME(shadowScaleCoef)] = &shadowScaleCoef;
+    m[GET_VARIABLE_NAME(maxGridSize)] = &maxGridSize;
     return m;
 }

@@ -59,6 +59,8 @@ void Camera3D::scale(float sx, float sy) {
 }
 
 void Camera3D::scale(float scale) {
+    // todo hardcode
+    scale = max(scale, QREPS*10);
     if (scale < QREPS)
         throw QRBadParamException(__FILE__, __LINE__, __TIME__, "negative scale for camera");
     width *= scale;

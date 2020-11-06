@@ -26,6 +26,13 @@ facade(f), manager(am) {
 
     auto *scale = new QPushButton("увеличить плотность сетки", this);
     connect(scale, &QPushButton::clicked, [this, iterate, processTimer, water](){
+        if (facade->builder->getWidth() >= maxGridSize) {
+            QMessageBox msgBox;
+            msgBox.setText("достигнут предел размера сетки. Вы можете увеличить предел в настройках");
+            msgBox.exec();
+            return;
+        }
+
         if (iterate->text() == "остановить") {
             iterate->setText("начать генерацию");
             processTimer->stop();

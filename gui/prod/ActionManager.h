@@ -104,7 +104,7 @@ private:
     QRQueue<float> dx, dy, dz;
     QRQueue<int> actionType; // 0 - move, 1 - scale, 2 - rotate
 
-    int hmapLimit=2, waterLimit=1;//30;
+    int hmapLimit=2, waterLimit=5;
     int hmap_cnt=0, water_cnt=0;
 
     bool buzy = false;

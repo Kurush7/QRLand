@@ -145,8 +145,7 @@ void WaterManager::setWaterLevel(float wl) {
     for (size_t i = 0; i < points.height(); ++i)
         for (size_t j = 0; j < points.width(); ++j) {
             v = points[i][j]->getVector();
-            if (v[2] < wl)
-                waterLevel[i][j] = wl - v[2];
+            waterLevel[i][j] = max(0.f, wl - v[2]);
         }
 
     if(waterEnabled) updateWater();

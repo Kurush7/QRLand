@@ -24,7 +24,8 @@ void WaterManager::erosionIteration(float dt, bool useTools) {
 void WaterManager::updateFlux(float dt) {
     // flux: 0-left, 1-right, 2-up, 3-down
     int w = hmap.width(), h = hmap.height();
-    dt = dt*fluxPipeCapacity*gravity;
+    float add = (0.25 / worldStep);
+    dt = dt * (worldStep * add * fluxPipeCapacity)*gravity;
     float val, k;
 
     for (int i = 0; i < h; ++i)

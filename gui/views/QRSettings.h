@@ -17,8 +17,14 @@ public:
         setWindowTitle("параметры");
         setFixedHeight(400);
         auto w = new QWidget();
+
+        auto star = new QRLabel("* - для обновления параметра необходимо\nсохранить "
+                                "конфигурацию и перезагрузить приложение");
+
         ui = new QRLayoutManager("global", QRVert);
-        ui->addLayers("render $ gui $ landscape $ water $ climate", QRVert);     // todo sep not working
+        ui->addLayers("basic render $ gui $ landscape $ water $ climate", QRVert);     // todo sep not working
+
+        ui->addWidgets({{"lab", star}}, "basic");
 
         auto save = new QPushButton("сохранить конфигурацию", this);
         ui->addLayers("save", QRHor);
@@ -30,7 +36,7 @@ public:
         QLabel *lab = new QRLabel("Рендеринг");
         lab->setObjectName("headerLabel");
         ui->addWidgets({{"label", lab}}, cur_layer);
-        addInput("число потоков *(обновление после перезагрузки)", &RENDER_THREAD_CNT, cur_layer);
+        addInput("число потоков *", &RENDER_THREAD_CNT, cur_layer);
         addInput("макс. число вершин модели", &MAX_POINT_CNT, cur_layer);
         addInput("качество теней, коэф.(int)", &shadowScaleCoef, cur_layer);
 
@@ -38,14 +44,15 @@ public:
         lab = new QRLabel("Частоты обновления");
         lab->setObjectName("headerLabel");
         ui->addWidgets({{"label", lab}}, cur_layer);
-        addInput("частота генератора карты высот (1/с)", &hmapFPS, cur_layer, true);
-        addInput("частота генератора воды (1/c)", &erosionFPS, cur_layer);
+        addInput("частота генератора карты высот (1/с) *", &hmapFPS, cur_layer, true);
+        addInput("частота генератора воды (1/c) *", &erosionFPS, cur_layer);
 
         cur_layer="landscape";
         lab = new QRLabel("Генерация карты высот");
         lab->setObjectName("headerLabel");
         ui->addWidgets({{"label", lab}}, cur_layer);
-        addInput("LOD: длина сегмента (число точек)", &FrameSize, cur_layer, true);
+        addInput("максимальный линейный размер сетки *", &maxGridSize, cur_layer, true);
+        addInput("LOD: длина сегмента (число точек)", &FrameSize, cur_layer);
         addInput("LOD: макс. ошибка отрисовки", &maxPixelError, cur_layer);
         addInput("LOD: текущая ошибка отрисовки", &currentPixelError, cur_layer);
         addInput("LOD: число пикселей на единицу", &pixelsPerUnit, cur_layer);

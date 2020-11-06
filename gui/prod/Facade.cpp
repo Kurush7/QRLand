@@ -24,9 +24,8 @@ using namespace std;
 // todo water intensity setting: no auto-change for instruments
 
 
-// todo: scale: water fuckup: too small water move coef: set dynamic step
+// todo: scale: water: choose water move coef (pipe one): set dynamic step
 // todo settings fps: add '* after reload'
-// todo set water level: fuckup
 
 Facade::Facade(const sptr<QRImage> &main_img, const sptr<QRImage> &hmap_img)
 : main_image(main_img), hmap_image(hmap_img) {

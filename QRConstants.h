@@ -7,6 +7,7 @@
 
 #include <thread>
 
+extern int maxGridSize;
 const float miniMapSize = 1000;
 const float maxFloatValidate=1000;
 
