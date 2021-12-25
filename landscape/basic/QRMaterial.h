@@ -1,0 +1,17 @@
+//
+// Created by kurush on 05.07.2020.
+//
+
+#ifndef BIG3DFLUFFY_QRVOXEL_H
+#define BIG3DFLUFFY_QRVOXEL_H
+
+enum QRMaterial {
+    QRDEFAULT_MATERIAL=0,
+    QRVSTONE_MATERIAL=1,
+    QRVGRASS_MATERIAL=2,
+    QRWATER_MATERIAL=3,
+    QRVSNOW_MATERIAL=4,
+};
+
+
+#endif //BIG3DFLUFFY_QRVOXEL_H

@@ -4,7 +4,7 @@
 
 #include "FrameLoader.h"
 
-Frame3DLoader::Frame3DLoader (std::shared_ptr<LoadSource> src,  std::shared_ptr<AbstractObject3DFactory>f)
+Frame3DLoader::Frame3DLoader (sptr<LoadSource> src,  sptr<QRObject3DFactory>f)
 : source(src), factory(f) {}
 
 bool Frame3DLoader::loadPoints() {
@@ -46,10 +46,10 @@ bool Frame3DLoader::loadEdges() {
     return true;
 }
 
-std::shared_ptr<BaseFrame3D> Frame3DLoader::getFrame() {
+sptr<QRFrame3D> Frame3DLoader::getFrame() {
     if (!isReady()) return nullptr;
     if (isBuilt) return frame;
-    frame = shared_ptr<BaseFrame3D>(new Frame3D(objects));
+    frame = sptr<QRFrame3D>(new SimpleFrame3D(objects));
     isBuilt = true;
     return frame;
 }

@@ -1,0 +1,10 @@
+//
+// Created by kurush on 03.10.2020.
+//
+
+#ifndef BIG3DFLUFFY_DIAMONDSQUARE_H
+#define BIG3DFLUFFY_DIAMONDSQUARE_H
+
+
+
+#endif //BIG3DFLUFFY_DIAMONDSQUARE_H

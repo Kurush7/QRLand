@@ -1,17 +1,11 @@
-set(path "objects/")
+set(path ${path}/objects)
+add_subdirectory(components)
+add_subdirectory(mementos)
+add_subdirectory(managers)
+add_subdirectory(lights)
+add_subdirectory(composites)
+
 set(source_list ${source_list}
-        ${path}/components/Point3D.cpp
-        ${path}/components/Edge3D.cpp
-        ${path}/components/Camera3D.cpp
-        ${path}/components/Projection.cpp
-        ${path}/components/Industry.cpp
-        ${path}/composites/BaseComposite.cpp
-        ${path}/composites/Frame3D.cpp
-        ${path}/composites/Scene3D.cpp
-        ${path}/managers/LoadSource.cpp
-        ${path}/managers/FrameLoader.cpp
-        ${path}/managers/SceneBuilder.cpp
-        ${path}/managers/SelectionManager.cpp
         ${path}/exceptions/QRObjectException.cpp
-        ${path}/visitors/Visitor.cpp
+        ${path}/visitors/QRVisitor.cpp
         PARENT_SCOPE)

@@ -14,13 +14,13 @@ TEST(MathTests, vector3D)
     EXPECT_EQ(vec.arr[0], 0);
     EXPECT_EQ(vec.arr[1], 0);
     EXPECT_EQ(vec.arr[2], 0);
-    EXPECT_EQ(vec.arr[3], 1);
+    EXPECT_EQ(vec.arr[3], 0);
 
     auto vec2 = Vector3D(1,2,3);
     EXPECT_EQ(vec2.arr[0], 1);
     EXPECT_EQ(vec2.arr[1], 2);
     EXPECT_EQ(vec2.arr[2], 3);
-    EXPECT_EQ(vec2.arr[3], 1);
+    EXPECT_EQ(vec2.arr[3], 0);
 
     auto vec3 = Vector3D({1,2,3});
     EXPECT_EQ(vec2, vec3);

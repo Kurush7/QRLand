@@ -6,28 +6,25 @@
 #include <QLocale>
 #include <QLibraryInfo>
 
+#include "gui/prod/MainWindow.h"
+#include "gui/prod/EditorWindow.h"
+#include "configManager.h"
 
-#include "gui/MainWindow.h"
 
 using namespace std;
 
-#include "3Domain/containers/QRVector/QRVector.h"
-#include "3Domain/containers/QRMap/QRMap.h"
 
 int main(int argc, char *argv[]) {
+    loadConfig();
 
-    // test code
-    QRVector<int> vec;
-    for (int i = 0; i < 5; ++i)
-        vec.push_back(i);
+    //no use QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
     QApplication app(argc, argv);
 
     QFile styleF;
-    styleF.setFileName("gui/style.css");
+    styleF.setFileName("style.css");
     styleF.open(QFile::ReadOnly);
     QString qssStr = styleF.readAll();
     app.setStyleSheet(qssStr);
-
 
     QString translatorFileName = QLatin1String("qt_");
     translatorFileName += QLocale::system().name();
@@ -36,9 +33,13 @@ int main(int argc, char *argv[]) {
         app.installTranslator(translator);
 
     MainWindow window;
-
     window.setWindowIcon(QIcon("i.ico"));
     window.show();
+
+    // todo delete from here
+    //string file = "landscape.qrland";
+    //auto *x = new EditorWindow(ModelInitData(), file);
+    //x->show();
 
     return app.exec();
 }

@@ -5,12 +5,12 @@
 #ifndef BIG3DFLUFFY_LOADSOURCE_H
 #define BIG3DFLUFFY_LOADSOURCE_H
 
-#include "../BaseObject.h"
+#include "objects/QRObject.h"
 #include <fstream>
 
 /*
 LoadData defines, which source to open (one interface, may be widened in base class: for auth-data etc.)
-LoadSource represents concrete loader (from file/db....). Has basic 'read' template function. if params
+LoadSource represents concrete loader (from file/db....). Has basic 'read' ala-template function. if params
 are needed for the request (e.g., sql-request body), visitor should be added, which puts the params
 into concrete source, then calls 'data' (and source will have the params inside)
 */
@@ -38,21 +38,21 @@ public:
 
 class LoadSource {
 public:
-    virtual void reopen(shared_ptr<LoadData> data) = 0;
-    virtual void accept(shared_ptr<SourceVisitor> visitor) = 0;
+    virtual void reopen(sptr<LoadData> data) = 0;
+    virtual void accept(sptr<SourceVisitor> visitor) = 0;
 
     virtual int readInt() = 0;
-    virtual double readDouble() = 0;
+    virtual float readDouble() = 0;
 };
 
 class FileSource: public LoadSource {
 public:
-    explicit FileSource(shared_ptr<LoadData> data);
-    virtual void reopen(shared_ptr<LoadData> data);
-    virtual void accept(shared_ptr<SourceVisitor> visitor) {visitor->visitFileSource(*this);}
+    explicit FileSource(sptr<LoadData> data);
+    virtual void reopen(sptr<LoadData> data);
+    virtual void accept(sptr<SourceVisitor> visitor) {visitor->visitFileSource(*this);}
 
     virtual int readInt() {return read<int>();}
-    virtual double readDouble() {return read<double>();}
+    virtual float readDouble() {return read<float>();}
 
     template <typename T>
     T read();
